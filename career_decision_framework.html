@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The "30% Solution" - Win-Win Career Decision Framework</title>
+    <meta name="description" content="Use the 30% Solution framework to evaluate career opportunities based on long-term potential, not just compensation. Achieve Win-Win Hiring outcomes.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            z-index: -2;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 60px 40px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .header .subtitle {
+            font-size: clamp(18px, 3vw, 24px);
+            color: #00ffff;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .header .description {
+            font-size: clamp(16px, 2vw, 18px);
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .framework-visual {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(26, 26, 46, 0.8));
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 60px 0;
+            backdrop-filter: blur(15px);
+        }
+        
+        .framework-title {
+            text-align: center;
+            font-size: 28px;
+            color: #00ffff;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .evaluation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .factor-card {
+            background: linear-gradient(145deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .factor-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 255, 0.5);
+            box-shadow: 0 15px 30px rgba(0, 255, 255, 0.2);
+        }
+        
+        .factor-title {
+            font-size: 18px;
+            color: #ff00ff;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .factor-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .rating-item {
+            text-align: center;
+            flex: 1;
+            padding: 8px 4px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .rating-number {
+            display: block;
+            font-weight: bold;
+            color: #00ffff;
+            font-size: 16px;
+        }
+        
+        .scoring-section {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 255, 255, 0.1));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .scoring-title {
+            font-size: 24px;
+            color: #00ffff;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .score-ranges {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .score-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid;
+        }
+        
+        .score-card.excellent {
+            border-left-color: #00ff00;
+        }
+        
+        .score-card.good {
+            border-left-color: #ffff00;
+        }
+        
+        .score-card.warning {
+            border-left-color: #ff8800;
+        }
+        
+        .score-card.danger {
+            border-left-color: #ff0000;
+        }
+        
+        .score-number {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        
+        .score-card.excellent .score-number { color: #00ff00; }
+        .score-card.good .score-number { color: #ffff00; }
+        .score-card.warning .score-number { color: #ff8800; }
+        .score-card.danger .score-number { color: #ff0000; }
+        
+        .key-insights {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(26, 26, 46, 0.9));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .insights-title {
+            font-size: 28px;
+            color: #00ffff;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .insight-item {
+            background: linear-gradient(145deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .insight-item h4 {
+            color: #ff00ff;
+            font-size: 18px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .insight-item p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            color: #000;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .cta-section h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+        
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+        
+        .nav-home {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ffff;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-home:hover {
+            background: rgba(0, 0, 0, 1);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .header {
+                padding: 40px 20px;
+            }
+            
+            .framework-visual, .scoring-section, .key-insights {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1>The "30% Solution"</h1>
+            <p class="subtitle">Win-Win Career Decision Framework</p>
+            <p class="description">Stop making career decisions based solely on compensation. Use this advanced framework to evaluate opportunities based on long-term potential and achieve true career growth.</p>
+        </header>
+        
+        <section class="framework-visual">
+            <h2 class="framework-title">Career Opportunity Evaluation Matrix</h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.7); margin-bottom: 30px;">Rate each factor from 1-5 (1=Terrible, 5=Outstanding)</p>
+            
+            <div class="evaluation-grid">
+                <div class="factor-card">
+                    <h3 class="factor-title">Growth Opportunity</h3>
+                    <p class="factor-description">Long-term career advancement potential, skill development, and learning opportunities</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <span class="rating-number">1</span>
+                            <span>Terrible</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">2</span>
+                            <span>Poor</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">3</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">4</span>
+                            <span>Very Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">5</span>
+                            <span>Outstanding</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Work Impact & Stretch</h3>
+                    <p class="factor-description">Meaningful work that challenges you, provides stretch assignments, and creates measurable impact</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <span class="rating-number">1</span>
+                            <span>Terrible</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">2</span>
+                            <span>Poor</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">3</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">4</span>
+                            <span>Very Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">5</span>
+                            <span>Outstanding</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Manager & Coaching</h3>
+                    <p class="factor-description">Quality of leadership, mentoring approach, and manager's commitment to your development</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <span class="rating-number">1</span>
+                            <span>Terrible</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">2</span>
+                            <span>Poor</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">3</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">4</span>
+                            <span>Very Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">5</span>
+                            <span>Outstanding</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Company Culture & Development</h3>
+                    <p class="factor-description">Company's commitment to employee growth, culture fit, and proactive development programs</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <span class="rating-number">1</span>
+                            <span>Terrible</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">2</span>
+                            <span>Poor</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">3</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">4</span>
+                            <span>Very Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">5</span>
+                            <span>Outstanding</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Team & Collaboration</h3>
+                    <p class="factor-description">Quality of teammates, collaborative environment, and peer learning opportunities</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <span class="rating-number">1</span>
+                            <span>Terrible</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">2</span>
+                            <span>Poor</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">3</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">4</span>
+                            <span>Very Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">5</span>
+                            <span>Outstanding</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Work-Life Integration</h3>
+                    <p class="factor-description">Flexibility, autonomy, and sustainable work-life balance that supports long-term performance</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <span class="rating-number">1</span>
+                            <span>Terrible</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">2</span>
+                            <span>Poor</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">3</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">4</span>
+                            <span>Very Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">5</span>
+                            <span>Outstanding</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Compensation & Equity</h3>
+                    <p class="factor-description">Total compensation package including salary, equity, benefits, and long-term earning potential</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <span class="rating-number">1</span>
+                            <span>Terrible</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">2</span>
+                            <span>Poor</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">3</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">4</span>
+                            <span>Very Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">5</span>
+                            <span>Outstanding</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Role Understanding & Clarity</h3>
+                    <p class="factor-description">Clear performance objectives, realistic expectations, and comprehensive understanding of responsibilities</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <span class="rating-number">1</span>
+                            <span>Terrible</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">2</span>
+                            <span>Poor</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">3</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">4</span>
+                            <span>Very Good</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-number">5</span>
+                            <span>Outstanding</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="scoring-section">
+            <h2 class="scoring-title">Interpreting Your Score (Total: /40)</h2>
+            
+            <div class="score-ranges">
+                <div class="score-card excellent">
+                    <div class="score-number">32-40</div>
+                    <h4>Exceptional Opportunity</h4>
+                    <p>This represents a true career move with 30%+ non-monetary growth potential</p>
+                </div>
+                
+                <div class="score-card good">
+                    <div class="score-number">24-31</div>
+                    <h4>Solid Career Move</h4>
+                    <p>Good opportunity if compensation is competitive and growth factors are strong</p>
+                </div>
+                
+                <div class="score-card warning">
+                    <div class="score-number">16-23</div>
+                    <h4>Proceed with Caution</h4>
+                    <p>Marginal opportunity - ensure you understand the risks and have a development plan</p>
+                </div>
+                
+                <div class="score-card danger">
+                    <div class="score-number">8-15</div>
+                    <h4>High Risk</h4>
+                    <p>Consider staying in current role or continuing your search for better opportunities</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="key-insights">
+            <h2 class="insights-title">Key Implementation Insights</h2>
+            
+            <div class="insight-item">
+                <h4>The 30% Solution Principle</h4>
+                <p>A true career move should provide at least 30% non-monetary increase through stretch assignments, impact, growth opportunities, and satisfaction - even if the salary increase is modest.</p>
+            </div>
+            
+            <div class="insight-item">
+                <h4>Win-Win Hiring Outcomes</h4>
+                <p>When candidates score opportunities using this framework, over 90% remain enthusiastic about their job after the first year - creating true Win-Win Hiring outcomes.</p>
+            </div>
+            
+            <div class="insight-item">
+                <h4>Beyond Transactional Hiring</h4>
+                <p>Most hiring processes are too transactional. Both companies and candidates must think long-term about career integration and mutual success, not just immediate fit.</p>
+            </div>
+            
+            <div class="insight-item">
+                <h4>The Information Gap Problem</h4>
+                <p>Companies often make offers without giving candidates a complete picture of the role, leading to misaligned expectations and high turnover rates.</p>
+            </div>
+            
+            <div class="insight-item">
+                <h4>Candidate Due Diligence</h4>
+                <p>Before accepting any offer, ask hiring managers to describe challenges, performance metrics, and meet potential peers to gather comprehensive information.</p>
+            </div>
+            
+            <div class="insight-item">
+                <h4>Benchmark Against Your Best Role</h4>
+                <p>Score your best previous job using this framework as a benchmark. Don't accept anything that scores significantly lower, regardless of compensation.</p>
+            </div>
+        </section>
+        
+        <section class="cta-section">
+            <h2>Your Career is Your Most Valuable Asset</h2>
+            <p>Time is finite. Don't gamble with career decisions based on short-term thinking. Use this framework to make informed, strategic career moves that compound over time.</p>
+            <a href="/" class="nav-home">← Back to Moneyball for HR!</a>
+        </section>
+    </div>
+</body>
+</html>
