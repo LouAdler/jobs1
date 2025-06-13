@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moneyball for HR! - The Future of Strategic Hiring</title>
+    <meta name="description" content="Revolutionary hiring methodology that transforms talent acquisition. AI-powered insights meet human strategy.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            z-index: -2;
+        }
+        
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(0, 255, 0, 0.05) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite alternate;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+        
+        /* Futuristic header */
+        .hero {
+            position: relative;
+            padding: 120px 40px 80px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 48%, rgba(0, 255, 255, 0.3) 49%, rgba(0, 255, 255, 0.3) 51%, transparent 52%);
+            animation: scanline 3s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes scanline {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
+        }
+        
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 84px);
+            font-weight: 900;
+            margin-bottom: 24px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ff00);
+            background-size: 200% 200%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow 4s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            letter-spacing: -2px;
+        }
+        
+        @keyframes rainbow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .hero .tagline {
+            font-size: clamp(24px, 4vw, 32px);
+            margin-bottom: 20px;
+            color: #00ffff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        }
+        
+        .hero .description {
+            font-size: clamp(18px, 2.5vw, 22px);
+            max-width: 800px;
+            margin: 0 auto 40px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            color: #000;
+            padding: 20px 40px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.5);
+        }
+        
+        .main-content {
+            padding: 80px 40px;
+        }
+        
+        .section {
+            max-width: 1200px;
+            margin: 0 auto 80px;
+        }
+        
+        .problem-solution {
+            text-align: center;
+            margin-bottom: 100px;
+        }
+        
+        .problem-solution h2 {
+            font-size: clamp(36px, 5vw, 48px);
+            color: #00ffff;
+            margin-bottom: 40px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .vs-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 40px;
+            align-items: center;
+            margin: 40px 0;
+        }
+        
+        .problem-box, .solution-box {
+            padding: 40px;
+            border-radius: 20px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .problem-box {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 100, 100, 0.1));
+            border-left: 4px solid #ff0040;
+        }
+        
+        .solution-box {
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 255, 255, 0.1));
+            border-left: 4px solid #00ffff;
+        }
+        
+        .vs-divider {
+            font-size: 32px;
+            font-weight: 900;
+            color: #ff00ff;
+            text-transform: uppercase;
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+        }
+        
+        .key-insight {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.2), rgba(0, 255, 255, 0.2));
+            padding: 60px 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 80px 0;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .key-insight::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .key-insight h2 {
+            font-size: clamp(28px, 4vw, 36px);
+            margin-bottom: 20px;
+            color: #00ffff;
+            font-weight: 800;
+        }
+        
+        .key-insight p {
+            font-size: clamp(16px, 2.5vw, 20px);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 80px 0;
+        }
+        
+        .nav-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .nav-card:hover::before {
+            opacity: 1;
+        }
+        
+        .nav-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 255, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+        }
+        
+        .nav-card h3 {
+            font-size: 24px;
+            color: #00ffff;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .nav-card p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .methodology-section {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(26, 26, 46, 0.8));
+            padding: 80px 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .methodology-section h2 {
+            color: #00ffff;
+            font-size: clamp(32px, 4vw, 42px);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .methodology-item {
+            background: linear-gradient(145deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .methodology-item:hover {
+            transform: scale(1.05);
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+        
+        .methodology-item h4 {
+            color: #ff00ff;
+            font-size: 18px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .methodology-item p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(26, 26, 46, 0.9));
+            text-align: center;
+            padding: 60px 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer h3 {
+            font-size: 24px;
+            color: #00ffff;
+            margin-bottom: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        
+        .footer p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 20px 60px;
+            }
+            
+            .main-content {
+                padding: 60px 20px;
+            }
+            
+            .vs-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .vs-divider {
+                writing-mode: initial;
+                text-orientation: initial;
+                transform: rotate(90deg);
+            }
+            
+            .navigation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <div class="container">
+        <header class="hero">
+            <h1>MONEYBALL FOR HR!</h1>
+            <p class="tagline">The Future of Strategic Hiring</p>
+            <p class="description">Revolutionary methodology that transforms talent acquisition. Stop playing by outdated rules. Start hiring the best available talent, not just the best who applies.</p>
+            <a href="#methodology" class="cta-button">Enter the Future</a>
+        </header>
+        
+        <main class="main-content">
+            <section class="problem-solution section">
+                <h2>The Revolution Begins</h2>
+                <div class="vs-container">
+                    <div class="problem-box">
+                        <h3>TRADITIONAL HIRING</h3>
+                        <p>Optimizes for the best person who applies. Limited talent pool. Mediocre results. AI will replace this obsolete approach.</p>
+                    </div>
+                    <div class="vs-divider">VS</div>
+                    <div class="solution-box">
+                        <h3>MONEYBALL FOR HR!</h3>
+                        <p>Optimizes for the best person available. Unlimited talent access. Exceptional results. Human strategy enhanced by data science.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="key-insight section" id="methodology">
+                <h2>The Core Truth</h2>
+                <p>If you're not playing "Moneyball for HR!" AI will take over the recruiter's role. This is a strategic team game involving prospects, their networks, hiring managers as coaches, and recruiters as talent scouts and performance analysts.</p>
+            </section>
+            
+            <section class="methodology-section section">
+                <h2>The System Architecture</h2>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 40px; font-size: 18px;">A complete framework for building championship teams through advanced talent acquisition</p>
+                
+                <div class="methodology-grid">
+                    <div class="methodology-item">
+                        <h4>Next-Gen Game Rules</h4>
+                        <p>9 revolutionary principles that replace traditional hiring methods with performance-based acquisition</p>
+                    </div>
+                    <div class="methodology-item">
+                        <h4>AI-Enhanced Metrics</h4>
+                        <p>Track what matters: 1st year success rates and Win-Win Hiring outcomes using advanced analytics</p>
+                    </div>
+                    <div class="methodology-item">
+                        <h4>Precision Targeting</h4>
+                        <p>Focus on 15-20 prequalified prospects using data science, not hundreds of random applicants</p>
+                    </div>
+                    <div class="methodology-item">
+                        <h4>Career Transformation</h4>
+                        <p>Offer 30% non-monetary increases: exponential growth, impact, stretch assignments, satisfaction</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="navigation-grid section">
+                <a href="/why-moneyball-hr.html" class="nav-card">
+                    <h3>The Manifesto</h3>
+                    <p>10 revolutionary reasons why forward-thinking leaders must abandon traditional hiring and embrace the future of talent acquisition.</p>
+                </a>
+                
+                <a href="/game-rules.html" class="nav-card">
+                    <h3>System Protocols</h3>
+                    <p>9 fundamental rules that power the new hiring operating system. Replace legacy methods with performance-based algorithms.</p>
+                </a>
+                
+                <a href="/metrics-that-matter.html" class="nav-card">
+                    <h3>Performance Analytics</h3>
+                    <p>Advanced metrics dashboard - from prospect engagement algorithms to first-year success predictive models.</p>
+                </a>
+                
+                <a href="/hiring-systems-analysis-2.html" class="nav-card">
+                    <h3>Deep System Analysis</h3>
+                    <p>Comprehensive breakdown of hiring architectures and methodologies that drive consistent championship results.</p>
+                </a>
+                
+                <a href="/impact-results.html" class="nav-card">
+                    <h3>Success Metrics</h3>
+                    <p>Quantified impact data from organizations that have implemented the "Moneyball for HR!" transformation protocol.</p>
+                </a>
+                
+                <a href="/getting-started.html" class="nav-card">
+                    <h3>Implementation Protocol</h3>
+                    <p>Step-by-step deployment guide to integrate this advanced methodology into your talent acquisition infrastructure.</p>
+                </a>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <h3>Moneyball for HR!</h3>
+            <p>The future of strategic talent acquisition is here. Stop playing yesterday's game.</p>
+        </footer>
+    </div>
+</body>
+</html>
