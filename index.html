@@ -173,6 +173,74 @@
             margin: 0 auto 80px;
         }
         
+        /* New Research Showcase Section */
+        .research-showcase {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 100, 100, 0.1));
+            padding: 80px 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 0, 0, 0.3);
+            margin-bottom: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .research-showcase::before {
+            content: '!';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            font-size: 300px;
+            font-weight: 900;
+            color: rgba(255, 0, 0, 0.05);
+            transform: rotate(-15deg);
+        }
+        
+        .research-showcase h2 {
+            font-size: clamp(36px, 5vw, 48px);
+            color: #ff0040;
+            margin-bottom: 30px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        
+        .research-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-box .number {
+            font-size: clamp(36px, 5vw, 48px);
+            font-weight: 900;
+            color: #ff0040;
+            margin-bottom: 10px;
+        }
+        
+        .stat-box .label {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .research-link {
+            display: block;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
         .problem-solution {
             text-align: center;
             margin-bottom: 100px;
@@ -282,6 +350,11 @@
             overflow: hidden;
         }
         
+        .nav-card.highlight {
+            border: 2px solid #ff0040;
+            background: linear-gradient(145deg, rgba(255, 0, 0, 0.05), rgba(255, 0, 0, 0.1));
+        }
+        
         .nav-card::before {
             content: '';
             position: absolute;
@@ -315,12 +388,28 @@
             z-index: 1;
         }
         
+        .nav-card.highlight h3 {
+            color: #ff0040;
+        }
+        
         .nav-card p {
             color: rgba(255, 255, 255, 0.8);
             font-size: 16px;
             line-height: 1.6;
             position: relative;
             z-index: 1;
+        }
+        
+        .nav-card .badge {
+            display: inline-block;
+            background: #ff0040;
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 15px;
         }
         
         .methodology-section {
@@ -418,6 +507,10 @@
             .navigation-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .research-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -433,6 +526,35 @@
         </header>
         
         <main class="main-content">
+            <!-- New Research Showcase Section -->
+            <section class="research-showcase section">
+                <h2>GROUNDBREAKING RESEARCH: The $100 Billion Failure</h2>
+                <div class="research-stats">
+                    <div class="stat-box">
+                        <div class="number">4%</div>
+                        <div class="label">Employee Engagement Growth</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">12%</div>
+                        <div class="label">Hiring Success Improvement</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">115%</div>
+                        <div class="label">Marketing Effectiveness Gains</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">$100B</div>
+                        <div class="label">Annual HR Tech Waste</div>
+                    </div>
+                </div>
+                <p style="text-align: center; color: rgba(255, 255, 255, 0.9); font-size: 20px; margin-bottom: 30px;">
+                    While companies have become 10x better at finding customers, they've barely improved at finding and engaging employees. This comprehensive analysis reveals the shocking truth about technology's failed promise in human capital.
+                </p>
+                <div class="research-link">
+                    <a href="/technology-impact-analysis.html" class="cta-button">View Full Research Study</a>
+                </div>
+            </section>
+            
             <section class="problem-solution section">
                 <h2>The Revolution Begins</h2>
                 <div class="vs-container">
@@ -478,49 +600,41 @@
             </section>
             
             <section class="navigation-grid section">
-    <a href="/technology-impact-analysis.html" class="nav-card highlight">
-        <span class="badge">NEW RESEARCH</span>
-        <h3>25-Year Technology Impact Study</h3>
-        <p>Comprehensive analysis revealing how HR and recruiting technology have failed while other business functions thrived. The data that proves we need a revolution.</p>
-    </a>
-    
-    <a href="/manifesto.html" class="nav-card">
-        <h3>The Manifesto</h3>
-        <p>10 revolutionary reasons why forward-thinking leaders must abandon traditional hiring and embrace the future of talent acquisition.</p>
-    </a>
-    
-    <a href="https://hiring.tips/GPT_course_sprint" class="nav-card" target="_blank" rel="noopener">
-        <h3>Learn to Play "Moneyball for HR!"</h3>
-        <p>The Performance-based Hiring Sprint is how you'll find and hire the best Moneyball candidates available.</p>
-    </a>
-    
-    <a href="/metrics-that-matter.html" class="nav-card">
-        <h3>Performance Analytics</h3>
-        <p>Advanced metrics dashboard - from prospect engagement algorithms to first-year success predictive models.</p>
-    </a>
-    
-    <a href="/hiring-systems-analysis-2.html" class="nav-card">
-        <h3>Root Cause Analysis</h3>
-        <p>Deep research on the root cause of all major hiring problems and how to make lasting process changes.</p>
-    </a>
-    
-    <a href="/impact-results.html" class="nav-card">
-        <h3>Success Metrics</h3>
-        <p>Quantified impact data from organizations that have implemented the "Moneyball for HR!" transformation protocol.</p>
-    </a>
-    
-    <a href="career_decision_framework.html" class="nav-card">
-        <h3>Use the "30% Solution"</h3>
-        <p>Achieve More Win-Win Hiring Outcomes with our advanced career decision framework that evaluates long-term potential over short-term compensation.</p>
-    </a>
-</section>
+                <a href="/technology-impact-analysis.html" class="nav-card highlight">
+                    <span class="badge">NEW RESEARCH</span>
+                    <h3>25-Year Technology Impact Study</h3>
+                    <p>Comprehensive analysis revealing how HR and recruiting technology have failed while other business functions thrived. The data that proves we need a revolution.</p>
+                </a>
+                
+                <a href="/manifesto.html" class="nav-card">
+                    <h3>The Manifesto</h3>
+                    <p>10 revolutionary reasons why forward-thinking leaders must abandon traditional hiring and embrace the future of talent acquisition.</p>
+                </a>
+                
+                <a href="https://hiring.tips/GPT_course_sprint" class="nav-card" target="_blank" rel="noopener">
+                    <h3>Learn to Play "Moneyball for HR!"</h3>
+                    <p>The Performance-based Hiring Sprint is how you'll find and hire the best Moneyball candidates available.</p>
+                </a>
+                
+                <a href="/metrics-that-matter.html" class="nav-card">
+                    <h3>Performance Analytics</h3>
+                    <p>Advanced metrics dashboard - from prospect engagement algorithms to first-year success predictive models.</p>
+                </a>
+                
+                <a href="/hiring-systems-analysis-2.html" class="nav-card">
+                    <h3>Root Cause Analysis</h3>
+                    <p>Deep research on the root cause of all major hiring problems and how to make lasting process changes.</p>
+                </a>
+                
+                <a href="/impact-results.html" class="nav-card">
+                    <h3>Success Metrics</h3>
+                    <p>Quantified impact data from organizations that have implemented the "Moneyball for HR!" transformation protocol.</p>
+                </a>
                 
                 <a href="career_decision_framework.html" class="nav-card">
-    <h3>Use the "30% Solution"</h3>
-    <p>Achieve More Win-Win Hiring Outcomes with our advanced career decision framework that evaluates long-term potential over short-term compensation.</p>
-</a>
-
-
+                    <h3>Use the "30% Solution"</h3>
+                    <p>Achieve More Win-Win Hiring Outcomes with our advanced career decision framework that evaluates long-term potential over short-term compensation.</p>
+                </a>
             </section>
         </main>
         
