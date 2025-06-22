@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiring Framework Due Diligence Analyzer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .intro-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .intro-section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .intro-section p {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .first-principles {
+            background: #fef3c7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .first-principles h3 {
+            color: #92400e;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .first-principles ul {
+            color: #92400e;
+            margin-left: 20px;
+        }
+        
+        .first-principles li {
+            margin-bottom: 8px;
+        }
+        
+        .framework-input-section {
+            background: #e3f2fd;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .framework-input-section h3 {
+            color: #1976d2;
+            margin-bottom: 20px;
+            font-size: 20px;
+            text-align: center;
+        }
+        
+        .analysis-type {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .type-button {
+            padding: 10px 20px;
+            border: 2px solid #2196f3;
+            background: white;
+            color: #1976d2;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .type-button.active {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .type-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .framework-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+        
+        .framework-input:focus {
+            outline: none;
+            border-color: #1565c0;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+        }
+        
+        .multi-framework-section {
+            display: none;
+        }
+        
+        .multi-framework-section.active {
+            display: block;
+        }
+        
+        .framework-list {
+            margin-bottom: 15px;
+        }
+        
+        .framework-item {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #90caf9;
+        }
+        
+        .remove-button {
+            background: #ef5350;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .remove-button:hover {
+            background: #e53935;
+        }
+        
+        .add-button {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        .add-button:hover {
+            background: #45a049;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .example-chip {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #1976d2;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #90caf9;
+            text-align: center;
+        }
+        
+        .example-chip:hover {
+            background: #1976d2;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .generate-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 30px auto;
+            display: block;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .generate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .generate-button:active {
+            transform: translateY(0);
+        }
+        
+        .prompt-output {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .prompt-output.active {
+            display: block;
+        }
+        
+        .output-header {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .output-header h3 {
+            color: #333;
+            font-size: 18px;
+        }
+        
+        .copy-button {
+            background: #4caf50;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .copy-button:hover {
+            background: #45a049;
+        }
+        
+        .copy-button.copied {
+            background: #2196f3;
+        }
+        
+        .prompt-text {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            border: 1px solid #ddd;
+        }
+        
+        .criteria-preview {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .criteria-preview h4 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .criteria-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 10px;
+            color: #856404;
+            font-size: 14px;
+        }
+        
+        .criteria-item {
+            padding: 5px 0;
+            border-bottom: 1px dotted #ffeaa7;
+        }
+        
+        .criteria-item.new {
+            font-weight: bold;
+            color: #d4380d;
+        }
+        
+        .instructions {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .instructions h4 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            color: #388e3c;
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header p {
+                font-size: 16px;
+            }
+            
+            .examples-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+            
+            .analysis-type {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .type-button {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Hiring Framework Due Diligence Analyzer</h1>
+            <p>AI-Powered Analysis Using First Principles</p>
+        </div>
+        
+        <div class="content">
+            <div class="intro-section">
+                <h2>What This Tool Does</h2>
+                <p>This tool generates a customized prompt that you can use with Claude to get a comprehensive analysis of any hiring framework compared against <strong>Performance-based Hiring as the benchmark</strong>.</p>
+                <p>Claude will evaluate frameworks across <strong>17 critical dimensions</strong> and provide a detailed comparison table showing how each framework measures up to the industry-leading Performance-based Hiring methodology.</p>
+            </div>
+            
+            <div class="first-principles">
+                <h3>🔬 First Principles Applied</h3>
+                <ul>
+                    <li><strong>Root Cause Analysis:</strong> #1 reason for failure is lack of role clarity</li>
+                    <li><strong>Mutual Value Creation:</strong> Both employer and employee must win</li>
+                    <li><strong>Predictive Validity:</strong> Past behavior ≠ future performance without context</li>
+                    <li><strong>Systems Thinking:</strong> Hiring is an ecosystem, not an event</li>
+                    <li><strong>Behavioral Economics:</strong> People are loss-averse and need compelling reasons to switch</li>
+                </ul>
+            </div>
+            
+            <div class="framework-input-section">
+                <h3>Choose Analysis Type</h3>
+                
+                <div class="analysis-type">
+                    <button class="type-button active" onclick="setAnalysisType('single')" id="singleBtn">
+                        Single Framework
+                    </button>
+                    <button class="type-button" onclick="setAnalysisType('comparison')" id="comparisonBtn">
+                        Compare Multiple Frameworks
+                    </button>
+                </div>
+                
+                <div id="singleFrameworkSection">
+                    <input 
+                        type="text" 
+                        id="frameworkName" 
+                        class="framework-input" 
+                        placeholder="Enter framework name (e.g., STAR Method, Topgrading)"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <div id="multiFrameworkSection" class="multi-framework-section">
+                    <div class="framework-list" id="frameworkList"></div>
+                    <input 
+                        type="text" 
+                        id="frameworkInput" 
+                        class="framework-input" 
+                        placeholder="Enter framework name and click Add"
+                        autocomplete="off"
+                    >
+                    <button class="add-button" onclick="addFramework()">+ Add Framework</button>
+                </div>
+                
+                <div class="examples-grid">
+                    <div class="example-chip" onclick="quickAdd('STAR Method')">STAR Method</div>
+                    <div class="example-chip" onclick="quickAdd('Topgrading')">Topgrading</div>
+                    <div class="example-chip" onclick="quickAdd('Performance-based Hiring')">Performance-based</div>
+                    <div class="example-chip" onclick="quickAdd('Case Interviews')">Case Interviews</div>
+                    <div class="example-chip" onclick="quickAdd('Panel Interviews')">Panel Interviews</div>
+                    <div class="example-chip" onclick="quickAdd('HireVue AI')">HireVue AI</div>
+                    <div class="example-chip" onclick="quickAdd('Bar Raiser')">Bar Raiser</div>
+                    <div class="example-chip" onclick="quickAdd('Behavioral Interviewing')">Behavioral</div>
+                    <div class="example-chip" onclick="quickAdd('Who Method')">Who Method</div>
+                    <div class="example-chip" onclick="quickAdd('Google Structured')">Google Structured</div>
+                    <div class="example-chip" onclick="quickAdd('Cultural Fit')">Cultural Fit</div>
+                    <div class="example-chip" onclick="quickAdd('Predictive Index')">Predictive Index</div>
+                </div>
+            </div>
+            
+            <button class="generate-button" onclick="generatePrompt()">
+                Generate Analysis Prompt
+            </button>
+            
+            <div class="prompt-output" id="promptOutput">
+                <div class="output-header">
+                    <h3>Your Custom Analysis Prompt</h3>
+                    <button class="copy-button" onclick="copyPrompt()" id="copyButton">
+                        📋 Copy to Clipboard
+                    </button>
+                </div>
+                <div class="prompt-text" id="promptText"></div>
+            </div>
+            
+            <div class="instructions">
+                <h4>📝 How to Use This Tool</h4>
+                <ol>
+                    <li>Choose single framework analysis or comparison mode</li>
+                    <li>Enter framework name(s) or click examples</li>
+                    <li>Click "Generate Analysis Prompt"</li>
+                    <li>Copy the generated prompt using the copy button</li>
+                    <li>Open Claude (claude.ai) and paste the prompt</li>
+                    <li>Claude will analyze using first principles and provide a detailed report</li>
+                </ol>
+            </div>
+            
+            <div class="criteria-preview">
+                <h4>🔍 What Claude Will Analyze (17 Dimensions)</h4>
+                <div class="criteria-list">
+                    <div class="criteria-item new">0. Job Analysis Capability (NEW)</div>
+                    <div class="criteria-item">1. Bidirectional Success</div>
+                    <div class="criteria-item">2. Interview Accuracy</div>
+                    <div class="criteria-item">3. Quality of Hire</div>
+                    <div class="criteria-item">4. Process Integration</div>
+                    <div class="criteria-item">5. Time/Cost Efficiency</div>
+                    <div class="criteria-item">6. Scalability</div>
+                    <div class="criteria-item">7. Diversity & Equity</div>
+                    <div class="criteria-item">8. Adaptability</div>
+                    <div class="criteria-item">9. Sustainability</div>
+                    <div class="criteria-item">10. Economic ROI</div>
+                    <div class="criteria-item">11. Behavioral Alignment</div>
+                    <div class="criteria-item">12. Systems Thinking</div>
+                    <div class="criteria-item">13. Strategic Advantage</div>
+                    <div class="criteria-item">14. Operational Reality</div>
+                    <div class="criteria-item">15. Ethical Standards</div>
+                    <div class="criteria-item">16. Process Control</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let analysisType = 'single';
+        let frameworks = [];
+        
+        function setAnalysisType(type) {
+            analysisType = type;
+            document.getElementById('singleBtn').classList.toggle('active', type === 'single');
+            document.getElementById('comparisonBtn').classList.toggle('active', type === 'comparison');
+            document.getElementById('singleFrameworkSection').style.display = type === 'single' ? 'block' : 'none';
+            document.getElementById('multiFrameworkSection').classList.toggle('active', type === 'comparison');
+        }
+        
+        function quickAdd(name) {
+            if (analysisType === 'single') {
+                document.getElementById('frameworkName').value = name;
+            } else {
+                if (!frameworks.includes(name)) {
+                    frameworks.push(name);
+                    updateFrameworkList();
+                }
+            }
+        }
+        
+        function addFramework() {
+            const input = document.getElementById('frameworkInput');
+            const name = input.value.trim();
+            
+            if (name && !frameworks.includes(name)) {
+                frameworks.push(name);
+                updateFrameworkList();
+                input.value = '';
+            }
+        }
+        
+        function removeFramework(index) {
+            frameworks.splice(index, 1);
+            updateFrameworkList();
+        }
+        
+        function updateFrameworkList() {
+            const list = document.getElementById('frameworkList');
+            list.innerHTML = frameworks.map((fw, index) => `
+                <div class="framework-item">
+                    <span>${fw}</span>
+                    <button class="remove-button" onclick="removeFramework(${index})">Remove</button>
+                </div>
+            `).join('');
+        }
+        
+        function generatePrompt() {
+            let frameworksToAnalyze = [];
+            
+            if (analysisType === 'single') {
+                const name = document.getElementById('frameworkName').value.trim();
+                if (!name) {
+                    alert('Please enter a hiring framework name');
+                    return;
+                }
+                // Always include Performance-based Hiring for comparison
+                frameworksToAnalyze = [name, 'Performance-based Hiring'];
+            } else {
+                if (frameworks.length < 1) {
+                    alert('Please add at least 1 framework to compare');
+                    return;
+                }
+                // Always include Performance-based Hiring if not already in list
+                frameworksToAnalyze = [...frameworks];
+                if (!frameworksToAnalyze.includes('Performance-based Hiring')) {
+                    frameworksToAnalyze.push('Performance-based Hiring');
+                }
+            }
+            
+            const frameworkText = frameworksToAnalyze.join(', ');
+            
+            const prompt = `Please conduct a comprehensive due diligence analysis comparing **${frameworkText}** hiring methodologies/systems using FIRST PRINCIPLES THINKING. Create a detailed COMPARISON TABLE showing how each framework performs against Performance-based Hiring as the benchmark.
+
+**FIRST PRINCIPLES FOUNDATION:**
+Before scoring, consider these fundamental truths about hiring:
+1. **Role Clarity Crisis**: The #1 reason employees underperform or quit in year one is lack of role clarity - not knowing what success looks like
+2. **Mutual Value**: Sustainable hiring requires both employer and employee to evaluate success and remain satisfied
+3. **Context Matters**: Past behavior only predicts future performance in similar contexts with similar resources
+4. **Loss Aversion**: Top performers need compelling reasons (30%+ improvement) to overcome switching costs
+5. **System Effects**: Hiring success depends on the entire ecosystem, not just the selection method
+
+**REQUIRED OUTPUT FORMAT:**
+
+1. **Executive Summary Comparison Table** showing:
+   - All frameworks in columns (with Performance-based Hiring as the benchmark)
+   - All 17 dimensions in rows
+   - Scores (1-10) in cells
+   - Total scores and percentages at bottom
+   - Color coding: Green (8-10), Yellow (5-7), Red (1-4)
+
+2. **Key Insights Summary** including:
+   - Why each framework scored as it did on critical dimensions
+   - Where Performance-based Hiring outperforms and why
+   - Where other frameworks might have advantages
+   - Specific use cases for each framework
+
+3. **Gap Analysis Table** showing:
+   - What each framework is missing compared to Performance-based Hiring
+   - Specific improvements needed
+   - Integration opportunities
+
+**EVALUATION DIMENSIONS:**
+
+### FOUNDATIONAL CAPABILITY (The Missing Link)
+
+**0. Job Analysis & Role Definition**
+- Does the framework include a systematic method for defining success in the role?
+- Can it create performance-based job descriptions (performance profiles/impact statements)?
+- Does it translate job requirements into measurable performance objectives?
+- How does it ensure candidates understand exactly what success looks like?
+- Does it address the #1 cause of failure: lack of role clarity?
+
+### SUCCESS DIMENSIONS (Core Outcomes)
+
+**1. Bidirectional Point of View (Mutual Success)**
+- Does the framework measure both manager AND employee satisfaction after 1 year?
+- Is there a mutual evaluation process during hiring?
+- Are post-hire success metrics tracked from both perspectives?
+- Does it create win-win outcomes?
+
+**2. Interview Accuracy (Predictive Validity)**
+- How well does the assessment predict actual on-the-job performance?
+- Is there validated research showing predictive validity?
+- Does it go beyond traditional Q&A interviews?
+- Does it assess ability to achieve specific performance objectives?
+- Note: Most interviews have only 20-35% predictive validity
+
+**3. Quality of Hire (Top Performer Attraction)**
+- Does it have a specific strategy for attracting passive candidates?
+- Does it appeal to high performers (growth opportunities, meaningful work)?
+- Can it articulate the 30% improvement opportunity?
+- Are there mechanisms to ensure mutual fit?
+- What's the resulting retention and performance levels?
+
+**4. Full Integrated Process (End-to-End System)**
+- Does it cover the entire talent lifecycle from workforce planning through first anniversary?
+- Are there feedback loops for continuous improvement?
+- Does it integrate pre-hire, hiring, and post-hire activities?
+- Is success measured and fed back into the process?
+
+**5. Efficiency (Time and Cost Effectiveness)**
+- What's the total resource requirement from first contact to productive employee?
+- Consider total cost including bad hires and turnover
+- Is there an optimal balance between speed and quality?
+- Are there diminishing returns at any point?
+
+**6. Scalability (Volume Capability)**
+- Can the process handle high volume without quality degradation?
+- Are there bottlenecks that limit growth?
+- Can it be systematized and taught to others?
+- Does it work for 10 hires or 1,000 hires?
+
+**7. Equity (Bias Reduction & Diversity)**
+- Does it actively reduce unconscious bias?
+- Are non-traditional backgrounds welcomed?
+- Does it focus on potential vs. pedigree?
+- Is the process accessible to diverse candidates?
+
+**8. Adaptability (Cross-Context Flexibility)**
+- Can it be customized for different roles, industries, and cultures?
+- Does it work for entry-level through executive positions?
+- Is it industry-agnostic or specialized?
+- How much modification is required for different contexts?
+
+**9. Sustainability (Long-term Viability)**
+- Does the system improve over time?
+- Can interviewers sustain the effort required?
+- Does it build organizational capability?
+- Is there risk of process fatigue or burnout?
+
+### EVALUATION LENSES (Strategic Perspectives)
+
+**10. Economic (Return on Investment)**
+- What's the total ROI including all costs and benefits?
+- Factor in retention improvements and performance gains
+- Include hidden costs (bad hires, turnover, training)
+- Compare to alternative approaches
+
+**11. Behavioral (Psychological Alignment)**
+- Does it align with how people actually make career decisions?
+- Does it understand candidate motivations and concerns?
+- Does it account for loss aversion and switching costs?
+- Is the human element respected?
+- Does it create positive experiences?
+
+**12. Systems Thinking (Holistic View)**
+- Does it recognize hiring as an interconnected ecosystem?
+- Are feedback loops built into the design?
+- Does it connect to other HR/business systems?
+- Is there a big-picture perspective?
+
+**13. Strategic Advantage (Competitive Edge)**
+- Does it differentiate from competitors?
+- Can it access passive talent others miss?
+- Does it build sustainable employer brand?
+- Is the advantage defensible?
+
+**14. Operational Reality (Practical Implementation)**
+- Can it be implemented without heroic effort?
+- Are resource requirements reasonable?
+- Will managers actually use it consistently?
+- Does it work in practice, not just theory?
+
+**15. Ethical (Fairness & Dignity)**
+- Is the process respectful of candidates' time and effort?
+- Is there transparency in decision-making?
+- Are power dynamics appropriately balanced?
+- Does it treat all participants with dignity?
+
+**16. Process Control (Measurement & Improvement)**
+- Are there clear metrics and KPIs?
+- Can you track what's working and what isn't?
+- Is there a continuous improvement mechanism?
+- Can problems be identified and fixed quickly?
+
+**SCORING GUIDELINES:**
+- 9-10: Exceptional/Industry-leading
+- 7-8: Strong/Above average
+- 5-6: Adequate/Average
+- 3-4: Weak/Below average
+- 1-2: Poor/Failing
+
+**FIRST PRINCIPLES WEIGHTING:**
+Give extra weight to dimensions that address root causes:
+- Job Analysis (prevents #1 failure reason)
+- Bidirectional Success (sustainable outcomes)
+- Quality of Hire (accessing passive talent)
+- Behavioral Alignment (how decisions are actually made)
+
+**CRITICAL REQUIREMENTS FOR THE ANALYSIS:**
+
+1. **Always show Performance-based Hiring scores** based on its documented capabilities:
+   - Job Analysis: 10 (defines roles through performance objectives)
+   - Bidirectional Success: 10 (win-win hiring with 30% rule)
+   - Quality of Hire: 9 (attracts passive talent)
+   - Full Process: 10 (end-to-end system)
+   - Behavioral Alignment: 10 (based on how people decide)
+
+2. **Create visual comparison table** that makes differences immediately clear
+
+3. **Highlight gaps** where frameworks fall short of Performance-based Hiring
+
+4. **Provide actionable insights** on how to improve or integrate frameworks
+
+5. **Use specific examples** and evidence for all scores
+
+Please ensure the output is formatted as clear, easy-to-read tables that executives can use for decision-making.`;
+            
+            document.getElementById('promptText').textContent = prompt;
+            document.getElementById('promptOutput').classList.add('active');
+            
+            // Scroll to the output
+            document.getElementById('promptOutput').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        function copyPrompt() {
+            const promptText = document.getElementById('promptText').textContent;
+            
+            navigator.clipboard.writeText(promptText).then(() => {
+                const copyButton = document.getElementById('copyButton');
+                copyButton.textContent = '✓ Copied!';
+                copyButton.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyButton.textContent = '📋 Copy to Clipboard';
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy. Please select the text manually and copy.');
+            });
+        }
+        
+        // Allow Enter key to add framework in comparison mode
+        document.getElementById('frameworkInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                addFramework();
+            }
+        });
+        
+        // Allow Enter key to generate prompt in single mode
+        document.getElementById('frameworkName').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                generatePrompt();
+            }
+        });
+    </script>
+</body>
+</html>
