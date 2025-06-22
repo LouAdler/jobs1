@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiring Framework Due Diligence Analyzer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .intro-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .intro-section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .intro-section p {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .framework-input-section {
+            background: #e3f2fd;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .framework-input-section h3 {
+            color: #1976d2;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .framework-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .framework-input:focus {
+            outline: none;
+            border-color: #1565c0;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .example-chip {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #1976d2;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #90caf9;
+        }
+        
+        .example-chip:hover {
+            background: #1976d2;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .generate-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 30px auto;
+            display: block;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .generate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .generate-button:active {
+            transform: translateY(0);
+        }
+        
+        .prompt-output {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .prompt-output.active {
+            display: block;
+        }
+        
+        .output-header {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .output-header h3 {
+            color: #333;
+            font-size: 18px;
+        }
+        
+        .copy-button {
+            background: #4caf50;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .copy-button:hover {
+            background: #45a049;
+        }
+        
+        .copy-button.copied {
+            background: #2196f3;
+        }
+        
+        .prompt-text {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            border: 1px solid #ddd;
+        }
+        
+        .criteria-preview {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .criteria-preview h4 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .criteria-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            color: #856404;
+            font-size: 14px;
+        }
+        
+        .criteria-item {
+            padding: 5px 0;
+            border-bottom: 1px dotted #ffeaa7;
+        }
+        
+        .instructions {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .instructions h4 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            color: #388e3c;
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header p {
+                font-size: 16px;
+            }
+            
+            .examples-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Hiring Framework Analyzer</h1>
+            <p>AI-Powered Due Diligence for Any Hiring Methodology</p>
+        </div>
+        
+        <div class="content">
+            <div class="intro-section">
+                <h2>What This Tool Does</h2>
+                <p>This tool generates a customized prompt that you can use with Claude to get a comprehensive analysis of any hiring framework or methodology.</p>
+                <p>Claude will evaluate the framework across 16 critical dimensions and provide a detailed scorecard report with evidence-based ratings.</p>
+            </div>
+            
+            <div class="framework-input-section">
+                <h3>Enter the Hiring Framework You Want to Analyze</h3>
+                <input 
+                    type="text" 
+                    id="frameworkName" 
+                    class="framework-input" 
+                    placeholder="e.g., STAR Method, Topgrading, etc."
+                    autocomplete="off"
+                >
+                
+                <div class="examples-grid">
+                    <div class="example-chip" onclick="setFramework('STAR Method')">STAR Method</div>
+                    <div class="example-chip" onclick="setFramework('Topgrading')">Topgrading</div>
+                    <div class="example-chip" onclick="setFramework('Case Interviews')">Case Interviews</div>
+                    <div class="example-chip" onclick="setFramework('Panel Interviews')">Panel Interviews</div>
+                    <div class="example-chip" onclick="setFramework('HireVue AI Screening')">HireVue AI</div>
+                    <div class="example-chip" onclick="setFramework('Amazon Bar Raiser')">Bar Raiser</div>
+                    <div class="example-chip" onclick="setFramework('Predictive Index')">Predictive Index</div>
+                    <div class="example-chip" onclick="setFramework('Cultural Fit Interviewing')">Cultural Fit</div>
+                </div>
+            </div>
+            
+            <button class="generate-button" onclick="generatePrompt()">
+                Generate Analysis Prompt
+            </button>
+            
+            <div class="prompt-output" id="promptOutput">
+                <div class="output-header">
+                    <h3>Your Custom Analysis Prompt</h3>
+                    <button class="copy-button" onclick="copyPrompt()" id="copyButton">
+                        📋 Copy to Clipboard
+                    </button>
+                </div>
+                <div class="prompt-text" id="promptText"></div>
+            </div>
+            
+            <div class="instructions">
+                <h4>📝 How to Use This Tool</h4>
+                <ol>
+                    <li>Enter the name of any hiring framework or methodology above</li>
+                    <li>Click "Generate Analysis Prompt"</li>
+                    <li>Copy the generated prompt using the copy button</li>
+                    <li>Open Claude (claude.ai) and paste the prompt</li>
+                    <li>Claude will analyze the framework and provide a detailed report</li>
+                </ol>
+            </div>
+            
+            <div class="criteria-preview">
+                <h4>🔍 What Claude Will Analyze</h4>
+                <div class="criteria-list">
+                    <div class="criteria-item">1. Bidirectional Success</div>
+                    <div class="criteria-item">2. Interview Accuracy</div>
+                    <div class="criteria-item">3. Quality of Hire</div>
+                    <div class="criteria-item">4. Process Integration</div>
+                    <div class="criteria-item">5. Time/Cost Efficiency</div>
+                    <div class="criteria-item">6. Scalability</div>
+                    <div class="criteria-item">7. Diversity & Equity</div>
+                    <div class="criteria-item">8. Adaptability</div>
+                    <div class="criteria-item">9. Sustainability</div>
+                    <div class="criteria-item">10. Economic ROI</div>
+                    <div class="criteria-item">11. Behavioral Alignment</div>
+                    <div class="criteria-item">12. Systems Thinking</div>
+                    <div class="criteria-item">13. Strategic Advantage</div>
+                    <div class="criteria-item">14. Operational Reality</div>
+                    <div class="criteria-item">15. Ethical Standards</div>
+                    <div class="criteria-item">16. Process Control</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function setFramework(name) {
+            document.getElementById('frameworkName').value = name;
+        }
+        
+        function generatePrompt() {
+            const frameworkName = document.getElementById('frameworkName').value.trim();
+            
+            if (!frameworkName) {
+                alert('Please enter a hiring framework name');
+                return;
+            }
+            
+            const prompt = `Please conduct a comprehensive due diligence analysis of the **${frameworkName}** hiring methodology/system. Evaluate it across the following 16 critical dimensions, providing specific scores (1-10) and evidence-based rationale for each score.
+
+**Format your analysis as a detailed scorecard report including:**
+- Brief overview of the framework
+- Score for each dimension with specific evidence/rationale
+- Total score and percentage
+- Comparison to other major frameworks
+- Key strengths and weaknesses
+- Recommendation summary
+
+**EVALUATION DIMENSIONS:**
+
+### SUCCESS DIMENSIONS (Core Outcomes)
+
+**1. Bidirectional Point of View (Mutual Success)**
+- Does the framework measure both manager AND employee satisfaction after 1 year?
+- Is there a mutual evaluation process during hiring?
+- Are post-hire success metrics tracked from both perspectives?
+- Does it create win-win outcomes?
+
+**2. Interview Accuracy (Predictive Validity)**
+- How well does the assessment predict actual on-the-job performance?
+- Is there validated research showing predictive validity?
+- Does it go beyond traditional Q&A interviews?
+- Note: Most interviews have only 20-35% predictive validity
+
+**3. Quality of Hire (Top Performer Attraction)**
+- Does it have a specific strategy for attracting passive candidates?
+- Does it appeal to high performers (growth opportunities, meaningful work)?
+- Are there mechanisms to ensure mutual fit?
+- What's the resulting retention and performance levels?
+
+**4. Full Integrated Process (End-to-End System)**
+- Does it cover the entire talent lifecycle from workforce planning through first anniversary?
+- Are there feedback loops for continuous improvement?
+- Does it integrate pre-hire, hiring, and post-hire activities?
+- Is success measured and fed back into the process?
+
+**5. Efficiency (Time and Cost Effectiveness)**
+- What's the total resource requirement from first contact to productive employee?
+- Consider total cost including bad hires and turnover
+- Is there an optimal balance between speed and quality?
+- Are there diminishing returns at any point?
+
+**6. Scalability (Volume Capability)**
+- Can the process handle high volume without quality degradation?
+- Are there bottlenecks that limit growth?
+- Can it be systematized and taught to others?
+- Does it work for 10 hires or 1,000 hires?
+
+**7. Equity (Bias Reduction & Diversity)**
+- Does it actively reduce unconscious bias?
+- Are non-traditional backgrounds welcomed?
+- Does it focus on potential vs. pedigree?
+- Is the process accessible to diverse candidates?
+
+**8. Adaptability (Cross-Context Flexibility)**
+- Can it be customized for different roles, industries, and cultures?
+- Does it work for entry-level through executive positions?
+- Is it industry-agnostic or specialized?
+- How much modification is required for different contexts?
+
+**9. Sustainability (Long-term Viability)**
+- Does the system improve over time?
+- Can interviewers sustain the effort required?
+- Does it build organizational capability?
+- Is there risk of process fatigue or burnout?
+
+### EVALUATION LENSES (Strategic Perspectives)
+
+**10. Economic (Return on Investment)**
+- What's the total ROI including all costs and benefits?
+- Factor in retention improvements and performance gains
+- Include hidden costs (bad hires, turnover, training)
+- Compare to alternative approaches
+
+**11. Behavioral (Psychological Alignment)**
+- Does it align with how people actually make career decisions?
+- Does it understand candidate motivations and concerns?
+- Is the human element respected?
+- Does it create positive experiences?
+
+**12. Systems Thinking (Holistic View)**
+- Does it recognize hiring as an interconnected ecosystem?
+- Are feedback loops built into the design?
+- Does it connect to other HR/business systems?
+- Is there a big-picture perspective?
+
+**13. Strategic Advantage (Competitive Edge)**
+- Does it differentiate from competitors?
+- Can it access passive talent others miss?
+- Does it build sustainable employer brand?
+- Is the advantage defensible?
+
+**14. Operational Reality (Practical Implementation)**
+- Can it be implemented without heroic effort?
+- Are resource requirements reasonable?
+- Will managers actually use it consistently?
+- Does it work in practice, not just theory?
+
+**15. Ethical (Fairness & Dignity)**
+- Is the process respectful of candidates' time and effort?
+- Is there transparency in decision-making?
+- Are power dynamics appropriately balanced?
+- Does it treat all participants with dignity?
+
+**16. Process Control (Measurement & Improvement)**
+- Are there clear metrics and KPIs?
+- Can you track what's working and what isn't?
+- Is there a continuous improvement mechanism?
+- Can problems be identified and fixed quickly?
+
+**SCORING GUIDELINES:**
+- 9-10: Exceptional/Industry-leading
+- 7-8: Strong/Above average
+- 5-6: Adequate/Average
+- 3-4: Weak/Below average
+- 1-2: Poor/Failing
+
+**Please conduct thorough research on ${frameworkName} and provide specific examples, data, or evidence to support each score. Compare results to these benchmarks:**
+- Performance-based Hiring: 84%
+- Google Structured Interviewing: 67%
+- Who Method: 66%
+- DDI Behavioral: 64%
+- Topgrading: 50%`;
+            
+            document.getElementById('promptText').textContent = prompt;
+            document.getElementById('promptOutput').classList.add('active');
+            
+            // Scroll to the output
+            document.getElementById('promptOutput').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        function copyPrompt() {
+            const promptText = document.getElementById('promptText').textContent;
+            
+            navigator.clipboard.writeText(promptText).then(() => {
+                const copyButton = document.getElementById('copyButton');
+                copyButton.textContent = '✓ Copied!';
+                copyButton.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyButton.textContent = '📋 Copy to Clipboard';
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy. Please select the text manually and copy.');
+            });
+        }
+        
+        // Allow Enter key to generate prompt
+        document.getElementById('frameworkName').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                generatePrompt();
+            }
+        });
+    </script>
+</body>
+</html>
