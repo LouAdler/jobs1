@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hiring Framework Due Diligence Analyzer</title>
+    <title>HR Tech Due Diligence Analyzer</title>
     <style>
         * {
             box-sizing: border-box;
@@ -68,6 +68,19 @@
         .intro-section p {
             color: #555;
             margin-bottom: 10px;
+        }
+        
+        .validation-notice {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+            color: #155724;
+        }
+        
+        .validation-notice strong {
+            color: #155724;
         }
         
         .first-principles {
@@ -324,7 +337,7 @@
         
         .criteria-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 10px;
             color: #856404;
             font-size: 14px;
@@ -333,11 +346,6 @@
         .criteria-item {
             padding: 5px 0;
             border-bottom: 1px dotted #ffeaa7;
-        }
-        
-        .criteria-item.new {
-            font-weight: bold;
-            color: #d4380d;
         }
         
         .instructions {
@@ -389,29 +397,31 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎯 Hiring Framework Due Diligence Analyzer</h1>
-            <p>AI-Powered Analysis Using First Principles</p>
+            <h1>🎯 HR Tech Due Diligence Analyzer</h1>
+            <p>Evidence-Based Assessment Using Validated Criteria</p>
         </div>
         
         <div class="content">
             <div class="intro-section">
                 <h2>What This Tool Does</h2>
-                <p>This tool generates a customized prompt that you can use with Claude to get a comprehensive analysis of any hiring framework compared against <strong>Performance-based Hiring as the benchmark</strong>.</p>
-                <p>Claude will evaluate frameworks across <strong>17 critical dimensions</strong> and provide a detailed comparison table showing how each framework measures up to the industry-leading Performance-based Hiring methodology.</p>
-                <p><strong>New AI-Era Evaluation:</strong> The analysis now includes assessment of AI innovation potential, system optimization issues (like filtering out strong candidates), and requires objective, multi-validated evidence for all claims.</p>
+                <p>This tool generates a customized prompt that you can use with Claude to get a comprehensive analysis of any HR Tech solution or hiring framework compared against <strong>Performance-based Hiring as the benchmark</strong>.</p>
+                <p>Claude will evaluate solutions across <strong>15 validated dimensions</strong> that comprehensively assess both traditional hiring effectiveness and modern AI capabilities.</p>
+                <div class="validation-notice">
+                    <strong>✓ First Principles Evaluation:</strong> The assessment will be conducted using First Principles thinking, systems analysis, behavioral economics, and advanced analytical frameworks to ensure an unbiased, evidence-based evaluation that goes beyond surface-level features to examine actual impact on hiring outcomes.
+                </div>
             </div>
             
             <div class="first-principles">
-                <h3>🔬 First Principles Applied</h3>
+                <h3>🔬 Core Assessment Principles</h3>
                 <ul>
-                    <li><strong>Root Cause Analysis:</strong> #1 reason for failure is lack of role clarity</li>
-                    <li><strong>Mutual Value Creation:</strong> Both employer and employee must win long-term</li>
-                    <li><strong>Predictive Validity:</strong> Past behavior ≠ future performance without context</li>
-                    <li><strong>Systems Thinking:</strong> Hiring is an ecosystem, not an event</li>
-                    <li><strong>Behavioral Economics:</strong> People are loss-averse and need compelling reasons to switch</li>
-                    <li><strong>AI Innovation:</strong> Does it leverage AI for better decisions, not just automation?</li>
-                    <li><strong>System Optimization:</strong> Avoid sub-optimization that filters out strong candidates</li>
-                    <li><strong>Objective Validation:</strong> All claims must be evidence-based and multi-validated</li>
+                    <li><strong>Talent Strategy First:</strong> Primary focus on attracting the best, not weeding out</li>
+                    <li><strong>Real Job Analysis:</strong> Accounts for actual role, culture, resources, and manager style</li>
+                    <li><strong>Bidirectional Success:</strong> Both employer and employee must win long-term</li>
+                    <li><strong>Predictive Accuracy:</strong> Focuses on factors that drive actual performance</li>
+                    <li><strong>Full Talent Market:</strong> Accesses passive candidates, not just applicants</li>
+                    <li><strong>True ROI:</strong> Measures quality improvement, not just efficiency</li>
+                    <li><strong>Systems Thinking:</strong> Based on how top performers actually make decisions</li>
+                    <li><strong>Enterprise Ready:</strong> Scalable technology that works globally</li>
                 </ul>
             </div>
             
@@ -420,10 +430,10 @@
                 
                 <div class="analysis-type">
                     <button class="type-button active" onclick="setAnalysisType('single')" id="singleBtn">
-                        Single Framework
+                        Single Solution
                     </button>
                     <button class="type-button" onclick="setAnalysisType('comparison')" id="comparisonBtn">
-                        Compare Multiple Frameworks
+                        Compare Multiple Solutions
                     </button>
                 </div>
                 
@@ -432,7 +442,7 @@
                         type="text" 
                         id="frameworkName" 
                         class="framework-input" 
-                        placeholder="Enter framework name (e.g., STAR Method, Topgrading)"
+                        placeholder="Enter HR Tech solution or framework name"
                         autocomplete="off"
                     >
                 </div>
@@ -443,25 +453,25 @@
                         type="text" 
                         id="frameworkInput" 
                         class="framework-input" 
-                        placeholder="Enter framework name and click Add"
+                        placeholder="Enter solution name and click Add"
                         autocomplete="off"
                     >
-                    <button class="add-button" onclick="addFramework()">+ Add Framework</button>
+                    <button class="add-button" onclick="addFramework()">+ Add Solution</button>
                 </div>
                 
                 <div class="examples-grid">
-                    <div class="example-chip" onclick="quickAdd('STAR Method')">STAR Method</div>
-                    <div class="example-chip" onclick="quickAdd('Topgrading')">Topgrading</div>
+                    <div class="example-chip" onclick="quickAdd('Workday Recruiting')">Workday</div>
+                    <div class="example-chip" onclick="quickAdd('Greenhouse')">Greenhouse</div>
+                    <div class="example-chip" onclick="quickAdd('Lever')">Lever</div>
+                    <div class="example-chip" onclick="quickAdd('SmartRecruiters')">SmartRecruiters</div>
+                    <div class="example-chip" onclick="quickAdd('iCIMS')">iCIMS</div>
+                    <div class="example-chip" onclick="quickAdd('HireVue')">HireVue</div>
+                    <div class="example-chip" onclick="quickAdd('Pymetrics')">Pymetrics</div>
+                    <div class="example-chip" onclick="quickAdd('SeekOut')">SeekOut</div>
+                    <div class="example-chip" onclick="quickAdd('Beamery')">Beamery</div>
+                    <div class="example-chip" onclick="quickAdd('Phenom')">Phenom</div>
                     <div class="example-chip" onclick="quickAdd('Performance-based Hiring')">Performance-based</div>
-                    <div class="example-chip" onclick="quickAdd('Case Interviews')">Case Interviews</div>
-                    <div class="example-chip" onclick="quickAdd('Panel Interviews')">Panel Interviews</div>
-                    <div class="example-chip" onclick="quickAdd('HireVue AI')">HireVue AI</div>
-                    <div class="example-chip" onclick="quickAdd('Bar Raiser')">Bar Raiser</div>
-                    <div class="example-chip" onclick="quickAdd('Behavioral Interviewing')">Behavioral</div>
-                    <div class="example-chip" onclick="quickAdd('Who Method')">Who Method</div>
-                    <div class="example-chip" onclick="quickAdd('Google Structured')">Google Structured</div>
-                    <div class="example-chip" onclick="quickAdd('Cultural Fit')">Cultural Fit</div>
-                    <div class="example-chip" onclick="quickAdd('Predictive Index')">Predictive Index</div>
+                    <div class="example-chip" onclick="quickAdd('Custom/Internal System')">Custom System</div>
                 </div>
             </div>
             
@@ -482,35 +492,33 @@
             <div class="instructions">
                 <h4>📝 How to Use This Tool</h4>
                 <ol>
-                    <li>Choose single framework analysis or comparison mode</li>
-                    <li>Enter framework name(s) or click examples</li>
+                    <li>Choose single solution analysis or comparison mode</li>
+                    <li>Enter HR Tech solution name(s) or click examples</li>
                     <li>Click "Generate Analysis Prompt"</li>
                     <li>Copy the generated prompt using the copy button</li>
                     <li>Open Claude (claude.ai) and paste the prompt</li>
-                    <li>Claude will analyze using first principles and provide a detailed report</li>
+                    <li>Claude will analyze using validated criteria and provide a detailed report</li>
                 </ol>
             </div>
             
             <div class="criteria-preview">
-                <h4>🔍 What Claude Will Analyze (17 Dimensions)</h4>
+                <h4>🔍 15 Validated Assessment Dimensions</h4>
                 <div class="criteria-list">
-                    <div class="criteria-item new">0. Job Analysis Capability (NEW)</div>
-                    <div class="criteria-item">1. Bidirectional Success</div>
-                    <div class="criteria-item">2. Interview Accuracy</div>
-                    <div class="criteria-item">3. Quality of Hire</div>
-                    <div class="criteria-item">4. Process Integration</div>
-                    <div class="criteria-item">5. Time/Cost Efficiency</div>
-                    <div class="criteria-item">6. Scalability</div>
-                    <div class="criteria-item">7. Diversity & Equity</div>
-                    <div class="criteria-item">8. Adaptability</div>
-                    <div class="criteria-item">9. Sustainability</div>
-                    <div class="criteria-item">10. Economic ROI</div>
-                    <div class="criteria-item">11. Behavioral Alignment</div>
-                    <div class="criteria-item">12. Systems Thinking</div>
-                    <div class="criteria-item">13. Strategic Advantage</div>
-                    <div class="criteria-item">14. Operational Reality</div>
-                    <div class="criteria-item">15. Ethical Standards</div>
-                    <div class="criteria-item">16. Process Control</div>
+                    <div class="criteria-item">1. Talent Strategy (Attract Best vs. Weed Out)</div>
+                    <div class="criteria-item">2. Job Analysis (Real Situation Assessment)</div>
+                    <div class="criteria-item">3. Bidirectional Success (Win-Win Outcomes)</div>
+                    <div class="criteria-item">4. Interview Accuracy (Long-term Predictors)</div>
+                    <div class="criteria-item">5. Quality of Hire (Performance Tracking)</div>
+                    <div class="criteria-item">6. Process Integration & Control</div>
+                    <div class="criteria-item">7. Time/Cost Efficiency</div>
+                    <div class="criteria-item">8. Full Talent Market Access</div>
+                    <div class="criteria-item">9. True ROI (Quality vs. Efficiency)</div>
+                    <div class="criteria-item">10. Scalability (Global & All Roles)</div>
+                    <div class="criteria-item">11. Diversity & Equity</div>
+                    <div class="criteria-item">12. Behavioral Alignment</div>
+                    <div class="criteria-item">13. Systems Thinking</div>
+                    <div class="criteria-item">14. Technical Infrastructure</div>
+                    <div class="criteria-item">15. AI Impact (Efficiency vs. Enhancement)</div>
                 </div>
             </div>
         </div>
@@ -571,14 +579,14 @@
             if (analysisType === 'single') {
                 const name = document.getElementById('frameworkName').value.trim();
                 if (!name) {
-                    alert('Please enter a hiring framework name');
+                    alert('Please enter an HR Tech solution or framework name');
                     return;
                 }
                 // Always include Performance-based Hiring for comparison
                 frameworksToAnalyze = [name, 'Performance-based Hiring'];
             } else {
                 if (frameworks.length < 1) {
-                    alert('Please add at least 1 framework to compare');
+                    alert('Please add at least 1 solution to compare');
                     return;
                 }
                 // Always include Performance-based Hiring if not already in list
@@ -590,204 +598,167 @@
             
             const frameworkText = frameworksToAnalyze.join(', ');
             
-            const prompt = `Please conduct a comprehensive due diligence analysis comparing **${frameworkText}** hiring methodologies/systems using FIRST PRINCIPLES THINKING. Create a detailed COMPARISON TABLE showing how each framework performs against Performance-based Hiring as the benchmark.
+            const prompt = `Please conduct a comprehensive HR Tech due diligence analysis comparing **${frameworkText}** using the following 15 VALIDATED ASSESSMENT CRITERIA. Create a detailed COMPARISON TABLE showing how each solution performs against Performance-based Hiring as the benchmark.
 
-**CRITICAL EVALUATION REQUIREMENTS:**
-1. **AI Innovation Assessment**: Does the framework contain ORIGINAL innovation that leverages AI for enhanced decision-making, not just basic automation? Look for genuine AI-powered insights, predictive capabilities, and intelligent process optimization.
+**EVALUATION METHODOLOGY:**
+This assessment will be conducted using:
+- **First Principles Thinking**: Breaking down to fundamental truths about hiring
+- **Systems Analysis**: Understanding interconnections and feedback loops
+- **Behavioral Economics**: How people actually make decisions
+- **Evidence-Based Scoring**: All claims must be verifiable
+- **Sub-Optimization Detection**: Identifying where efficiency hurts effectiveness
 
-2. **System Optimization Analysis**: Identify any sub-optimization issues where the system filters out strong candidates for irrelevant reasons (e.g., keyword matching, arbitrary experience requirements, school pedigree). Document false negative rates.
+**15 VALIDATED ASSESSMENT DIMENSIONS:**
 
-3. **Objective Validation Standard**: All scores must be based on:
-   - Published research or case studies
-   - Documented implementation results
-   - Multiple independent sources of validation
-   - Specific examples, not general claims
-   - If evidence is lacking, state clearly and score accordingly
+**1. TALENT STRATEGY - Attract Best vs. Weed Out**
+- Is the primary design philosophy to ATTRACT the best talent or ELIMINATE the unqualified?
+- Does every step in the process support attracting top performers?
+- Does it create compelling opportunities that excite passive candidates?
+- Are screening mechanisms designed to find reasons to include vs. exclude?
+- How does it balance efficiency with not missing great candidates?
 
-**FIRST PRINCIPLES FOUNDATION:**
-Before scoring, consider these fundamental truths about hiring:
-1. **Role Clarity Crisis**: The #1 reason employees underperform or quit in year one is lack of role clarity - not knowing what success looks like
-2. **Mutual Value**: Sustainable hiring requires both employer and employee to evaluate success and remain satisfied long-term
-3. **Context Matters**: Past behavior only predicts future performance in similar contexts with similar resources
-4. **Loss Aversion**: Top performers need compelling reasons (30%+ improvement) to overcome switching costs
-5. **System Effects**: Hiring success depends on the entire ecosystem, not just the selection method
-6. **AI Potential**: True innovation uses AI to enhance human judgment, not replace it
-7. **Optimization Paradox**: Many "efficient" systems optimize for the wrong metrics, missing great candidates
+**2. JOB ANALYSIS - Real Situation Assessment**
+- Does it analyze the actual job requirements, not just generic descriptions?
+- Does it account for company culture, available resources, and team dynamics?
+- Does it consider the hiring manager's leadership style and preferences?
+- Can it create performance-based job descriptions that define success?
+- How does it ensure role clarity to prevent the #1 cause of failure?
+
+**3. BIDIRECTIONAL SUCCESS - Win-Win Outcomes**
+- Is it built on the premise that it must be a strong career move for the candidate?
+- Does it ensure the new hire will be considered an outstanding performer?
+- Does it require full disclosure of the real job to candidates?
+- Are both parties expected to evaluate success throughout the first year?
+- How does it create sustainable, long-term mutual satisfaction?
+
+**4. INTERVIEW ACCURACY - Long-term Success Predictors**
+- Does it focus on factors that drive long-term success and satisfaction?
+- Does it assess role intensity and workload expectations?
+- Can it determine candidate's intrinsic motivating needs?
+- Does it evaluate manager-candidate style compatibility?
+- Can it predict post-hire engagement (Gallup Q12 results)?
+
+**5. QUALITY OF HIRE - Performance Measurement**
+- Does it actually predict quality of hire as a measurable metric?
+- Can it track performance throughout the first year and beyond?
+- Does it use objective performance data, not just subjective ratings?
+- Are there feedback loops to improve prediction accuracy?
+- What's the correlation between predictions and actual outcomes?
+
+**6. PROCESS INTEGRATION & CONTROL**
+- Is it a complete business process from workforce planning through first anniversary?
+- Are all stages connected with data flow and feedback loops?
+- Can it identify and fix process breakdowns?
+- Does it provide real-time visibility and control?
+- How well does it integrate with other HR/business systems?
+
+**7. TIME/COST EFFICIENCY**
+- Does it actually reduce time-to-hire for quality candidates?
+- What's the total cost including technology, training, and process changes?
+- Are efficiency gains sustainable or do they degrade over time?
+- Does speed come at the expense of quality?
+- What's the break-even point for ROI?
+
+**8. FULL TALENT MARKET ACCESS**
+- Can it reach passive candidates (73% of the market)?
+- Does it just post jobs or actively source top performers?
+- Can it articulate compelling career opportunities?
+- Does it build talent pipelines for future needs?
+- How effective is it at converting passive candidates?
+
+**9. TRUE ROI - Quality vs. Efficiency**
+- Is ROI based on improving Quality of Hire or just process efficiency?
+- Does it reduce the cost of bad hires and turnover?
+- Can it quantify performance improvements?
+- Are the benefits sustainable and compounding?
+- What's the payback period for full implementation?
+
+**10. SCALABILITY - Global & All Roles**
+- Can it handle all job types from entry to executive?
+- Does it work across different countries and cultures?
+- Are features universal or do they require customization?
+- Can it scale from 10 to 10,000 hires annually?
+- What are the breaking points or limitations?
+
+**11. DIVERSITY & EQUITY**
+- Does it actively reduce bias in job descriptions and screening?
+- Can it expand the candidate pool beyond traditional sources?
+- Does it focus on potential and performance vs. pedigree?
+- Are there metrics to track diversity improvements?
+- How does it ensure equitable candidate experience?
+
+**12. BEHAVIORAL ALIGNMENT**
+- Does it understand how hiring managers actually make decisions?
+- Does it account for how top performers evaluate opportunities?
+- Can it overcome psychological biases in selection?
+- Does it align personal and business objectives?
+- How does it handle the 30% career move requirement?
+
+**13. SYSTEMS THINKING - Best Practices Foundation**
+- Is it based on how the best people actually look for work?
+- Does it reflect how top managers build high-performing teams?
+- Are there feedback loops for continuous improvement?
+- Does it avoid sub-optimization of individual metrics?
+- Can it adapt based on changing market conditions?
+
+**14. TECHNICAL INFRASTRUCTURE**
+- Is the technology robust enough for enterprise deployment?
+- Can it handle security and compliance requirements?
+- Is it cloud-native with modern architecture?
+- Does it provide APIs for integration?
+- What's the implementation and support track record?
+
+**15. AI IMPACT - Efficiency vs. Enhancement**
+- Does AI merely automate existing processes or fundamentally improve them?
+- Are AI capabilities focused on efficiency gains or decision enhancement?
+- Can it provide predictive insights not possible with traditional methods?
+- Does it use AI to reduce bias or might it amplify existing biases?
+- What's the actual vs. marketed AI capability?
 
 **REQUIRED OUTPUT FORMAT:**
 
-1. **Executive Summary Comparison Table** showing:
-   - All frameworks in columns (with Performance-based Hiring as the benchmark)
-   - All 17 dimensions in rows
-   - Scores (1-10) in cells with evidence citations
-   - Total scores and percentages at bottom
+1. **Executive Summary Comparison Table**
+   - Solutions in columns (Performance-based Hiring as benchmark)
+   - All 15 dimensions in rows
+   - Scores (1-10) with brief evidence notes
+   - Total scores and percentages
    - Color coding: Green (8-10), Yellow (5-7), Red (1-4)
-   - Special notation for AI innovation and optimization issues
 
-2. **Key Insights Summary** including:
-   - Why each framework scored as it did on critical dimensions
-   - Where Performance-based Hiring outperforms and why
-   - Where other frameworks might have advantages
-   - Specific use cases for each framework
-   - AI innovation opportunities missed
-   - Sub-optimization problems identified
-
-3. **Gap Analysis Table** showing:
-   - What each framework is missing compared to Performance-based Hiring
-   - Specific improvements needed
+2. **Critical Findings**
+   - Where each solution excels or fails
+   - Sub-optimization issues identified
+   - Real AI capabilities vs. marketing claims
    - Integration opportunities
-   - How to add AI capabilities effectively
 
-**EVALUATION DIMENSIONS:**
+3. **ROI Analysis**
+   - Quality improvement potential
+   - Cost-benefit comparison
+   - Implementation timeline
+   - Risk factors
 
-### FOUNDATIONAL CAPABILITY (The Missing Link)
-
-**0. Job Analysis & Role Definition**
-- Does the framework include a systematic method for defining success in the role?
-- Can it create performance-based job descriptions (performance profiles/impact statements)?
-- Does it translate job requirements into measurable performance objectives?
-- How does it ensure candidates understand exactly what success looks like?
-- Does it address the #1 cause of failure: lack of role clarity?
-
-### SUCCESS DIMENSIONS (Core Outcomes)
-
-**1. Bidirectional Point of View (Mutual Success)**
-- Does the framework measure both manager AND employee satisfaction after 1 year?
-- Is there a mutual evaluation process during hiring?
-- Are post-hire success metrics tracked from both perspectives?
-- Does it create win-win outcomes?
-
-**2. Interview Accuracy (Predictive Validity)**
-- How well does the assessment predict actual on-the-job performance?
-- Is there validated research showing predictive validity?
-- Does it go beyond traditional Q&A interviews?
-- Does it assess ability to achieve specific performance objectives?
-- Note: Most interviews have only 20-35% predictive validity
-
-**3. Quality of Hire (Top Performer Attraction)**
-- Does it have a specific strategy for attracting passive candidates?
-- Does it appeal to high performers (growth opportunities, meaningful work)?
-- Can it articulate the 30% improvement opportunity?
-- Are there mechanisms to ensure mutual fit?
-- What's the resulting retention and performance levels?
-
-**4. Full Integrated Process (End-to-End System)**
-- Does it cover the entire talent lifecycle from workforce planning through first anniversary?
-- Are there feedback loops for continuous improvement?
-- Does it integrate pre-hire, hiring, and post-hire activities?
-- Is success measured and fed back into the process?
-
-**5. Efficiency (Time and Cost Effectiveness)**
-- What's the total resource requirement from first contact to productive employee?
-- Consider total cost including bad hires and turnover
-- Is there an optimal balance between speed and quality?
-- Are there diminishing returns at any point?
-
-**6. Scalability (Volume Capability)**
-- Can the process handle high volume without quality degradation?
-- Are there bottlenecks that limit growth?
-- Can it be systematized and taught to others?
-- Does it work for 10 hires or 1,000 hires?
-
-**7. Equity (Bias Reduction & Diversity)**
-- Does it actively reduce unconscious bias?
-- Are non-traditional backgrounds welcomed?
-- Does it focus on potential vs. pedigree?
-- Is the process accessible to diverse candidates?
-
-**8. Adaptability (Cross-Context Flexibility)**
-- Can it be customized for different roles, industries, and cultures?
-- Does it work for entry-level through executive positions?
-- Is it industry-agnostic or specialized?
-- How much modification is required for different contexts?
-
-**9. Sustainability (Long-term Viability)**
-- Does the system improve over time?
-- Can interviewers sustain the effort required?
-- Does it build organizational capability?
-- Is there risk of process fatigue or burnout?
-
-### EVALUATION LENSES (Strategic Perspectives)
-
-**10. Economic (Return on Investment)**
-- What's the total ROI including all costs and benefits?
-- Factor in retention improvements and performance gains
-- Include hidden costs (bad hires, turnover, training)
-- Compare to alternative approaches
-
-**11. Behavioral (Psychological Alignment)**
-- Does it align with how people actually make career decisions?
-- Does it understand candidate motivations and concerns?
-- Does it account for loss aversion and switching costs?
-- Is the human element respected?
-- Does it create positive experiences?
-
-**12. Systems Thinking (Holistic View)**
-- Does it recognize hiring as an interconnected ecosystem?
-- Are feedback loops built into the design?
-- Does it connect to other HR/business systems?
-- Is there a big-picture perspective?
-- Does it avoid sub-optimization that improves one metric while harming overall outcomes?
-- Can it identify when efficient filtering creates false negatives?
-
-**13. Strategic Advantage (Competitive Edge)**
-- Does it differentiate from competitors?
-- Can it access passive talent others miss?
-- Does it build sustainable employer brand?
-- Is the advantage defensible?
-
-**14. Operational Reality (Practical Implementation)**
-- Can it be implemented without heroic effort?
-- Are resource requirements reasonable?
-- Will managers actually use it consistently?
-- Does it work in practice, not just theory?
-- Does it leverage AI for genuine improvement, not just buzzword compliance?
-- Are there original innovations that advance the field?
-
-**15. Ethical (Fairness & Dignity)**
-- Is the process respectful of candidates' time and effort?
-- Is there transparency in decision-making?
-- Are power dynamics appropriately balanced?
-- Does it treat all participants with dignity?
-
-**16. Process Control (Measurement & Improvement)**
-- Are there clear metrics and KPIs?
-- Can you track what's working and what isn't?
-- Is there a continuous improvement mechanism?
-- Can problems be identified and fixed quickly?
+4. **Recommendations**
+   - Best use cases for each solution
+   - How to address gaps
+   - Integration strategies
+   - Implementation priorities
 
 **SCORING GUIDELINES:**
-- 9-10: Exceptional/Industry-leading
-- 7-8: Strong/Above average
-- 5-6: Adequate/Average
-- 3-4: Weak/Below average
-- 1-2: Poor/Failing
+- 9-10: Best-in-class with proven results
+- 7-8: Strong capabilities with evidence
+- 5-6: Adequate but with limitations
+- 3-4: Significant gaps or concerns
+- 1-2: Critical deficiencies
 
-**FIRST PRINCIPLES WEIGHTING:**
-Give extra weight to dimensions that address root causes:
-- Job Analysis (prevents #1 failure reason)
-- Bidirectional Success (sustainable outcomes)
-- Quality of Hire (accessing passive talent)
-- Behavioral Alignment (how decisions are actually made)
+**BENCHMARK SCORES for Performance-based Hiring:**
+- Talent Strategy: 10 (designed to attract, not eliminate)
+- Job Analysis: 10 (performance objectives methodology)
+- Bidirectional Success: 10 (win-win hiring philosophy)
+- Interview Accuracy: 9 (performance-based interviewing)
+- Quality of Hire: 10 (measured and tracked)
+- Full Talent Market: 10 (passive candidate focus)
+- AI Impact: 7 (enhances human decision-making, not just automation)
 
-**CRITICAL REQUIREMENTS FOR THE ANALYSIS:**
-
-1. **Always show Performance-based Hiring scores** based on its documented capabilities:
-   - Job Analysis: 10 (defines roles through performance objectives)
-   - Bidirectional Success: 10 (win-win hiring with 30% rule)
-   - Quality of Hire: 9 (attracts passive talent)
-   - Full Process: 10 (end-to-end system)
-   - Behavioral Alignment: 10 (based on how people decide)
-
-2. **Create visual comparison table** that makes differences immediately clear
-
-3. **Highlight gaps** where frameworks fall short of Performance-based Hiring
-
-4. **Provide actionable insights** on how to improve or integrate frameworks
-
-5. **Use specific examples** and evidence for all scores
-
-Please ensure the output is formatted as clear, easy-to-read tables that executives can use for decision-making.`;
+Please provide specific examples and evidence for all scores. Flag any areas where vendor claims cannot be verified.`;
             
             document.getElementById('promptText').textContent = prompt;
             document.getElementById('promptOutput').classList.add('active');
