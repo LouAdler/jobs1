@@ -486,14 +486,20 @@
             </div>
             
             <div class="prompt-output" id="promptOutput">
-                <div class="output-header">
-                    <h3>Your Strategic Assessment Prompt</h3>
-                    <button class="copy-button" onclick="copyPrompt()">
-                        📋 Copy to Clipboard
-                    </button>
-                </div>
-                <div class="prompt-text" id="promptText"></div>
-            </div>
+    <div class="output-header">
+        <h3>Your Strategic Assessment Prompt</h3>
+        <button class="copy-button" onclick="copyPrompt()">
+            📋 Copy to Clipboard
+        </button>
+    </div>
+    
+    <!-- NEW INSTRUCTION BOX -->
+    <div style="background-color: #e3f2fd; border: 2px solid #2196f3; border-radius: 8px; padding: 16px; margin: 15px 20px; font-size: 16px;">
+        <strong>📋 Instructions:</strong> Copy the complete prompt below and paste it into any AI system (ChatGPT, Claude, Gemini, Copilot, etc.) to conduct your strategic assessment. The AI will analyze your chosen solutions using advanced analytical frameworks.
+    </div>
+    
+    <div class="prompt-text" id="promptText"></div>
+</div>
             
             <div class="output-preview">
                 <h4>What You'll Receive</h4>
