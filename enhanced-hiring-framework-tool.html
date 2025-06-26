@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Hiring Framework Enhancement Tool</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 20px;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .intro-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .intro-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .intro-section p {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .philosophy-box {
+            background: linear-gradient(to right, #e8f5e9, #c8e6c9);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .philosophy-box h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        .transformation-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .transform-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .transform-item.from {
+            border: 2px solid #f44336;
+        }
+        
+        .transform-item.to {
+            border: 2px solid #4caf50;
+        }
+        
+        .transform-arrow {
+            font-size: 36px;
+            color: #4caf50;
+        }
+        
+        .factors-section {
+            background: #fff3cd;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .factors-section h3 {
+            color: #856404;
+            margin-bottom: 20px;
+            font-size: 26px;
+            text-align: center;
+        }
+        
+        .factor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .factor-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .factor-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .factor-number {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #ff6b6b;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .factor-card h4 {
+            color: #d32f2f;
+            margin-bottom: 8px;
+            margin-top: 8px;
+            font-size: 16px;
+        }
+        
+        .factor-card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .input-section {
+            background: #e3f2fd;
+            padding: 35px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .input-section h3 {
+            color: #1565c0;
+            margin-bottom: 25px;
+            font-size: 26px;
+        }
+        
+        .text-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            background: white;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: #1565c0;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+        }
+        
+        .example-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .example-btn {
+            background: #e8f4f8;
+            color: #1976d2;
+            border: 1px solid #90caf9;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .example-btn:hover {
+            background: #bbdefb;
+            transform: translateY(-1px);
+        }
+        
+        .note {
+            font-size: 14px;
+            color: #1976d2;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .generate-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .generate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .clear-button {
+            background: #e0e0e0;
+            color: #333;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .clear-button:hover {
+            background: #bdbdbd;
+            transform: translateY(-2px);
+        }
+        
+        .prompt-output {
+            display: none;
+            margin-top: 40px;
+        }
+        
+        .prompt-output.active {
+            display: block;
+        }
+        
+        .output-header {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .output-header h3 {
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        
+        .copy-button {
+            background: #4caf50;
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .copy-button:hover {
+            background: #388e3c;
+        }
+        
+        .prompt-text {
+            background: #f5f5f5;
+            padding: 25px;
+            border-radius: 0 0 12px 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            border: 1px solid #ddd;
+        }
+        
+        .output-preview {
+            background: #e8f5e9;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border: 2px solid #4caf50;
+        }
+        
+        .output-preview h4 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-align: center;
+        }
+        
+        .output-preview ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .output-preview li {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #4caf50;
+            display: flex;
+            align-items: center;
+        }
+        
+        .output-preview li::before {
+            content: '🚀';
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .metrics-box {
+            background: #d4edda;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+        
+        .metrics-box strong {
+            color: #155724;
+        }
+        
+        .impact-banner {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        .impact-banner h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .report-purpose-box {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .report-purpose-box h5 {
+            color: #1565c0;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .report-purpose-box p {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Strategic Hiring Framework Enhancement Tool</h1>
+            <p>Transform Any Hiring System Using Performance-based Hiring Principles</p>
+        </div>
+        
+        <div class="content">
+            <div class="impact-banner">
+                <h3>Stop Losing Great Talent to Flawed Processes</h3>
+                <p>Get AI-powered recommendations to transform your hiring framework from "Candidate Processing" to "Talent Acquisition"</p>
+            </div>
+            
+            <div class="intro-section">
+                <h2>The Transformation Opportunity</h2>
+                <p>This tool generates AI-ready prompts that show you exactly how to enhance any hiring framework or HR system using the 10 strategic factors that drive <strong>long-term mutual success</strong>.</p>
+                
+                <div class="philosophy-box">
+                    <h3>Transform Your Hiring Philosophy</h3>
+                    <div class="transformation-grid">
+                        <div class="transform-item from">
+                            <h4 style="color: #d32f2f;">From: Candidate Processing</h4>
+                            <p>Efficiently weeding out weak candidates</p>
+                        </div>
+                        <div class="transform-arrow">→</div>
+                        <div class="transform-item to">
+                            <h4 style="color: #2e7d32;">To: Talent Acquisition</h4>
+                            <p>Attracting exceptional performers who thrive</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="metrics-box">
+                    <p><strong>MLS (Management Leadership Score):</strong> Improve how hiring managers attract, develop, and retain exceptional talent</p>
+                    <p><strong>NEX (New Employee Experience):</strong> Enhance performance, satisfaction, and growth throughout the first 2-3 years</p>
+                </div>
+            </div>
+            
+            <div class="factors-section">
+                <h3>🎯 The 10 Strategic Enhancement Factors</h3>
+                <div class="factor-grid">
+                    <div class="factor-card">
+                        <div class="factor-number">1</div>
+                        <h4>Long-term Success Architecture</h4>
+                        <p>Design for 2-3 year mutual success, not quick fills</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-number">2</div>
+                        <h4>Attraction-First Talent Strategy</h4>
+                        <p>Build systems to identify and draw in top performers proactively</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-number">3</div>
+                        <h4>Performance-Based Foundation</h4>
+                        <p>Define jobs by success outcomes, not skills checklists</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-number">4</div>
+                        <h4>Hiring Manager as Talent Magnet</h4>
+                        <p>Develop managers' ability to attract exceptional talent</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-number">5</div>
+                        <h4>Mutual Evaluation Design</h4>
+                        <p>Enable both sides to thoroughly assess fit for sustainable success</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-number">6</div>
+                        <h4>Quality-Over-Speed Optimization</h4>
+                        <p>Reward finding the best person, not filling fastest</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-number">7</div>
+                        <h4>Predictive vs. Descriptive Assessment</h4>
+                        <p>Predict future success, not just validate past experience</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-number">8</div>
+                        <h4>Career Opportunity Positioning</h4>
+                        <p>Present roles as development opportunities for A-players</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-number">9</div>
+                        <h4>Competitive Advantage in Talent Wars</h4>
+                        <p>Win exceptional candidates who have multiple options</p>
+                    </div>
+                    <div class="factor-card">
+                        <div class="factor-number">10</div>
+                        <h4>Outcome Accountability Loop</h4>
+                        <p>Measure actual MLS/NEX results and improve continuously</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-section">
+                <h3>Enter Hiring Framework or HR System to Enhance</h3>
+                <input 
+                    type="text" 
+                    id="frameworkName" 
+                    class="text-input" 
+                    placeholder="e.g., Workday, STAR Method, Behavioral Interviewing, Our Current Process"
+                >
+                <div class="example-buttons">
+                    <button class="example-btn" onclick="setFramework('Workday')">Workday</button>
+                    <button class="example-btn" onclick="setFramework('Greenhouse')">Greenhouse</button>
+                    <button class="example-btn" onclick="setFramework('SmartRecruiters')">SmartRecruiters</button>
+                    <button class="example-btn" onclick="setFramework('STAR Method')">STAR Method</button>
+                    <button class="example-btn" onclick="setFramework('Behavioral Interviewing')">Behavioral Interviewing</button>
+                    <button class="example-btn" onclick="setFramework('Panel Interviews')">Panel Interviews</button>
+                    <button class="example-btn" onclick="setFramework('Our Current Hiring Process')">Current Process</button>
+                </div>
+                <p class="note">💡 Enter any hiring system, methodology, or even "our current process" to get enhancement recommendations</p>
+                <p style="font-size: 13px; color: #666; margin-top: 10px;">After generating, you can copy the prompt for any AI or run it directly in Claude</p>
+            </div>
+            
+            <div class="button-group">
+                <button class="generate-button" onclick="generateEnhancementPrompt()">
+                    Generate Enhancement Plan
+                </button>
+                <button class="clear-button" onclick="clearForm()">
+                    Clear
+                </button>
+            </div>
+            
+            <div class="prompt-output" id="promptOutput">
+                <div class="output-header">
+                    <h3>Your Enhancement Prompt<br>
+                    <span style="font-weight: normal; font-size: 16px; color: #666;">Choose how to use this prompt:</span></h3>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="copy-button" onclick="copyPrompt()">
+                            📋 Copy to Clipboard
+                        </button>
+                        <button class="copy-button" style="background: #667eea;" onclick="runInClaude()">
+                            🤖 Run in Claude
+                        </button>
+                    </div>
+                </div>
+                <div class="prompt-text" id="promptText"></div>
+            </div>
+            
+            <div class="output-preview">
+                <h4>What You'll Receive</h4>
+                
+                <div class="report-purpose-box">
+                    <h5>Report Purpose</h5>
+                    <p id="reportPurposeText">This report will analyze your system's current hiring capabilities across 10 strategic factors that drive long-term mutual success, and provide specific recommendations for enhancement using Performance-based Hiring principles. The goal is to transform the system from efficiently processing candidates to proactively attracting and winning exceptional talent who will thrive long-term.</p>
+                </div>
+                
+                <ul>
+                    <li><strong>Integrated Executive Report:</strong> Professional document combining visual and written analysis</li>
+                    <li><strong>Executive Summary:</strong> Current state assessment and enhancement opportunity</li>
+                    <li><strong>Radar Chart Visualization:</strong> Embedded within the report showing before/after scores</li>
+                    <li><strong>Detailed Factor Analysis:</strong> Current vs. enhanced states for all 10 factors</li>
+                    <li><strong>Transformation Roadmap:</strong> Phased implementation plan with quick wins</li>
+                    <li><strong>Top 10 Priority Actions:</strong> Ranked by impact and ease of implementation</li>
+                    <li><strong>ROI Projection:</strong> Expected gains in quality, retention, and productivity</li>
+                    <li><strong>Success Measurement:</strong> KPIs and tracking methodology</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function setFramework(name) {
+            document.getElementById('frameworkName').value = name;
+        }
+        
+        function generateEnhancementPrompt() {
+            const frameworkName = document.getElementById('frameworkName').value.trim();
+            
+            if (!frameworkName) {
+                alert('Please enter a hiring framework or system to enhance');
+                return;
+            }
+            
+            // Update the report purpose text with the framework name
+            const purposeText = `This report will analyze ${frameworkName}'s current hiring capabilities across 10 strategic factors that drive long-term mutual success, and provide specific recommendations for enhancement using Performance-based Hiring principles. The goal is to transform the system from efficiently processing candidates to proactively attracting and winning exceptional talent who will thrive long-term.`;
+            document.getElementById('reportPurposeText').textContent = purposeText;
+            
+            const prompt = `You are a strategic hiring consultant. Analyze ${frameworkName} and write a comprehensive enhancement report. Generate the ACTUAL REPORT CONTENT, not code or HTML markup.
+
+# ${frameworkName} Strategic Enhancement Report
+## Transforming from Candidate Processing to Talent Acquisition
+
+### Report Purpose
+
+This report analyzes ${frameworkName}'s current hiring capabilities across 10 strategic factors that drive long-term mutual success, and provides specific recommendations for enhancement using Performance-based Hiring principles. The goal is to transform the system from efficiently processing candidates to proactively attracting and winning exceptional talent who will thrive long-term.
+
+### Executive Summary
+
+**Current State Assessment**
+Write a paragraph assessing ${frameworkName} as a standalone system. Include the total score out of 100, its overall orientation (Talent Acquisition vs. Candidate Processing), key strengths and limitations, and which factors score highest and lowest.
+
+**Enhancement Opportunity**  
+Write a paragraph explaining how integrating Performance-based Hiring would transform ${frameworkName}. Include the new total score out of 100, overall improvement percentage, top 3 factors with biggest improvements, and strategic impact on winning top talent.
+
+### Strategic Factor Analysis
+
+**Enhancement Opportunity Overview**
+
+Present the following data in a clear, visual format:
+
+The 10 Strategic Factors:
+1. Long-term Success Architecture
+2. Attraction-First Talent Strategy  
+3. Performance-Based Foundation
+4. Hiring Manager as Talent Magnet
+5. Mutual Evaluation Design
+6. Quality-Over-Speed Optimization
+7. Predictive vs. Descriptive Assessment
+8. Career Opportunity Positioning
+9. Competitive Advantage in Talent Wars
+10. Outcome Accountability Loop
+
+For each factor, show:
+- Current Score (1-10)
+- Enhanced Score with Performance-based Hiring (1-10)
+- Improvement (+X points)
+- Priority Level (High/Medium/Low)
+
+Total Score: Current XX/100 → Enhanced YY/100 (+ZZ points, Z% improvement)
+
+**Key Insights:**
+- Biggest improvements: [List top 3 factors]
+- Quick wins: [Factors improving 3+ points easily]
+- Strategic priorities: [Factors needing investment for 5+ point gains]
+
+### Detailed Enhancement Analysis
+
+<table style="border-collapse: collapse; width: 100%; margin: 20px 0;">
+<thead style="background-color: #2c3e50; color: white;">
+<tr>
+<th style="padding: 12px; border: 1px solid #ddd;">Strategic Factor</th>
+<th style="padding: 12px; border: 1px solid #ddd;">Current Score</th>
+<th style="padding: 12px; border: 1px solid #ddd;">Enhanced Score</th>
+<th style="padding: 12px; border: 1px solid #ddd;">Improvement</th>
+<th style="padding: 12px; border: 1px solid #ddd;">Priority Level</th>
+</tr>
+</thead>
+<tbody>
+<tr style="background-color: #f8f9fa;">
+<td style="padding: 10px; border: 1px solid #ddd;">Long-term Success Architecture</td>
+<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">X/10</td>
+<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">Y/10</td>
+<td style="padding: 10px; border: 1px solid #ddd; text-align: center; color: #27ae60; font-weight: bold;">+Z</td>
+<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">High/Medium/Low</td>
+</tr>
+[Continue for all 10 factors with alternating row colors]
+<tr style="background-color: #e8f5e9; font-weight: bold;">
+<td style="padding: 10px; border: 1px solid #ddd;">TOTAL SCORE</td>
+<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">XX/100</td>
+<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">YY/100</td>
+<td style="padding: 10px; border: 1px solid #ddd; text-align: center; color: #27ae60;">+ZZ</td>
+<td style="padding: 10px; border: 1px solid #ddd; text-align: center;">Z% Improvement</td>
+</tr>
+</tbody>
+</table>
+
+**Key Insights:**
+- Biggest improvements: [List top 3 factors with largest gains]
+- Quick wins: [Factors that can improve 3+ points easily]
+- Strategic priorities: [Factors requiring investment but offering 5+ point gains]
+
+### Detailed Enhancement Analysis
+
+<div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+<h4 style="color: #2c3e50;">Factor 1: Long-term Success Architecture</h4>
+<table style="width: 100%; border-collapse: collapse;">
+<tr>
+<td style="padding: 15px; background-color: #ffebee; border-radius: 5px; margin-bottom: 10px;">
+<strong>Current State (Score: X/10)</strong><br>
+[Assessment in 2-3 sentences with specific evidence]
+</td>
+</tr>
+<tr>
+<td style="padding: 15px; background-color: #e8f5e9; border-radius: 5px; margin-top: 10px;">
+<strong>Enhanced State (Score: Y/10)</strong><br>
+[Enhancement description including specific Performance-based principle, implementation steps, and expected impact]
+</td>
+</tr>
+</table>
+</div>
+
+[Repeat for all 10 factors with consistent styling]
+
+[Continue with the rest of the report sections, all as part of this single document...]
+
+### Transformation Roadmap
+
+<div style="background-color: #e3f2fd; padding: 25px; border-radius: 10px; margin: 25px 0;">
+<h4 style="color: #1565c0; margin-bottom: 20px;">Implementation Phases</h4>
+
+<div style="margin-bottom: 20px;">
+<h5 style="color: #1976d2;">Phase 1: Quick Wins (0-30 days)</h5>
+<ul style="list-style-type: none; padding-left: 0;">
+<li style="padding: 8px; margin: 5px 0; background-color: white; border-left: 4px solid #4caf50; border-radius: 4px;">
+✓ [Specific action targeting 3+ point improvement]
+</li>
+[Continue with 3-4 quick wins]
+</ul>
+</div>
+
+<div style="margin-bottom: 20px;">
+<h5 style="color: #1976d2;">Phase 2: System Integration (30-90 days)</h5>
+<ul style="list-style-type: none; padding-left: 0;">
+<li style="padding: 8px; margin: 5px 0; background-color: white; border-left: 4px solid #ff9800; border-radius: 4px;">
+⚡ [System-level change for 4-5 point improvement]
+</li>
+[Continue with 3-4 system changes]
+</ul>
+</div>
+
+<div>
+<h5 style="color: #1976d2;">Phase 3: Cultural Transformation (90-180 days)</h5>
+<ul style="list-style-type: none; padding-left: 0;">
+<li style="padding: 8px; margin: 5px 0; background-color: white; border-left: 4px solid #9c27b0; border-radius: 4px;">
+🚀 [Cultural shift for maximum impact]
+</li>
+[Continue with 3-4 cultural changes]
+</ul>
+</div>
+</div>
+
+### Top 10 Priority Actions
+
+<table style="border-collapse: collapse; width: 100%; margin: 20px 0;">
+<thead style="background-color: #4caf50; color: white;">
+<tr>
+<th style="padding: 12px; border: 1px solid #ddd; width: 10%;">Priority</th>
+<th style="padding: 12px; border: 1px solid #ddd; width: 40%;">Action Item</th>
+<th style="padding: 12px; border: 1px solid #ddd; width: 25%;">Factor Improved</th>
+<th style="padding: 12px; border: 1px solid #ddd; width: 15%;">Score Impact</th>
+<th style="padding: 12px; border: 1px solid #ddd; width: 10%;">Effort</th>
+</tr>
+</thead>
+<tbody>
+[List 10 prioritized actions with appropriate styling]
+</tbody>
+</table>
+
+### ROI Projection
+
+<div style="background-color: #e8f5e9; padding: 25px; border-radius: 10px; margin: 25px 0;">
+<h4 style="color: #2e7d32; margin-bottom: 20px;">Expected Returns on Enhancement Investment</h4>
+[Include formatted ROI projections with metrics]
+</div>
+
+### Conclusion
+
+[Summarize the transformation opportunity and impact]
+
+---
+
+**FORMATTING REQUIREMENTS:**
+1. Use HTML-style formatting throughout for professional presentation
+2. Create a COMPLETE radar chart with all 10 factors - no truncation, no missing factors
+3. Use color-coded sections (green for positive, blue for informational, etc.)
+4. Create visual hierarchy with consistent styling
+5. Ensure the radar chart is professional quality with all factors clearly visible
+6. Make it executive-ready with clean, modern design elements
+
+**CRITICAL FOR RADAR CHART:**
+- Must show ALL 10 strategic factors
+- Use regular (not bold) font weight for all text
+- Use moderate font size that balances readability with visual appeal
+- Ensure proper spacing between labels to avoid crowding
+- No abbreviated or truncated factor names
+- Verify the chart is complete and uncluttered before proceeding
+- Use the same high-quality format every time
+- If any factor is missing or text is cut off, redo the chart
+
+**DO NOT**:
+- Use plain markdown tables as a substitute for the radar chart
+- Create ASCII art or text-based graphics
+- Present data in basic unformatted lists
+- Truncate or abbreviate factor names in the radar chart
+- Create incomplete radar charts with missing factors
+
+**DO**:
+- Create a complete, professional radar chart with all 10 factors
+- Use proper visualization tools to ensure quality
+- Maintain consistent formatting throughout
+- Include visual elements like borders, shading, and spacing
+- Present as you would for a board presentation
+
+**Apply These Analytical Methods:**
+- **First Principles Thinking**: Question fundamental assumptions about hiring
+- **Inversion Analysis**: Work backwards from failure to identify improvements
+- **Game Theory**: Analyze how changes affect candidate/employer dynamics
+- **Systems Thinking**: Identify feedback loops and unintended consequences
+
+**THE 10 STRATEGIC FACTORS TO EVALUATE AND ENHANCE:**
+
+1. **Long-term Success Architecture**
+2. **Attraction-First Talent Strategy**
+3. **Performance-Based Foundation**
+4. **Hiring Manager as Talent Magnet**
+5. **Mutual Evaluation Design**
+6. **Quality-Over-Speed Optimization**
+7. **Predictive vs. Descriptive Assessment**
+8. **Career Opportunity Positioning**
+9. **Competitive Advantage in Talent Wars**
+10. **Outcome Accountability Loop**
+
+**SCORING GUIDANCE:**
+- 1-3: Primarily Candidate Processing focused
+- 4-6: Mixed approach with some positive elements
+- 7-10: Strong Talent Acquisition orientation
+
+**ANALYTICAL METHODS TO APPLY:**
+- First Principles: Question fundamental assumptions
+- Inversion: Work backwards from failure modes
+- Game Theory: Analyze strategic dynamics
+- Systems Thinking: Identify feedback loops
+
+Format this as a professional report suitable for executive presentation, with clear sections, visual elements, and actionable recommendations throughout.
+
+**DELIVERABLES TO INCLUDE:**
+
+1. **Radar Chart Visualization**
+   - Create a spider/radar chart with all 10 factors arranged in a circle
+   - Plot two lines:
+     - Current ${frameworkName} scores (one color)
+     - Enhanced scores with Performance-based Hiring (different color)
+   - Show the gap between lines as shaded improvement area
+   - Scale from 0 (center) to 10 (outer edge)
+   - Label each factor clearly around the perimeter
+   - Title: "${frameworkName}: Current vs. Enhanced Scores with Performance-based Hiring Integration"
+   
+   Example format:
+   "Create a radar chart showing:
+   - Long-term Success: Current 3 → Enhanced 8
+   - Attraction-First: Current 4 → Enhanced 9
+   - Performance-Based: Current 2 → Enhanced 9
+   [Continue for all 10 factors]"
+
+2. **Score Improvement Summary Table**
+   - List all 10 factors with current score, enhanced score, and improvement
+   - Total score improvement (e.g., 45/100 → 78/100)
+   - Highlight biggest improvements (4+ point gains)
+   - Sort by improvement potential
+
+3. **Transformation Roadmap**
+   - Phase 1 (30 days): Quick wins targeting 3+ point improvements
+   - Phase 2 (90 days): System integration for 4-5 point gains
+   - Phase 3 (6 months): Cultural transformation for maximum impact
+   - Priority based on score gap × implementation ease
+
+4. **Integration Blueprint**
+   - How Performance-based Hiring layers onto ${frameworkName}
+   - Specific features/modules to enhance
+   - New capabilities to add
+   - Synergies to leverage
+
+5. **ROI Projection**
+   - Expected Quality of Hire improvement based on score increases
+   - Retention impact (correlation between scores and 2-year retention)
+   - Time-to-productivity gains
+   - Cost savings from reduced mis-hires
+
+**VISUAL SUMMARY FORMAT:**
+\`\`\`
+Radar Chart: ${frameworkName} Enhancement Opportunity
+
+        Long-term Success (1)
+               10
+        9 ----+---- 9
+       8      |      8
+      7       |       7  Attraction-First (2)
+     6        |        6
+    5         |         5
+   4          |          4
+  3           |           3
+ 2            |            2
+1             |             1
+              0
+Performance-Based (3)  Talent Magnet (4)
+
+[Continue for all 10 factors in circular pattern]
+
+Legend:
+--- Current ${frameworkName} Score
+=== Enhanced with Performance-based Hiring
+/// Improvement Opportunity Area
+\`\`\`
+
+**BOTTOM LINE FOCUS:**
+Show specifically how integrating Performance-based Hiring principles with ${frameworkName} would:
+- Transform it from Candidate Processing to Talent Acquisition
+- Improve overall strategic hiring effectiveness
+- Create sustainable competitive advantage in attracting top talent
+- Drive measurable improvements in MLS and NEX metrics
+
+Format your response with clear sections, use specific examples, and ensure all scores and improvements are justified with evidence.`;
+            
+            document.getElementById('promptText').textContent = prompt;
+            document.getElementById('promptOutput').classList.add('active');
+        }
+        
+        function copyPrompt() {
+            const promptText = document.getElementById('promptText').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement("textarea");
+                textArea.value = promptText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        }
+        
+        function runInClaude() {
+            const frameworkName = document.getElementById('frameworkName').value.trim();
+            const promptText = document.getElementById('promptText').textContent;
+            
+            if (!promptText) {
+                alert('Please generate a prompt first');
+                return;
+            }
+            
+            // Copy to clipboard first
+            navigator.clipboard.writeText(promptText).then(() => {
+                // Open Claude.ai new conversation
+                window.open('https://claude.ai/new', '_blank');
+                
+                // Show instructions
+                alert('The prompt has been copied to your clipboard!\n\n' + 
+                      'Claude.ai is opening in a new tab.\n' + 
+                      'Simply paste (Ctrl+V or Cmd+V) to start your analysis.');
+                
+                // Update button temporarily
+                const button = document.querySelector('button[onclick="runInClaude()"]');
+                const originalText = button.innerHTML;
+                button.innerHTML = '✓ Copied & Opening...';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 3000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement("textarea");
+                textArea.value = promptText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                window.open('https://claude.ai/new', '_blank');
+                
+                alert('The prompt has been copied to your clipboard!\n\n' + 
+                      'Claude.ai is opening in a new tab.\n' + 
+                      'Simply paste (Ctrl+V or Cmd+V) to start your analysis.');
+            });
+        }
+        
+        function clearForm() {
+            document.getElementById('frameworkName').value = '';
+            document.getElementById('promptOutput').classList.remove('active');
+            // Reset the report purpose text to default
+            document.getElementById('reportPurposeText').textContent = "This report will analyze your system's current hiring capabilities across 10 strategic factors that drive long-term mutual success, and provide specific recommendations for enhancement using Performance-based Hiring principles. The goal is to transform the system from efficiently processing candidates to proactively attracting and winning exceptional talent who will thrive long-term.";
+        }
+    </script>
+</body>
+</html>
