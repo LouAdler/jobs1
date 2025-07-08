@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 30% Solution - Career Decision Framework</title>
+    <meta name="description" content="Use the 30% Solution framework to evaluate career opportunities based on long-term potential, not just compensation.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            background: #f0f2f5;
+            color: #1a1a1a;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 50px 40px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 2px solid #e1e8ed;
+        }
+        
+        .header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+        
+        .header .subtitle {
+            font-size: 22px;
+            color: #2563eb;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .header .description {
+            font-size: 17px;
+            color: #475569;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        
+        .instructions-box {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin: 30px 0 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .instructions-box::before {
+            content: "⚡";
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            font-size: 60px;
+            opacity: 0.1;
+        }
+        
+        .instructions-box h3 {
+            color: #d97706;
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .instructions-box p {
+            color: #92400e;
+            font-size: 16px;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+        
+        .score-display {
+            position: sticky;
+            top: 20px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border: 3px solid #1e40af;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.3);
+            z-index: 10;
+        }
+        
+        .current-score {
+            font-size: 48px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .score-label {
+            font-size: 16px;
+            color: #dbeafe;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .score-category {
+            font-size: 18px;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .framework-visual {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 45px;
+            margin: 50px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        
+        .framework-title {
+            text-align: center;
+            font-size: 28px;
+            color: #0f172a;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .framework-subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 35px;
+            font-size: 17px;
+        }
+        
+        .evaluation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .factor-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .factor-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .factor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border-color: #3b82f6;
+        }
+        
+        .factor-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .factor-title {
+            font-size: 18px;
+            color: #0f172a;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .factor-description {
+            color: #475569;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            gap: 6px;
+        }
+        
+        .rating-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .rating-item input[type="radio"] {
+            display: none;
+        }
+        
+        .rating-item label {
+            display: block;
+            padding: 10px 5px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 11px;
+            color: #64748b;
+            background: #ffffff;
+            font-weight: 600;
+        }
+        
+        .rating-item label:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+        
+        .rating-item input[type="radio"]:checked + label {
+            border-color: #2563eb;
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .rating-number {
+            display: block;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .scoring-section {
+            background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 45px;
+            margin: 50px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        
+        .scoring-title {
+            font-size: 28px;
+            color: #0f172a;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .score-ranges {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        @media (min-width: 900px) {
+            .score-ranges {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .score-ranges {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .score-card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .score-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(20px, -20px);
+        }
+        
+        .score-card.excellent {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+        }
+        
+        .score-card.good {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+        }
+        
+        .score-card.warning {
+            border-color: #f97316;
+            background: linear-gradient(135deg, #ffffff 0%, #fff7ed 100%);
+        }
+        
+        .score-card.danger {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+        }
+        
+        .score-card.active {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .score-card.excellent.active {
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.25);
+        }
+        
+        .score-card.good.active {
+            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.25);
+        }
+        
+        .score-card.warning.active {
+            box-shadow: 0 15px 40px rgba(249, 115, 22, 0.25);
+        }
+        
+        .score-card.danger.active {
+            box-shadow: 0 15px 40px rgba(239, 68, 68, 0.25);
+        }
+        
+        .score-number {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        
+        .score-card.excellent .score-number { color: #059669; }
+        .score-card.good .score-number { color: #d97706; }
+        .score-card.warning .score-number { color: #ea580c; }
+        .score-card.danger .score-number { color: #dc2626; }
+        
+        .score-card h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #0f172a;
+            font-weight: 700;
+        }
+        
+        .score-card p {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.5;
+        }
+        
+        .key-insights {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 45px;
+            margin: 50px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        
+        .insights-title {
+            font-size: 28px;
+            color: #0f172a;
+            margin-bottom: 35px;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .insight-item {
+            background: #ffffff;
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .insight-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        
+        .insight-item h4 {
+            color: #0f172a;
+            font-size: 18px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        
+        .insight-item p {
+            color: #475569;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        
+        .export-section {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 2px solid #3b82f6;
+            border-radius: 16px;
+            padding: 35px;
+            margin: 50px 0;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+        }
+        
+        .export-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 8px 10px 0;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .export-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+        
+        .export-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            background: #94a3b8;
+            box-shadow: none;
+        }
+        
+        /* Footer styles - PROPERLY PLACED IN THE STYLE SECTION */
+        .footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-top: 2px solid #e5e7eb;
+            margin-top: 50px;
+        }
+        
+        .footer p {
+            margin: 0;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white !important;
+            }
+            
+            .export-section, .instructions-box {
+                display: none !important;
+            }
+            
+            .container {
+                max-width: none !important;
+                padding: 20px !important;
+            }
+            
+            .score-display {
+                position: static !important;
+                box-shadow: none !important;
+                border: 2px solid #333 !important;
+                background: #f0f0f0 !important;
+            }
+            
+            .score-display * {
+                color: #000 !important;
+            }
+            
+            .print-only {
+                display: block !important;
+            }
+            
+            .header, .framework-visual, .scoring-section, .key-insights {
+                box-shadow: none !important;
+                page-break-inside: avoid;
+            }
+        }
+        
+        .print-only {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .header {
+                padding: 35px 25px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+            
+            .framework-visual, .scoring-section, .key-insights {
+                padding: 30px 20px;
+            }
+            
+            .rating-scale {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .rating-item label {
+                padding: 12px;
+            }
+            
+            .evaluation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>The 30% Solution</h1>
+            <p class="subtitle">Career Decision Framework</p>
+            <p class="description">Evaluate career opportunities based on comprehensive factors beyond compensation. This framework helps you assess the true value of a role by measuring growth potential, impact, and long-term career development.</p>
+            
+            <div class="instructions-box">
+                <h3>Important Instructions</h3>
+                <p>It's important to evaluate all career opportunities on all of the short- and long-term factors that drive on-the-job motivation and satisfaction. This form summarizes these eight factors. Too often candidates make short term decisions based on current circumstances, rather than looking at the complete picture. Completing this form objectively will let candidates fully understand the career merits of any job opportunity. If you don't have enough information to make this assessment, be sure to get it before accepting or rejecting an offer.</p>
+            </div>
+        </header>
+        
+        <div class="score-display">
+            <div class="current-score" id="totalScore">0/40</div>
+            <div class="score-label">Current Opportunity Score</div>
+            <div class="score-category" id="scoreCategory">Complete evaluation to see result</div>
+        </div>
+        
+        <section class="framework-visual">
+            <h2 class="framework-title">Career Opportunity Evaluation</h2>
+            <p class="framework-subtitle">Rate each factor from 1-5 based on your assessment of the opportunity</p>
+            
+            <div class="evaluation-grid">
+                <div class="factor-card">
+                    <h3 class="factor-title">Growth Opportunity</h3>
+                    <p class="factor-description">Long-term career advancement potential, skill development, and learning opportunities</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <input type="radio" name="growth" value="1" id="growth-1">
+                            <label for="growth-1">
+                                <span class="rating-number">1</span>
+                                <span>Poor</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="growth" value="2" id="growth-2">
+                            <label for="growth-2">
+                                <span class="rating-number">2</span>
+                                <span>Fair</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="growth" value="3" id="growth-3">
+                            <label for="growth-3">
+                                <span class="rating-number">3</span>
+                                <span>Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="growth" value="4" id="growth-4">
+                            <label for="growth-4">
+                                <span class="rating-number">4</span>
+                                <span>Very Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="growth" value="5" id="growth-5">
+                            <label for="growth-5">
+                                <span class="rating-number">5</span>
+                                <span>Excellent</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Work Impact & Challenge</h3>
+                    <p class="factor-description">Meaningful work that challenges you, provides stretch assignments, and creates measurable impact</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <input type="radio" name="impact" value="1" id="impact-1">
+                            <label for="impact-1">
+                                <span class="rating-number">1</span>
+                                <span>Poor</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="impact" value="2" id="impact-2">
+                            <label for="impact-2">
+                                <span class="rating-number">2</span>
+                                <span>Fair</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="impact" value="3" id="impact-3">
+                            <label for="impact-3">
+                                <span class="rating-number">3</span>
+                                <span>Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="impact" value="4" id="impact-4">
+                            <label for="impact-4">
+                                <span class="rating-number">4</span>
+                                <span>Very Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="impact" value="5" id="impact-5">
+                            <label for="impact-5">
+                                <span class="rating-number">5</span>
+                                <span>Excellent</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Manager & Mentorship</h3>
+                    <p class="factor-description">Quality of leadership, mentoring approach, and manager's commitment to your development</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <input type="radio" name="manager" value="1" id="manager-1">
+                            <label for="manager-1">
+                                <span class="rating-number">1</span>
+                                <span>Poor</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="manager" value="2" id="manager-2">
+                            <label for="manager-2">
+                                <span class="rating-number">2</span>
+                                <span>Fair</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="manager" value="3" id="manager-3">
+                            <label for="manager-3">
+                                <span class="rating-number">3</span>
+                                <span>Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="manager" value="4" id="manager-4">
+                            <label for="manager-4">
+                                <span class="rating-number">4</span>
+                                <span>Very Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="manager" value="5" id="manager-5">
+                            <label for="manager-5">
+                                <span class="rating-number">5</span>
+                                <span>Excellent</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Company Culture & Values</h3>
+                    <p class="factor-description">Company's commitment to employee growth, culture fit, and development programs</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <input type="radio" name="culture" value="1" id="culture-1">
+                            <label for="culture-1">
+                                <span class="rating-number">1</span>
+                                <span>Poor</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="culture" value="2" id="culture-2">
+                            <label for="culture-2">
+                                <span class="rating-number">2</span>
+                                <span>Fair</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="culture" value="3" id="culture-3">
+                            <label for="culture-3">
+                                <span class="rating-number">3</span>
+                                <span>Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="culture" value="4" id="culture-4">
+                            <label for="culture-4">
+                                <span class="rating-number">4</span>
+                                <span>Very Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="culture" value="5" id="culture-5">
+                            <label for="culture-5">
+                                <span class="rating-number">5</span>
+                                <span>Excellent</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Team Quality</h3>
+                    <p class="factor-description">Caliber of teammates, collaborative environment, and peer learning opportunities</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <input type="radio" name="team" value="1" id="team-1">
+                            <label for="team-1">
+                                <span class="rating-number">1</span>
+                                <span>Poor</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="team" value="2" id="team-2">
+                            <label for="team-2">
+                                <span class="rating-number">2</span>
+                                <span>Fair</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="team" value="3" id="team-3">
+                            <label for="team-3">
+                                <span class="rating-number">3</span>
+                                <span>Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="team" value="4" id="team-4">
+                            <label for="team-4">
+                                <span class="rating-number">4</span>
+                                <span>Very Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="team" value="5" id="team-5">
+                            <label for="team-5">
+                                <span class="rating-number">5</span>
+                                <span>Excellent</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Work-Life Balance</h3>
+                    <p class="factor-description">Flexibility, autonomy, and sustainable work-life integration</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <input type="radio" name="worklife" value="1" id="worklife-1">
+                            <label for="worklife-1">
+                                <span class="rating-number">1</span>
+                                <span>Poor</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="worklife" value="2" id="worklife-2">
+                            <label for="worklife-2">
+                                <span class="rating-number">2</span>
+                                <span>Fair</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="worklife" value="3" id="worklife-3">
+                            <label for="worklife-3">
+                                <span class="rating-number">3</span>
+                                <span>Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="worklife" value="4" id="worklife-4">
+                            <label for="worklife-4">
+                                <span class="rating-number">4</span>
+                                <span>Very Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="worklife" value="5" id="worklife-5">
+                            <label for="worklife-5">
+                                <span class="rating-number">5</span>
+                                <span>Excellent</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Compensation Package</h3>
+                    <p class="factor-description">Total compensation including salary, equity, benefits, and long-term earning potential</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <input type="radio" name="compensation" value="1" id="compensation-1">
+                            <label for="compensation-1">
+                                <span class="rating-number">1</span>
+                                <span>Poor</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="compensation" value="2" id="compensation-2">
+                            <label for="compensation-2">
+                                <span class="rating-number">2</span>
+                                <span>Fair</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="compensation" value="3" id="compensation-3">
+                            <label for="compensation-3">
+                                <span class="rating-number">3</span>
+                                <span>Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="compensation" value="4" id="compensation-4">
+                            <label for="compensation-4">
+                                <span class="rating-number">4</span>
+                                <span>Very Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="compensation" value="5" id="compensation-5">
+                            <label for="compensation-5">
+                                <span class="rating-number">5</span>
+                                <span>Excellent</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="factor-card">
+                    <h3 class="factor-title">Role Clarity</h3>
+                    <p class="factor-description">Clear performance objectives, realistic expectations, and defined success metrics</p>
+                    <div class="rating-scale">
+                        <div class="rating-item">
+                            <input type="radio" name="clarity" value="1" id="clarity-1">
+                            <label for="clarity-1">
+                                <span class="rating-number">1</span>
+                                <span>Poor</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="clarity" value="2" id="clarity-2">
+                            <label for="clarity-2">
+                                <span class="rating-number">2</span>
+                                <span>Fair</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="clarity" value="3" id="clarity-3">
+                            <label for="clarity-3">
+                                <span class="rating-number">3</span>
+                                <span>Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="clarity" value="4" id="clarity-4">
+                            <label for="clarity-4">
+                                <span class="rating-number">4</span>
+                                <span>Very Good</span>
+                            </label>
+                        </div>
+                        <div class="rating-item">
+                            <input type="radio" name="clarity" value="5" id="clarity-5">
+                            <label for="clarity-5">
+                                <span class="rating-number">5</span>
+                                <span>Excellent</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="scoring-section">
+            <h2 class="scoring-title">Score Interpretation</h2>
+            
+            <div class="score-ranges">
+                <div class="score-card excellent" id="score-32-40">
+                    <div class="score-number">32-40</div>
+                    <h4>Exceptional Opportunity</h4>
+                    <p>This represents a true career move with significant non-monetary growth potential</p>
+                </div>
+                
+                <div class="score-card good" id="score-24-31">
+                    <div class="score-number">24-31</div>
+                    <h4>Good Opportunity</h4>
+                    <p>Solid career move if compensation is competitive and growth factors align</p>
+                </div>
+                
+                <div class="score-card warning" id="score-16-23">
+                    <div class="score-number">16-23</div>
+                    <h4>Average Opportunity</h4>
+                    <p>Carefully evaluate the risks and ensure you have a clear development plan</p>
+                </div>
+                
+                <div class="score-card danger" id="score-8-15">
+                    <div class="score-number">8-15</div>
+                    <h4>Below Average</h4>
+                    <p>Consider other opportunities that better align with your career objectives</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="export-section">
+            <h2 style="color: #0f172a; margin-bottom: 15px; font-size: 24px; font-weight: 700;">Export Your Analysis</h2>
+            <p style="color: #475569; margin-bottom: 25px; font-size: 16px;">Generate a comprehensive report of your career opportunity evaluation</p>
+            <button class="export-button" id="exportBtn" onclick="generateReport()" disabled>
+                Download Report
+            </button>
+            <button class="export-button" id="printBtn" onclick="printReport()" disabled>
+                Print Report
+            </button>
+            <p style="color: #64748b; font-size: 14px; margin-top: 20px;">
+                Complete all 8 factors to enable export
+            </p>
+        </section>
+        
+        <!-- Hidden report template -->
+        <div id="reportTemplate" class="print-only">
+            <div class="report-header">
+                <h1>Career Opportunity Evaluation Report</h1>
+                <h2>The 30% Solution Framework</h2>
+                <p>Generated on: <span id="reportDate"></span></p>
+            </div>
+            
+            <div class="report-summary">
+                <h3>Overall Score: <span id="reportScore"></span></h3>
+                <h4>Assessment: <span id="reportAssessment"></span></h4>
+                <p id="reportRecommendation"></p>
+            </div>
+            
+            <div id="reportFactors">
+                <!-- Factor ratings will be inserted here -->
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <h3>Key Insights</h3>
+                <ul>
+                    <li>A true career move should provide at least 30% non-monetary increase through stretch assignments, impact, growth opportunities, and satisfaction</li>
+                    <li>When candidates evaluate opportunities using this framework, over 90% remain satisfied with their decision after the first year</li>
+                    <li>Score your best previous job using this framework as a benchmark for comparison</li>
+                    <li>Consider long-term career implications, not just immediate compensation</li>
+                </ul>
+            </div>
+        </div>
+        
+        <section class="key-insights">
+            <h2 class="insights-title">Framework Insights</h2>
+            
+            <div class="insight-item">
+                <h4>The 30% Solution Principle</h4>
+                <p>A true career move should provide at least 30% non-monetary increase through stretch assignments, impact, growth opportunities, and satisfaction - even if the salary increase is modest.</p>
+            </div>
+            
+            <div class="insight-item">
+                <h4>Long-Term Career Success</h4>
+                <p>When candidates evaluate opportunities using this framework, over 90% remain satisfied with their decision after the first year, creating sustainable career progression.</p>
+            </div>
+            
+            <div class="insight-item">
+                <h4>Beyond Compensation</h4>
+                <p>Most career decisions focus too heavily on immediate compensation. Successful professionals think long-term about career trajectory and skill development.</p>
+            </div>
+            
+            <div class="insight-item">
+                <h4>Information Gathering</h4>
+                <p>Before accepting any offer, gather comprehensive information about challenges, performance metrics, and team dynamics to make an informed decision.</p>
+            </div>
+            
+            <div class="insight-item">
+                <h4>Benchmark Your Experience</h4>
+                <p>Score your best previous role using this framework as a benchmark. Don't accept opportunities that score significantly lower, regardless of compensation.</p>
+            </div>
+        </section>
+        
+        <!-- Footer properly placed with the container -->
+        <footer class="footer">
+            <p>&copy; 2025 Moneyball for HR! - Strategic Talent Acquisition Framework - info@performancebasedhiring.com</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Career scoring calculator
+        const factors = ['growth', 'impact', 'manager', 'culture', 'team', 'worklife', 'compensation', 'clarity'];
+        const factorNames = {
+            'growth': 'Growth Opportunity',
+            'impact': 'Work Impact & Challenge', 
+            'manager': 'Manager & Mentorship',
+            'culture': 'Company Culture & Values',
+            'team': 'Team Quality',
+            'worklife': 'Work-Life Balance',
+            'compensation': 'Compensation Package',
+            'clarity': 'Role Clarity'
+        };
+        
+        function calculateScore() {
+            let totalScore = 0;
+            let completedFactors = 0;
+            
+            factors.forEach(factor => {
+                const selectedInput = document.querySelector(`input[name="${factor}"]:checked`);
+                if (selectedInput) {
+                    totalScore += parseInt(selectedInput.value);
+                    completedFactors++;
+                }
+            });
+            
+            // Update score display
+            document.getElementById('totalScore').textContent = `${totalScore}/40`;
+            
+            // Update score category and highlight appropriate card
+            updateScoreCategory(totalScore, completedFactors);
+            
+            // Enable/disable export buttons
+            const exportBtn = document.getElementById('exportBtn');
+            const printBtn = document.getElementById('printBtn');
+            if (completedFactors === 8) {
+                exportBtn.disabled = false;
+                printBtn.disabled = false;
+            } else {
+                exportBtn.disabled = true;
+                printBtn.disabled = true;
+            }
+            
+            return totalScore;
+        }
+        
+        function updateScoreCategory(score, completedFactors) {
+            const scoreCategory = document.getElementById('scoreCategory');
+            const scoreCards = document.querySelectorAll('.score-card');
+            
+            // Remove all active classes
+            scoreCards.forEach(card => card.classList.remove('active'));
+            
+            if (completedFactors < 8) {
+                scoreCategory.textContent = `Complete evaluation (${completedFactors}/8 factors)`;
+                scoreCategory.style.background = 'rgba(255, 255, 255, 0.2)';
+                scoreCategory.style.color = '#ffffff';
+                scoreCategory.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                return;
+            }
+            
+            let categoryText = '';
+            let activeCardId = '';
+            
+            if (score >= 32) {
+                categoryText = 'Exceptional Opportunity';
+                activeCardId = 'score-32-40';
+                scoreCategory.style.background = 'rgba(16, 185, 129, 0.2)';
+                scoreCategory.style.color = '#ffffff';
+                scoreCategory.style.borderColor = 'rgba(16, 185, 129, 0.5)';
+            } else if (score >= 24) {
+                categoryText = 'Good Opportunity';
+                activeCardId = 'score-24-31';
+                scoreCategory.style.background = 'rgba(245, 158, 11, 0.2)';
+                scoreCategory.style.color = '#ffffff';
+                scoreCategory.style.borderColor = 'rgba(245, 158, 11, 0.5)';
+            } else if (score >= 16) {
+                categoryText = 'Average Opportunity';
+                activeCardId = 'score-16-23';
+                scoreCategory.style.background = 'rgba(249, 115, 22, 0.2)';
+                scoreCategory.style.color = '#ffffff';
+                scoreCategory.style.borderColor = 'rgba(249, 115, 22, 0.5)';
+            } else {
+                categoryText = 'Below Average';
+                activeCardId = 'score-8-15';
+                scoreCategory.style.background = 'rgba(239, 68, 68, 0.2)';
+                scoreCategory.style.color = '#ffffff';
+                scoreCategory.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+            }
+            
+            scoreCategory.textContent = categoryText;
+            
+            // Highlight the active score card
+            const activeCard = document.getElementById(activeCardId);
+            if (activeCard) {
+                activeCard.classList.add('active');
+            }
+        }
+        
+        function generateReport() {
+            const totalScore = calculateScore();
+            const currentDate = new Date().toLocaleDateString();
+            
+            // Update report template
+            document.getElementById('reportDate').textContent = currentDate;
+            document.getElementById('reportScore').textContent = `${totalScore}/40`;
+            
+            // Set assessment and recommendation
+            let assessment, recommendation;
+            if (totalScore >= 32) {
+                assessment = 'Exceptional Opportunity';
+                recommendation = 'This represents a true career move with significant non-monetary growth potential. Strong recommendation to proceed if compensation is competitive.';
+            } else if (totalScore >= 24) {
+                assessment = 'Good Opportunity';
+                recommendation = 'Solid career move with good potential. Proceed if compensation is competitive and growth factors align with your career goals.';
+            } else if (totalScore >= 16) {
+                assessment = 'Average Opportunity';
+                recommendation = 'Mixed signals present. Ensure you understand the risks and have a clear development plan before proceeding.';
+            } else {
+                assessment = 'Below Average';
+                recommendation = 'Consider staying in your current role or continuing your search for better opportunities that align with your career objectives.';
+            }
+            
+            document.getElementById('reportAssessment').textContent = assessment;
+            document.getElementById('reportRecommendation').textContent = recommendation;
+            
+            // Generate factor breakdown
+            const factorsHtml = factors.map(factor => {
+                const selectedInput = document.querySelector(`input[name="${factor}"]:checked`);
+                const rating = selectedInput ? selectedInput.value : 'Not Rated';
+                const ratingText = ['Not Rated', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][rating] || 'Not Rated';
+                
+                return `
+                    <div style="margin-bottom: 15px; padding: 10px; background: #f9f9f9; border-radius: 5px;">
+                        <strong>${factorNames[factor]}:</strong> ${rating}/5 (${ratingText})
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('reportFactors').innerHTML = `
+                <h3>Factor Breakdown</h3>
+                ${factorsHtml}
+            `;
+            
+            // Create downloadable report
+            const reportContent = document.getElementById('reportTemplate').innerHTML;
+            const fullReport = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Career Opportunity Evaluation Report</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+                        .report-header { text-align: center; margin-bottom: 30px; padding: 20px; border-bottom: 2px solid #333; }
+                        .report-summary { background: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 8px; border: 1px solid #ccc; }
+                        h1, h2, h3 { color: #333; }
+                        ul { padding-left: 20px; }
+                        li { margin-bottom: 8px; }
+                    </style>
+                </head>
+                <body>
+                    ${reportContent}
+                </body>
+                </html>
+            `;
+            
+            // Download the report
+            const blob = new Blob([fullReport], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Career_Evaluation_Report_${currentDate.replace(/\//g, '-')}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function printReport() {
+            calculateScore(); // Update the report first
+            const currentDate = new Date().toLocaleDateString();
+            const totalScore = calculateScore();
+            
+            // Update report template for printing
+            document.getElementById('reportDate').textContent = currentDate;
+            document.getElementById('reportScore').textContent = `${totalScore}/40`;
+            
+            // Set assessment and recommendation for print
+            let assessment, recommendation;
+            if (totalScore >= 32) {
+                assessment = 'Exceptional Opportunity';
+                recommendation = 'This represents a true career move with significant non-monetary growth potential.';
+            } else if (totalScore >= 24) {
+                assessment = 'Good Opportunity';
+                recommendation = 'Solid career move with good potential for career advancement.';
+            } else if (totalScore >= 16) {
+                assessment = 'Average Opportunity';
+                recommendation = 'Mixed signals - ensure you understand the risks.';
+            } else {
+                assessment = 'Below Average';
+                recommendation = 'Consider other opportunities that better align with your career goals.';
+            }
+            
+            document.getElementById('reportAssessment').textContent = assessment;
+            document.getElementById('reportRecommendation').textContent = recommendation;
+            
+            // Generate factor breakdown for print
+            const factorsHtml = factors.map(factor => {
+                const selectedInput = document.querySelector(`input[name="${factor}"]:checked`);
+                const rating = selectedInput ? selectedInput.value : 'Not Rated';
+                const ratingText = ['Not Rated', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][rating] || 'Not Rated';
+                
+                return `
+                    <div style="margin-bottom: 15px; padding: 10px; background: #f9f9f9; border-radius: 5px;">
+                        <strong>${factorNames[factor]}:</strong> ${rating}/5 (${ratingText})
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('reportFactors').innerHTML = `
+                <h3>Factor Breakdown</h3>
+                ${factorsHtml}
+            `;
+            
+            // Print the page
+            window.print();
+        }
+        
+        // Add event listeners to all radio buttons
+        factors.forEach(factor => {
+            const inputs = document.querySelectorAll(`input[name="${factor}"]`);
+            inputs.forEach(input => {
+                input.addEventListener('change', calculateScore);
+            });
+        });
+        
+        // Initialize score display
+        calculateScore();
+    </script>
+</body>
+</html>
