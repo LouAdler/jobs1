@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance-based Interview Guide - Demo Version</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        /* Demo Banner */
+        .demo-banner {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-banner::before {
+            content: "DEMO";
+            position: absolute;
+            top: -20px;
+            right: -40px;
+            background: rgba(255,255,255,0.2);
+            padding: 60px 50px 10px 50px;
+            transform: rotate(45deg);
+            font-weight: bold;
+            font-size: 24px;
+        }
+        
+        .demo-banner h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.8em;
+        }
+        
+        .demo-banner p {
+            margin: 0 0 15px 0;
+            font-size: 1.1em;
+        }
+        
+        .cta-button {
+            background-color: white;
+            color: #e74c3c;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        
+        .candidate-info {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .disabled-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            z-index: 10;
+        }
+        
+        .lock-message {
+            background-color: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .lock-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .candidate-info h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .info-grid {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            opacity: 0.3;
+        }
+        
+        .info-field {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-field label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .info-field input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+        
+        .intro-note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .step-container {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .step-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .step-header:hover {
+            background-color: #e9ecef;
+        }
+        
+        .step-header.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .step-number {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .step-header.active .step-number {
+            background-color: white;
+            color: #3498db;
+        }
+        
+        .step-title {
+            flex-grow: 1;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .chevron {
+            transition: transform 0.3s ease;
+            font-size: 1.2em;
+        }
+        
+        .chevron.rotate {
+            transform: rotate(180deg);
+        }
+        
+        .step-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 20px;
+        }
+        
+        .step-content.show {
+            max-height: 2000px;
+            padding: 20px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .questions-section, .tips-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .questions-section h3, .tips-section h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .main-question {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+            font-weight: 500;
+        }
+        
+        .follow-up-questions {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .follow-up-questions li {
+            margin-bottom: 8px;
+        }
+        
+        .tips-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .tips-list li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+        
+        .tips-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .special-note {
+            background-color: #fff3cd;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 3px solid #ffc107;
+        }
+        
+        .notes-section {
+            background-color: #f0f7ff;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #b3d9ff;
+            position: relative;
+        }
+        
+        .notes-section h4 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .notes-section textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+        
+        .disabled-feature {
+            position: relative;
+        }
+        
+        .disabled-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 5;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .disabled-badge:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+        
+        .preview-active .disabled-badge {
+            background-color: #27ae60;
+        }
+        
+        .preview-timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        .preview-content {
+            transition: all 0.5s ease;
+        }
+        
+        .preview-locked {
+            filter: blur(3px);
+            user-select: none;
+            position: relative;
+        }
+        
+        .preview-unlocked {
+            filter: none !important;
+            user-select: text !important;
+            opacity: 1 !important;
+        }
+        
+        .preview-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(52, 152, 219, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .preview-locked:hover .preview-overlay {
+            opacity: 1;
+        }
+        
+        .preview-overlay-text {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .feature-preview {
+            margin-top: 30px;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .feature-preview h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .feature-item {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .feature-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .feature-description {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .blurred-section {
+            filter: blur(3px);
+            user-select: none;
+            pointer-events: none;
+        }
+        
+        .evidence-basket-preview {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: white;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 300px;
+            max-height: 200px;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .bottom-cta {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+            margin-top: 50px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-cta h2 {
+            margin-top: 0;
+            font-size: 2em;
+        }
+        
+        .bottom-cta p {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-banner h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preview Timer -->
+    <div class="preview-timer" id="preview-timer">
+        Preview Mode: <span id="timer-count">30</span> seconds remaining
+    </div>
+    
+    <!-- Demo Banner -->
+    <div class="demo-banner">
+        <h2>🎯 Demo Version - Limited Functionality</h2>
+        <p>Experience the power of our Performance-based Interview Guide</p>
+        <a href="https://hiring.tips/AG_contactmain3" class="cta-button">Unlock Full Access</a>
+    </div>
+    
+    <div class="header">
+        <h1>The Performance-based Interview Guide</h1>
+        <p>June 2025 • ©2025 The Adler Group, Inc.</p>
+    </div>
+    
+    <div class="candidate-info">
+        <h2>Interview Information</h2>
+        <div class="disabled-overlay">
+            <div class="lock-message">
+                <div class="lock-icon">🔒</div>
+                <h3>Full Version Feature</h3>
+                <p>Import job descriptions, track candidates, and customize interviews</p>
+                <a href="https://hiring.tips/AG_contactmain3" class="cta-button" style="font-size: 14px; padding: 8px 20px;">Get Access</a>
+            </div>
+        </div>
+        <div class="info-grid">
+            <div class="info-field">
+                <label for="candidate-name">Candidate Name</label>
+                <input type="text" id="candidate-name" placeholder="Enter candidate name" disabled>
+            </div>
+            <div class="info-field">
+                <label for="job-position">Job Position</label>
+                <input type="text" id="job-position" placeholder="Enter position title" disabled>
+            </div>
+            <div class="info-field">
+                <label for="interviewer-name">Interviewer Name</label>
+                <input type="text" id="interviewer-name" placeholder="Enter your name" disabled>
+            </div>
+            <div class="info-field">
+                <label for="interview-date">Interview Date</label>
+                <input type="date" id="interview-date" disabled>
+            </div>
+        </div>
+    </div>
+    
+    <div class="intro-note">
+        <strong>Important Note:</strong> Before interviewing anyone, define 3-4 key performance objectives for the job and 1-2 problems or challenges the person hired will be asked to handle. Some questions below relate to these job-related factors.
+    </div>
+
+    <!-- Step 1 - Fully Visible -->
+    <div class="step-container">
+        <div class="step-header active" onclick="toggleSection(this)">
+            <div>
+                <span class="step-number">Step 1</span>
+                <span class="step-title">Welcome and Review Job/Motivation</span>
+            </div>
+            <span class="chevron rotate">▼</span>
+        </div>
+        <div class="step-content show">
+            <div class="content-grid">
+                <div class="questions-section">
+                    <h3>Opening Questions</h3>
+                    <div class="main-question">
+                        "Let me give you a short overview of this job. (provide one-minute summary). Given this, can you give me a quick overview of how your background relates to this job?"
+                    </div>
+                    <div class="main-question">
+                        "What are you looking for now in a new job?" (pause)<br>
+                        "Why is having ___ and ___ important to you now?"
+                    </div>
+                    <div class="main-question">
+                        "What's your current job hunting status? How long have you been looking?"
+                    </div>
+                    <div class="special-note">
+                        <strong>For subsequent interviewers:</strong> "Based on your other discussions, please give me a quick overview of your thoughts about the job, and what you've discussed with others so far."
+                    </div>
+                </div>
+                <div class="tips-section">
+                    <h3>Information & Hot Tips</h3>
+                    <ul class="tips-list">
+                        <li>Ask for clarifying details to understand how the candidate's background, trend and current role fits with the current job requirements</li>
+                        <li>Asking the "Why?" follow-up question gets at the true source of motivation</li>
+                        <li>Determine if person wants any job, or if person is looking for a career move</li>
+                        <li>Mention that the purpose of this interview will be to determine if a win-win hiring outcome is possible</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="notes-section disabled-feature">
+                <span class="disabled-badge">Full Version Only</span>
+                <h4>Notes for Step 1</h4>
+                <textarea id="notes-step-1" placeholder="In the full version, capture detailed notes and evidence here..." disabled></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2 - Partially Visible -->
+    <div class="step-container">
+        <div class="step-header" onclick="toggleSection(this)">
+            <div>
+                <span class="step-number">Step 2</span>
+                <span class="step-title">Measure Impact of First Impression</span>
+                <span class="disabled-badge" onclick="activatePreview(event, 'step2')">👁️ Preview</span>
+            </div>
+            <span class="chevron">▼</span>
+        </div>
+        <div class="step-content">
+            <div class="content-grid">
+                <div class="questions-section">
+                    <h3>Action: Be Aware of Your Biases</h3>
+                    <div class="main-question">
+                        Write down your immediate emotional reaction to the candidate – relaxed, uptight, or neutral. Write down the cause...
+                    </div>
+                    <div class="preview-content preview-locked" id="step2-preview">
+                        <p>At the end of the interview you'll measure your first impression again, when you're less affected by it.</p>
+                        <div class="preview-overlay" onclick="activatePreview(event, 'step2')">
+                            <span class="preview-overlay-text">Click to preview</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tips-section">
+                    <h3>Information & Hot Tips</h3>
+                    <ul class="tips-list">
+                        <li>Wait 30-minutes</li>
+                        <li>Do opposite of normal reaction</li>
+                        <li class="preview-content preview-locked" id="step2-tip1">Like: prove incompetency, be tough</li>
+                        <li class="preview-content preview-locked" id="step2-tip2">Dislike: prove competency, be easy</li>
+                        <li class="preview-content preview-locked" id="step2-tip3">Ask same questions to all</li>
+                        <li class="preview-content preview-locked" id="step2-tip4">Be cynical, get proof, examples, facts</li>
+                    </ul>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="https://hiring.tips/AG_contactmain3" style="color: #3498db; font-weight: bold;">Unlock all tips and techniques →</a>
+                    </div>
+                </div>
+            </div>
+            <div class="notes-section disabled-feature">
+                <span class="disabled-badge">Full Version Only</span>
+                <h4>Notes for Step 2</h4>
+                <textarea disabled placeholder="Note-taking feature available in full version..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3 - Review Work History -->
+    <div class="step-container">
+        <div class="step-header" onclick="toggleSection(this)">
+            <div>
+                <span class="step-number">Step 3</span>
+                <span class="step-title">Review Work History and Background</span>
+                <span class="disabled-badge" onclick="activatePreview(event, 'step3')">👁️ Preview</span>
+            </div>
+            <span class="chevron">▼</span>
+        </div>
+        <div class="step-content">
+            <div class="content-grid">
+                <div class="questions-section">
+                    <h3>Work History Questions</h3>
+                    <div class="main-question">
+                        "Please tell me about your most recent job. What was your position, the company, your duties, and any recognition you received?"
+                    </div>
+                    <div class="special-note">
+                        Spend 20-25 minutes on this as part of a one-hour interview...
+                    </div>
+                    <p><strong>For each job obtain:</strong></p>
+                    <ul class="follow-up-questions">
+                        <li>Overview, title, type of work</li>
+                        <li>Draw org chart & how team was built</li>
+                        <li class="preview-content preview-locked">Dates, why left, explain gaps</li>
+                        <li class="preview-content preview-locked">Highlights, big projects, major focus</li>
+                        <li class="preview-content preview-locked">Recognition, raises, promotion</li>
+                    </ul>
+                </div>
+                <div class="tips-section">
+                    <h3>Fact-finding & Hot Tips</h3>
+                    <p><strong>Look for an Achiever Pattern:</strong> major accomplishments in each job, upward progression, significant recognition.</p>
+                    <ul class="tips-list">
+                        <li>For each position obtain: title, promotions, basic duties</li>
+                        <li class="preview-content preview-locked">Ask why the person changed jobs and if the job achieved the reason for changing</li>
+                        <li class="preview-content preview-locked">Avoid Job Hopping Syndrome. If the person is an Achiever but growth has stalled</li>
+                    </ul>
+                    <div class="preview-content preview-locked" style="margin-top: 15px;">
+                        <p><strong>Look for stretch gaps such as:</strong></p>
+                        <ul class="tips-list">
+                            <li>Project size and span of control</li>
+                            <li>Influence and exposure</li>
+                            <li>Impact and growth</li>
+                        </ul>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px; padding: 20px; background-color: #e3f2fd; border-radius: 5px;">
+                        <p style="margin-bottom: 10px;">Get access to complete interviewing techniques and evaluation criteria</p>
+                        <a href="https://hiring.tips/AG_contactmain3" class="cta-button" style="font-size: 14px; padding: 8px 20px;">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="notes-section disabled-feature">
+                <span class="disabled-badge">Full Version Only</span>
+                <h4>Notes for Step 3</h4>
+                <textarea disabled placeholder="Capture detailed work history notes in the full version..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4 - Major Accomplishments -->
+    <div class="step-container">
+        <div class="step-header" onclick="toggleSection(this)">
+            <div>
+                <span class="step-number">Step 4</span>
+                <span class="step-title">Assess a Few Major Accomplishments</span>
+                <span class="disabled-badge" onclick="activatePreview(event, 'step4')">👁️ Preview</span>
+            </div>
+            <span class="chevron">▼</span>
+        </div>
+        <div class="step-content">
+            <div class="content-grid">
+                <div class="questions-section">
+                    <h3>Major Accomplishment Questions</h3>
+                    <div class="main-question">
+                        "Can you please tell me about your most significant accomplishment at (company)? Or, consider a project or event that you're quite proud of or where you excelled"
+                    </div>
+                    <div class="preview-content preview-locked" style="margin-top: 15px;">
+                        <div class="main-question">
+                            "One major project we're now working on is (describe). Please tell me about something comparable you've led."
+                        </div>
+                        <div class="special-note" style="margin-top: 10px;">
+                            <strong>Modified version for other interviewers:</strong> "I'd like to focus on (attribute). Can you tell me about a major accomplishment that best demonstrates this?"
+                        </div>
+                    </div>
+                </div>
+                <div class="tips-section">
+                    <h3>Fact-finding & Hot Tips</h3>
+                    <p>Spend 12-15 minutes (each) on 2-3 different major accomplishments...</p>
+                    <ul class="tips-list">
+                        <li>Overview of job, company</li>
+                        <li>Team and org structure</li>
+                        <li>Environment – pace, resources</li>
+                        <li>When? How long? Results?</li>
+                        <li class="preview-content preview-locked">What results were expected?</li>
+                        <li class="preview-content preview-locked">How did you plan project?</li>
+                        <li class="preview-content preview-locked">Obtain 2-3 examples of initiative</li>
+                        <li class="preview-content preview-locked">What did you change/improve?</li>
+                        <li class="preview-content preview-locked">Big challenges or conflict faced</li>
+                        <li class="preview-content preview-locked">What did you learn about self?</li>
+                        <li class="preview-content preview-locked">How did you grow as a result?</li>
+                        <li class="preview-content preview-locked">What would you do differently?</li>
+                        <li class="preview-content preview-locked">What (technical) skills needed?</li>
+                        <li class="preview-content preview-locked">How were these enhanced?</li>
+                        <li class="preview-content preview-locked">Describe likes, dislikes</li>
+                        <li class="preview-content preview-locked">Where did you exceed expectations?</li>
+                        <li class="preview-content preview-locked">How did you improve yourself?</li>
+                        <li class="preview-content preview-locked">What recognition did you receive?</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="notes-section disabled-feature">
+                <span class="disabled-badge">Full Version Only</span>
+                <h4>Notes for Step 4</h4>
+                <textarea disabled placeholder="Document accomplishments and evidence here..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4a - Team Accomplishments -->
+    <div class="step-container">
+        <div class="step-header" onclick="toggleSection(this)">
+            <div>
+                <span class="step-number">Step 4a</span>
+                <span class="step-title">Assess Major Team Accomplishments</span>
+                <span class="disabled-badge">Preview Only</span>
+            </div>
+            <span class="chevron">▼</span>
+        </div>
+        <div class="step-content">
+            <div class="content-grid">
+                <div class="questions-section">
+                    <h3>Team Accomplishment Questions</h3>
+                    <div class="main-question">
+                        "Can you please tell me about a major team accomplishment?"
+                    </div>
+                    <div style="text-align: center; margin: 20px; padding: 20px; background-color: #fff3cd; border-radius: 5px;">
+                        <p>🔒 Full interview questions and team assessment criteria</p>
+                        <p style="font-size: 14px; color: #666;">Available in the complete course</p>
+                    </div>
+                </div>
+                <div class="tips-section">
+                    <h3>Fact-finding & Hot Tips</h3>
+                    <ul class="tips-list">
+                        <li>Draw an org chart w/title</li>
+                        <li>What was your role, why you?</li>
+                        <li style="opacity: 0.3;">What was plan & were results met?</li>
+                        <li style="opacity: 0.3;">What were biggest team problems?</li>
+                    </ul>
+                    <a href="https://hiring.tips/AG_contactmain3" style="display: block; text-align: center; margin-top: 20px; color: #3498db;">
+                        Access complete team assessment techniques →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 5 - Problem Solving -->
+    <div class="step-container">
+        <div class="step-header" onclick="toggleSection(this)">
+            <div>
+                <span class="step-number">Step 5</span>
+                <span class="step-title">Discuss Major Job-related Problems</span>
+                <span class="disabled-badge">Preview Only</span>
+            </div>
+            <span class="chevron">▼</span>
+        </div>
+        <div class="step-content">
+            <div class="content-grid">
+                <div class="questions-section">
+                    <h3>Problem-Solving Questions</h3>
+                    <div class="main-question">
+                        "One major problem we're now facing is ___________. How would you go about addressing this?"
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; text-align: center;">
+                        <p style="font-size: 18px; margin-bottom: 10px;">🎯 Want to see the complete problem-solving assessment framework?</p>
+                        <a href="https://hiring.tips/AG_contactmain3" class="cta-button" style="font-size: 14px; padding: 8px 20px;">Get Full Access</a>
+                    </div>
+                </div>
+                <div class="tips-section">
+                    <h3>Fact-finding & Hot Tips</h3>
+                    <p>Preview of assessment areas:</p>
+                    <ul class="tips-list" style="opacity: 0.5;">
+                        <li>What would you need to know?</li>
+                        <li>What would you do first, why?</li>
+                        <li>Who else would you involve?</li>
+                    </ul>
+                    <p style="text-align: center; color: #666;">+ 8 more critical assessment questions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 6 - Candidate Questions -->
+    <div class="step-container">
+        <div class="step-header" onclick="toggleSection(this)">
+            <div>
+                <span class="step-number">Step 6</span>
+                <span class="step-title">Let the Candidate Ask Questions</span>
+                <span class="disabled-badge">Preview Only</span>
+            </div>
+            <span class="chevron">▼</span>
+        </div>
+        <div class="step-content">
+            <div class="content-grid">
+                <div class="questions-section">
+                    <h3>Candidate Questions</h3>
+                    <div class="main-question">
+                        "Based on what we've discussed so far, do you have any questions?"
+                    </div>
+                    <div class="special-note" style="filter: blur(2px);">
+                        It's important to delay candidate questions until the end...
+                    </div>
+                </div>
+                <div class="tips-section">
+                    <h3>Evaluation Criteria</h3>
+                    <p>Learn how to evaluate candidate questions for:</p>
+                    <ul style="opacity: 0.5;">
+                        <li>Strategic thinking indicators</li>
+                        <li>Motivation signals</li>
+                        <li>Cultural fit markers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 7 - Recruiting -->
+    <div class="step-container">
+        <div class="step-header" onclick="toggleSection(this)">
+            <div>
+                <span class="step-number">Step 7</span>
+                <span class="step-title">Recruit Using the Win-Win Hiring Opportunity</span>
+                <span class="disabled-badge">Preview Only</span>
+            </div>
+            <span class="chevron">▼</span>
+        </div>
+        <div class="step-content">
+            <div style="text-align: center; padding: 40px;">
+                <h3 style="color: #2c3e50;">Master the Art of Recruiting Top Talent</h3>
+                <p style="font-size: 16px; margin: 20px 0;">This critical step teaches you how to:</p>
+                <ul style="text-align: left; display: inline-block; margin-bottom: 20px;">
+                    <li>Create a compelling opportunity</li>
+                    <li>Assess genuine interest</li>
+                    <li>Navigate compensation discussions</li>
+                    <li>Secure commitment from top candidates</li>
+                </ul>
+                <a href="https://hiring.tips/AG_contactmain3" class="cta-button">Learn the Complete Method</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 8 - Final Assessment -->
+    <div class="step-container">
+        <div class="step-header" onclick="toggleSection(this)">
+            <div>
+                <span class="step-number">Step 8</span>
+                <span class="step-title">Measure First Impression Again</span>
+                <span class="disabled-badge">Preview Only</span>
+            </div>
+            <span class="chevron">▼</span>
+        </div>
+        <div class="step-content">
+            <div class="content-grid">
+                <div class="questions-section">
+                    <h3>Final Assessment</h3>
+                    <div class="main-question">
+                        Measure first impression again at the end of the interview...
+                    </div>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <p>📊 Access the complete bias measurement framework</p>
+                    </div>
+                </div>
+                <div class="tips-section">
+                    <h3>Coming Next:</h3>
+                    <ul>
+                        <li>Quality of Hire Scorecard</li>
+                        <li>Evidence-based Rating System</li>
+                        <li>Automated Reporting Tools</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Preview -->
+    <div class="feature-preview">
+        <h2>🚀 Unlock These Powerful Features</h2>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div class="feature-icon">📋</div>
+                <div class="feature-title">Evidence Basket</div>
+                <div class="feature-description">Collect and organize key observations throughout the interview</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">Job Customization</div>
+                <div class="feature-description">Import job descriptions and get custom interview prompts</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Quality of Hire Scorecard</div>
+                <div class="feature-description">Automated scoring based on collected evidence</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📑</div>
+                <div class="feature-title">Export & Reports</div>
+                <div class="feature-description">Generate PDF summaries and GPT-ready exports</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">💡</div>
+                <div class="feature-title">Smart Highlighting</div>
+                <div class="feature-description">Highlight and tag key phrases for competency mapping</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🔄</div>
+                <div class="feature-title">Data Persistence</div>
+                <div class="feature-description">Save and resume interviews at any time</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evidence Basket Preview -->
+    <div class="evidence-basket-preview">
+        <div style="font-weight: bold; margin-bottom: 10px;">Evidence Basket (Demo)</div>
+        <div style="font-size: 14px; color: #666;">
+            <p>✓ Strong technical background...</p>
+            <p>✓ Led team of 15 engineers...</p>
+            <p>✓ Achieved 40% efficiency gain...</p>
+        </div>
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="bottom-cta" id="enroll">
+        <h2>Ready to Transform Your Hiring Process?</h2>
+        <p>Get full access to the Performance-based Interview Guide and our complete hiring toolkit</p>
+        <a href="https://hiring.tips/AG_contactmain3" class="cta-button">Enroll in the Course Now →</a>
+        <p style="margin-top: 20px; font-size: 14px; opacity: 0.9;">
+            ✓ Immediate Access &nbsp;&nbsp;&nbsp; ✓ All Interview Tools &nbsp;&nbsp;&nbsp; ✓ Lifetime Updates
+        </p>
+        <p style="margin-top: 15px;">
+            <a href="https://hiring.tips/AG_contactmain3" style="color: white; text-decoration: underline; font-size: 16px;">
+                Questions? Contact us for more information →
+            </a>
+        </p>
+    </div>
+
+    <script>
+        let previewActive = false;
+        let previewTimer = null;
+        let currentPreviewStep = null;
+        
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const chevron = header.querySelector('.chevron');
+            
+            // Toggle the content
+            content.classList.toggle('show');
+            chevron.classList.toggle('rotate');
+            header.classList.toggle('active');
+            
+            // Close other sections
+            const allHeaders = document.querySelectorAll('.step-header');
+            allHeaders.forEach(otherHeader => {
+                if (otherHeader !== header && otherHeader.classList.contains('active')) {
+                    const otherContent = otherHeader.nextElementSibling;
+                    const otherChevron = otherHeader.querySelector('.chevron');
+                    otherContent.classList.remove('show');
+                    otherChevron.classList.remove('rotate');
+                    otherHeader.classList.remove('active');
+                }
+            });
+        }
+        
+        function activatePreview(event, stepId) {
+            event.stopPropagation();
+            
+            if (previewActive) {
+                // If preview is already active, just show message
+                alert('Preview mode is already active. Enjoy exploring the content!');
+                return;
+            }
+            
+            // Show confirmation
+            if (confirm('Start 30-second preview of locked content?\n\nThis will temporarily unlock blurred sections so you can see what\'s included in the full version.')) {
+                startPreview(stepId);
+            }
+        }
+        
+        function startPreview(stepId) {
+            previewActive = true;
+            currentPreviewStep = stepId;
+            
+            // Show timer
+            const timerDiv = document.getElementById('preview-timer');
+            timerDiv.style.display = 'block';
+            
+            // Unlock all preview content
+            const allPreviewContent = document.querySelectorAll('.preview-content');
+            allPreviewContent.forEach(content => {
+                content.classList.remove('preview-locked');
+                content.classList.add('preview-unlocked');
+            });
+            
+            // Change badge text
+            const badges = document.querySelectorAll('.disabled-badge');
+            badges.forEach(badge => {
+                badge.textContent = '✓ Preview Active';
+                badge.parentElement.parentElement.classList.add('preview-active');
+            });
+            
+            // Start countdown
+            let seconds = 30;
+            const timerSpan = document.getElementById('timer-count');
+            
+            previewTimer = setInterval(() => {
+                seconds--;
+                timerSpan.textContent = seconds;
+                
+                if (seconds <= 5) {
+                    timerDiv.style.backgroundColor = '#e74c3c';
+                }
+                
+                if (seconds <= 0) {
+                    endPreview();
+                }
+            }, 1000);
+        }
+        
+        function endPreview() {
+            previewActive = false;
+            
+            // Clear timer
+            if (previewTimer) {
+                clearInterval(previewTimer);
+            }
+            
+            // Hide timer
+            const timerDiv = document.getElementById('preview-timer');
+            timerDiv.style.display = 'none';
+            timerDiv.style.backgroundColor = '#2c3e50';
+            document.getElementById('timer-count').textContent = '30';
+            
+            // Re-lock all content
+            const allPreviewContent = document.querySelectorAll('.preview-content');
+            allPreviewContent.forEach(content => {
+                content.classList.add('preview-locked');
+                content.classList.remove('preview-unlocked');
+            });
+            
+            // Reset badges
+            const badges = document.querySelectorAll('.disabled-badge');
+            badges.forEach(badge => {
+                badge.textContent = '👁️ Preview';
+                badge.parentElement.parentElement.classList.remove('preview-active');
+            });
+            
+            // Show upgrade message
+            setTimeout(() => {
+                if (confirm('Preview ended! Did you find the content valuable?\n\nClick OK to learn more about getting full access.')) {
+                    window.open('https://hiring.tips/AG_contactmain3', '_blank');
+                }
+            }, 500);
+        }
+        
+        function showUpgradeMessage() {
+            if (confirm('This feature is available in the full version. Would you like to learn more about our Performance-based Hiring course?')) {
+                window.open('https://hiring.tips/AG_contactmain3', '_blank');
+            }
+        }
+        
+        // Simulate some activity
+        setTimeout(() => {
+            const basket = document.querySelector('.evidence-basket-preview');
+            basket.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                basket.style.transform = 'scale(1)';
+            }, 300);
+        }, 3000);
+        
+        // Add tooltip to preview badges
+        document.addEventListener('DOMContentLoaded', function() {
+            const badges = document.querySelectorAll('.disabled-badge');
+            badges.forEach(badge => {
+                badge.title = 'Click to preview locked content for 30 seconds';
+            });
+        });
+    </script>
+</body>
+</html>
