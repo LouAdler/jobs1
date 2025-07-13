@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance-based Interview Guide - Sarah Chen</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        
+        .candidate-info {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .candidate-info h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .info-grid {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .info-field {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-field label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .info-field input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #f8f9fa;
+        }
+        
+        .intro-note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .step-container {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .step-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #3498db;
+            color: white;
+            border-bottom: 2px solid #2980b9;
+        }
+        
+        .step-number {
+            background-color: white;
+            color: #3498db;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .step-title {
+            flex-grow: 1;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .step-evidence-count {
+            background-color: #27ae60;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .step-content {
+            padding: 20px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .questions-section, .tips-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .questions-section h3, .tips-section h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .main-question {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+            font-weight: 500;
+        }
+        
+        .notes-section {
+            background-color: #f0f7ff;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #b3d9ff;
+        }
+        
+        .notes-section h4 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .notes-section textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+            background-color: #fffef0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .evidence-basket {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: white;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 350px;
+            max-height: 500px;
+            z-index: 1000;
+        }
+        
+        .evidence-basket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .evidence-basket-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .evidence-item {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            position: relative;
+            padding-right: 30px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .evidence-tag {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .evidence-text {
+            font-size: 13px;
+            margin-top: 5px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .evidence-source {
+            font-size: 11px;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 3px;
+        }
+        
+        .basket-count {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .phase-indicator {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .phase-step {
+            display: flex;
+            align-items: center;
+            opacity: 0.5;
+        }
+        
+        .phase-step.active {
+            opacity: 1;
+        }
+        
+        .phase-step.completed {
+            opacity: 1;
+        }
+        
+        .phase-number {
+            background-color: white;
+            color: #2c3e50;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .phase-step.completed .phase-number {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .custom-question {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        
+        .customized-badge {
+            background: #27ae60;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+        
+        .kpo-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        
+        .import-status {
+            color: #27ae60;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        .completed-notes {
+            background-color: #f9f9f9;
+            color: #2c3e50;
+            font-style: normal;
+        }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .evidence-basket {
+                width: 280px;
+                right: 10px;
+                bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>The Performance-based Interview Guide</h1>
+        <p>June 2025 • ©2025 The Adler Group, Inc.</p>
+    </div>
+    
+    <div class="phase-indicator">
+        <div class="phase-step completed">
+            <div class="phase-number">✓</div>
+            <div>Interview & Evidence Gathering</div>
+        </div>
+        <div class="phase-step active">
+            <div class="phase-number">2</div>
+            <div>Review Evidence</div>
+        </div>
+        <div class="phase-step">
+            <div class="phase-number">3</div>
+            <div>Complete Scorecard</div>
+        </div>
+    </div>
+    
+    <div class="candidate-info">
+        <h2>Interview Information</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div style="flex: 1;">
+                <button class="kpo-button">📋 View KPOs</button>
+                <span class="import-status">✓ Job description loaded: Factory Solutions Manager - Texas Instruments</span>
+            </div>
+        </div>
+        <div class="info-grid">
+            <div class="info-field">
+                <label>Candidate Name</label>
+                <input type="text" value="Sarah Chen" readonly>
+            </div>
+            <div class="info-field">
+                <label>Job Position</label>
+                <input type="text" value="Factory Solutions Manager" readonly>
+            </div>
+            <div class="info-field">
+                <label>Interviewer Name</label>
+                <input type="text" value="John Martinez" readonly>
+            </div>
+            <div class="info-field">
+                <label>Interview Date</label>
+                <input type="date" value="2025-01-15" readonly>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div>
+                <span class="step-number">Step 1</span>
+                <span class="step-title">Welcome and Review Job/Motivation</span>
+                <span class="customized-badge">Customized</span>
+                <span class="step-evidence-count">3 evidence items</span>
+            </div>
+        </div>
+        <div class="step-content">
+            <div class="custom-question">
+                <div style="font-size: 12px; color: #2980b9; font-weight: bold; margin-bottom: 8px;">💡 JOB OVERVIEW TALKING POINTS</div>
+                <div style="font-size: 14px; line-height: 1.6; color: #2c3e50;">
+                    When giving your one-minute job overview, consider mentioning:<br>
+                    • <strong>Role:</strong> Factory Solutions Manager<br>
+                    • <strong>Key priority:</strong> Develop and Implement 300mm Fab Technology Roadmap<br>
+                    • <strong>Value proposition:</strong> Drive technological transformation at scale within a global semiconductor leader...<br>
+                    • <strong>Company:</strong> Texas Instruments<br>
+                </div>
+            </div>
+            <div class="content-grid">
+                <div class="questions-section">
+                    <h3>Opening Questions</h3>
+                    <div class="main-question">
+                        "Let me give you a short overview of this job. (provide one-minute summary). Given this, can you give me a quick overview of how your background relates to this job?"
+                    </div>
+                </div>
+                <div class="tips-section">
+                    <h3>Information & Hot Tips</h3>
+                    <ul>
+                        <li>Ask for clarifying details to understand fit</li>
+                        <li>Asking the "Why?" follow-up question gets at motivation</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="notes-section">
+                <h4>Notes for Step 1</h4>
+                <textarea class="completed-notes" readonly>Sarah showed strong interest in the Factory Solutions Manager role. Currently Sr. Manager of Manufacturing IT at Intel's Arizona fab - been there 4 years. Looking for broader scope and leadership opportunity.
+
+Key motivations:
+- Wants to lead digital transformation at scale
+- Interested in TI's multi-fab environment 
+- Seeks role with both technical depth and strategic impact
+
+Current job hunting status: Actively looking for 2 months, has had 3 other interviews but this role most aligned with career goals.</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div>
+                <span class="step-number">Step 2</span>
+                <span class="step-title">Measure Impact of First Impression</span>
+                <span class="step-evidence-count">1 evidence item</span>
+            </div>
+        </div>
+        <div class="step-content">
+            <div class="notes-section">
+                <h4>Notes for Step 2</h4>
+                <textarea class="completed-notes" readonly>Initial impression: Professional, articulate, perhaps slightly nervous. Came across as technical-focused initially but warmed up as interview progressed. Good eye contact, engaged listening.</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div>
+                <span class="step-number">Step 3</span>
+                <span class="step-title">Review Work History and Background</span>
+                <span class="customized-badge">Customized</span>
+                <span class="step-evidence-count">4 evidence items</span>
+            </div>
+        </div>
+        <div class="step-content">
+            <div class="custom-question" style="background-color: #fff9e6; border: 2px solid #f39c12;">
+                <div style="font-size: 12px; color: #e67e22; font-weight: bold; margin-bottom: 8px;">💡 RELEVANT EXPERIENCE TO EXPLORE</div>
+                <div style="font-size: 14px; line-height: 1.6; color: #2c3e50;">
+                    As you review their work history, listen for experience related to:<br>
+                    • Leading teams and driving organizational change<br>
+                    • Manufacturing operations and process optimization<br>
+                    • Implementing technical solutions and systems<br>
+                    • Driving measurable improvements in efficiency, quality, or cost
+                </div>
+            </div>
+            <div class="notes-section">
+                <h4>Notes for Step 3</h4>
+                <textarea class="completed-notes" readonly>Career progression:
+- 2021-Present: Sr. Manager Manufacturing IT, Intel (promoted from Manager in 2022)
+- 2018-2021: IT Systems Manager, TSMC Phoenix
+- 2015-2018: MES Engineer, GlobalFoundries
+- 2012-2015: Software Engineer, Applied Materials
+
+Notable achievements:
+- Led 12-person team at Intel
+- Implemented new MES system saving $2M annually
+- Recognized with Intel Achievement Award 2023
+- Steady progression but all in single-fab environments</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div>
+                <span class="step-number">Step 4</span>
+                <span class="step-title">Assess a Few Major Accomplishments</span>
+                <span class="customized-badge">Customized</span>
+                <span class="step-evidence-count">4 evidence items</span>
+            </div>
+        </div>
+        <div class="step-content">
+            <div class="custom-question">
+                <div style="font-size: 12px; color: #2980b9; font-weight: bold; margin-bottom: 8px;">💡 ACCOMPLISHMENTS TO PROBE</div>
+                <div style="font-size: 14px; line-height: 1.6; color: #2c3e50;">
+                    Look for accomplishments that demonstrate ability to:<br>
+                    • Develop and Implement 300mm Fab Technology Roadmap<br>
+                    • Elevate IT Operations and Security Standards Across Fabs<br>
+                    • Build and Develop a Top-Tier Factory Solutions Engineering Organization<br>
+                    <br><em>Tip: Ask "What's been your most comparable achievement?" after they share each story.</em>
+                </div>
+            </div>
+            <div class="notes-section">
+                <h4>Notes for Step 4</h4>
+                <textarea class="completed-notes" readonly>Accomplishment 1: MES System Implementation at Intel (2022-2023)
+- Led cross-functional team of 15 people
+- Replaced legacy system with modern cloud-based MES
+- Completed 2 months ahead of schedule
+- Reduced downtime by 40%, improved OEE by 8%
+- Budget: $5M, delivered under budget by $300K
+
+Accomplishment 2: AI-Powered Fault Detection System (2023)
+- Designed predictive maintenance system using ML
+- Reduced unplanned downtime by 35%
+- Self-initiated project, got buy-in from leadership
+- Now being rolled out to other Intel sites
+
+Technical skills demonstrated: Python, SQL, AWS, MES platforms, data analytics</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4a -->
+    <div class="step-container">
+        <div class="step-header">
+            <div>
+                <span class="step-number">Step 4a</span>
+                <span class="step-title">Assess Major Team Accomplishments</span>
+                <span class="step-evidence-count">4 evidence items</span>
+            </div>
+        </div>
+        <div class="step-content">
+            <div class="notes-section">
+                <h4>Notes for Step 4a</h4>
+                <textarea class="completed-notes" readonly>Team Leadership Example:
+- Inherited underperforming IT support team in 2022
+- 3 of 8 members were on performance plans
+- Implemented new training program and mentorship
+- Within 6 months, all team members meeting expectations
+- Team satisfaction scores increased from 65% to 85%
+
+Challenge: Had conflict with manufacturing director over system priorities
+- Initially struggled to align on roadmap
+- Took time to understand his perspective
+- Created joint steering committee
+- Now have strong working relationship
+
+Concern: Limited experience with large, distributed teams or matrix organizations. Most team leadership has been direct reports in single location.</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div>
+                <span class="step-number">Step 5</span>
+                <span class="step-title">Discuss Major Job-related Problems</span>
+                <span class="customized-badge">Customized</span>
+                <span class="step-evidence-count">3 evidence items</span>
+            </div>
+        </div>
+        <div class="step-content">
+            <div class="custom-question" style="background-color: #fff9e6; border: 2px solid #f39c12;">
+                <div style="font-size: 12px; color: #e67e22; font-weight: bold; margin-bottom: 8px;">💡 REAL CHALLENGES TO DISCUSS</div>
+                <div style="font-size: 14px; line-height: 1.6; color: #2c3e50;">
+                    Consider using these actual role challenges:<br>
+                    <strong>1.</strong> "Within the first 12 months, design, refine, and execute a robust technology roadmap that integrates emerging software, data analytics..."<br>
+                    <strong>2.</strong> "In the first 6–9 months, lead multiple fab IT teams to standardize and elevate execution quality, enforce world-class security policies..."<br>
+                    <br><em>After their approach, always ask: "What have you done that's most similar?"</em>
+                </div>
+            </div>
+            <div class="notes-section">
+                <h4>Notes for Step 5</h4>
+                <textarea class="completed-notes" readonly>Presented challenge: "How would you approach integrating IT systems across our 3 different 300mm fabs with different levels of automation?"
+
+Her approach:
+1. First 30 days: Audit current state at each fab
+2. Identify commonalities and gaps
+3. Build phased integration roadmap
+4. Start with data layer standardization
+5. Create tiger team with reps from each site
+6. Pilot with non-critical systems first
+
+Related experience: Integrated systems between Intel's two buildings, but acknowledged this is smaller scale than multi-fab integration.
+
+Good strategic thinking but would need support on change management across sites.</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Steps 6-8 with similar completed notes... -->
+    
+    <!-- Step 6 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div>
+                <span class="step-number">Step 6</span>
+                <span class="step-title">Let the Candidate Ask Questions</span>
+                <span class="step-evidence-count">2 evidence items</span>
+            </div>
+        </div>
+        <div class="step-content">
+            <div class="notes-section">
+                <h4>Notes for Step 6</h4>
+                <textarea class="completed-notes" readonly>Questions asked:
+1. "What's the biggest technical challenge facing the fabs right now?"
+2. "How does TI measure success for this role in year one?"
+3. "What's the culture like across the different fab sites?"
+4. "What development opportunities exist for growing into VP level?"
+5. "How much autonomy will I have in building the team?"
+
+Good strategic questions focused on success metrics and long-term growth.</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div>
+                <span class="step-number">Step 7</span>
+                <span class="step-title">Recruit Using the Win-Win Hiring Opportunity</span>
+                <span class="step-evidence-count">3 evidence items</span>
+            </div>
+        </div>
+        <div class="step-content">
+            <div class="notes-section">
+                <h4>Notes for Step 7</h4>
+                <textarea class="completed-notes" readonly>Interest level: 8/10
+
+What would make it a 10:
+- Wants to meet with peer managers
+- Tour the facilities
+- Understand more about TI's AI/ML roadmap
+- Clarity on relocation package (currently in Phoenix)
+
+Compensation: Currently at $165K base, looking for $180-190K range
+Availability: 4-week notice period
+
+Other opportunities: Final rounds with Samsung Austin, but prefers TI role</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 8 -->
+    <div class="step-container">
+        <div class="step-header">
+            <div>
+                <span class="step-number">Step 8</span>
+                <span class="step-title">Measure First Impression Again</span>
+                <span class="step-evidence-count">3 evidence items</span>
+            </div>
+        </div>
+        <div class="step-content">
+            <div class="notes-section">
+                <h4>Notes for Step 8</h4>
+                <textarea class="completed-notes" readonly>First impression changed positively - became more confident and engaging as she discussed technical accomplishments. Natural teacher when explaining complex systems. 
+
+Would need coaching on executive presence for VP-level interactions but has strong foundation. Cultural fit seems good - values collaboration and continuous improvement.</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evidence Basket -->
+    <div class="evidence-basket">
+        <div class="evidence-basket-header">
+            <span>Evidence Basket</span>
+            <span class="basket-count">28</span>
+        </div>
+        <div class="evidence-basket-content">
+            <!-- Motivation Evidence -->
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Motivation</span>
+                    <span class="evidence-tag">Culture & Environment</span>
+                </div>
+                <div class="evidence-text">Wants to lead digital transformation at scale</div>
+                <div class="evidence-source">Step 1 - General Fit</div>
+            </div>
+            
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Motivation</span>
+                    <span class="evidence-tag">Culture & Environment</span>
+                </div>
+                <div class="evidence-text">Actively seeking broader leadership opportunity</div>
+                <div class="evidence-source">Step 1 - General Fit</div>
+            </div>
+            
+            <!-- Experience Evidence -->
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Experience</span>
+                    <span class="evidence-tag">Achiever Pattern & Growth Trend</span>
+                </div>
+                <div class="evidence-text">4 years at Intel leading Manufacturing IT</div>
+                <div class="evidence-source">Step 1 - General Fit</div>
+            </div>
+            
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Experience</span>
+                    <span class="evidence-tag">Achiever Pattern & Growth Trend</span>
+                </div>
+                <div class="evidence-text">12+ years in semiconductor manufacturing IT</div>
+                <div class="evidence-source">Step 3 - Work History</div>
+            </div>
+            
+            <!-- Achiever Pattern Evidence -->
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Achiever Pattern & Growth Trend</span>
+                </div>
+                <div class="evidence-text">Promoted to Sr. Manager within 1 year at Intel</div>
+                <div class="evidence-source">Step 3 - Work History</div>
+            </div>
+            
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Achiever Pattern & Growth Trend</span>
+                </div>
+                <div class="evidence-text">Intel Achievement Award 2023</div>
+                <div class="evidence-source">Step 3 - Work History</div>
+            </div>
+            
+            <!-- Technical Evidence -->
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Talent & Overall Technical Ability</span>
+                    <span class="evidence-tag">Job Fit with Recent Comparable Results</span>
+                </div>
+                <div class="evidence-text">Led MES implementation saving $2M annually</div>
+                <div class="evidence-source">Step 3 - Work History</div>
+            </div>
+            
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Management & Organizational Ability</span>
+                </div>
+                <div class="evidence-text">Led 15-person cross-functional MES implementation</div>
+                <div class="evidence-source">Step 4 - Accomplishments</div>
+            </div>
+            
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Talent & Overall Technical Ability</span>
+                </div>
+                <div class="evidence-text">Delivered $5M project 2 months early and under budget</div>
+                <div class="evidence-source">Step 4 - Accomplishments</div>
+            </div>
+            
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Thinking & Job-related Problem-solving</span>
+                </div>
+                <div class="evidence-text">Self-initiated AI fault detection reducing downtime 35%</div>
+                <div class="evidence-source">Step 4 - Accomplishments</div>
+            </div>
+            
+            <!-- Team Skills Evidence -->
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Team Skills (EQ) & Development, Leadership</span>
+                </div>
+                <div class="evidence-text">Turned around underperforming team in 6 months</div>
+                <div class="evidence-source">Step 4a - Team</div>
+            </div>
+            
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Team Skills (EQ) & Development, Leadership</span>
+                </div>
+                <div class="evidence-text">Team satisfaction improved from 65% to 85%</div>
+                <div class="evidence-source">Step 4a - Team</div>
+            </div>
+            
+            <div class="evidence-item" style="border-color: #e74c3c;">
+                <div>
+                    <span class="evidence-tag" style="background-color: #e74c3c;">Team Skills (EQ) & Development, Leadership</span>
+                </div>
+                <div class="evidence-text">Limited experience with distributed/matrix teams</div>
+                <div class="evidence-source">Step 4a - Team (Weakness)</div>
+            </div>
+            
+            <!-- Problem Solving Evidence -->
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Thinking & Job-related Problem-solving</span>
+                </div>
+                <div class="evidence-text">Structured approach to multi-fab integration challenge</div>
+                <div class="evidence-source">Step 5 - Problem Solving</div>
+            </div>
+            
+            <!-- Interest/Motivation Evidence -->
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Motivation</span>
+                </div>
+                <div class="evidence-text">High interest level (8/10) in role</div>
+                <div class="evidence-source">Step 7 - Interest</div>
+            </div>
+            
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Motivation</span>
+                </div>
+                <div class="evidence-text">TI is preferred over Samsung opportunity</div>
+                <div class="evidence-source">Step 7 - Interest</div>
+            </div>
+            
+            <!-- Culture Fit Evidence -->
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Managerial Fit</span>
+                    <span class="evidence-tag">Culture & Environment</span>
+                </div>
+                <div class="evidence-text">Professional demeanor, engaged listening</div>
+                <div class="evidence-source">Step 2 - First Impression</div>
+            </div>
+            
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Culture & Environment</span>
+                </div>
+                <div class="evidence-text">Natural teacher, good at explaining complex topics</div>
+                <div class="evidence-source">Step 8 - Final Assessment</div>
+            </div>
+            
+            <div class="evidence-item">
+                <div>
+                    <span class="evidence-tag">Culture & Environment</span>
+                </div>
+                <div class="evidence-text">Values align with TI culture</div>
+                <div class="evidence-source">Step 8 - Final Assessment</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

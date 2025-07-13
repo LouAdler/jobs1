@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance-based Interview Scorecard - Sarah Chen</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f3f4f6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: #dbeafe;
+        }
+        
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .icon {
+            width: 20px;
+            height: 20px;
+            color: #3b82f6;
+        }
+        
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #6b7280;
+        }
+        
+        .info-value {
+            font-weight: 600;
+        }
+        
+        /* Alert Boxes */
+        .alert {
+            padding: 16px;
+            border-left: 4px solid;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+        
+        .alert-warning {
+            background-color: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+        
+        .alert-danger {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        /* Overall Rating */
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .rating-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #f59e0b;
+        }
+        
+        .rating-label {
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+        
+        .rating-sublabel {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .rating-bar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            height: 12px;
+        }
+        
+        .rating-segment {
+            background-color: #e5e7eb;
+            border-radius: 2px;
+        }
+        
+        .rating-segment.filled {
+            background-color: #f59e0b;
+        }
+        
+        /* Competency Items */
+        .competency-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        
+        .competency-header {
+            padding: 16px;
+            background-color: #f9fafb;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .competency-header:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .competency-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .competency-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .competency-icon-wrapper {
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        .competency-icon-wrapper.rating-good {
+            background-color: #fef3c7;
+            color: #f59e0b;
+        }
+        
+        .competency-icon-wrapper.rating-low {
+            background-color: #fee2e2;
+            color: #ef4444;
+        }
+        
+        .competency-icon-wrapper.rating-high {
+            background-color: #d1fae5;
+            color: #10b981;
+        }
+        
+        .competency-title {
+            font-weight: 500;
+        }
+        
+        .competency-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .competency-rating {
+            text-align: right;
+        }
+        
+        .competency-score {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .score-good { color: #f59e0b; }
+        .score-low { color: #ef4444; }
+        .score-high { color: #10b981; }
+        
+        .competency-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .competency-details {
+            padding: 16px;
+            background-color: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            display: none;
+        }
+        
+        .competency-details.show {
+            display: block;
+        }
+        
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .evidence-section h4 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .evidence-section.positive h4 {
+            color: #059669;
+        }
+        
+        .evidence-section.concerns h4 {
+            color: #dc2626;
+        }
+        
+        .evidence-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .evidence-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 4px;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+        
+        .bullet {
+            margin-top: 2px;
+        }
+        
+        .bullet.green { color: #10b981; }
+        .bullet.red { color: #ef4444; }
+        
+        .improvement-box {
+            background-color: #eff6ff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+        
+        .improvement-box h4 {
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+        
+        .improvement-text {
+            color: #1e40af;
+            font-size: 0.875rem;
+            white-space: pre-line;
+        }
+        
+        /* Interview Notes */
+        .step-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        
+        .step-header {
+            padding: 16px;
+            background-color: #f9fafb;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .step-header:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .step-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .step-number {
+            background-color: #dbeafe;
+            color: #1e40af;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .evidence-count {
+            background-color: #e5e7eb;
+            color: #6b7280;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .step-content {
+            padding: 16px;
+            border-top: 1px solid #e5e7eb;
+            display: none;
+        }
+        
+        .step-content.show {
+            display: block;
+        }
+        
+        .notes-box {
+            background-color: #f9fafb;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 0.875rem;
+            color: #374151;
+            white-space: pre-line;
+        }
+        
+        .evidence-items {
+            margin-top: 16px;
+        }
+        
+        .evidence-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+        }
+        
+        .evidence-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+        
+        .evidence-dot.positive { background-color: #10b981; }
+        .evidence-dot.negative { background-color: #ef4444; }
+        
+        .evidence-tag {
+            background-color: #dbeafe;
+            color: #1e40af;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        
+        /* Recommendation Box */
+        .recommendation {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+        }
+        
+        .recommendation-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .recommendation-icon {
+            color: #f59e0b;
+            margin-top: 4px;
+        }
+        
+        .recommendation h3 {
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+        
+        .recommendation p {
+            color: #92400e;
+            margin-bottom: 12px;
+        }
+        
+        .recommendation ol {
+            color: #92400e;
+            padding-left: 24px;
+            font-size: 0.875rem;
+        }
+        
+        .recommendation ol li {
+            margin-bottom: 4px;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 32px;
+        }
+        
+        /* Chevron */
+        .chevron {
+            transition: transform 0.2s;
+        }
+        
+        .chevron.down {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Performance-based Interview Scorecard</h1>
+            <p>Complete Example with Evidence-Based Ratings</p>
+        </div>
+
+        <!-- Candidate Information -->
+        <div class="card">
+            <div class="card-header">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <h2>Candidate Information</h2>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Candidate:</span>
+                    <span class="info-value">Sarah Chen</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Position:</span>
+                    <span class="info-value">Factory Solutions Manager</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Company:</span>
+                    <span class="info-value">Texas Instruments</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Interview Date:</span>
+                    <span class="info-value">2025-01-15</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interview Summary -->
+        <div class="card">
+            <div class="card-header">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <h2>Interview Summary</h2>
+            </div>
+            <p style="margin-bottom: 12px;">Sarah Chen is a strong candidate with 12+ years of semiconductor manufacturing IT experience, currently serving as Sr. Manager at Intel. She demonstrates solid technical capabilities and has successfully led MES implementations and automation projects.</p>
+            
+            <div class="alert alert-warning">
+                <div class="alert-title">Key Strength:</div>
+                <p>Strong technical background with proven ability to deliver complex projects on time and under budget.</p>
+            </div>
+            
+            <div class="alert alert-danger">
+                <div class="alert-title">Primary Concern:</div>
+                <p>Limited experience with distributed teams and matrix organizations. All leadership experience has been with direct reports in single locations.</p>
+            </div>
+        </div>
+
+        <!-- Overall Rating -->
+        <div class="card">
+            <h2 style="margin-bottom: 16px;">Overall Assessment</h2>
+            <div class="rating-display">
+                <div class="rating-number">3.4</div>
+                <div>
+                    <div class="rating-label">Above Average</div>
+                    <div class="rating-sublabel">Recommend proceed with additional assessment</div>
+                </div>
+            </div>
+            <div class="rating-bar">
+                <div class="rating-segment filled"></div>
+                <div class="rating-segment filled"></div>
+                <div class="rating-segment filled"></div>
+                <div class="rating-segment" style="background-color: #fbbf24;"></div>
+                <div class="rating-segment"></div>
+            </div>
+        </div>
+
+        <!-- Competency Ratings -->
+        <div class="card">
+            <h2 style="margin-bottom: 24px;">Competency Ratings</h2>
+            
+            <!-- Motivation -->
+            <div class="competency-item">
+                <div class="competency-header" onclick="toggleCompetency('motivation')">
+                    <div class="competency-header-content">
+                        <div class="competency-info">
+                            <div class="competency-icon-wrapper rating-good">
+                                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="competency-title">Motivation</div>
+                                <div class="competency-description">Interest in job, career goals alignment, commitment level</div>
+                            </div>
+                        </div>
+                        <div class="competency-rating">
+                            <div class="competency-score score-good">3.5</div>
+                            <div class="competency-label">Good</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="competency-details" id="motivation-details">
+                    <div class="evidence-grid">
+                        <div class="evidence-section positive">
+                            <h4>
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                </svg>
+                                Supporting Evidence
+                            </h4>
+                            <ul class="evidence-list">
+                                <li><span class="bullet green">•</span>Actively seeking broader leadership opportunity</li>
+                                <li><span class="bullet green">•</span>Wants to lead digital transformation at scale</li>
+                                <li><span class="bullet green">•</span>High interest level (8/10) in role</li>
+                                <li><span class="bullet green">•</span>TI is preferred over Samsung opportunity</li>
+                                <li><span class="bullet green">•</span>Willing to relocate from Phoenix to Dallas</li>
+                                <li><span class="bullet green">•</span>Interested in long-term growth to VP level</li>
+                            </ul>
+                        </div>
+                        <div class="evidence-section concerns">
+                            <h4>
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                </svg>
+                                Concerns
+                            </h4>
+                            <ul class="evidence-list">
+                                <li><span class="bullet red">•</span>Compensation expectations may be slightly high for level</li>
+                                <li><span class="bullet red">•</span>Needs more clarity on role before full commitment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Skills (Low Rating) -->
+            <div class="competency-item">
+                <div class="competency-header" onclick="toggleCompetency('teamskills')">
+                    <div class="competency-header-content">
+                        <div class="competency-info">
+                            <div class="competency-icon-wrapper rating-low">
+                                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="competency-title">Team Skills (EQ) & Development, Leadership</div>
+                                <div class="competency-description">Ability to lead, develop, and collaborate with teams</div>
+                            </div>
+                        </div>
+                        <div class="competency-rating">
+                            <div class="competency-score score-low">2.5</div>
+                            <div class="competency-label">Below Average</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="competency-details" id="teamskills-details">
+                    <div class="evidence-grid">
+                        <div class="evidence-section positive">
+                            <h4>
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                </svg>
+                                Supporting Evidence
+                            </h4>
+                            <ul class="evidence-list">
+                                <li><span class="bullet green">•</span>Turned around underperforming team in 6 months</li>
+                                <li><span class="bullet green">•</span>Team satisfaction improved from 65% to 85%</li>
+                                <li><span class="bullet green">•</span>Successfully resolved conflict with manufacturing director</li>
+                                <li><span class="bullet green">•</span>Implemented training and mentorship programs</li>
+                            </ul>
+                        </div>
+                        <div class="evidence-section concerns">
+                            <h4>
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                </svg>
+                                Concerns
+                            </h4>
+                            <ul class="evidence-list">
+                                <li><span class="bullet red">•</span>Limited experience with distributed/matrix teams</li>
+                                <li><span class="bullet red">•</span>Never managed managers before</li>
+                                <li><span class="bullet red">•</span>All team leadership in single location</li>
+                                <li><span class="bullet red">•</span>Struggled initially with stakeholder alignment</li>
+                                <li><span class="bullet red">•</span>May need development for executive presence</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="improvement-box">
+                        <h4>How to Improve This Rating</h4>
+                        <div class="improvement-text">To raise this score to 3.5-4.0, we would need to see:
+• Examples of leading virtual or distributed teams successfully
+• Experience managing managers or leading matrix organizations  
+• More sophisticated stakeholder management across multiple sites
+• Evidence of influencing without direct authority
+• Examples of building teams from scratch vs. inheriting them
+
+Recommended actions:
+1. Conduct reference checks focused on team leadership
+2. Consider panel interview with other department heads
+3. Discuss specific scenarios for managing remote teams
+4. Explore her experience with organizational change management
+5. Assess executive communication skills more deeply</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add remaining competencies here following same pattern -->
+            <!-- Job Fit -->
+            <div class="competency-item">
+                <div class="competency-header" onclick="toggleCompetency('jobfit')">
+                    <div class="competency-header-content">
+                        <div class="competency-info">
+                            <div class="competency-icon-wrapper rating-good">
+                                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="competency-title">Job Fit with Recent Comparable Results</div>
+                                <div class="competency-description">Relevant experience and proven ability to handle similar challenges</div>
+                            </div>
+                        </div>
+                        <div class="competency-rating">
+                            <div class="competency-score score-good">3.5</div>
+                            <div class="competency-label">Good</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="competency-details" id="jobfit-details">
+                    <div class="evidence-grid">
+                        <div class="evidence-section positive">
+                            <h4>
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                </svg>
+                                Supporting Evidence
+                            </h4>
+                            <ul class="evidence-list">
+                                <li><span class="bullet green">•</span>Led MES implementation similar to TI needs</li>
+                                <li><span class="bullet green">•</span>Project being scaled to other Intel sites</li>
+                                <li><span class="bullet green">•</span>12+ years in semiconductor manufacturing IT</li>
+                                <li><span class="bullet green">•</span>Experience with fault detection and automation</li>
+                            </ul>
+                        </div>
+                        <div class="evidence-section concerns">
+                            <h4>
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                </svg>
+                                Concerns
+                            </h4>
+                            <ul class="evidence-list">
+                                <li><span class="bullet red">•</span>Limited multi-site integration experience</li>
+                                <li><span class="bullet red">•</span>All experience in single-fab environments</li>
+                                <li><span class="bullet red">•</span>Would need to scale up from 12 to larger team</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achiever Pattern -->
+            <div class="competency-item">
+                <div class="competency-header" onclick="toggleCompetency('achiever')">
+                    <div class="competency-header-content">
+                        <div class="competency-info">
+                            <div class="competency-icon-wrapper rating-high">
+                                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="competency-title">Achiever Pattern & Growth Trend</div>
+                                <div class="competency-description">Track record of accomplishments and career progression</div>
+                            </div>
+                        </div>
+                        <div class="competency-rating">
+                            <div class="competency-score score-high">4.0</div>
+                            <div class="competency-label">Very Good</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="competency-details" id="achiever-details">
+                    <div class="evidence-grid">
+                        <div class="evidence-section positive">
+                            <h4>
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                </svg>
+                                Supporting Evidence
+                            </h4>
+                            <ul class="evidence-list">
+                                <li><span class="bullet green">•</span>Promoted to Sr. Manager within 1 year at Intel</li>
+                                <li><span class="bullet green">•</span>Intel Achievement Award 2023</li>
+                                <li><span class="bullet green">•</span>Consistent career progression across companies</li>
+                                <li><span class="bullet green">•</span>Delivered projects early and under budget</li>
+                            </ul>
+                        </div>
+                        <div class="evidence-section concerns">
+                            <h4>
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                </svg>
+                                Concerns
+                            </h4>
+                            <ul class="evidence-list">
+                                <li><span class="bullet red">•</span>Growth has been steady but not exceptional</li>
+                                <li><span class="bullet red">•</span>No experience at Director level yet</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interview Notes -->
+        <div class="card">
+            <div class="card-header">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <h2>Interview Notes by Step</h2>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="step-item">
+                <div class="step-header" onclick="toggleStep('step1')">
+                    <div class="step-info">
+                        <span class="step-number">Step 1</span>
+                        <h3 style="font-weight: 500;">Welcome and Review Job/Motivation</h3>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="evidence-count">3 evidence items</span>
+                        <svg class="chevron" id="step1-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="step-content" id="step1-content">
+                    <h4 style="margin-bottom: 8px;">Interview Notes:</h4>
+                    <div class="notes-box">Sarah showed strong interest in the Factory Solutions Manager role. Currently Sr. Manager of Manufacturing IT at Intel's Arizona fab - been there 4 years. Looking for broader scope and leadership opportunity.
+
+Key motivations:
+- Wants to lead digital transformation at scale
+- Interested in TI's multi-fab environment 
+- Seeks role with both technical depth and strategic impact
+
+Current job hunting status: Actively looking for 2 months, has had 3 other interviews but this role most aligned with career goals.</div>
+                    
+                    <div class="evidence-items">
+                        <h4 style="margin-bottom: 8px;">Evidence Collected:</h4>
+                        <div class="evidence-item">
+                            <div class="evidence-dot positive"></div>
+                            <div>
+                                <span>4 years at Intel leading Manufacturing IT</span>
+                                <span class="evidence-tag">Experience</span>
+                            </div>
+                        </div>
+                        <div class="evidence-item">
+                            <div class="evidence-dot positive"></div>
+                            <div>
+                                <span>Wants to lead digital transformation at scale</span>
+                                <span class="evidence-tag">Motivation</span>
+                            </div>
+                        </div>
+                        <div class="evidence-item">
+                            <div class="evidence-dot positive"></div>
+                            <div>
+                                <span>Actively seeking broader leadership opportunity</span>
+                                <span class="evidence-tag">Motivation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-item">
+                <div class="step-header" onclick="toggleStep('step2')">
+                    <div class="step-info">
+                        <span class="step-number">Step 2</span>
+                        <h3 style="font-weight: 500;">Measure Impact of First Impression</h3>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="evidence-count">1 evidence item</span>
+                        <svg class="chevron" id="step2-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="step-content" id="step2-content">
+                    <h4 style="margin-bottom: 8px;">Interview Notes:</h4>
+                    <div class="notes-box">Initial impression: Professional, articulate, perhaps slightly nervous. Came across as technical-focused initially but warmed up as interview progressed. Good eye contact, engaged listening.</div>
+                    
+                    <div class="evidence-items">
+                        <h4 style="margin-bottom: 8px;">Evidence Collected:</h4>
+                        <div class="evidence-item">
+                            <div class="evidence-dot positive"></div>
+                            <div>
+                                <span>Professional demeanor, engaged listening</span>
+                                <span class="evidence-tag">Managerial Fit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-item">
+                <div class="step-header" onclick="toggleStep('step3')">
+                    <div class="step-info">
+                        <span class="step-number">Step 3</span>
+                        <h3 style="font-weight: 500;">Review Work History and Background</h3>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="evidence-count">4 evidence items</span>
+                        <svg class="chevron" id="step3-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="step-content" id="step3-content">
+                    <h4 style="margin-bottom: 8px;">Interview Notes:</h4>
+                    <div class="notes-box">Career progression:
+- 2021-Present: Sr. Manager Manufacturing IT, Intel (promoted from Manager in 2022)
+- 2018-2021: IT Systems Manager, TSMC Phoenix
+- 2015-2018: MES Engineer, GlobalFoundries
+- 2012-2015: Software Engineer, Applied Materials
+
+Notable achievements:
+- Led 12-person team at Intel
+- Implemented new MES system saving $2M annually
+- Recognized with Intel Achievement Award 2023
+- Steady progression but all in single-fab environments</div>
+                    
+                    <div class="evidence-items">
+                        <h4 style="margin-bottom: 8px;">Evidence Collected:</h4>
+                        <div class="evidence-item">
+                            <div class="evidence-dot positive"></div>
+                            <div>
+                                <span>Promoted to Sr. Manager within 1 year at Intel</span>
+                                <span class="evidence-tag">Achiever Pattern & Growth Trend</span>
+                            </div>
+                        </div>
+                        <div class="evidence-item">
+                            <div class="evidence-dot positive"></div>
+                            <div>
+                                <span>Led MES implementation saving $2M annually</span>
+                                <span class="evidence-tag">Talent & Overall Technical Ability</span>
+                            </div>
+                        </div>
+                        <div class="evidence-item">
+                            <div class="evidence-dot positive"></div>
+                            <div>
+                                <span>12+ years in semiconductor manufacturing IT</span>
+                                <span class="evidence-tag">Experience</span>
+                            </div>
+                        </div>
+                        <div class="evidence-item">
+                            <div class="evidence-dot positive"></div>
+                            <div>
+                                <span>Intel Achievement Award 2023</span>
+                                <span class="evidence-tag">Achiever Pattern & Growth Trend</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4a - Team -->
+            <div class="step-item">
+                <div class="step-header" onclick="toggleStep('step4a')">
+                    <div class="step-info">
+                        <span class="step-number">Step 4a</span>
+                        <h3 style="font-weight: 500;">Assess Major Team Accomplishments</h3>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="evidence-count">4 evidence items</span>
+                        <svg class="chevron" id="step4a-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="step-content" id="step4a-content">
+                    <h4 style="margin-bottom: 8px;">Interview Notes:</h4>
+                    <div class="notes-box">Team Leadership Example:
+- Inherited underperforming IT support team in 2022
+- 3 of 8 members were on performance plans
+- Implemented new training program and mentorship
+- Within 6 months, all team members meeting expectations
+- Team satisfaction scores increased from 65% to 85%
+
+Challenge: Had conflict with manufacturing director over system priorities
+- Initially struggled to align on roadmap
+- Took time to understand his perspective
+- Created joint steering committee
+- Now have strong working relationship
+
+Concern: Limited experience with large, distributed teams or matrix organizations. Most team leadership has been direct reports in single location.</div>
+                    
+                    <div class="evidence-items">
+                        <h4 style="margin-bottom: 8px;">Evidence Collected:</h4>
+                        <div class="evidence-item">
+                            <div class="evidence-dot positive"></div>
+                            <div>
+                                <span>Turned around underperforming team in 6 months</span>
+                                <span class="evidence-tag">Team Skills (EQ) & Development, Leadership</span>
+                            </div>
+                        </div>
+                        <div class="evidence-item">
+                            <div class="evidence-dot positive"></div>
+                            <div>
+                                <span>Team satisfaction improved from 65% to 85%</span>
+                                <span class="evidence-tag">Team Skills (EQ) & Development, Leadership</span>
+                            </div>
+                        </div>
+                        <div class="evidence-item">
+                            <div class="evidence-dot negative"></div>
+                            <div>
+                                <span>Limited experience with distributed/matrix teams</span>
+                                <span class="evidence-tag" style="background-color: #fee2e2; color: #991b1b;">Team Skills (Weakness)</span>
+                            </div>
+                        </div>
+                        <div class="evidence-item">
+                            <div class="evidence-dot positive"></div>
+                            <div>
+                                <span>Successfully resolved conflict with manufacturing director</span>
+                                <span class="evidence-tag">Team Skills (EQ) & Development, Leadership</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendation -->
+        <div class="card">
+            <h2 style="margin-bottom: 16px;">Hiring Recommendation</h2>
+            <div class="recommendation">
+                <div class="recommendation-header">
+                    <svg class="recommendation-icon" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    </svg>
+                    <div>
+                        <h3>Proceed with Caution</h3>
+                        <p>Sarah is a solid candidate with good technical skills and a track record of delivering results. However, the team leadership concerns need to be addressed before making a final decision.</p>
+                        <div style="margin-top: 8px;">
+                            <p style="font-weight: 500; margin-bottom: 4px;">Recommended Next Steps:</p>
+                            <ol>
+                                <li>Conduct reference checks specifically focused on team leadership and matrix management</li>
+                                <li>Arrange panel interview with peer managers to assess cultural fit</li>
+                                <li>Consider a case study presentation on managing distributed teams</li>
+                                <li>Discuss detailed development plan for first 90 days if hired</li>
+                                <li>Potentially negotiate a lower starting level with clear path to target role</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>This is a sample scorecard demonstrating evidence-based interviewing</p>
+            <p>© 2025 The Adler Group, Inc. - Performance-based Hiring®</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleCompetency(id) {
+            const details = document.getElementById(id + '-details');
+            details.classList.toggle('show');
+        }
+
+        function toggleStep(id) {
+            const content = document.getElementById(id + '-content');
+            const chevron = document.getElementById(id + '-chevron');
+            content.classList.toggle('show');
+            chevron.classList.toggle('down');
+        }
+
+        // Auto-expand team skills to show the low rating
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleCompetency('teamskills');
+            toggleStep('step4a');
+        });
+    </script>
+</body>
+</html>
