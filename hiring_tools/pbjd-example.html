@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance-based Job Description Example - Factory Solutions Manager</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header-banner {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-banner h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+        }
+        
+        .header-banner p {
+            margin: 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .demo-notice {
+            background-color: #ffc107;
+            color: #333;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .demo-notice a {
+            color: #0056b3;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+        
+        .demo-notice a:hover {
+            text-decoration: underline;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .job-header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .company-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .company-name {
+            font-size: 1.5em;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .job-title {
+            font-size: 2.2em;
+            color: #333;
+            margin: 0 0 20px 0;
+        }
+        
+        .job-meta {
+            display: flex;
+            gap: 30px;
+            color: #666;
+            font-size: 1.1em;
+            flex-wrap: wrap;
+        }
+        
+        .job-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            margin: 0 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .section h3 {
+            color: #34495e;
+            margin: 20px 0 10px 0;
+        }
+        
+        .evp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .evp-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .evp-item h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+        
+        .objective {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #1976d2;
+        }
+        
+        .objective h4 {
+            margin: 0 0 10px 0;
+            color: #1565c0;
+            font-size: 1.2em;
+        }
+        
+        .objective-number {
+            display: inline-block;
+            background: #1976d2;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .subtask {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 3px solid #666;
+        }
+        
+        .subtask h4 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 1.1em;
+        }
+        
+        .subtask p {
+            margin: 0;
+            color: #555;
+        }
+        
+        .culture-fit {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            font-style: italic;
+        }
+        
+        .download-section {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .download-section h3 {
+            color: white;
+            margin: 0 0 15px 0;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: white;
+            color: #28a745;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #666;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        
+        .back-link:hover {
+            color: #3498db;
+        }
+        
+        .highlight-box {
+            background: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .highlight-box h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        
+        .highlight-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .highlight-box li {
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .header-banner h1 {
+                font-size: 2em;
+            }
+            
+            .job-title {
+                font-size: 1.8em;
+            }
+            
+            .company-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .job-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-banner">
+        <h1>Performance-based Job Description</h1>
+        <p>A New Standard for Defining What Success Looks Like</p>
+    </div>
+    
+    <div class="demo-notice">
+        📋 This is a sample performance-based job description. 
+        <a href="https://hiring.tips/AG_contactmain3">Learn how to create your own →</a>
+    </div>
+    
+    <div class="container">
+        <a href="./" class="back-link">← Back to Hiring Tools</a>
+        
+        <div class="job-header">
+            <div class="company-info">
+                <div class="company-name">Texas Instruments</div>
+                <div style="color: #666;">Example PBJD</div>
+            </div>
+            <h1 class="job-title">Factory Solutions Manager</h1>
+            <div class="job-meta">
+                <div class="job-meta-item">
+                    📍 <span>Dallas, TX</span>
+                </div>
+                <div class="job-meta-item">
+                    💼 <span>Full-time</span>
+                </div>
+                <div class="job-meta-item">
+                    🏭 <span>Manufacturing Technology</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="highlight-box">
+            <h4>🎯 What Makes This Different?</h4>
+            <p>Unlike traditional job descriptions that list requirements and responsibilities, this performance-based job description focuses on:</p>
+            <ul>
+                <li><strong>Measurable objectives</strong> with specific timeframes</li>
+                <li><strong>Critical outcomes</strong> the person must achieve</li>
+                <li><strong>Real challenges</strong> they'll need to solve</li>
+                <li><strong>Growth opportunities</strong> and impact potential</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Role Overview</h2>
+            <p>As the Factory Solutions Manager, you will lead the strategy, execution, and continuous improvement of Texas Instruments' 300mm Fab IT organizations. This role is critical to the success of our manufacturing operations, requiring you to synergize software, data analytics, automation, and IT infrastructure to deliver world-class fab performance.</p>
+            <p>You will translate complex technology investments into clear business outcomes while building an innovative and collaborative engineering culture. You will directly influence the implementation of emerging Data, AI/ML, MES, and automation technologies across multiple connected fabs. The environment is high-tech, collaborative, and demands disciplined leadership with a focus on zero disruption and operational excellence.</p>
+        </div>
+        
+        <div class="section">
+            <h2>Why This Opportunity Matters</h2>
+            <div class="evp-grid">
+                <div class="evp-item">
+                    <h4>Purpose</h4>
+                    <p>Drive technological transformation at scale within a global semiconductor leader committed to shaping the future of electronics manufacturing.</p>
+                </div>
+                <div class="evp-item">
+                    <h4>Growth</h4>
+                    <p>Lead a multi-fab digitalization roadmap, mentor cross-functional teams, and expand your impact by building enterprise-grade solutions for real-time factory operations.</p>
+                </div>
+                <div class="evp-item">
+                    <h4>Motivators</h4>
+                    <p>Innovate at the intersection of advanced manufacturing, data science, and automation while fostering a culture of excellence, accountability, and continuous learning.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Major Performance Objectives</h2>
+            <p style="margin-bottom: 20px; font-style: italic;">These are the key deliverables that will define success in this role:</p>
+            
+            <div class="objective">
+                <h4><span class="objective-number">1</span> Develop and Implement 300mm Fab Technology Roadmap</h4>
+                <p><strong>Timeline:</strong> Within the first 12 months</p>
+                <p>Design, refine, and execute a robust technology roadmap that integrates emerging software, data analytics, and automation solutions to maximize fab efficiency and quality. This includes aligning investment decisions with long-term manufacturing strategies, ensuring total cost of ownership is optimized, and leveraging AI/ML capabilities to deliver measurable business improvements.</p>
+            </div>
+            
+            <div class="objective">
+                <h4><span class="objective-number">2</span> Elevate IT Operations and Security Standards Across Fabs</h4>
+                <p><strong>Timeline:</strong> In the first 6–9 months</p>
+                <p>Lead multiple fab IT teams to standardize and elevate execution quality, enforce world-class security policies, and embed proactive quality control practices. Implement robust fault detection, statistical process control, and predictive maintenance systems, ensuring all systems achieve zero-disruption goals.</p>
+            </div>
+            
+            <div class="objective">
+                <h4><span class="objective-number">3</span> Build and Develop a Top-Tier Factory Solutions Engineering Organization</h4>
+                <p><strong>Timeline:</strong> By the end of the first year</p>
+                <p>Assess current capabilities, identify skill gaps, and develop a multi-year talent plan to attract, develop, and retain high-performing engineering teams. Foster a collaborative, innovative culture focused on operational excellence and scalable technology solutions that directly contribute to manufacturing success.</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Critical First-Year Subtasks</h2>
+            <p style="margin-bottom: 20px;">To achieve the major objectives, you'll need to complete these key milestones:</p>
+            
+            <div class="subtask">
+                <h4>Conduct Comprehensive Operational Audit</h4>
+                <p><strong>First 60 days:</strong> Complete a detailed audit of existing fab IT infrastructure, processes, and security measures. Identify vulnerabilities and inefficiencies, propose short-term corrective actions, and prioritize areas for immediate improvement.</p>
+            </div>
+            
+            <div class="subtask">
+                <h4>Deploy a 30-60-90 Day Action Plan for Quick Wins</h4>
+                <p>Establish and execute a clear plan to stabilize operations, address urgent system performance issues, and ensure continuity of manufacturing execution systems with measurable early impacts.</p>
+            </div>
+            
+            <div class="subtask">
+                <h4>Strengthen Cross-Functional Partnerships</h4>
+                <p><strong>First 90 days:</strong> Collaborate with manufacturing, engineering, quality, and business leaders to align IT initiatives with production goals. Develop communication channels and reporting systems to ensure transparency and timely decision-making.</p>
+            </div>
+            
+            <div class="subtask">
+                <h4>Implement Advanced Factory Automation Solutions</h4>
+                <p><strong>Within six months:</strong> Lead the integration of fault detection and classification (FDC), SPC, dispatch, scheduling systems, and operator interfaces to enhance end-to-end automation. Use data-driven decision-making to improve yield and production throughput.</p>
+            </div>
+            
+            <div class="subtask">
+                <h4>Define and Monitor Technical Performance KPIs</h4>
+                <p>Establish clear metrics for system uptime, security compliance, software deployment success, and user adoption rates. Regularly review performance dashboards with stakeholders to ensure alignment with business targets.</p>
+            </div>
+            
+            <div class="subtask">
+                <h4>Champion Digital Transformation Initiatives</h4>
+                <p>Continuously identify opportunities to expand the use of data analytics, AI/ML, and automation to streamline manufacturing workflows, reduce cost per wafer, and increase predictive capability for production bottlenecks.</p>
+            </div>
+            
+            <div class="subtask">
+                <h4>Continuously Evaluate and Integrate AI to Improve Performance</h4>
+                <p><strong>Within the first 90–180 days:</strong> Own the process of identifying how AI and automation tools can further enhance factory IT operations. Pilot new technologies that improve real-time data use, system reliability, and quality assurance, and develop plans for wider rollouts.</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Culture and Situation Fit</h2>
+            <div class="culture-fit">
+                <p>You will thrive in Texas Instruments' fast-paced, innovative manufacturing environment, where collaboration across engineering, manufacturing, and IT is vital. The role demands a leader who embraces continuous improvement, champions best-in-class security, and motivates diverse technical teams to deliver exceptional results under high standards of quality and reliability.</p>
+            </div>
+        </div>
+        
+        <div class="download-section">
+            <h3>Want to Use This Format?</h3>
+            <p>This performance-based job description can be imported directly into our interview guide</p>
+            <a href="TI_Factory_Solutions_Manager_PBJD.json" download class="download-btn">📥 Download JSON File</a>
+            <a href="https://hiring.tips/AG_contactmain3" class="download-btn">📚 Learn the Method</a>
+        </div>
+    </div>
+</body>
+</html>
