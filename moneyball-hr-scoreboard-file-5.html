@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moneyball for HR! - Performance-Based Hiring Scoreboard</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .scoreboard {
+            background-color: #1a4d2e;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 30px;
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            color: #ffd700;
+            margin-top: 10px;
+        }
+        
+        .header .subtitle a {
+            color: #ffd700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .header .subtitle a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+        
+        .baseball-icon {
+            font-size: 3em;
+            position: absolute;
+            top: -10px;
+        }
+        
+        .baseball-icon.left {
+            left: 20px;
+        }
+        
+        .baseball-icon.right {
+            right: 20px;
+        }
+        
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .column {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .column h2 {
+            color: #1a4d2e;
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #1a4d2e;
+            padding-bottom: 10px;
+        }
+        
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .rule-item:hover {
+            background-color: #e8f5e8;
+            transform: translateX(5px);
+        }
+        
+        .checkbox {
+            width: 25px;
+            height: 25px;
+            margin-right: 15px;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: #1a4d2e;
+        }
+        
+        .rule-content {
+            flex: 1;
+        }
+        
+        .rule-number {
+            font-weight: bold;
+            color: #d32f2f;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        
+        .rule-text {
+            color: #333;
+            line-height: 1.4;
+            font-size: 0.95em;
+        }
+        
+        .base-indicator {
+            background-color: #ffd700;
+            color: #1a4d2e;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 8px;
+            display: inline-block;
+        }
+        
+        .score-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .score-title {
+            color: #1a4d2e;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .score-definition {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        
+        .learn-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background-color: #1a4d2e;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .learn-link:hover {
+            background-color: #2a5d3e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+        
+        .diamond {
+            display: inline-block;
+            margin: 0 10px;
+            font-size: 1.5em;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+            }
+            .scoreboard {
+                box-shadow: none;
+                border: 2px solid #1a4d2e;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scoreboard">
+        <div class="header">
+            <span class="baseball-icon left">⚾</span>
+            <h1>MONEYBALL FOR HR!</h1>
+            <span class="baseball-icon right">⚾</span>
+            <div class="subtitle"><a href="https://hiring.tips/Moneyball_Signup3" target="_blank">Performance-Based Hiring Scoreboard</a></div>
+        </div>
+        
+        <div class="game-board">
+            <div class="column">
+                <h2>THE SETUP (Rules 1-5)</h2>
+                
+                <div class="rule-item">
+                    <input type="checkbox" class="checkbox">
+                    <div class="rule-content">
+                        <div class="rule-number">RULE #1: REDEFINE THE GAME</div>
+                        <div class="rule-text">Replace job descriptions with 5-6 performance objectives</div>
+                        <div class="base-indicator">NEW RULES RULE</div>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <input type="checkbox" class="checkbox">
+                    <div class="rule-content">
+                        <div class="rule-number">RULE #2: CHANGE SCOUTING</div>
+                        <div class="rule-text">Manager agrees to screen anyone with comparable work</div>
+                        <div class="base-indicator">1ST BASE</div>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <input type="checkbox" class="checkbox">
+                    <div class="rule-content">
+                        <div class="rule-number">RULE #3: BUILD FARM SYSTEM</div>
+                        <div class="rule-text">Find 10-12 semi-finalists via high-touch sourcing</div>
+                        <div class="base-indicator">RELATIONSHIP BUILDING</div>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <input type="checkbox" class="checkbox">
+                    <div class="rule-content">
+                        <div class="rule-number">RULE #4: START LIVE ACTION</div>
+                        <div class="rule-text">30-minute two-way exploratory call completed</div>
+                        <div class="base-indicator">GET TWO YESES!</div>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <input type="checkbox" class="checkbox">
+                    <div class="rule-content">
+                        <div class="rule-number">RULE #5: NEGOTIATE EARLY</div>
+                        <div class="rule-text">Both parties aligned and moving to full interview</div>
+                        <div class="base-indicator">2ND BASE - PUT $ IN PARKING LOT</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="column">
+                <h2>THE CLOSE (Rules 6-10)</h2>
+                
+                <div class="rule-item">
+                    <input type="checkbox" class="checkbox">
+                    <div class="rule-content">
+                        <div class="rule-number">RULE #6: FULL COUNT INTERVIEW</div>
+                        <div class="rule-text">Performance-based interview with full disclosure</div>
+                        <div class="base-indicator">3RD BASE</div>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <input type="checkbox" class="checkbox">
+                    <div class="rule-content">
+                        <div class="rule-number">RULE #7: INSTANT REPLAY</div>
+                        <div class="rule-text">Formal debrief with team and candidate complete</div>
+                        <div class="base-indicator">OVERCOME OBSTACLES</div>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <input type="checkbox" class="checkbox">
+                    <div class="rule-content">
+                        <div class="rule-number">RULE #8: BRING IT HOME</div>
+                        <div class="rule-text">Candidate accepts offer understanding career value</div>
+                        <div class="base-indicator">RUNNER SCORES!</div>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <input type="checkbox" class="checkbox">
+                    <div class="rule-content">
+                        <div class="rule-number">RULE #9: DELIVER ON THE PROMISE</div>
+                        <div class="rule-text">Custom onboarding plan implemented</div>
+                        <div class="base-indicator">WIN THE GAME</div>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <input type="checkbox" class="checkbox">
+                    <div class="rule-content">
+                        <div class="rule-number">RULE #10: KEEP ON WINNING</div>
+                        <div class="rule-text">Feedback loop using performance objectives</div>
+                        <div class="base-indicator">CREATE A DYNASTY</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="score-section">
+            <div class="score-title">
+                <span class="diamond">◆</span>
+                WIN-WIN HIRING DEFINED
+                <span class="diamond">◆</span>
+            </div>
+            <div class="score-definition">
+                Both the hiring manager and new hire enthusiastically agree<br>
+                it was a great decision on the one-year anniversary
+            </div>
+            <a href="https://hiring.tips/AG_contactmain3" class="learn-link" target="_blank">
+                Learn How to Play "Moneyball for HR!"
+            </a>
+        </div>
+    </div>
+</body>
+</html>
