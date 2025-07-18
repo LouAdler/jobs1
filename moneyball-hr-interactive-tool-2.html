@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moneyball for HR! - Interactive Playbook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: #1a4d2e;
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '⚾';
+            position: absolute;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 4em;
+            opacity: 0.3;
+        }
+        
+        .header::after {
+            content: '⚾';
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 4em;
+            opacity: 0.3;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header h1 a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .header h1 a:hover {
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .header p {
+            font-size: 1.3em;
+            color: #ffd700;
+        }
+        
+        .header p a {
+            color: #ffd700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .header p a:hover {
+            color: white;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        
+        .win-win-definition {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+            border: 3px solid #1a4d2e;
+        }
+        
+        .win-win-definition h2 {
+            color: #1a4d2e;
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+        
+        .win-win-definition p {
+            font-size: 1.2em;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .section-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 968px) {
+            .section-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: #1a4d2e;
+            color: white;
+            padding: 25px 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 3px solid #ffd700;
+        }
+        
+        .rule {
+            border-bottom: 1px solid #eee;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .rule:last-child {
+            border-bottom: none;
+        }
+        
+        .rule-header {
+            padding: 20px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        
+        .rule-header:hover {
+            background: #e9ecef;
+        }
+        
+        .rule.expanded .rule-header {
+            background: #fff3cd;
+        }
+        
+        .rule-title {
+            flex: 1;
+        }
+        
+        .rule-number {
+            color: #d32f2f;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        .rule-name {
+            color: #333;
+            font-size: 0.95em;
+        }
+        
+        .expand-icon {
+            font-size: 1.5em;
+            color: #1a4d2e;
+            transition: transform 0.3s ease;
+        }
+        
+        .rule.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .rule-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: white;
+        }
+        
+        .rule.expanded .rule-content {
+            max-height: 1000px;
+        }
+        
+        .rule-inner {
+            padding: 0 30px 30px;
+        }
+        
+        .rule-section {
+            margin: 20px 0;
+        }
+        
+        .rule-section h4 {
+            color: #1a4d2e;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .rule-section p, .rule-section ul {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .rule-section ul {
+            margin-left: 20px;
+        }
+        
+        .rule-section li {
+            margin-bottom: 8px;
+        }
+        
+        .metric-box {
+            background: #ffd700;
+            color: #1a4d2e;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid #1a4d2e;
+        }
+        
+        .metric-title {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        
+        .metric-description {
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .control-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .control-panel button {
+            background: #1a4d2e;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .control-panel button:hover {
+            background: #2a5d3e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .footer {
+            background: #1a4d2e;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+        
+        .footer a {
+            display: inline-block;
+            background: #ffd700;
+            color: #1a4d2e;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .footer a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .highlight {
+            background: #fffacd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .code-example {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            border-left: 4px solid #1a4d2e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><a href="https://hiring.tips/Moneyball_Signup3" target="_blank">MONEYBALL FOR HR!</a></h1>
+            <p><a href="https://hiring.tips/Moneyball_Signup3" target="_blank">The Complete Performance-Based Hiring Playbook</a></p>
+        </div>
+        
+        <div class="win-win-definition">
+            <h2>◆ THE ULTIMATE OBJECTIVE: WIN-WIN HIRING ◆</h2>
+            <p>Both the hiring manager and new hire enthusiastically agree it was a great decision on the one-year anniversary.</p>
+        </div>
+        
+        <div class="control-panel">
+            <button onclick="expandAll()">Expand All Rules</button>
+            <button onclick="collapseAll()">Collapse All Rules</button>
+        </div>
+        
+        <div class="section-container">
+            <!-- THE SETUP Section -->
+            <div class="section">
+                <div class="section-header">THE SETUP (Rules 1-5)</div>
+                
+                <!-- Rule 1 -->
+                <div class="rule" onclick="toggleRule(this)">
+                    <div class="rule-header">
+                        <div class="rule-title">
+                            <div class="rule-number">RULE #1: REDEFINE THE GAME</div>
+                            <div class="rule-name">Replace job descriptions with 5-6 performance objectives</div>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-inner">
+                            <div class="rule-section">
+                                <h4>What It Means:</h4>
+                                <p>Stop listing requirements and start defining success. Write 5-6 SMARTe objectives that describe what the person needs to accomplish in the first year.</p>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>How to Execute:</h4>
+                                <ul>
+                                    <li>Define measurable outcomes, not activities</li>
+                                    <li>Include at least one AI/automation objective</li>
+                                    <li>Make everything Specific, Measurable, Action-oriented, Results-focused, Time-bound, and Engaging</li>
+                                </ul>
+                                <div class="code-example">
+                                    Example: "Within 90 days, redesign the inventory system to reduce carrying costs by 15%"
+                                </div>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>Scorecard Connection:</h4>
+                                <p>This becomes your benchmark for evaluating:</p>
+                                <ul>
+                                    <li>Technical Skills (comparing actual experience to objectives)</li>
+                                    <li>Job Fit (intrinsic motivation to achieve these specific outcomes)</li>
+                                    <li>Comparable Results (evidence of similar accomplishments)</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="metric-box">
+                                <div class="metric-title">Metric of Success: NEW RULES RULE</div>
+                                <div class="metric-description">Transform job requirements from wish lists into measurable success outcomes. Achievement: 100% of objectives are SMARTe formatted.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rule 2 -->
+                <div class="rule" onclick="toggleRule(this)">
+                    <div class="rule-header">
+                        <div class="rule-title">
+                            <div class="rule-number">RULE #2: CHANGE SCOUTING</div>
+                            <div class="rule-name">Manager agrees to screen anyone with comparable work</div>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-inner">
+                            <div class="rule-section">
+                                <h4>What It Means:</h4>
+                                <p>Hiring managers must commit to interviewing anyone who has achieved comparable results, regardless of industry, title, or traditional qualifications.</p>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>How to Execute:</h4>
+                                <ul>
+                                    <li>Get written agreement before starting the search</li>
+                                    <li>Focus on outcomes achieved, not years of experience</li>
+                                    <li>Look for the "Achiever Pattern" - consistent top 25% performance</li>
+                                    <li>Consider non-traditional backgrounds</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>Scorecard Connection:</h4>
+                                <p>Opens the door to evaluate:</p>
+                                <ul>
+                                    <li>Achiever Pattern & Growth Trend</li>
+                                    <li>Transferable skills from different contexts</li>
+                                    <li>Problem-solving abilities across industries</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="metric-box">
+                                <div class="metric-title">Metric of Success: 1ST BASE</div>
+                                <div class="metric-description">Hiring manager commits in writing to interview all candidates with comparable achievements. Achievement: Signed agreement before search begins.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rule 3 -->
+                <div class="rule" onclick="toggleRule(this)">
+                    <div class="rule-header">
+                        <div class="rule-title">
+                            <div class="rule-number">RULE #3: BUILD FARM SYSTEM</div>
+                            <div class="rule-name">Find 10-12 semi-finalists via high-touch sourcing</div>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-inner">
+                            <div class="rule-section">
+                                <h4>What It Means:</h4>
+                                <p>Quality over quantity. Identify 10-12 people who would both be interested AND interesting to the hiring manager.</p>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>How to Execute:</h4>
+                                <ul>
+                                    <li>Use "Career Zone" targeting (Passive, Explorer, Tiptoer, Active)</li>
+                                    <li>Leverage AI for initial sourcing, human touch for engagement</li>
+                                    <li>Focus on relationship building, not transaction</li>
+                                    <li>Create compelling outreach that speaks to career growth</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>Scorecard Connection:</h4>
+                                <p>Helps identify candidates with:</p>
+                                <ul>
+                                    <li>Strong cultural alignment potential</li>
+                                    <li>Intrinsic motivation indicators</li>
+                                    <li>Team collaboration evidence</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="metric-box">
+                                <div class="metric-title">Metric of Success: RELATIONSHIP BUILDING</div>
+                                <div class="metric-description">Build a qualified pipeline where 80% of candidates would both accept exploratory calls AND be of interest to hiring manager.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rule 4 -->
+                <div class="rule" onclick="toggleRule(this)">
+                    <div class="rule-header">
+                        <div class="rule-title">
+                            <div class="rule-number">RULE #4: START LIVE ACTION</div>
+                            <div class="rule-name">30-minute two-way exploratory call completed</div>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-inner">
+                            <div class="rule-section">
+                                <h4>What It Means:</h4>
+                                <p>Not an interview - a career conversation. Both sides explore if there's mutual interest before investing more time.</p>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>How to Execute:</h4>
+                                <ul>
+                                    <li>Lead with the compelling challenges of the role</li>
+                                    <li>Ask: "Walk me through your most comparable accomplishment"</li>
+                                    <li>Listen for evidence of intrinsic motivation</li>
+                                    <li>Frame as a potential 30% career move (stretch, growth, satisfaction)</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>Scorecard Connection:</h4>
+                                <p>Initial assessment of:</p>
+                                <ul>
+                                    <li>Comparable Results</li>
+                                    <li>Communication skills</li>
+                                    <li>Motivation to do THIS work (not just get A job)</li>
+                                    <li>Manager fit potential</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="metric-box">
+                                <div class="metric-title">Metric of Success: GET TWO YESES!</div>
+                                <div class="metric-description">Both candidate and hiring manager agree to proceed to full interview process. Achievement: 75% conversion rate from exploratory calls.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rule 5 -->
+                <div class="rule" onclick="toggleRule(this)">
+                    <div class="rule-header">
+                        <div class="rule-title">
+                            <div class="rule-number">RULE #5: ESTABLISH THE CAREER MOVE</div>
+                            <div class="rule-name">Both parties aligned and moving to full interview</div>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-inner">
+                            <div class="rule-section">
+                                <h4>What It Means:</h4>
+                                <p>Compensation goes in the parking lot. Focus on whether this role offers 30% non-monetary growth.</p>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>How to Execute:</h4>
+                                <ul>
+                                    <li>Map the role to candidate's career trajectory</li>
+                                    <li>Identify specific areas of stretch and growth</li>
+                                    <li>Get verbal commitment: "If this truly is a career move, would you be open to exploring?"</li>
+                                    <li>Document what would make this a win-win hire</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>Scorecard Connection:</h4>
+                                <p>Validates:</p>
+                                <ul>
+                                    <li>Long-term motivation potential</li>
+                                    <li>Cultural fit indicators</li>
+                                    <li>Growth trajectory alignment</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="metric-box">
+                                <div class="metric-title">Metric of Success: 2ND BASE - PUT $$ IN PARKING LOT</div>
+                                <div class="metric-description">Candidate agrees this represents a 30% career move before discussing compensation. Achievement: Documented career move factors for each finalist.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SCORING SYSTEM Section -->
+            <div class="section">
+                <div class="section-header">SCORING SYSTEM (Rules 6-10)</div>
+                
+                <!-- Rule 6 -->
+                <div class="rule" onclick="toggleRule(this)">
+                    <div class="rule-header">
+                        <div class="rule-title">
+                            <div class="rule-number">RULE #6: FULL COUNT INTERVIEW</div>
+                            <div class="rule-name">Performance-based interview with full disclosure</div>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-inner">
+                            <div class="rule-section">
+                                <h4>What It Means:</h4>
+                                <p>Deep-dive interviews focused on actual accomplishments related to your performance objectives.</p>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>How to Execute:</h4>
+                                <ul>
+                                    <li>Use the two-question Performance-based Interview</li>
+                                    <li>"Walk me through your work history" (looking for patterns)</li>
+                                    <li>"Tell me about your most significant accomplishment related to [objective]"</li>
+                                    <li>Spend 15-20 minutes on each major accomplishment</li>
+                                    <li>Get specific evidence, metrics, and context</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>Scorecard Connection:</h4>
+                                <p>Gather evidence to score:</p>
+                                <ul>
+                                    <li>All technical competencies</li>
+                                    <li>Management & organizational ability</li>
+                                    <li>Team skills and leadership</li>
+                                    <li>Problem-solving approach</li>
+                                    <li>Results orientation</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="metric-box">
+                                <div class="metric-title">Metric of Success: 3RD BASE</div>
+                                <div class="metric-description">Complete evidence-based assessment with specific examples for each scorecard factor. Achievement: No "Need More Evidence" ratings on final candidates.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rule 7 -->
+                <div class="rule" onclick="toggleRule(this)">
+                    <div class="rule-header">
+                        <div class="rule-title">
+                            <div class="rule-number">RULE #7: INSTANT REPLAY</div>
+                            <div class="rule-name">Formal debrief with team and candidate complete</div>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-inner">
+                            <div class="rule-section">
+                                <h4>What It Means:</h4>
+                                <p>Structured evidence-sharing session where all interviewers present findings and reach consensus using the scorecard.</p>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>How to Execute:</h4>
+                                <ul>
+                                    <li>Each interviewer presents evidence, not opinions</li>
+                                    <li>Score each factor using the 1-5 scale</li>
+                                    <li>Identify gaps needing investigation</li>
+                                    <li>Address any yellow flags or concerns</li>
+                                    <li>Get candidate's assessment of role fit</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>Scorecard Connection:</h4>
+                                <p>Complete team scoring of:</p>
+                                <ul>
+                                    <li>All factors with shared evidence</li>
+                                    <li>Identify any "Need More Evidence" areas</li>
+                                    <li>Consensus on cultural fit</li>
+                                    <li>Agreement on predicted Quality of Hire</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="metric-box">
+                                <div class="metric-title">Metric of Success: OVERCOME OBSTACLES</div>
+                                <div class="metric-description">Identify and resolve all concerns before making offer. Achievement: Consensus "Yes" from all interviewers with documented evidence.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rule 8 -->
+                <div class="rule" onclick="toggleRule(this)">
+                    <div class="rule-header">
+                        <div class="rule-title">
+                            <div class="rule-number">RULE #8: BRING IT HOME</div>
+                            <div class="rule-name">Candidate accepts offer understanding career value</div>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-inner">
+                            <div class="rule-section">
+                                <h4>What It Means:</h4>
+                                <p>Close on career opportunity first, compensation second. Ensure candidate sees long-term value.</p>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>How to Execute:</h4>
+                                <ul>
+                                    <li>Use the 1-10 test: "Where does this rank vs. other opportunities?"</li>
+                                    <li>Address any concerns keeping it below 8</li>
+                                    <li>Confirm the 30% career move factors</li>
+                                    <li>Only present offer after verbal commitment</li>
+                                    <li>Test with: "What would stop you from accepting?"</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>Scorecard Connection:</h4>
+                                <p>Final validation of:</p>
+                                <ul>
+                                    <li>Motivation squared (to do the job, not get it)</li>
+                                    <li>Recruitability score</li>
+                                    <li>Long-term success predictors</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="metric-box">
+                                <div class="metric-title">Metric of Success: RUNNER SCORES!</div>
+                                <div class="metric-description">Candidate accepts offer rating opportunity 8+ on 1-10 scale. Achievement: 90% offer acceptance rate with no post-acceptance dropouts.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rule 9 -->
+                <div class="rule" onclick="toggleRule(this)">
+                    <div class="rule-header">
+                        <div class="rule-title">
+                            <div class="rule-number">RULE #9: DELIVER ON THE PROMISE</div>
+                            <div class="rule-name">Custom onboarding plan implemented</div>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-inner">
+                            <div class="rule-section">
+                                <h4>What It Means:</h4>
+                                <p>The real win happens after start date. Create a success roadmap tied to the original performance objectives.</p>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>How to Execute:</h4>
+                                <ul>
+                                    <li>Build 30-60-90 day plan before start date</li>
+                                    <li>Assign "success sponsor" beyond direct manager</li>
+                                    <li>Weekly check-ins first month</li>
+                                    <li>Map early wins to performance objectives</li>
+                                    <li>Course-correct quickly if needed</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>Scorecard Connection:</h4>
+                                <p>Sets foundation for measuring:</p>
+                                <ul>
+                                    <li>Actual performance vs. predicted scores</li>
+                                    <li>Early indicators of quality of hire</li>
+                                    <li>Validation of assessment accuracy</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="metric-box">
+                                <div class="metric-title">Metric of Success: WIN THE GAME</div>
+                                <div class="metric-description">New hire successfully completes first performance objective. Achievement: 90-day satisfaction score of 4+ from both manager and new hire.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rule 10 -->
+                <div class="rule" onclick="toggleRule(this)">
+                    <div class="rule-header">
+                        <div class="rule-title">
+                            <div class="rule-number">RULE #10: KEEP ON WINNING</div>
+                            <div class="rule-name">Feedback loop using performance objectives</div>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-inner">
+                            <div class="rule-section">
+                                <h4>What It Means:</h4>
+                                <p>Measure actual Quality of Hire against predictions. Use data to continuously improve the process.</p>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>How to Execute:</h4>
+                                <ul>
+                                    <li>Score same factors at 30, 60, 90 days, and one year</li>
+                                    <li>Compare actual performance to interview predictions</li>
+                                    <li>Track which interviewers are best predictors</li>
+                                    <li>Identify pattern misses in assessment</li>
+                                    <li>Refine process based on data</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-section">
+                                <h4>Scorecard Connection:</h4>
+                                <p>Validates entire process by:</p>
+                                <ul>
+                                    <li>Measuring prediction accuracy</li>
+                                    <li>Identifying successful patterns</li>
+                                    <li>Refining scorecard factors</li>
+                                    <li>Building institutional knowledge</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="metric-box">
+                                <div class="metric-title">Metric of Success: CREATE A DYNASTY</div>
+                                <div class="metric-description">Build predictive hiring system with continuous improvement. Achievement: 67% of hires score in top half of peer group at one year.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h2>THE MONEYBALL PROMISE</h2>
+            <p>Stop gambling on hiring. Start predicting success.</p>
+            <p>When you focus on performance and fit rather than skills and experience, you build teams that win consistently.</p>
+            <a href="https://hiring.tips/AG_contactmain3" target="_blank">Learn How to Play "Moneyball for HR!"</a>
+        </div>
+    </div>
+    
+    <script>
+        function toggleRule(ruleElement) {
+            ruleElement.classList.toggle('expanded');
+        }
+        
+        function expandAll() {
+            document.querySelectorAll('.rule').forEach(rule => {
+                rule.classList.add('expanded');
+            });
+        }
+        
+        function collapseAll() {
+            document.querySelectorAll('.rule').forEach(rule => {
+                rule.classList.remove('expanded');
+            });
+        }
+    </script>
+</body>
+</html>
