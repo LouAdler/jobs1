@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Win-Win Analysis - Senior Software Engineer Position</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .scenario-info {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .probability-display {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .probability-circle {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 30px;
+            position: relative;
+            background: conic-gradient(
+                #ffc107 0deg,
+                #ffc107 216deg,
+                #e9ecef 216deg
+            );
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .probability-inner {
+            width: 210px;
+            height: 210px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .probability-value {
+            font-size: 4em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .scores-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .score-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .score-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+        
+        .assessment-comparison {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .score-cell {
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .score-1, .score-2 { color: #dc3545; }
+        .score-3 { color: #ffc107; }
+        .score-4, .score-5 { color: #28a745; }
+        
+        .gap-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .gap-aligned { background: #d4edda; color: #155724; }
+        .gap-minor { background: #fff3cd; color: #856404; }
+        .gap-major { background: #f8d7da; color: #721c24; }
+        
+        .recommendations-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .rec-category {
+            margin-bottom: 30px;
+        }
+        
+        .rec-category h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .recommendation-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .recommendation-item.critical {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        
+        .rec-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .action-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+        
+        .action-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .action-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #0066cc;
+            font-weight: bold;
+        }
+        
+        .impact-badge {
+            display: inline-block;
+            background: #dc3545;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-left: 10px;
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .verdict-box {
+            background: #fff3cd;
+            border: 2px solid #ffeeba;
+            color: #856404;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sample Win-Win Analysis Report</h1>
+            <p>Senior Software Engineer Position - TechCorp Inc.</p>
+        </div>
+        
+        <div class="scenario-info">
+            <h2 class="section-title">Scenario Overview</h2>
+            <p><strong>Position:</strong> Senior Software Engineer - Cloud Infrastructure Team</p>
+            <p><strong>Company:</strong> TechCorp Inc. (Mid-size SaaS company, 500 employees)</p>
+            <p><strong>Candidate:</strong> Sarah Chen (8 years experience, currently unemployed for 2 months)</p>
+            <p><strong>Assessment Date:</strong> January 15, 2025</p>
+        </div>
+        
+        <div class="probability-display">
+            <h2 class="section-title">Win-Win Success Probability</h2>
+            <div class="probability-circle">
+                <div class="probability-inner">
+                    <div class="probability-value">60%</div>
+                    <div class="probability-label">Win-Win Score</div>
+                </div>
+            </div>
+            
+            <div class="verdict-box">
+                Good Match - Success probable with key adjustments needed
+            </div>
+            
+            <div class="scores-grid">
+                <div class="score-card">
+                    <div>Company QoH Score</div>
+                    <div class="score-value">72%</div>
+                    <small>Quality of Hire Assessment</small>
+                </div>
+                <div class="score-card">
+                    <div>Candidate Career Score</div>
+                    <div class="score-value">56%</div>
+                    <small>After Maslow Adjustment</small>
+                </div>
+                <div class="score-card">
+                    <div>Alignment Factor</div>
+                    <div class="score-value">78%</div>
+                    <small>Expectation Match</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="assessment-comparison">
+            <h2 class="section-title">Detailed Factor-by-Factor Analysis</h2>
+            
+            <h3>Company Side Assessment (What TechCorp Needs)</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Factor</th>
+                        <th>Score</th>
+                        <th>Assessment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Skills, Experience & Education</strong></td>
+                        <td class="score-cell score-4">4/5</td>
+                        <td>Strong technical skills in cloud platforms, missing some Kubernetes experience</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Achiever Pattern & Growth</strong></td>
+                        <td class="score-cell score-3">3/5</td>
+                        <td>Steady progression but recent job changes raise questions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Talent & Technical Ability</strong></td>
+                        <td class="score-cell score-5">5/5</td>
+                        <td>Exceptional problem solver, contributed to open source projects</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Management & Organization</strong></td>
+                        <td class="score-cell score-4">4/5</td>
+                        <td>Led projects successfully, good at managing technical debt</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Team Skills & Leadership</strong></td>
+                        <td class="score-cell score-3">3/5</td>
+                        <td>Good collaborator but limited leadership experience</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Problem Solving</strong></td>
+                        <td class="score-cell score-5">5/5</td>
+                        <td>Innovative thinker, solved critical production issues</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Job Fit</strong></td>
+                        <td class="score-cell score-4">4/5</td>
+                        <td>Similar role at smaller scale, ready to scale up</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Managerial Fit</strong></td>
+                        <td class="score-cell score-3">3/5</td>
+                        <td>Compatible styles but manager prefers more proactive communication</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Culture Fit</strong></td>
+                        <td class="score-cell score-2">2/5</td>
+                        <td>Prefers remote work, company emphasizes in-office collaboration</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Motivation (Power Factor)</strong></td>
+                        <td class="score-cell score-4">4/5</td>
+                        <td>Passionate about cloud technology and scalability challenges</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3 style="margin-top: 30px;">Candidate Side Assessment (What Sarah Wants)</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Factor</th>
+                        <th>Score</th>
+                        <th>Assessment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Growth Opportunity</strong></td>
+                        <td class="score-cell score-4">4/5</td>
+                        <td>Clear path to Staff Engineer, learning opportunities in K8s</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Work Impact & Challenge</strong></td>
+                        <td class="score-cell score-5">5/5</td>
+                        <td>Mission-critical infrastructure work, high visibility projects</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Manager & Mentorship</strong></td>
+                        <td class="score-cell score-3">3/5</td>
+                        <td>Manager is competent but not known for mentoring</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Company Culture</strong></td>
+                        <td class="score-cell score-2">2/5</td>
+                        <td>Concerns about work-life balance and remote work policies</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Team Quality</strong></td>
+                        <td class="score-cell score-4">4/5</td>
+                        <td>Strong engineering team with good collaboration</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Work-Life Balance</strong></td>
+                        <td class="score-cell score-2">2/5</td>
+                        <td>On-call rotation, expectation of 50+ hour weeks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Compensation & Benefits</strong></td>
+                        <td class="score-cell score-3">3/5</td>
+                        <td>Base salary at market rate, limited equity upside</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Location & Commute</strong></td>
+                        <td class="score-cell score-2">2/5</td>
+                        <td>45-minute commute, 4 days in-office requirement</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Desperation Level (Risk Factor)</strong></td>
+                        <td class="score-cell score-3">3/5</td>
+                        <td>Moderate pressure - 2 months unemployed, 3 months runway</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p style="margin-top: 20px;"><strong>Pre-Maslow Score:</strong> 70% | <strong>Post-Maslow Score:</strong> 56% (20% reduction due to desperation)</p>
+        </div>
+        
+        <div class="assessment-comparison">
+            <h2 class="section-title">Key Alignment Gaps</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Area</th>
+                        <th>Company Offers/Needs</th>
+                        <th>Candidate Wants/Offers</th>
+                        <th>Gap</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Culture & Work Style</strong></td>
+                        <td>In-office collaboration (2/5)</td>
+                        <td>Remote flexibility desired (2/5)</td>
+                        <td><span class="gap-indicator gap-major">Major Gap</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Work-Life Balance</strong></td>
+                        <td>High-intensity environment</td>
+                        <td>Seeking balance (2/5)</td>
+                        <td><span class="gap-indicator gap-major">Major Gap</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Location/Commute</strong></td>
+                        <td>4 days in-office required</td>
+                        <td>45-min commute concern (2/5)</td>
+                        <td><span class="gap-indicator gap-major">Major Gap</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technical Skills</strong></td>
+                        <td>Strong match (4/5)</td>
+                        <td>Exceptional ability (5/5)</td>
+                        <td><span class="gap-indicator gap-aligned">Well Aligned</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Growth Potential</strong></td>
+                        <td>Leadership development needed (3/5)</td>
+                        <td>Seeking growth (4/5)</td>
+                        <td><span class="gap-indicator gap-minor">Minor Gap</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="recommendations-section">
+            <h2 class="section-title">Recommendations to Improve Win-Win Probability</h2>
+            
+            <div class="rec-category">
+                <h3>🚨 Critical Actions (Must Address for Success)</h3>
+                
+                <div class="recommendation-item critical">
+                    <div class="rec-title">
+                        Address Work-Life Balance and Remote Work Concerns
+                        <span class="impact-badge">HIGH IMPACT</span>
+                    </div>
+                    <ul class="action-list">
+                        <li>Consider offering 2-3 days remote work per week initially</li>
+                        <li>Implement "no meeting Fridays" or core collaboration hours</li>
+                        <li>Review on-call rotation to ensure adequate recovery time</li>
+                        <li>Discuss flexible start/end times to help with commute</li>
+                        <li>Consider compressed work week option (4x10)</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendation-item critical">
+                    <div class="rec-title">
+                        Mitigate Candidate's Moderate Desperation Level
+                        <span class="impact-badge">HIGH IMPACT</span>
+                    </div>
+                    <ul class="action-list">
+                        <li>Accelerate decision timeline - provide answer within 1 week</li>
+                        <li>Be transparent about all steps remaining in process</li>
+                        <li>Consider offering sign-on bonus to ease financial pressure</li>
+                        <li>Discuss start date flexibility if candidate needs time</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="rec-category">
+                <h3>⚠️ Important Improvements (Should Address)</h3>
+                
+                <div class="recommendation-item">
+                    <div class="rec-title">
+                        Enhance Compensation Package to Offset Other Gaps
+                    </div>
+                    <ul class="action-list">
+                        <li>Increase base salary by 10-15% above initial offer</li>
+                        <li>Offer meaningful equity participation (0.1-0.2%)</li>
+                        <li>Include professional development budget ($5K/year)</li>
+                        <li>Provide commute reimbursement or parking subsidy</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendation-item">
+                    <div class="rec-title">
+                        Strengthen Manager-Candidate Relationship
+                    </div>
+                    <ul class="action-list">
+                        <li>Schedule weekly 1-on-1s for first 3 months</li>
+                        <li>Create clear 30-60-90 day plan together</li>
+                        <li>Identify external mentor or coach for leadership development</li>
+                        <li>Discuss communication preferences upfront</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendation-item">
+                    <div class="rec-title">
+                        Bridge the Culture Gap
+                    </div>
+                    <ul class="action-list">
+                        <li>Pair with culture buddy who also values work-life balance</li>
+                        <li>Share examples of employees who successfully work flexibly</li>
+                        <li>Highlight team's async communication practices</li>
+                        <li>Involve candidate in defining team culture going forward</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="rec-category">
+                <h3>💡 Opportunity Areas (Nice to Have)</h3>
+                
+                <div class="recommendation-item">
+                    <div class="rec-title">
+                        Maximize Technical Strengths
+                    </div>
+                    <ul class="action-list">
+                        <li>Fast-track to technical lead role within 6 months</li>
+                        <li>Sponsor conference attendance and speaking opportunities</li>
+                        <li>Create innovation time (20% for personal projects)</li>
+                        <li>Establish patent bonus program for innovations</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendation-item">
+                    <div class="rec-title">
+                        Address Kubernetes Skill Gap
+                    </div>
+                    <ul class="action-list">
+                        <li>Provide CKA (Certified Kubernetes Administrator) training</li>
+                        <li>Pair with K8s expert for first project</li>
+                        <li>Allow ramp-up time in first quarter</li>
+                        <li>Set up test environment for experimentation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scenario-info">
+            <h2 class="section-title">Bottom Line</h2>
+            <p><strong>Current State:</strong> 60% probability suggests moderate risk that can be mitigated with targeted actions.</p>
+            <p><strong>Potential State:</strong> Implementing critical and important recommendations could raise probability to 75-80%.</p>
+            <p><strong>Key Success Factor:</strong> Flexibility on remote work and work-life balance is essential. Without addressing these concerns, Sarah may accept the offer due to financial pressure but is likely to continue job searching, resulting in early turnover.</p>
+            <p><strong>Investment Required:</strong> ~$25K additional investment (salary increase, sign-on bonus, development budget) could secure a high-performing engineer and prevent costly turnover.</p>
+        </div>
+    </div>
+</body>
+</html>
