@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality of Hire Talent Scorecard - Michael Chen (Sample)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        /* Sample Banner */
+        .sample-banner {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .sample-banner a {
+            color: white;
+            text-decoration: underline;
+            margin-left: 10px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .info-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-field {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-field label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .info-field input {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background-color: #f8f9fa;
+        }
+        
+        .info-field input:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+        
+        .scorecard-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #2a5298;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .factor-row {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        
+        .factor-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        
+        .factor-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .rating-options {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .rating-option {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .rating-option:hover {
+            background: #f0f4f8;
+            border-color: #2a5298;
+            z-index: 10;
+        }
+        
+        .rating-option.selected {
+            background: #2a5298;
+            color: white;
+            border-color: #2a5298;
+        }
+        
+        .rating-option input[type="radio"] {
+            display: none;
+        }
+        
+        .rating-option .level {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .rating-option .description {
+            font-size: 0.85em;
+            line-height: 1.3;
+        }
+        
+        /* Enhanced Tooltip Styles */
+        .evidence-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 10px;
+            padding: 15px;
+            background: #333;
+            color: white;
+            border-radius: 8px;
+            width: 350px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 1000;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        .evidence-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #333;
+        }
+        
+        .rating-option:hover .evidence-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .evidence-tooltip h4 {
+            color: #4CAF50;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .evidence-tooltip ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .evidence-tooltip li {
+            margin-bottom: 5px;
+        }
+        
+        .evidence-tooltip .warning {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        
+        .evidence-tooltip .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .comment-section {
+            margin-top: 15px;
+        }
+        
+        .comment-section textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+            min-height: 80px;
+            background-color: #fffef0;
+        }
+        
+        .comment-section textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+        
+        .overall-evidence {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .overall-evidence textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: vertical;
+            background-color: #fffef0;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #2a5298;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3c72;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .score-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 200px;
+            z-index: 100;
+        }
+        
+        .score-display h3 {
+            color: #2a5298;
+            margin-bottom: 10px;
+        }
+        
+        .score-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffc107;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 20px 20px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        .footer a {
+            color: #2a5298;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer em {
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .rating-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .score-display {
+                position: static;
+                margin-bottom: 20px;
+            }
+            
+            .evidence-tooltip {
+                width: 280px;
+                font-size: 0.85em;
+            }
+        }
+        
+        @media print {
+            .action-buttons {
+                display: none;
+            }
+            
+            .score-display {
+                position: static;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            
+            .evidence-tooltip {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sample-banner">
+        📋 SAMPLE COMPLETED SCORECARD - This is a demonstration of a completed assessment
+        <a href="https://hiring.tips/AG_contactmain3">Learn More About Performance-based Hiring</a>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Quality of Hire Talent Scorecard</h1>
+            <p>Performance-based Interview Assessment Tool - Completed Example</p>
+        </div>
+        
+        <div class="score-display">
+            <h3>Average Score</h3>
+            <div class="score-value" id="totalScore">2.8 / 5.0</div>
+        </div>
+        
+        <div class="info-section">
+            <div class="info-grid">
+                <div class="info-field">
+                    <label for="candidate">Candidate Name</label>
+                    <input type="text" id="candidate" value="Michael Chen" readonly>
+                </div>
+                <div class="info-field">
+                    <label for="position">Position</label>
+                    <input type="text" id="position" value="Factory Solutions Manager" readonly>
+                </div>
+                <div class="info-field">
+                    <label for="interviewer">Interviewer</label>
+                    <input type="text" id="interviewer" value="Sarah Johnson" readonly>
+                </div>
+                <div class="info-field">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" value="2025-01-15" readonly>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scorecard-section">
+            <h2 class="section-title">BASIC COMPETENCIES</h2>
+            
+            <div class="factor-row" data-factor="primarySkills">
+                <div class="factor-name">Primary Skills</div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="primarySkills" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Bare minimum. Has the basics but needs training.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Primary Skills</h4>
+                            <ul>
+                                <li>Shows basic understanding of core concepts</li>
+                                <li>Requires extensive training and supervision</li>
+                                <li>Examples: Entry-level knowledge, theoretical understanding only</li>
+                                <li class="warning">Red flag: Cannot demonstrate practical application</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="primarySkills" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Has the basics but needs training.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Primary Skills</h4>
+                            <ul>
+                                <li>Can perform routine tasks with guidance</li>
+                                <li>Has 1-2 years relevant experience</li>
+                                <li>Examples: Completed training, handled simple projects</li>
+                                <li>Needs mentoring for complex tasks</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option selected">
+                        <input type="radio" name="primarySkills" value="3" checked>
+                        <span class="level">Level 3</span>
+                        <span class="description">Covers all direct job needs well.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Primary Skills</h4>
+                            <ul>
+                                <li>Independently handles all core responsibilities</li>
+                                <li>3-5 years of proven experience</li>
+                                <li>Examples: Led similar projects, achieved measurable results</li>
+                                <li class="success">Can start contributing immediately</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="primarySkills" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Extremely strong in all job needs.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Primary Skills</h4>
+                            <ul>
+                                <li>Expert-level proficiency across all areas</li>
+                                <li>5-8 years with exceptional achievements</li>
+                                <li>Examples: Industry recognition, innovative solutions</li>
+                                <li>Mentors others and improves processes</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="primarySkills" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Broad. Brings far more to the table.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Primary Skills</h4>
+                            <ul>
+                                <li>Industry thought leader or innovator</li>
+                                <li>8+ years with transformational impact</li>
+                                <li>Examples: Published author, speaker, patent holder</li>
+                                <li class="success">Will elevate entire team/department</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Primary Skills..." data-factor="primarySkills" readonly>Michael has solid foundational skills in fab IT management. Led MES implementation at Intel's 200mm fab. Familiar with FDC and SPC systems but hasn't worked with 300mm fabs specifically. Would need 3-6 months to fully adapt to TI's specific tech stack and scale.</textarea>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="experience">
+                <div class="factor-name">Experience</div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="experience" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Minimum threshold.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Experience</h4>
+                            <ul>
+                                <li>Less than minimum years required</li>
+                                <li>Unrelated industry or role background</li>
+                                <li>Examples: Career changer, recent graduate</li>
+                                <li class="warning">Will need significant ramp-up time</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="experience" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Meets most, but not all needs.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Experience</h4>
+                            <ul>
+                                <li>Has 70% of required experience</li>
+                                <li>Similar role in different industry</li>
+                                <li>Examples: Transferable skills, adjacent experience</li>
+                                <li>Some gaps that can be addressed</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option selected">
+                        <input type="radio" name="experience" value="3" checked>
+                        <span class="level">Level 3</span>
+                        <span class="description">Meets all experience needs.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Experience</h4>
+                            <ul>
+                                <li>Matches all job requirements</li>
+                                <li>Same industry and similar role</li>
+                                <li>Examples: Direct competitor experience, proven track record</li>
+                                <li class="success">Ready to perform from day one</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="experience" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Broader and related experience.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Experience</h4>
+                            <ul>
+                                <li>Exceeds requirements with added value</li>
+                                <li>Multiple relevant industries/roles</li>
+                                <li>Examples: International experience, M&A, turnarounds</li>
+                                <li>Brings best practices from other contexts</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="experience" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Excellent background for role.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Experience</h4>
+                            <ul>
+                                <li>Ideal progression and preparation</li>
+                                <li>Built similar functions from scratch</li>
+                                <li>Examples: IPO experience, scaled teams 10x</li>
+                                <li class="success">Perfect strategic fit for company stage</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Experience..." data-factor="experience" readonly>8 years in semiconductor manufacturing IT. Started as systems engineer at Intel, promoted to IT Manager after 3 years. Current role at GlobalFoundries managing fab IT for 200mm operations. Direct experience with MES, but limited exposure to AI/ML implementations. No experience with multi-fab coordination.</textarea>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="achieverPattern">
+                <div class="factor-name">Achiever Pattern & Growth Trend</div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="achieverPattern" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">No evidence the person is in the top 50%. Spotty trend.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Achiever Pattern</h4>
+                            <ul>
+                                <li>Job hopping without progression</li>
+                                <li>No significant accomplishments cited</li>
+                                <li>Examples: Lateral moves, short tenures</li>
+                                <li class="warning">Pattern of underperformance</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option selected">
+                        <input type="radio" name="achieverPattern" value="2" checked>
+                        <span class="level">Level 2</span>
+                        <span class="description">Some, but not sure if person is in top 50%. Flatter trend.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Achiever Pattern</h4>
+                            <ul>
+                                <li>Steady contributor but not standout</li>
+                                <li>Some achievements but not consistent</li>
+                                <li>Examples: Met goals, maintained status quo</li>
+                                <li>Limited evidence of exceeding expectations</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="achieverPattern" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Evidence clearly indicates person is in top 25%! Upward growth.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Achiever Pattern</h4>
+                            <ul>
+                                <li>Consistent promotions every 2-3 years</li>
+                                <li>Exceeded goals by 20-30%</li>
+                                <li>Examples: Award winner, top performer ratings</li>
+                                <li class="success">Clear upward trajectory</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="achieverPattern" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Evidence clearly indicates person is in top 10-15%. Steep upward path.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Achiever Pattern</h4>
+                            <ul>
+                                <li>Fast-track promotions ahead of peers</li>
+                                <li>Exceeded goals by 40-50%+</li>
+                                <li>Examples: Youngest VP, President's Club multiple years</li>
+                                <li>Recruited away by top companies</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="achieverPattern" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Evidence clearly indicates person is in top 5%. Handles big stretch roles.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Achiever Pattern</h4>
+                            <ul>
+                                <li>Exceptional progression (e.g., IC to VP in 5 years)</li>
+                                <li>Transformed departments/companies</li>
+                                <li>Examples: Turned around failing division, 10x growth</li>
+                                <li class="success">Pattern of impossible achievements</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Achiever Pattern..." data-factor="achieverPattern" readonly>Steady progression but not exceptional. One promotion in 8 years (engineer to manager). Met performance goals consistently but rarely exceeded them. Received "Meets Expectations" ratings for past 3 years. No major awards or recognition. Seems content with current pace - mentioned work-life balance several times.</textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scorecard-section">
+            <h2 class="section-title">ESSENTIAL CORE COMPETENCES</h2>
+            
+            <div class="factor-row" data-factor="technicalAbility">
+                <div class="factor-name">Talent & Overall Technical Ability</div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="technicalAbility" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Nothing remarkable. Needs too much extra training and support.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Technical Ability</h4>
+                            <ul>
+                                <li>Cannot explain technical concepts clearly</li>
+                                <li>No evidence of technical problem-solving</li>
+                                <li>Examples: Failed technical assessment, vague answers</li>
+                                <li class="warning">Would struggle with technical demands</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="technicalAbility" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Can do the work, but needs added training, support or coaching.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Technical Ability</h4>
+                            <ul>
+                                <li>Basic technical competence demonstrated</li>
+                                <li>Needs guidance on complex problems</li>
+                                <li>Examples: Solved simple cases, familiar with tools</li>
+                                <li>6-12 months to full productivity</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="technicalAbility" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Technically tops. An asset. Can learn quickly. Covers all job needs.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Technical Ability</h4>
+                            <ul>
+                                <li>Strong technical foundation across stack</li>
+                                <li>Self-sufficient problem solver</li>
+                                <li>Examples: Built similar systems, optimized performance</li>
+                                <li class="success">Can handle all technical requirements</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option selected">
+                        <input type="radio" name="technicalAbility" value="4" checked>
+                        <span class="level">Level 4</span>
+                        <span class="description">Top-notch. Trains others. Constantly improving. Brings more to the table.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Technical Ability</h4>
+                            <ul>
+                                <li>Go-to expert for technical decisions</li>
+                                <li>Mentors team on best practices</li>
+                                <li>Examples: Architected scalable solutions, reduced tech debt</li>
+                                <li>Introduces new technologies/methodologies</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="technicalAbility" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Brilliant. Sets standards. Leader in field. Sought out. Recognized.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Technical Ability</h4>
+                            <ul>
+                                <li>Industry-recognized technical leader</li>
+                                <li>Speaks at conferences, publishes papers</li>
+                                <li>Examples: Open source maintainer, technical advisor</li>
+                                <li class="success">Will attract top talent to company</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Technical Ability..." data-factor="technicalAbility" readonly>Strong technical foundation - architected MES integration that reduced downtime by 15%. Expert in SQL, Python, and fab automation protocols. Presented technical solutions clearly during case study. Has mentored junior engineers. Published 2 internal whitepapers on fab optimization. Limited AI/ML experience is only gap.</textarea>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="managementAbility">
+                <div class="factor-name">Management & Organizational Ability</div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="managementAbility" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Seems reactive. Misses most deadlines or projects aren't comparable.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Management Ability</h4>
+                            <ul>
+                                <li>No clear project management approach</li>
+                                <li>Cannot describe planning methodology</li>
+                                <li>Examples: Missed deadlines, scope creep, budget overruns</li>
+                                <li class="warning">Lacks organizational skills</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managementAbility" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Projects are comparable but seems more reactive than forward-looking.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Management Ability</h4>
+                            <ul>
+                                <li>Basic project management skills</li>
+                                <li>Delivers but with some issues</li>
+                                <li>Examples: Met deadlines with overtime, reactive to problems</li>
+                                <li>Needs structure and oversight</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option selected">
+                        <input type="radio" name="managementAbility" value="3" checked>
+                        <span class="level">Level 3</span>
+                        <span class="description">Has planned, organized and executed comparable projects.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Management Ability</h4>
+                            <ul>
+                                <li>Proven track record of delivery</li>
+                                <li>Uses project management tools effectively</li>
+                                <li>Examples: On-time, on-budget delivery, stakeholder satisfaction</li>
+                                <li class="success">Can manage complex initiatives</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managementAbility" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Excellent. Plans, anticipates, communicates, and succeeds.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Management Ability</h4>
+                            <ul>
+                                <li>Proactive risk management</li>
+                                <li>Excellent stakeholder communication</li>
+                                <li>Examples: Recovered troubled projects, improved processes</li>
+                                <li>Delivers early and under budget</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managementAbility" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Outstanding organizational results with comparable projects and teams.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Management Ability</h4>
+                            <ul>
+                                <li>Transformed organizational capability</li>
+                                <li>Managed $10M+ initiatives flawlessly</li>
+                                <li>Examples: Led digital transformation, merger integration</li>
+                                <li class="success">Executive-level program management</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Management Ability..." data-factor="managementAbility" readonly>Managed $2M MES upgrade project - delivered on time and 5% under budget. Uses Agile methodologies effectively. Good at stakeholder communication but tends to escalate issues rather than solve independently. Has managed single fab projects but no experience coordinating multi-site initiatives.</textarea>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="teamSkills">
+                <div class="factor-name">Team Skills (EQ) & Development, Leadership</div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="teamSkills" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Hasn't worked on comparable teams or little team growth.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Team Skills</h4>
+                            <ul>
+                                <li>Prefers working alone</li>
+                                <li>No examples of collaboration</li>
+                                <li>Examples: Conflict with teammates, poor communication</li>
+                                <li class="warning">May disrupt team dynamics</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="teamSkills" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Has worked on comparable teams and has some team growth.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Team Skills</h4>
+                            <ul>
+                                <li>Basic team player</li>
+                                <li>Some mentoring experience</li>
+                                <li>Examples: Participated in team projects, helped onboard</li>
+                                <li>Developing leadership skills</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option selected">
+                        <input type="radio" name="teamSkills" value="3" checked>
+                        <span class="level">Level 3</span>
+                        <span class="description">Good fit on comparable teams. Has developed strong comparable teams.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Team Skills</h4>
+                            <ul>
+                                <li>Strong collaborator and communicator</li>
+                                <li>Successfully led small teams</li>
+                                <li>Examples: Built high-performing team, resolved conflicts</li>
+                                <li class="success">Creates positive team environment</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="teamSkills" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Clear positive team track. Coaches others. Recognized for strong team skills.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Team Skills</h4>
+                            <ul>
+                                <li>Sought out as mentor/coach</li>
+                                <li>Builds diverse, inclusive teams</li>
+                                <li>Examples: Developed future leaders, culture champion</li>
+                                <li>High employee engagement scores</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="teamSkills" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Impressive x-func team growth. Asked to lead. Persuades, motivates, coaches.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Team Skills</h4>
+                            <ul>
+                                <li>Inspirational leader across organization</li>
+                                <li>Built multiple successful teams</li>
+                                <li>Examples: Turned around toxic culture, 95%+ retention</li>
+                                <li class="success">Executive presence and influence</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Team Skills..." data-factor="teamSkills" readonly>Currently manages team of 8 engineers. 85% retention rate over 3 years. Provides regular 1-on-1 coaching. Two direct reports promoted under his leadership. Good cross-functional collaboration with manufacturing teams. Comfortable with current team size but hasn't managed larger or distributed teams.</textarea>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="problemSolving">
+                <div class="factor-name">Thinking & Job-related Problem-solving</div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="problemSolving" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Didn't understand any key issues or develop any solutions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Problem Solving</h4>
+                            <ul>
+                                <li>Surface-level thinking only</li>
+                                <li>Missed obvious issues</li>
+                                <li>Examples: Couldn't analyze case study, no framework</li>
+                                <li class="warning">Lacks analytical capability</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="problemSolving" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Understood most job related issues, developed okay solutions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Problem Solving</h4>
+                            <ul>
+                                <li>Basic problem identification</li>
+                                <li>Standard solutions proposed</li>
+                                <li>Examples: Used common frameworks, obvious answers</li>
+                                <li>Needs help with complex problems</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option selected">
+                        <input type="radio" name="problemSolving" value="3" checked>
+                        <span class="level">Level 3</span>
+                        <span class="description">Clearly understood all key issues and developed strong solutions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Problem Solving</h4>
+                            <ul>
+                                <li>Structured thinking approach</li>
+                                <li>Creative, practical solutions</li>
+                                <li>Examples: Root cause analysis, data-driven decisions</li>
+                                <li class="success">Can tackle ambiguous problems</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="problemSolving" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Understood all key & less obvious issues. Reaches out for best solutions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Problem Solving</h4>
+                            <ul>
+                                <li>Sees hidden connections</li>
+                                <li>Leverages diverse perspectives</li>
+                                <li>Examples: Prevented future issues, innovative approaches</li>
+                                <li>Strategic and tactical thinking</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="problemSolving" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Provides deeper level of insight. Offers multiple unique solutions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Problem Solving</h4>
+                            <ul>
+                                <li>Visionary problem solver</li>
+                                <li>Reframes problems entirely</li>
+                                <li>Examples: Created new business model, paradigm shift</li>
+                                <li class="success">Solves "unsolvable" problems</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Problem-solving..." data-factor="problemSolving" readonly>Good analytical skills demonstrated in case study. Identified 3 of 4 key issues in fab efficiency problem. Proposed practical solutions including phased implementation plan. Used data effectively to support recommendations. Missed the opportunity to consider AI/ML applications - stayed within traditional approaches.</textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scorecard-section">
+            <h2 class="section-title">SITUATIONAL FIT FACTORS – WEIGHT THESE FACTORS HIGHER</h2>
+            
+            <div class="factor-row" data-factor="jobFit">
+                <div class="factor-name">Job Fit with Recent Comparable Results</div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="jobFit" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Accomplishments are not directly comparable or not recent.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Job Fit</h4>
+                            <ul>
+                                <li>No similar role experience</li>
+                                <li>Achievements from 5+ years ago</li>
+                                <li>Examples: Different industry, smaller scale, different context</li>
+                                <li class="warning">High risk of performance gap</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option selected">
+                        <input type="radio" name="jobFit" value="2" checked>
+                        <span class="level">Level 2</span>
+                        <span class="description">Some comparable accomplishments, but inconsistent or not recent.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Job Fit</h4>
+                            <ul>
+                                <li>Partial overlap with requirements</li>
+                                <li>Similar but smaller scope</li>
+                                <li>Examples: Related function, different level</li>
+                                <li>Will need time to adjust</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="jobFit" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Major and subtask accomplishments are recent, strong and comparable.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Job Fit</h4>
+                            <ul>
+                                <li>Direct match with job requirements</li>
+                                <li>Recent wins in similar context</li>
+                                <li>Examples: Same problems solved, comparable team size</li>
+                                <li class="success">Can replicate past success</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="jobFit" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Achieved outstanding results under similar conditions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Job Fit</h4>
+                            <ul>
+                                <li>Exceeded expectations in same role</li>
+                                <li>Harder conditions, better results</li>
+                                <li>Examples: Larger scope, faster growth, fewer resources</li>
+                                <li>Proven ability to excel</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="jobFit" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Full job match with exceptional results – scope, pace, team, resources.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Job Fit</h4>
+                            <ul>
+                                <li>Perfect match on all dimensions</li>
+                                <li>Exceptional results repeatedly</li>
+                                <li>Examples: Built what we need, at our stage, our industry</li>
+                                <li class="success">Immediate high impact guaranteed</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Job Fit..." data-factor="jobFit" readonly>Experience is with 200mm fabs, not 300mm - significant scale difference. Has managed single fab IT, not multi-fab coordination required here. MES implementation is relevant but was 2 years ago. No experience with AI/ML integration which is critical for this role. Would need 6-9 months to scale up to our requirements.</textarea>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="managerialFit">
+                <div class="factor-name">Managerial Fit</div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="managerialFit" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Mismatch between candidate's & manager's style.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Managerial Fit</h4>
+                            <ul>
+                                <li>Conflicting work styles identified</li>
+                                <li>Different expectations on autonomy</li>
+                                <li>Examples: Needs structure vs. hands-off manager</li>
+                                <li class="warning">Likely friction and frustration</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managerialFit" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Limited, but has worked with similar managers.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Managerial Fit</h4>
+                            <ul>
+                                <li>Some style alignment</li>
+                                <li>Can adapt with effort</li>
+                                <li>Examples: Worked with similar personality before</li>
+                                <li>Will require adjustment period</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option selected">
+                        <input type="radio" name="managerialFit" value="3" checked>
+                        <span class="level">Level 3</span>
+                        <span class="description">Successfully worked with similar managers.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Managerial Fit</h4>
+                            <ul>
+                                <li>Compatible communication styles</li>
+                                <li>Aligned on work approach</li>
+                                <li>Examples: Thrived under similar leadership</li>
+                                <li class="success">Natural working relationship</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managerialFit" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Person easily adapts to a variety of manager styles.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Managerial Fit</h4>
+                            <ul>
+                                <li>High adaptability demonstrated</li>
+                                <li>Success with diverse managers</li>
+                                <li>Examples: Worked with 5+ management styles</li>
+                                <li>Manages up effectively</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managerialFit" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Super fit. Coaches upwards. Both are flexible.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Managerial Fit</h4>
+                            <ul>
+                                <li>Perfect chemistry observed</li>
+                                <li>Complementary strengths</li>
+                                <li>Examples: Finishing each other's thoughts, shared vision</li>
+                                <li class="success">Will elevate each other</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Managerial Fit..." data-factor="managerialFit" readonly>Good rapport with hiring manager during interview. Both have engineering backgrounds and data-driven approach. Michael prefers regular check-ins which aligns with manager's style. Has worked successfully under similar leadership at Intel. Communication style is compatible - direct and factual.</textarea>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="culture">
+                <div class="factor-name">Culture & Environment</div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="culture" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Complete mismatch on culture & environment.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Culture Fit</h4>
+                            <ul>
+                                <li>Values misalignment identified</li>
+                                <li>Prefers opposite environment</li>
+                                <li>Examples: Corporate vs. startup, formal vs. casual</li>
+                                <li class="warning">Unlikely to thrive or stay</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="culture" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Reasonable match on culture and environment.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Culture Fit</h4>
+                            <ul>
+                                <li>Some cultural alignment</li>
+                                <li>Can work in our environment</li>
+                                <li>Examples: Similar pace, partial value match</li>
+                                <li>May take time to integrate</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option selected">
+                        <input type="radio" name="culture" value="3" checked>
+                        <span class="level">Level 3</span>
+                        <span class="description">Close match on culture and environment.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Culture Fit</h4>
+                            <ul>
+                                <li>Strong value alignment</li>
+                                <li>Comfortable with our pace/style</li>
+                                <li>Examples: Similar companies, work-life balance fit</li>
+                                <li class="success">Will integrate smoothly</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="culture" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Excellent match and has made similar transfers.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Culture Fit</h4>
+                            <ul>
+                                <li>Proven cultural adaptability</li>
+                                <li>Thrived in similar environments</li>
+                                <li>Examples: Multiple successful transitions</li>
+                                <li>Will enhance our culture</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="culture" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Thrives in this type of environment, culture.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Culture Fit</h4>
+                            <ul>
+                                <li>Perfect cultural match</li>
+                                <li>Embodies our values naturally</li>
+                                <li>Examples: Built similar cultures, culture champion</li>
+                                <li class="success">Will strengthen culture significantly</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Culture & Environment..." data-factor="culture" readonly>Coming from similar large semiconductor company culture. Values quality, precision, and continuous improvement. Comfortable with structured processes and documentation requirements. Appreciates TI's stability and reputation. Expressed interest in our commitment to operational excellence.</textarea>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="motivation">
+                <div class="factor-name">Motivation</div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="motivation" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Little evidence of motivation to do this type of work.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Motivation</h4>
+                            <ul>
+                                <li>Lacks enthusiasm for role</li>
+                                <li>Money is only motivator</li>
+                                <li>Examples: Couldn't articulate why interested</li>
+                                <li class="warning">Flight risk from day one</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option selected">
+                        <input type="radio" name="motivation" value="2" checked>
+                        <span class="level">Level 2</span>
+                        <span class="description">Will do the core work but needs extra pushing.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Motivation</h4>
+                            <ul>
+                                <li>Moderate interest shown</li>
+                                <li>Sees it as a job, not passion</li>
+                                <li>Examples: Will do what's asked, minimal initiative</li>
+                                <li>Needs external motivation</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="motivation" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Self-motivated to do work with normal supervision.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Motivation</h4>
+                            <ul>
+                                <li>Genuine interest in the work</li>
+                                <li>Self-directed and proactive</li>
+                                <li>Examples: Researched company, asks good questions</li>
+                                <li class="success">Intrinsically motivated</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="motivation" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Takes initiative to learn and do more, faster and better.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Motivation</h4>
+                            <ul>
+                                <li>High drive and ambition</li>
+                                <li>Goes above and beyond</li>
+                                <li>Examples: Already has ideas, side projects in field</li>
+                                <li>Passionate about excellence</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="motivation" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Totally committed to get it done. Constantly gets better.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Motivation</h4>
+                            <ul>
+                                <li>Mission-driven alignment</li>
+                                <li>This is their calling</li>
+                                <li>Examples: Personal mission matches company, lifelong learner</li>
+                                <li class="success">Unstoppable force for success</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Motivation..." data-factor="motivation" readonly>PRIMARY CONCERN: Seemed more interested in stability and benefits than the role itself. Asked multiple questions about work-life balance, vacation policy, and remote work options. When asked about career goals, focused on "maintaining steady employment" rather than growth. Mentioned he's "comfortable where he is" several times. May lack drive for this transformational role.</textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="overall-evidence">
+            <h2 class="section-title">OVERALL FIT BASED ON SHARED EVIDENCE</h2>
+            <textarea id="overallEvidence" placeholder="Provide specific evidence to justify any very low rankings, less than 2, or extremely high rankings, above 3." readonly>Michael Chen presents as a technically strong candidate with solid fab IT experience but lacks the transformational leadership qualities needed for this role. His technical ability (Level 4) is his strongest asset - he has deep expertise in MES, automation, and fab systems. However, several concerns limit his potential:
+
+1. SCALE GAP: All experience is with 200mm single-fab operations vs. our 300mm multi-fab environment
+2. LIMITED VISION: Focused on maintaining status quo rather than driving digital transformation
+3. LOW MOTIVATION (Level 2): Repeatedly emphasized work-life balance over growth opportunities
+4. NO AI/ML EXPERIENCE: Critical gap for our technology roadmap objectives
+
+While Michael could handle day-to-day operations competently, he lacks the ambition and innovative mindset to lead TI's factory solutions transformation. Better suited for a senior engineer role than this strategic leadership position.</textarea>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="calculateScore()">Recalculate Score</button>
+            <button class="btn btn-secondary" onclick="exportToPDF()">
