@@ -1,83 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Performance-based Hiring GPT Agent Demo</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 2rem; }
-    h1 { color: #333; }
-    pre { background: #fff; padding: 1rem; border: 1px solid #ccc; overflow-x: auto; }
-    code { font-family: Consolas, monospace; font-size: 0.95rem; white-space: pre-wrap; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 2rem;
+    }
+    h1 {
+      color: #333;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      font-family: Consolas, monospace;
+      font-size: 0.95rem;
+      padding: 1rem;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+    pre {
+      background: #fff;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      margin-top: 2rem;
+    }
   </style>
 </head>
 <body>
-  <h1>Performance-based Hiring GPT Agent Prototype</h1>
-  <p>This page presents a prototype of an autonomous agent designed to help job seekers identify hidden job opportunities and generate targeted outreach without relying on traditional job applications.</p>
+  <h1>Performance-based Hiring GPT Agent Demo</h1>
+  <p>This interactive demo simulates how a GPT-based agent helps a job seeker generate targeted outreach messages without applying to job postings.</p>
 
-  <h2>Python Source Code</h2>
-  <pre><code>class CandidateProfile:
-    def __init__(self, name, accomplishments, skills, target_roles, industries, location, remote, comp_range):
-        self.name = name
-        self.accomplishments = accomplishments
-        self.skills = skills
-        self.target_roles = target_roles
-        self.industries = industries
-        self.location = location
-        self.remote = remote
-        self.comp_range = comp_range
+  <h2>Candidate Input</h2>
+  <textarea id="input" placeholder="Enter candidate info here..."></textarea>
+  <br />
+  <button onclick="generateMessages()">Generate Outreach Messages</button>
 
-class OpportunityResearcher:
-    def find_hidden_opportunities(self, candidate):
-        return [
-            {"company": "StealthTech AI", "title": "Product Strategy Lead", "trigger": "$15M Series A funding",
-             "match": "Strong fit with candidate's AI background and cross-functional leadership"},
-            {"company": "BioScale Health", "title": "Ops Expansion Director", "trigger": "New FDA approval",
-             "match": "Experience scaling operations in healthcare"}
-        ]
+  <h2>Generated Outreach</h2>
+  <pre id="output"></pre>
 
-class InfluenceMapper:
-    def find_contacts(self, company_name):
-        return [
-            {"name": "Sara Kim", "title": "VP Product", "connection": "2nd-degree on LinkedIn"},
-            {"name": "Jordan Lee", "title": "Talent Partner", "connection": "Shared alma mater"}
-        ]
+  <script>
+    function generateMessages() {
+      const candidate = {
+        name: "Jordan Maxwell",
+        accomplishments: ["a $12M turnaround by redesigning operations at MedScale Labs"],
+        skills: ["AI strategy", "product operations", "scaling teams"],
+      };
 
-class OutreachWriter:
-    def generate_message(self, contact, candidate, opportunity):
-        return (
-            f"Hi {contact['name']},\n\n"
-            f"I was excited to see that {opportunity['company']} is growing post-{opportunity['trigger'].lower()}. "
-            f"Given my background in {', '.join(candidate.skills)}, and past work leading {candidate.accomplishments[0]}, "
-            f"I'd love to explore how I could help your team in a strategic {opportunity['title']} capacity.\n\n"
-            f"Would you be open to a quick conversation next week?\n\nThanks,\n{candidate.name}"
-        )
+      const opportunities = [
+        {
+          company: "StealthTech AI",
+          title: "Product Strategy Lead",
+          trigger: "$15M Series A funding",
+        },
+        {
+          company: "BioScale Health",
+          title: "Ops Expansion Director",
+          trigger: "New FDA approval",
+        },
+      ];
 
-candidate = CandidateProfile(
-    name="Jordan Maxwell",
-    accomplishments=["a $12M turnaround by redesigning operations at MedScale Labs"],
-    skills=["AI strategy", "product operations", "scaling teams"],
-    target_roles=["Head of Strategy", "Director of Operations"],
-    industries=["HealthTech", "AI"],
-    location="San Diego, CA",
-    remote=True,
-    comp_range="$180K–$220K"
-)
+      const contacts = [
+        { name: "Sara Kim", title: "VP Product" },
+        { name: "Jordan Lee", title: "Talent Partner" },
+      ];
 
-researcher = OpportunityResearcher()
-mapper = InfluenceMapper()
-writer = OutreachWriter()
+      let output = "";
 
-opps = researcher.find_hidden_opportunities(candidate)
-for opp in opps:
-    contacts = mapper.find_contacts(opp["company"])
-    for contact in contacts:
-        msg = writer.generate_message(contact, candidate, opp)
-        print("\n--- Outreach Message ---")
-        print(msg)
-        print("-----------------------")
-</code></pre>
+      for (const opp of opportunities) {
+        for (const contact of contacts) {
+          const message = `Hi ${contact.name},\n\n` +
+            `I was excited to see that ${opp.company} is growing post-${opp.trigger.toLowerCase()}. ` +
+            `Given my background in ${candidate.skills.join(", ")}, and past work leading ${candidate.accomplishments[0]}, ` +
+            `I'd love to explore how I could help your team in a strategic ${opp.title} capacity.\n\n` +
+            `Would you be open to a quick conversation next week?\n\nThanks,\n${candidate.name}`;
 
-  <p>To test this demo, copy the above Python code into a <code>.py</code> file and run it using Python 3. It will simulate the process of generating personalized outreach messages for hidden job opportunities.</p>
+          output += `--- Outreach Message to ${contact.name} @ ${opp.company} ---\n${message}\n\n`;
+        }
+      }
+
+      document.getElementById("output").textContent = output;
+    }
+  </script>
 </body>
 </html>
