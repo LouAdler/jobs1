@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance-based Hiring GPT Agent Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 2rem; }
+    h1 { color: #333; }
+    pre { background: #fff; padding: 1rem; border: 1px solid #ccc; overflow-x: auto; }
+    code { font-family: Consolas, monospace; font-size: 0.95rem; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Performance-based Hiring GPT Agent Prototype</h1>
+  <p>This page presents a prototype of an autonomous agent designed to help job seekers identify hidden job opportunities and generate targeted outreach without relying on traditional job applications.</p>
+
+  <h2>Python Source Code</h2>
+  <pre><code>class CandidateProfile:
+    def __init__(self, name, accomplishments, skills, target_roles, industries, location, remote, comp_range):
+        self.name = name
+        self.accomplishments = accomplishments
+        self.skills = skills
+        self.target_roles = target_roles
+        self.industries = industries
+        self.location = location
+        self.remote = remote
+        self.comp_range = comp_range
+
+class OpportunityResearcher:
+    def find_hidden_opportunities(self, candidate):
+        return [
+            {"company": "StealthTech AI", "title": "Product Strategy Lead", "trigger": "$15M Series A funding",
+             "match": "Strong fit with candidate's AI background and cross-functional leadership"},
+            {"company": "BioScale Health", "title": "Ops Expansion Director", "trigger": "New FDA approval",
+             "match": "Experience scaling operations in healthcare"}
+        ]
+
+class InfluenceMapper:
+    def find_contacts(self, company_name):
+        return [
+            {"name": "Sara Kim", "title": "VP Product", "connection": "2nd-degree on LinkedIn"},
+            {"name": "Jordan Lee", "title": "Talent Partner", "connection": "Shared alma mater"}
+        ]
+
+class OutreachWriter:
+    def generate_message(self, contact, candidate, opportunity):
+        return (
+            f"Hi {contact['name']},\n\n"
+            f"I was excited to see that {opportunity['company']} is growing post-{opportunity['trigger'].lower()}. "
+            f"Given my background in {', '.join(candidate.skills)}, and past work leading {candidate.accomplishments[0]}, "
+            f"I'd love to explore how I could help your team in a strategic {opportunity['title']} capacity.\n\n"
+            f"Would you be open to a quick conversation next week?\n\nThanks,\n{candidate.name}"
+        )
+
+candidate = CandidateProfile(
+    name="Jordan Maxwell",
+    accomplishments=["a $12M turnaround by redesigning operations at MedScale Labs"],
+    skills=["AI strategy", "product operations", "scaling teams"],
+    target_roles=["Head of Strategy", "Director of Operations"],
+    industries=["HealthTech", "AI"],
+    location="San Diego, CA",
+    remote=True,
+    comp_range="$180K–$220K"
+)
+
+researcher = OpportunityResearcher()
+mapper = InfluenceMapper()
+writer = OutreachWriter()
+
+opps = researcher.find_hidden_opportunities(candidate)
+for opp in opps:
+    contacts = mapper.find_contacts(opp["company"])
+    for contact in contacts:
+        msg = writer.generate_message(contact, candidate, opp)
+        print("\n--- Outreach Message ---")
+        print(msg)
+        print("-----------------------")
+</code></pre>
+
+  <p>To test this demo, copy the above Python code into a <code>.py</code> file and run it using Python 3. It will simulate the process of generating personalized outreach messages for hidden job opportunities.</p>
+</body>
+</html>
