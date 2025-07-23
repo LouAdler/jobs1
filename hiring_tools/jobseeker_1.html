@@ -31,39 +31,39 @@
       border: 1px solid #ccc;
       margin-top: 2rem;
     }
+    .step {
+      background: #e0eaff;
+      border-left: 4px solid #007bff;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
   <h1>Performance-based Hiring GPT Agent Demo</h1>
-  <p>This interactive demo simulates how a GPT-based agent helps a job seeker generate targeted outreach messages without applying to job postings.</p>
+  <p>This demo simulates how an intelligent agent finds hidden job opportunities and generates targeted outreach messages for job seekers.</p>
 
-  <h2>Candidate Input</h2>
+  <h2>Candidate Profile</h2>
   <textarea id="input" placeholder="Enter candidate info here..."></textarea>
   <br />
-  <button onclick="generateMessages()">Generate Outreach Messages</button>
+  <button onclick="runAgentSimulation()">Run Job Match Simulation</button>
 
-  <h2>Generated Outreach</h2>
+  <h2>Simulation Output</h2>
   <pre id="output"></pre>
 
   <script>
-    function generateMessages() {
+    function runAgentSimulation() {
       const candidate = {
         name: "Jordan Maxwell",
         accomplishments: ["a $12M turnaround by redesigning operations at MedScale Labs"],
         skills: ["AI strategy", "product operations", "scaling teams"],
+        target_roles: ["Product Strategy Lead", "Director of Operations"],
+        industries: ["HealthTech", "AI"],
       };
 
-      const opportunities = [
-        {
-          company: "StealthTech AI",
-          title: "Product Strategy Lead",
-          trigger: "$15M Series A funding",
-        },
-        {
-          company: "BioScale Health",
-          title: "Ops Expansion Director",
-          trigger: "New FDA approval",
-        },
+      const opportunityDiscovery = [
+        { company: "StealthTech AI", trigger: "$15M Series A funding", title: "Product Strategy Lead" },
+        { company: "BioScale Health", trigger: "FDA approval of remote diagnostic device", title: "Ops Expansion Director" }
       ];
 
       const contacts = [
@@ -73,8 +73,23 @@
 
       let output = "";
 
-      for (const opp of opportunities) {
-        for (const contact of contacts) {
+      // Step 1: Discover Opportunities
+      output += "Step 1: Searching for companies showing growth signals...\n";
+      opportunityDiscovery.forEach(opp => {
+        output += `✅ Found: ${opp.company} — ${opp.trigger}\n`;
+      });
+
+      // Step 2: Match opportunities
+      output += "\nStep 2: Matching opportunities to candidate profile...\n";
+      opportunityDiscovery.forEach(opp => {
+        output += `→ Strong match for ${opp.title} at ${opp.company}\n`;
+      });
+
+      // Step 3: Generate outreach
+      output += "\nStep 3: Generating personalized outreach...\n\n";
+
+      opportunityDiscovery.forEach(opp => {
+        contacts.forEach(contact => {
           const message = `Hi ${contact.name},\n\n` +
             `I was excited to see that ${opp.company} is growing post-${opp.trigger.toLowerCase()}. ` +
             `Given my background in ${candidate.skills.join(", ")}, and past work leading ${candidate.accomplishments[0]}, ` +
@@ -82,8 +97,8 @@
             `Would you be open to a quick conversation next week?\n\nThanks,\n${candidate.name}`;
 
           output += `--- Outreach Message to ${contact.name} @ ${opp.company} ---\n${message}\n\n`;
-        }
-      }
+        });
+      });
 
       document.getElementById("output").textContent = output;
     }
