@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance-based Hiring Controller System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #e8eef5;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c5282 0%, #4299e1 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        /* Process Steps Section */
+        .process-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #2d3748;
+        }
+        
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .process-line {
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            right: 30px;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+        
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .step-circle.active {
+            background: #4299e1;
+            color: white;
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+        }
+        
+        .step-circle.completed {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .step-circle.inactive {
+            background: #e2e8f0;
+            color: #a0aec0;
+        }
+        
+        .step-label {
+            position: absolute;
+            top: 65px;
+            font-size: 0.75em;
+            color: #4a5568;
+            white-space: nowrap;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 70px;
+        }
+        
+        /* Status Section */
+        .status-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .status-item {
+            text-align: center;
+        }
+        
+        .status-label {
+            font-size: 0.85em;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+        
+        .status-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3182ce;
+        }
+        
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #38a169;
+        }
+        
+        .btn-outline {
+            background: white;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .btn-outline:hover {
+            background: #f7fafc;
+        }
+        
+        /* Module Cards Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .module-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .module-card:hover {
+            border-color: #4299e1;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        
+        .module-card.completed {
+            border-color: #48bb78;
+        }
+        
+        .module-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .module-icon {
+            font-size: 2em;
+        }
+        
+        .module-title h3 {
+            font-size: 1.05em;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .module-title p {
+            font-size: 0.85em;
+            color: #718096;
+        }
+        
+        .module-description {
+            font-size: 0.85em;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .module-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .module-status {
+            font-size: 0.8em;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        
+        .status-not-started {
+            background: #e2e8f0;
+            color: #718096;
+        }
+        
+        .status-not-created {
+            background: #fed7d7;
+            color: #c53030;
+        }
+        
+        .status-completed {
+            background: #c6f6d5;
+            color: #276749;
+        }
+        
+        .module-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .module-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .module-btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .module-btn-primary:hover {
+            background: #3182ce;
+        }
+        
+        .module-btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .module-btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        /* Data Flow Section */
+        .dataflow-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .integration-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            font-size: 0.85em;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #cbd5e0;
+        }
+        
+        .status-dot.active {
+            background: #48bb78;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #718096;
+            font-size: 0.85em;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        @media (max-width: 768px) {
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .process-steps {
+                overflow-x: auto;
+                padding-bottom: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Performance-based Hiring Controller System</h1>
+            <p>Integrated Assessment Platform for Quality Hiring Decisions</p>
+        </div>
+        
+        <div class="content">
+            <!-- Process Steps -->
+            <div class="process-section">
+                <h2 class="section-title">Performance-based Hiring Process</h2>
+                <div class="process-steps">
+                    <div class="process-line"></div>
+                    
+                    <div class="step-circle completed">
+                        1
+                        <span class="step-label">Create PBJD</span>
+                    </div>
+                    
+                    <div class="step-circle active">
+                        2
+                        <span class="step-label">Source Candidates</span>
+                    </div>
+                    
+                    <div class="step-circle inactive">
+                        3
+                        <span class="step-label">Interview</span>
+                    </div>
+                    
+                    <div class="step-circle inactive">
+                        4
+                        <span class="step-label">Scorecard</span>
+                    </div>
+                    
+                    <div class="step-circle inactive">
+                        5
+                        <span class="step-label">Career Rubric</span>
+                    </div>
+                    
+                    <div class="step-circle inactive">
+                        6
+                        <span class="step-label">Win-Win</span>
+                    </div>
+                    
+                    <div class="step-circle inactive">
+                        7
+                        <span class="step-label">Recruit & Close</span>
+                    </div>
+                    
+                    <div class="step-circle inactive">
+                        8
+                        <span class="step-label">Onboarding</span>
+                    </div>
+                    
+                    <div class="step-circle inactive">
+                        9
+                        <span class="step-label">Performance</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Current Status -->
+            <div class="status-section">
+                <h2 class="section-title">Current Assessment Status</h2>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="status-label">Candidate</div>
+                        <div class="status-value">Not Selected</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Position</div>
+                        <div class="status-value">Not Specified</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Progress</div>
+                        <div class="status-value">0%</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Hire Probability</div>
+                        <div class="status-value">Not Calculated</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary">
+                    📤 Export Complete Assessment
+                </button>
+                <button class="btn btn-secondary">
+                    🤖 Send to Performance-based Hiring GPT
+                </button>
+                <button class="btn btn-outline">
+                    🔄 Reset All Data
+                </button>
+            </div>
+            
+            <!-- Module Cards -->
+            <div class="modules-grid">
+                <!-- PBJD -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">📋</div>
+                        <div class="module-title">
+                            <h3>1. Performance-based Job Description</h3>
+                        </div>
+                    </div>
+                    <div class="module-description">
+                        Create a performance-based job description that defines success through objectives and outcomes, not skills and experience.
+                    </div>
+                    <div class="module-footer">
+                        <span class="module-status status-not-created">Not Created</span>
+                        <div class="module-actions">
+                            <button class="module-btn module-btn-primary">Create New PBJD</button>
+                            <button class="module-btn module-btn-secondary">Import PBJD</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sourcing -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">🎯</div>
+                        <div class="module-title">
+                            <h3>2. Source & Track Candidates</h3>
+                        </div>
+                    </div>
+                    <div class="module-description">
+                        Build ideal candidate personas and source top talent using the 30% Solution methodology.
+                    </div>
+                    <div class="module-footer">
+                        <span class="module-status status-not-started">Not Started</span>
+                        <div class="module-actions">
+                            <button class="module-btn module-btn-primary">Sourcing Status</button>
+                            <button class="module-btn module-btn-secondary">Import Data</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Interview -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">🎤</div>
+                        <div class="module-title">
+                            <h3>3. Conduct Interview</h3>
+                        </div>
+                    </div>
+                    <div class="module-description">
+                        Use a Performance-based Interview guide to conduct a complete evidence-based interview for this role.
+                    </div>
+                    <div class="module-footer">
+                        <span class="module-status status-not-started">Interview Status</span>
+                        <div class="module-actions">
+                            <button class="module-btn module-btn-primary">Open Interview Guide</button>
+                            <button class="module-btn module-btn-secondary">Import Data</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scorecard -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">📊</div>
+                        <div class="module-title">
+                            <h3>4. Quality of Hire Scorecard</h3>
+                        </div>
+                    </div>
+                    <div class="module-description">
+                        Complete the talent scorecard to evaluate the candidate across all key competencies and factors.
+                    </div>
+                    <div class="module-footer">
+                        <span class="module-status status-not-started">Not Started</span>
+                        <div class="module-actions">
+                            <button class="module-btn module-btn-primary">Open Scorecard</button>
+                            <button class="module-btn module-btn-secondary">Import Data</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Career Rubric -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">📋</div>
+                        <div class="module-title">
+                            <h3>5. Career Rubric Assessment</h3>
+                        </div>
+                    </div>
+                    <div class="module-description">
+                        Test the candidate's full understanding of the job requirements using the career development rubric.
+                    </div>
+                    <div class="module-footer">
+                        <span class="module-status status-not-started">Not Started</span>
+                        <div class="module-actions">
+                            <button class="module-btn module-btn-primary">Open Career Rubric</button>
+                            <button class="module-btn module-btn-secondary">Import Data</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Win-Win -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">🎯</div>
+                        <div class="module-title">
+                            <h3>6. Hire Success Probability</h3>
+                        </div>
+                    </div>
+                    <div class="module-description">
+                        Calculate the probability of a successful hire based on all assessment data collected.
+                    </div>
+                    <div class="module-footer">
+                        <span class="module-status status-not-started">Not Available</span>
+                        <div class="module-actions">
+                            <button class="module-btn module-btn-primary">Calculate Probability</button>
+                            <button class="module-btn module-btn-secondary">Export Win-Win Report</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recruiting & Closing -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">💼</div>
+                        <div class="module-title">
+                            <h3>7. Recruiting & Closing</h3>
+                        </div>
+                    </div>
+                    <div class="module-description">
+                        Manage the entire recruiting process from candidate engagement through offer acceptance.
+                    </div>
+                    <div class="module-footer">
+                        <span class="module-status status-not-started">Not Started</span>
+                        <div class="module-actions">
+                            <button class="module-btn module-btn-primary">Open Recruiting Hub</button>
+                            <button class="module-btn module-btn-secondary">Track Pipeline</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Onboarding -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">🚀</div>
+                        <div class="module-title">
+                            <h3>8. Onboarding Plan</h3>
+                        </div>
+                    </div>
+                    <div class="module-description">
+                        Generate a customized 30-60-90 day onboarding plan based on PBJD objectives and assessment insights.
+                    </div>
+                    <div class="module-footer">
+                        <span class="module-status status-not-started">Not Available</span>
+                        <div class="module-actions">
+                            <button class="module-btn module-btn-primary">View Requirements</button>
+                            <button class="module-btn module-btn-secondary">Export Plan</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Performance Management -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">📈</div>
+                        <div class="module-title">
+                            <h3>9. Performance Management</h3>
+                        </div>
+                    </div>
+                    <div class="module-description">
+                        Track post-hire performance to validate the Win-Win hiring outcome and ensure continued success.
+                    </div>
+                    <div class="module-footer">
+                        <span class="module-status status-not-started">Not Available</span>
+                        <div class="module-actions">
+                            <button class="module-btn module-btn-primary">Performance Dashboard</button>
+                            <button class="module-btn module-btn-secondary">30-60-90 Review</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Flow & Integration -->
+            <div class="dataflow-section">
+                <h2 class="section-title">Data Flow & Integration</h2>
+                <h3 style="font-size: 0.95em; color: #4a5568; margin-top: 20px; margin-bottom: 15px;">System Integration Status</h3>
+                <div class="integration-grid">
+                    <div class="integration-item">
+                        <div class="status-dot"></div>
+                        <span style="font-weight: 500;">Job Description</span>
+                        <span style="margin-left: auto; color: #718096;">Not loaded</span>
+                    </div>
+                    <div class="integration-item">
+                        <div class="status-dot"></div>
+                        <span style="font-weight: 500;">Candidate Pipeline</span>
+                        <span style="margin-left: auto; color: #718096;">Not started</span>
+                    </div>
+                    <div class="integration-item">
+                        <div class="status-dot active"></div>
+                        <span style="font-weight: 500;">Data Flow</span>
+                        <span style="margin-left: auto; color: #718096;">Ready</span>
+                    </div>
+                    <div class="integration-item">
+                        <div class="status-dot"></div>
+                        <span style="font-weight: 500;">GPT Integration</span>
+                        <span style="margin-left: auto; color: #718096;">Not connected</span>
+                    </div>
+                    <div class="integration-item">
+                        <div class="status-dot"></div>
+                        <span style="font-weight: 500;">Recruiting Hub</span>
+                        <span style="margin-left: auto; color: #718096;">Not configured</span>
+                    </div>
+                    <div class="integration-item">
+                        <div class="status-dot"></div>
+                        <span style="font-weight: 500;">Performance Tracking</span>
+                        <span style="margin-left: auto; color: #718096;">Not active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2025 The Adler Group, Inc. | Performance-based Hiring Controller System<br>
+            Based on Lou Adler's <em>Hire With Your Head</em> methodology</p>
+        </div>
+    </div>
+</body>
+</html>
