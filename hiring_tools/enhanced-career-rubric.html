@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Decision Framework - Enhanced Assessment Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .instructions-box {
+            background: #e3f2fd;
+            border: 2px solid #1976d2;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .instructions-box h3 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+        
+        .instructions-box ul {
+            margin-left: 20px;
+        }
+        
+        .probability-display {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .probability-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .probability-meter {
+            text-align: center;
+        }
+        
+        .probability-circle {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            position: relative;
+            background: conic-gradient(
+                #0066cc 0deg,
+                #0066cc var(--probability),
+                #e9ecef var(--probability)
+            );
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .probability-inner {
+            width: 170px;
+            height: 170px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .probability-value {
+            font-size: 3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .probability-label {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        
+        .maslow-impact {
+            background: #fff3cd;
+            border: 2px solid #ffeeba;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .maslow-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .impact-display {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        
+        .impact-value {
+            text-align: center;
+        }
+        
+        .impact-value strong {
+            display: block;
+            font-size: 2em;
+            color: #2c3e50;
+        }
+        
+        .assessment-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .factor-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .factor-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .factor-score {
+            background: #6c757d;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        
+        .factor-score.low { background: #dc3545; }
+        .factor-score.medium { background: #ffc107; color: #212529; }
+        .factor-score.high { background: #28a745; }
+        
+        .factor-description {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        
+        .rating-scale {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .rating-button {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-align: center;
+            position: relative;
+        }
+        
+        .rating-button:hover {
+            border-color: #6c757d;
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+        
+        .rating-button.selected {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+        
+        /* Tooltip Styles */
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 10px;
+            padding: 15px;
+            background: #333;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.85em;
+            width: 280px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            line-height: 1.5;
+        }
+        
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #333;
+        }
+        
+        .rating-button:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-5px);
+        }
+        
+        .tooltip h4 {
+            color: #ffc107;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        
+        .tooltip ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 0.95em;
+        }
+        
+        .tooltip li {
+            margin-bottom: 4px;
+        }
+        
+        .evidence-box {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 0.9em;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        
+        .evidence-box:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+        
+        .desperation-section {
+            background: #fff3cd;
+            border: 2px solid #ffeeba;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .desperation-warning {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #721c24;
+        }
+        
+        .summary-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .summary-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .summary-card.success { border-left-color: #28a745; }
+        .summary-card.warning { border-left-color: #ffc107; }
+        .summary-card.danger { border-left-color: #dc3545; }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            background: #0052a3;
+            transform: translateY(-1px);
+        }
+        
+        button.secondary {
+            background: #6c757d;
+        }
+        
+        button.secondary:hover {
+            background: #5a6268;
+        }
+        
+        .completion-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .probability-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .rating-scale {
+                flex-wrap: wrap;
+            }
+            
+            .rating-button {
+                min-width: calc(50% - 5px);
+            }
+            
+            .tooltip {
+                width: 250px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Career Decision Framework</h1>
+            <p>Comprehensive 8-Factor Assessment with Psychological Risk Adjustment</p>
+        </div>
+        
+        <div class="instructions-box">
+            <h3>📋 How to Use This Tool</h3>
+            <ul>
+                <li><strong>Hover over each rating</strong> to see what information you need to gather</li>
+                <li><strong>Rate each factor 1-5</strong> based on your research and interviews</li>
+                <li><strong>Document evidence</strong> in the text boxes to support your ratings</li>
+                <li><strong>Consider the Maslow adjustment</strong> - desperation compromises decision quality</li>
+            </ul>
+        </div>
+        
+        <div class="probability-display">
+            <div class="probability-grid">
+                <div class="probability-meter">
+                    <div class="probability-circle" style="--probability: 0deg;">
+                        <div class="probability-inner">
+                            <div class="probability-value" id="careerScore">0%</div>
+                            <div class="probability-label">Career Success Score</div>
+                        </div>
+                    </div>
+                    <p>Based on <span id="ratedFactors">0</span> of 8 factors rated</p>
+                </div>
+                
+                <div class="maslow-impact">
+                    <div class="maslow-title">🎯 Psychological Risk Impact</div>
+                    <div class="impact-display">
+                        <div class="impact-value">
+                            <strong id="beforeMaslow">0%</strong>
+                            <small>Objective Score</small>
+                        </div>
+                        <div class="impact-value">
+                            <strong id="afterMaslow">0%</strong>
+                            <small>Risk-Adjusted Score</small>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.85em; margin-top: 10px; color: #856404;">
+                        High pressure situations reduce decision quality by up to 80%
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="assessment-section">
+            <h2>Career Decision Factors</h2>
+            
+            <!-- Factor 1: Growth Opportunity -->
+            <div class="factor-group">
+                <div class="factor-title">
+                    1. Growth Opportunity
+                    <span class="factor-score" id="growthScore">Not Rated</span>
+                </div>
+                <div class="factor-description">
+                    Career advancement potential, skill development, and learning opportunities
+                </div>
+                <div class="rating-scale">
+                    <div class="rating-button" onclick="setRating('growth', 1)">
+                        1<br>Dead End
+                        <div class="tooltip">
+                            <h4>Signs of Dead End (Score: 1)</h4>
+                            <ul>
+                                <li>No promotion in 3+ years typical</li>
+                                <li>Flat org structure above you</li>
+                                <li>No skill development budget</li>
+                                <li>Managers hired externally only</li>
+                                <li>High turnover due to stagnation</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('growth', 2)">
+                        2<br>Limited
+                        <div class="tooltip">
+                            <h4>Limited Growth (Score: 2)</h4>
+                            <ul>
+                                <li>Promotions rare (4-5+ years)</li>
+                                <li>Few lateral move options</li>
+                                <li>Minimal training budget</li>
+                                <li>Unclear career paths</li>
+                                <li>Skills becoming outdated</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('growth', 3)">
+                        3<br>Good
+                        <div class="tooltip">
+                            <h4>Good Growth (Score: 3)</h4>
+                            <ul>
+                                <li>Clear promotion timeline (2-3 years)</li>
+                                <li>Documented career paths</li>
+                                <li>$1-2K annual training budget</li>
+                                <li>Internal mobility supported</li>
+                                <li>Regular stretch assignments</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('growth', 4)">
+                        4<br>Excellent
+                        <div class="tooltip">
+                            <h4>Excellent Growth (Score: 4)</h4>
+                            <ul>
+                                <li>Fast track promotions (18-24 months)</li>
+                                <li>Mentorship programs</li>
+                                <li>$3K+ development budget</li>
+                                <li>Cross-functional exposure</li>
+                                <li>Leadership development tracks</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('growth', 5)">
+                        5<br>Transform
+                        <div class="tooltip">
+                            <h4>Transformative (Score: 5)</h4>
+                            <ul>
+                                <li>Accelerated advancement possible</li>
+                                <li>Direct C-suite mentorship</li>
+                                <li>Unlimited learning resources</li>
+                                <li>Global opportunity exposure</li>
+                                <li>Equity/partnership track</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <textarea class="evidence-box" id="growth-evidence" 
+                    placeholder="Document specific evidence: promotion timelines shared, development programs mentioned, success stories of past employees, org chart discussions..."></textarea>
+            </div>
+            
+            <!-- Factor 2: Work Impact -->
+            <div class="factor-group">
+                <div class="factor-title">
+                    2. Work Impact & Challenge
+                    <span class="factor-score" id="impactScore">Not Rated</span>
+                </div>
+                <div class="factor-description">
+                    Meaningful contribution, strategic importance, and intellectual stimulation
+                </div>
+                <div class="rating-scale">
+                    <div class="rating-button" onclick="setRating('impact', 1)">
+                        1<br>Low Impact
+                        <div class="tooltip">
+                            <h4>Low Impact Work (Score: 1)</h4>
+                            <ul>
+                                <li>Routine tasks only</li>
+                                <li>No decision authority</li>
+                                <li>Work could be automated</li>
+                                <li>Minimal business impact</li>
+                                <li>No visibility to leadership</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('impact', 2)">
+                        2<br>Some Impact
+                        <div class="tooltip">
+                            <h4>Some Impact (Score: 2)</h4>
+                            <ul>
+                                <li>Supporting role in projects</li>
+                                <li>Limited decision making</li>
+                                <li>Department-level impact</li>
+                                <li>Occasional challenges</li>
+                                <li>Some process improvement</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('impact', 3)">
+                        3<br>Good Impact
+                        <div class="tooltip">
+                            <h4>Good Impact (Score: 3)</h4>
+                            <ul>
+                                <li>Leading key initiatives</li>
+                                <li>P&L responsibility ($1-5M)</li>
+                                <li>Cross-team influence</li>
+                                <li>Regular innovation</li>
+                                <li>Quarterly exec presentations</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('impact', 4)">
+                        4<br>High Impact
+                        <div class="tooltip">
+                            <h4>High Impact (Score: 4)</h4>
+                            <ul>
+                                <li>Strategic initiatives owner</li>
+                                <li>Major P&L impact ($5M+)</li>
+                                <li>Company-wide influence</li>
+                                <li>Market-facing innovation</li>
+                                <li>Board-level visibility</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('impact', 5)">
+                        5<br>Game Changer
+                        <div class="tooltip">
+                            <h4>Game Changing (Score: 5)</h4>
+                            <ul>
+                                <li>Transform business model</li>
+                                <li>Create new revenue streams</li>
+                                <li>Industry-wide impact</li>
+                                <li>Build new capabilities</li>
+                                <li>Define company strategy</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <textarea class="evidence-box" id="impact-evidence" 
+                    placeholder="Document specific evidence: key projects discussed, budget responsibility, strategic importance mentioned, problems to solve, innovation opportunities..."></textarea>
+            </div>
+            
+            <!-- Factor 3: Manager & Mentorship -->
+            <div class="factor-group">
+                <div class="factor-title">
+                    3. Manager & Mentorship
+                    <span class="factor-score" id="managerScore">Not Rated</span>
+                </div>
+                <div class="factor-description">
+                    Quality of direct management, mentorship, and leadership development
+                </div>
+                <div class="rating-scale">
+                    <div class="rating-button" onclick="setRating('manager', 1)">
+                        1<br>Poor
+                        <div class="tooltip">
+                            <h4>Poor Management (Score: 1)</h4>
+                            <ul>
+                                <li>High team turnover (>30%)</li>
+                                <li>No 1-on-1 meetings</li>
+                                <li>Micromanagement style</li>
+                                <li>No career discussions</li>
+                                <li>Negative team feedback</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('manager', 2)">
+                        2<br>Adequate
+                        <div class="tooltip">
+                            <h4>Adequate Manager (Score: 2)</h4>
+                            <ul>
+                                <li>Irregular check-ins</li>
+                                <li>Basic task management</li>
+                                <li>Limited coaching</li>
+                                <li>Reactive support only</li>
+                                <li>Average team retention</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('manager', 3)">
+                        3<br>Good
+                        <div class="tooltip">
+                            <h4>Good Manager (Score: 3)</h4>
+                            <ul>
+                                <li>Weekly 1-on-1s scheduled</li>
+                                <li>Clear goal setting</li>
+                                <li>Regular feedback</li>
+                                <li>Supports development</li>
+                                <li>Team success stories</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('manager', 4)">
+                        4<br>Great
+                        <div class="tooltip">
+                            <h4>Great Leader (Score: 4)</h4>
+                            <ul>
+                                <li>Strong track record developing talent</li>
+                                <li>Well-connected in industry</li>
+                                <li>Advocates for team</li>
+                                <li>Creates stretch opportunities</li>
+                                <li>Former reports promoted</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('manager', 5)">
+                        5<br>Career Maker
+                        <div class="tooltip">
+                            <h4>Career Maker (Score: 5)</h4>
+                            <ul>
+                                <li>Industry thought leader</li>
+                                <li>Opens executive doors</li>
+                                <li>Personal board advisor</li>
+                                <li>Sponsors advancement</li>
+                                <li>Lifelong mentor relationship</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <textarea class="evidence-box" id="manager-evidence" 
+                    placeholder="Document specific evidence: manager's background, management style discussed, team feedback, LinkedIn research on former reports, specific mentorship examples..."></textarea>
+            </div>
+            
+            <!-- Factor 4: Company Culture -->
+            <div class="factor-group">
+                <div class="factor-title">
+                    4. Company Culture & Values
+                    <span class="factor-score" id="compCultureScore">Not Rated</span>
+                </div>
+                <div class="factor-description">
+                    Cultural fit, values alignment, and workplace environment
+                </div>
+                <div class="rating-scale">
+                    <div class="rating-button" onclick="setRating('compCulture', 1)">
+                        1<br>Toxic
+                        <div class="tooltip">
+                            <h4>Toxic Culture (Score: 1)</h4>
+                            <ul>
+                                <li>Glassdoor rating <2.5</li>
+                                <li>High stress/burnout</li>
+                                <li>Political environment</li>
+                                <li>Values not lived</li>
+                                <li>Fear-based management</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('compCulture', 2)">
+                        2<br>Concerning
+                        <div class="tooltip">
+                            <h4>Concerning Culture (Score: 2)</h4>
+                            <ul>
+                                <li>Mixed employee reviews</li>
+                                <li>Some toxic pockets</li>
+                                <li>Unclear values</li>
+                                <li>Limited transparency</li>
+                                <li>Silos between teams</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('compCulture', 3)">
+                        3<br>Solid
+                        <div class="tooltip">
+                            <h4>Solid Culture (Score: 3)</h4>
+                            <ul>
+                                <li>Clear values practiced</li>
+                                <li>Good work environment</li>
+                                <li>Fair treatment</li>
+                                <li>Open communication</li>
+                                <li>3.5+ Glassdoor rating</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('compCulture', 4)">
+                        4<br>Great
+                        <div class="tooltip">
+                            <h4>Great Culture (Score: 4)</h4>
+                            <ul>
+                                <li>Strong mission alignment</li>
+                                <li>High employee engagement</li>
+                                <li>Innovation encouraged</li>
+                                <li>Diversity celebrated</li>
+                                <li>4+ Glassdoor rating</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('compCulture', 5)">
+                        5<br>World Class
+                        <div class="tooltip">
+                            <h4>World Class Culture (Score: 5)</h4>
+                            <ul>
+                                <li>Best Place to Work awards</li>
+                                <li>Industry culture leader</li>
+                                <li>Values deeply embedded</li>
+                                <li>Attracts top talent globally</li>
+                                <li>4.5+ Glassdoor rating</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <textarea class="evidence-box" id="compCulture-evidence" 
+                    placeholder="Document specific evidence: Glassdoor reviews, employee testimonials, values examples shared, diversity data, office environment observations..."></textarea>
+            </div>
+            
+            <!-- Factor 5: Team Quality -->
+            <div class="factor-group">
+                <div class="factor-title">
+                    5. Team Quality
+                    <span class="factor-score" id="teamQualityScore">Not Rated</span>
+                </div>
+                <div class="factor-description">
+                    Caliber of colleagues, collaboration quality, and team dynamics
+                </div>
+                <div class="rating-scale">
+                    <div class="rating-button" onclick="setRating('teamQuality', 1)">
+                        1<br>Weak
+                        <div class="tooltip">
+                            <h4>Weak Team (Score: 1)</h4>
+                            <ul>
+                                <li>Underqualified members</li>
+                                <li>High conflict/dysfunction</li>
+                                <li>Poor collaboration</li>
+                                <li>Skill gaps evident</li>
+                                <li>Low performance standards</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('teamQuality', 2)">
+                        2<br>Mixed
+                        <div class="tooltip">
+                            <h4>Mixed Team (Score: 2)</h4>
+                            <ul>
+                                <li>Some strong performers</li>
+                                <li>Inconsistent skills</li>
+                                <li>Limited collaboration</li>
+                                <li>Few thought leaders</li>
+                                <li>Average credentials</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('teamQuality', 3)">
+                        3<br>Solid
+                        <div class="tooltip">
+                            <h4>Solid Team (Score: 3)</h4>
+                            <ul>
+                                <li>Competent professionals</li>
+                                <li>Good collaboration</li>
+                                <li>Diverse backgrounds</li>
+                                <li>Stable team tenure</li>
+                                <li>Mutual respect evident</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('teamQuality', 4)">
+                        4<br>Strong
+                        <div class="tooltip">
+                            <h4>Strong Team (Score: 4)</h4>
+                            <ul>
+                                <li>Top-tier backgrounds</li>
+                                <li>High performance culture</li>
+                                <li>Great collaboration</li>
+                                <li>Industry experts</li>
+                                <li>Low turnover rate</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('teamQuality', 5)">
+                        5<br>Dream Team
+                        <div class="tooltip">
+                            <h4>Dream Team (Score: 5)</h4>
+                            <ul>
+                                <li>Best-in-class talent</li>
+                                <li>Industry thought leaders</li>
+                                <li>Exceptional collaboration</li>
+                                <li>Attracts top performers</li>
+                                <li>Career-defining opportunity</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <textarea class="evidence-box" id="teamQuality-evidence" 
+                    placeholder="Document specific evidence: team member backgrounds researched, LinkedIn profiles reviewed, collaboration examples, team achievements, interview impressions..."></textarea>
+            </div>
+            
+            <!-- Factor 6: Work-Life Balance -->
+            <div class="factor-group">
+                <div class="factor-title">
+                    6. Work-Life Balance
+                    <span class="factor-score" id="balanceScore">Not Rated</span>
+                </div>
+                <div class="factor-description">
+                    Schedule flexibility, workload manageability, and personal time respect
+                </div>
+                <div class="rating-scale">
+                    <div class="rating-button" onclick="setRating('balance', 1)">
+                        1<br>Burnout
+                        <div class="tooltip">
+                            <h4>Burnout Risk (Score: 1)</h4>
+                            <ul>
+                                <li>60-80+ hour weeks</li>
+                                <li>24/7 availability expected</li>
+                                <li>No vacation culture</li>
+                                <li>Weekend work normal</li>
+                                <li>High burnout rates</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('balance', 2)">
+                        2<br>Demanding
+                        <div class="tooltip">
+                            <h4>Demanding Schedule (Score: 2)</h4>
+                            <ul>
+                                <li>50-60 hour weeks</li>
+                                <li>Limited flexibility</li>
+                                <li>After-hours expected</li>
+                                <li>Vacation discouraged</li>
+                                <li>Stress visible in team</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('balance', 3)">
+                        3<br>Reasonable
+                        <div class="tooltip">
+                            <h4>Reasonable Balance (Score: 3)</h4>
+                            <ul>
+                                <li>45-50 hour weeks</li>
+                                <li>Some flexibility</li>
+                                <li>Vacation respected</li>
+                                <li>Occasional overtime</li>
+                                <li>Boundaries mostly honored</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('balance', 4)">
+                        4<br>Flexible
+                        <div class="tooltip">
+                            <h4>Flexible Balance (Score: 4)</h4>
+                            <ul>
+                                <li>40-45 hour weeks</li>
+                                <li>Remote options</li>
+                                <li>Flexible hours</li>
+                                <li>Vacation encouraged</li>
+                                <li>Family-friendly policies</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('balance', 5)">
+                        5<br>Optimal
+                        <div class="tooltip">
+                            <h4>Optimal Balance (Score: 5)</h4>
+                            <ul>
+                                <li>True 40-hour weeks</li>
+                                <li>Full remote flexibility</li>
+                                <li>Unlimited PTO used</li>
+                                <li>Sabbaticals offered</li>
+                                <li>Well-being prioritized</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <textarea class="evidence-box" id="balance-evidence" 
+                    placeholder="Document specific evidence: typical hours discussed, remote policy, vacation usage, team member lifestyles observed, emergency response expectations..."></textarea>
+            </div>
+            
+            <!-- Factor 7: Compensation & Benefits -->
+            <div class="factor-group">
+                <div class="factor-title">
+                    7. Compensation & Benefits
+                    <span class="factor-score" id="compensationScore">Not Rated</span>
+                </div>
+                <div class="factor-description">
+                    Total rewards package including salary, bonus, equity, and benefits
+                </div>
+                <div class="rating-scale">
+                    <div class="rating-button" onclick="setRating('compensation', 1)">
+                        1<br>Below Market
+                        <div class="tooltip">
+                            <h4>Below Market (Score: 1)</h4>
+                            <ul>
+                                <li>20%+ below market rate</li>
+                                <li>Minimal benefits</li>
+                                <li>No bonus structure</li>
+                                <li>High employee costs</li>
+                                <li>No equity/profit sharing</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('compensation', 2)">
+                        2<br>Weak
+                        <div class="tooltip">
+                            <h4>Weak Package (Score: 2)</h4>
+                            <ul>
+                                <li>10-20% below market</li>
+                                <li>Basic benefits only</li>
+                                <li>Small bonus potential</li>
+                                <li>Limited perks</li>
+                                <li>Minimal retirement match</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('compensation', 3)">
+                        3<br>Market Rate
+                        <div class="tooltip">
+                            <h4>Market Rate (Score: 3)</h4>
+                            <ul>
+                                <li>Matches market median</li>
+                                <li>Standard benefits</li>
+                                <li>10-20% bonus target</li>
+                                <li>401k match 3-4%</li>
+                                <li>Some equity/RSUs</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('compensation', 4)">
+                        4<br>Above Market
+                        <div class="tooltip">
+                            <h4>Above Market (Score: 4)</h4>
+                            <ul>
+                                <li>75th percentile pay</li>
+                                <li>Excellent benefits</li>
+                                <li>25-40% bonus potential</li>
+                                <li>Significant equity</li>
+                                <li>Premium perks included</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('compensation', 5)">
+                        5<br>Life Changing
+                        <div class="tooltip">
+                            <h4>Life Changing (Score: 5)</h4>
+                            <ul>
+                                <li>90th+ percentile pay</li>
+                                <li>Wealth-building equity</li>
+                                <li>Exceptional benefits</li>
+                                <li>50%+ bonus potential</li>
+                                <li>Financial independence path</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <textarea class="evidence-box" id="compensation-evidence" 
+                    placeholder="Document specific evidence: base salary offered, bonus structure, equity details, vesting schedule, benefits summary, 401k match, market research conducted..."></textarea>
+            </div>
+            
+            <!-- Factor 8: Location & Commute -->
+            <div class="factor-group">
+                <div class="factor-title">
+                    8. Location & Commute
+                    <span class="factor-score" id="locationScore">Not Rated</span>
+                </div>
+                <div class="factor-description">
+                    Office location, commute time, remote flexibility, and lifestyle fit
+                </div>
+                <div class="rating-scale">
+                    <div class="rating-button" onclick="setRating('location', 1)">
+                        1<br>Major Issue
+                        <div class="tooltip">
+                            <h4>Major Issue (Score: 1)</h4>
+                            <ul>
+                                <li>2+ hour daily commute</li>
+                                <li>Relocation required</li>
+                                <li>No remote option</li>
+                                <li>High cost of living</li>
+                                <li>Poor quality of life area</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('location', 2)">
+                        2<br>Challenging
+                        <div class="tooltip">
+                            <h4>Challenging (Score: 2)</h4>
+                            <ul>
+                                <li>60-90 min commute</li>
+                                <li>Limited transport options</li>
+                                <li>Expensive area</li>
+                                <li>1-2 days remote only</li>
+                                <li>Lifestyle compromises</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('location', 3)">
+                        3<br>Acceptable
+                        <div class="tooltip">
+                            <h4>Acceptable (Score: 3)</h4>
+                            <ul>
+                                <li>30-60 min commute</li>
+                                <li>Public transit available</li>
+                                <li>Hybrid flexibility</li>
+                                <li>Reasonable cost area</li>
+                                <li>Decent amenities nearby</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('location', 4)">
+                        4<br>Convenient
+                        <div class="tooltip">
+                            <h4>Convenient (Score: 4)</h4>
+                            <ul>
+                                <li>Under 30 min commute</li>
+                                <li>Multiple transport options</li>
+                                <li>3-4 days remote OK</li>
+                                <li>Great neighborhood</li>
+                                <li>Lifestyle enhancing</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('location', 5)">
+                        5<br>Perfect
+                        <div class="tooltip">
+                            <h4>Perfect Setup (Score: 5)</h4>
+                            <ul>
+                                <li>Walk/bike distance</li>
+                                <li>Full remote option</li>
+                                <li>Work from anywhere</li>
+                                <li>Ideal location/lifestyle</li>
+                                <li>Home office stipend</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <textarea class="evidence-box" id="location-evidence" 
+                    placeholder="Document specific evidence: office location, commute tested, parking costs, remote policy details, team distribution, travel requirements..."></textarea>
+            </div>
+        </div>
+        
+        <!-- Desperation/Maslow Risk Factor -->
+        <div class="desperation-section">
+            <h2>🧠 Psychological Risk Assessment</h2>
+            <p style="margin-bottom: 20px;">Your current situation affects decision quality. Higher pressure = lower objectivity.</p>
+            
+            <div class="factor-group" style="background: white;">
+                <div class="factor-title">
+                    Desperation Level (Maslow's Hierarchy)
+                    <span class="factor-score" id="desperationScore" style="background: #dc3545;">Not Rated</span>
+                </div>
+                <div class="factor-description" style="color: #856404;">
+                    Current employment status, financial runway, and external pressures
+                </div>
+                <div class="rating-scale">
+                    <div class="rating-button" onclick="setRating('desperation', 1)">
+                        1<br>No Pressure
+                        <div class="tooltip">
+                            <h4>No Pressure (Score: 1)</h4>
+                            <ul>
+                                <li>Happily employed</li>
+                                <li>12+ months runway</li>
+                                <li>Multiple options</li>
+                                <li>Can wait for perfect fit</li>
+                                <li>Strong negotiation position</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('desperation', 2)">
+                        2<br>Low Pressure
+                        <div class="tooltip">
+                            <h4>Low Pressure (Score: 2)</h4>
+                            <ul>
+                                <li>Employed but looking</li>
+                                <li>6-12 months runway</li>
+                                <li>Some good options</li>
+                                <li>Time to be selective</li>
+                                <li>Good negotiation leverage</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('desperation', 3)">
+                        3<br>Moderate
+                        <div class="tooltip">
+                            <h4>Moderate Pressure (Score: 3)</h4>
+                            <ul>
+                                <li>Notice period/layoff pending</li>
+                                <li>3-6 months runway</li>
+                                <li>Need decision soon</li>
+                                <li>Limited options</li>
+                                <li>Some negotiation power</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('desperation', 4)">
+                        4<br>High Pressure
+                        <div class="tooltip">
+                            <h4>High Pressure (Score: 4)</h4>
+                            <ul>
+                                <li>Currently unemployed</li>
+                                <li>1-3 months runway</li>
+                                <li>Family pressures</li>
+                                <li>Few alternatives</li>
+                                <li>Weak negotiation position</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rating-button" onclick="setRating('desperation', 5)">
+                        5<br>Desperate
+                        <div class="tooltip">
+                            <h4>Desperate (Score: 5)</h4>
+                            <ul>
+                                <li>No income source</li>
+                                <li><1 month runway</li>
+                                <li>Bills overdue</li>
+                                <li>This or nothing</li>
+                                <li>Survival mode active</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <textarea class="evidence-box" id="desperation-evidence" 
+                    placeholder="Document your situation: current employment status, financial runway in months, family obligations, other opportunities in pipeline, urgency factors..."></textarea>
+            </div>
+            
+            <div class="desperation-warning" id="desperationWarning" style="display: none;">
+                <strong>⚠️ Decision Quality Alert:</strong> <span id="warningText"></span>
+            </div>
+        </div>
+        
+        <div class="summary-section">
+            <h2>Decision Summary</h2>
+            <div class="summary-grid">
+                <div class="summary-card" id="strengthCard">
+                    <h4>✅ Opportunity Strengths</h4>
+                    <p id="strengthText">Complete assessment to see strengths</p>
+                </div>
+                <div class="summary-card" id="concernCard">
+                    <h4>⚠️ Key Concerns</h4>
+                    <p id="concernText">Complete assessment to see concerns</p>
+                </div>
+                <div class="summary-card" id="recommendCard">
+                    <h4>🎯 Recommendation</h4>
+                    <p id="recommendText">Complete assessment for recommendation</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button onclick="calculateScore()">Update Analysis</button>
+            <button class="secondary" onclick="exportResults()">Export Results</button>
+            <button class="secondary" onclick="resetForm()">Reset Form</button>
+        </div>
+    </div>
+    
+    <script>
+        const ratings = {
+            growth: 0,
+            impact: 0,
+            manager: 0,
+            compCulture: 0,
+            teamQuality: 0,
+            balance: 0,
+            compensation: 0,
+            location: 0,
+            desperation: 0
+        };
+        
+        function setRating(factor, value) {
+            ratings[factor] = value;
+            
+            // Update UI
+            const buttons = document.querySelectorAll(`[onclick*="setRating('${factor}'"]`);
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            // Find and select the correct button
+            const targetButton = Array.from(buttons).find(btn => 
+                btn.getAttribute('onclick').includes(`setRating('${factor}', ${value})`));
+            if (targetButton) {
+                targetButton.classList.add('selected');
+            }
+            
+            // Update score display
+            const scoreElement = document.getElementById(factor + 'Score');
+            scoreElement.textContent = value;
+            scoreElement.className = 'factor-score';
+            if (value <= 2) scoreElement.classList.add('low');
+            else if (value === 3) scoreElement.classList.add('medium');
+            else scoreElement.classList.add('high');
+            
+            // Special handling for desperation
+            if (factor === 'desperation') {
+                updateDesperationWarning(value);
+            }
+            
+            calculateScore();
+        }
+        
+        function calculateScore() {
+            const careerFactors = ['growth', 'impact', 'manager', 'compCulture', 
+                                  'teamQuality', 'balance', 'compensation', 'location'];
+            const ratedFactors = careerFactors.filter(f => ratings[f] > 0);
+            
+            if (ratedFactors.length === 0) {
+                document.getElementById('careerScore').textContent = '0%';
+                document.getElementById('beforeMaslow').textContent = '0%';
+                document.getElementById('afterMaslow').textContent = '0%';
+                document.getElementById('ratedFactors').textContent = '0';
+                return;
+            }
+            
+            // Calculate base average
+            const baseAverage = ratedFactors.reduce((sum, f) => sum + ratings[f], 0) / ratedFactors.length;
+            const baseScore = baseAverage * 20;
+            
+            // Apply desperation adjustment
+            const desperation = ratings.desperation || 1;
+            const desperationMultiplier = (6 - desperation) / 5;
+            const finalScore = baseScore * desperationMultiplier;
+            
+            // Update displays
+            document.getElementById('beforeMaslow').textContent = Math.round(baseScore) + '%';
+            document.getElementById('afterMaslow').textContent = Math.round(finalScore) + '%';
+            document.getElementById('careerScore').textContent = Math.round(finalScore) + '%';
+            document.getElementById('ratedFactors').textContent = ratedFactors.length;
+            
+            // Update circle
+            const degrees = (finalScore / 100) * 360;
+            document.querySelector('.probability-circle').style.setProperty('--probability', degrees + 'deg');
+            
+            updateSummary();
+        }
+        
+        function updateDesperationWarning(level) {
+            const warningDiv = document.getElementById('desperationWarning');
+            const warningText = document.getElementById('warningText');
+            
+            if (level >= 4) {
+                warningDiv.style.display = 'block';
+                warningText.textContent = level === 5 ? 
+                    'Survival mode severely compromises decision quality. Consider interim solutions while continuing your search for better opportunities.' :
+                    'High pressure is affecting your objectivity. Take extra time to evaluate if possible and consider getting input from trusted advisors.';
+            } else if (level === 3) {
+                warningDiv.style.display = 'block';
+                warningText.textContent = 'Moderate pressure detected. Stay disciplined in your evaluation process and avoid rushing the decision.';
+            } else {
+                warningDiv.style.display = 'none';
+            }
+        }
+        
+        function updateSummary() {
+            const strengths = Object.entries(ratings)
+                .filter(([k, v]) => k !== 'desperation' && v >= 4)
+                .sort(([,a], [,b]) => b - a);
+            const concerns = Object.entries(ratings)
+                .filter(([k, v]) => k !== 'desperation' && v > 0 && v <= 2)
+                .sort(([,a], [,b]) => a - b);
+            
+            // Update strength card
+            const strengthCard = document.getElementById('strengthCard');
+            strengthCard.classList.remove('success', 'warning', 'danger');
+            if (strengths.length > 0) {
+                strengthCard.classList.add('success');
+                let text = '<ul style="margin: 0; padding-left: 20px;">';
+                strengths.slice(0, 3).forEach(([k, v]) => {
+                    text += `<li>${formatFactorName(k)}: ${v}/5 - ${getStrengthDescription(k, v)}</li>`;
+                });
+                text += '</ul>';
+                document.getElementById('strengthText').innerHTML = text;
+            } else {
+                document.getElementById('strengthText').textContent = 'No significant strengths identified yet';
+            }
+            
+            // Update concern card
+            const concernCard = document.getElementById('concernCard');
+            concernCard.classList.remove('success', 'warning', 'danger');
+            if (concerns.length > 0 || ratings.desperation >= 4) {
+                concernCard.classList.add(ratings.desperation >= 4 ? 'danger' : 'warning');
+                let text = '<ul style="margin: 0; padding-left: 20px;">';
+                if (ratings.desperation >= 4) {
+                    text += `<li><strong>High Pressure Decision (${ratings.desperation}/5)</strong> - Risk of poor judgment</li>`;
+                }
+                concerns.slice(0, 3).forEach(([k, v]) => {
+                    text += `<li>${formatFactorName(k)}: ${v}/5 - ${getConcernDescription(k, v)}</li>`;
+                });
+                text += '</ul>';
+                document.getElementById('concernText').innerHTML = text;
+            } else {
+                document.getElementById('concernText').textContent = 'No major concerns identified';
+            }
+            
+            // Update recommendation
+            const score = parseFloat(document.getElementById('afterMaslow').textContent);
+            const recommendCard = document.getElementById('recommendCard');
+            recommendCard.classList.remove('success', 'warning', 'danger');
+            
+            let recommendationText = '';
+            if (score >= 80 && ratings.desperation <= 2) {
+                recommendCard.classList.add('success');
+                recommendationText = '🟢 <strong>Strong Accept:</strong> This is an exceptional opportunity that aligns well with your career goals. The combination of factors suggests high probability of success and satisfaction.';
+            } else if (score >= 65 && ratings.desperation <= 3) {
+                recommendCard.classList.add('success');
+                recommendationText = '🟢 <strong>Accept Recommended:</strong> This is a good opportunity with more strengths than weaknesses. The role should advance your career effectively.';
+            } else if (score >= 50 || (score >= 40 && ratings.desperation <= 2)) {
+                recommendCard.classList.add('warning');
+                recommendationText = '🟡 <strong>Proceed with Caution:</strong> Mixed signals suggest careful consideration needed. Can you negotiate improvements in weak areas? Do you have better alternatives?';
+            } else if (ratings.desperation >= 4 && score >= 30) {
+                recommendCard.classList.add('warning');
+                recommendationText = '🟡 <strong>Interim Solution:</strong> Given your situation, this may serve as a stepping stone. Plan to continue searching after stabilizing your situation.';
+            } else {
+                recommendCard.classList.add('danger');
+                recommendationText = '🔴 <strong>Decline Recommended:</strong> Too many red flags. This move is unlikely to advance your career. Keep searching for better-aligned opportunities.';
+            }
+            
+            if (ratings.desperation >= 4) {
+                recommendationText += '<br><br>⚠️ <em>Note: Your high-pressure situation is affecting decision quality. Consider seeking advice from trusted mentors.</em>';
+            }
+            
+            document.getElementById('recommendText').innerHTML = recommendationText;
+        }
+        
+        function formatFactorName(factor) {
+            const names = {
+                growth: 'Growth Opportunity',
+                impact: 'Work Impact',
+                manager: 'Manager Quality',
+                compCulture: 'Company Culture',
+                teamQuality: 'Team Quality',
+                balance: 'Work-Life Balance',
+                compensation: 'Compensation',
+                location: 'Location'
+            };
+            return names[factor] || factor;
+        }
+        
+        function getStrengthDescription(factor, score) {
+            const descriptions = {
+                growth: { 4: "Clear advancement path", 5: "Career transformation opportunity" },
+                impact: { 4: "Strategic importance", 5: "Industry game-changer" },
+                manager: { 4: "Strong leadership", 5: "Career-making mentorship" },
+                compCulture: { 4: "Great environment", 5: "World-class culture" },
+                teamQuality: { 4: "Top-tier colleagues", 5: "Dream team opportunity" },
+                balance: { 4: "Flexible arrangements", 5: "Optimal lifestyle fit" },
+                compensation: { 4: "Above market pay", 5: "Wealth-building package" },
+                location: { 4: "Convenient setup", 5: "Perfect arrangement" }
+            };
+            return descriptions[factor]?.[score] || "Strong positive factor";
+        }
+        
+        function getConcernDescription(factor, score) {
+            const descriptions = {
+                growth: { 1: "Dead-end position", 2: "Limited advancement" },
+                impact: { 1: "Minimal contribution", 2: "Low strategic value" },
+                manager: { 1: "Poor leadership", 2: "Weak management" },
+                compCulture: { 1: "Toxic environment", 2: "Cultural concerns" },
+                teamQuality: { 1: "Weak team", 2: "Mediocre colleagues" },
+                balance: { 1: "Burnout risk", 2: "Poor flexibility" },
+                compensation: { 1: "Underpaid", 2: "Below market" },
+                location: { 1: "Major commute issue", 2: "Location challenges" }
+            };
+            return descriptions[factor]?.[score] || "Area of concern";
+        }
+        
+        function exportResults() {
+            const evidence = {};
+            Object.keys(ratings).forEach(factor => {
+                const textarea = document.getElementById(factor + '-evidence');
+                if (textarea) {
+                    evidence[factor] = textarea.value;
+                }
+            });
+            
+            const report = {
+                assessmentDate: new Date().toISOString(),
+                scores: {
+                    overall: document.getElementById('careerScore').textContent,
+                    beforeAdjustment: document.getElementById('beforeMaslow').textContent,
+                    afterAdjustment: document.getElementById('afterMaslow').textContent
+                },
+                ratings: ratings,
+                evidence: evidence,
+                completedFactors: Object.values(ratings).filter(v => v > 0).length,
+                recommendation: document.getElementById('recommendText').textContent
+            };
+            
+            const dataStr = JSON.stringify(report, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', `career-assessment-${new Date().toISOString().split('T')[0]}.json`);
+            linkElement.click();
+            
+            alert('Assessment exported! Review this data with mentors or career advisors for additional perspective.');
+        }
+        
+        function resetForm() {
+            if (confirm('Are you sure you want to reset all ratings and evidence? This cannot be undone.')) {
+                // Reset all ratings
+                Object.keys(ratings).forEach(factor => {
+                    ratings[factor] = 0;
+                });
+                
+                // Clear all selections
+                document.querySelectorAll('.rating-button').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                
+                // Reset score displays
+                document.querySelectorAll('.factor-score').forEach(score => {
+                    score.textContent = 'Not Rated';
+                    score.className = 'factor-score';
+                });
+                
+                // Clear text areas
+                document.querySelectorAll('.evidence-box').forEach(box => {
+                    box.value = '';
+                });
+                
+                // Reset displays
+                calculateScore();
+                
+                // Hide warnings
+                document.getElementById('desperationWarning').style.display = 'none';
+            }
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateScore();
+        });
+    </script>
+</body>
+</html>
