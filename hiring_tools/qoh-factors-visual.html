@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality of Hire Predictive Factors</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+            overflow-x: auto;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 40px 20px 30px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .factors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            background: rgba(255,255,255,0.1);
+            padding: 2px;
+            margin: 0 20px;
+        }
+        
+        .factor-category {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            min-height: 300px;
+        }
+        
+        .factor-category h3 {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .factor-category.foundation {
+            background: linear-gradient(135deg, #fff 0%, #e3f2fd 100%);
+        }
+        
+        .factor-category.foundation h3 {
+            color: #1565c0;
+        }
+        
+        .factor-category.basic {
+            background: linear-gradient(135deg, #fff 0%, #e8f5e9 100%);
+        }
+        
+        .factor-category.basic h3 {
+            color: #2e7d32;
+        }
+        
+        .factor-category.core {
+            background: linear-gradient(135deg, #fff 0%, #fff3e0 100%);
+        }
+        
+        .factor-category.core h3 {
+            color: #e65100;
+        }
+        
+        .factor-category.situational {
+            background: linear-gradient(135deg, #fff 0%, #fce4ec 100%);
+        }
+        
+        .factor-category.situational h3 {
+            color: #c2185b;
+        }
+        
+        .factor-item {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: rgba(0,0,0,0.03);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .factor-item:hover {
+            background: rgba(0,0,0,0.06);
+            transform: translateX(5px);
+        }
+        
+        .factor-name {
+            font-weight: 600;
+            font-size: 0.95em;
+            color: #1a237e;
+            margin-bottom: 3px;
+        }
+        
+        .factor-desc {
+            font-size: 0.85em;
+            color: #546e7a;
+            line-height: 1.3;
+        }
+        
+        .weight-badge {
+            display: inline-block;
+            background: #ff5722;
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 5px;
+            font-weight: 600;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            padding: 30px 20px;
+            background: rgba(255,255,255,0.1);
+            margin: 20px;
+            border-radius: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            color: white;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+        
+        .cta-section h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .cta-section p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 18px 40px;
+            font-size: 1.2em;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(76,175,80,0.4);
+        }
+        
+        .cta-button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76,175,80,0.5);
+        }
+        
+        @media (max-width: 1200px) {
+            .factors-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .factors-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .stats-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>The Factors That Accurately Measure and Predict Quality of Hire</h1>
+            <p>Evidence-based assessment framework that transforms hiring from guesswork to science</p>
+        </div>
+        
+        <div class="factors-grid">
+            <div class="factor-category foundation">
+                <h3>Foundation</h3>
+                <div class="factor-item">
+                    <div class="factor-name">Work History Review</div>
+                    <div class="factor-desc">Career trajectory & progression patterns reveal future performance</div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: rgba(21,101,192,0.08); border-radius: 10px; border-left: 4px solid #1565c0;">
+                    <div style="font-weight: 600; color: #1565c0; margin-bottom: 8px; font-size: 0.95em;">Performance-based Hiring®</div>
+                    <div style="font-size: 0.85em; color: #37474f; line-height: 1.5;">
+                        A superior approach that attracts, assesses, and hires outstanding talent by focusing on true career moves rather than lateral transfers. Creates Win-Win outcomes where both employer and candidate achieve their goals through meaningful opportunity matching.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="factor-category basic">
+                <h3>Basic Competencies</h3>
+                <div class="factor-item">
+                    <div class="factor-name">Primary Skills</div>
+                    <div class="factor-desc">Core abilities for day-one readiness</div>
+                </div>
+                <div class="factor-item">
+                    <div class="factor-name">Experience</div>
+                    <div class="factor-desc">Relevant context reduces time-to-productivity</div>
+                </div>
+                <div class="factor-item">
+                    <div class="factor-name">Achiever Pattern</div>
+                    <div class="factor-desc">Top 25% performers consistently excel</div>
+                </div>
+            </div>
+            
+            <div class="factor-category core">
+                <h3>Core Competencies</h3>
+                <div class="factor-item">
+                    <div class="factor-name">Technical Ability</div>
+                    <div class="factor-desc">Deep expertise drives innovation</div>
+                </div>
+                <div class="factor-item">
+                    <div class="factor-name">Management Ability</div>
+                    <div class="factor-desc">Execution skills translate ideas to results</div>
+                </div>
+                <div class="factor-item">
+                    <div class="factor-name">Soft Skills</div>
+                    <div class="factor-desc">Communication & empathy fuel career success</div>
+                </div>
+                <div class="factor-item">
+                    <div class="factor-name">Team Skills & EQ</div>
+                    <div class="factor-desc">Collaboration multiplies team effectiveness</div>
+                </div>
+                <div class="factor-item">
+                    <div class="factor-name">Problem-Solving</div>
+                    <div class="factor-desc">Critical thinking creates competitive advantage</div>
+                </div>
+            </div>
+            
+            <div class="factor-category situational">
+                <h3>Situational Fit <span class="weight-badge">1.5x Weight</span></h3>
+                <div class="factor-item">
+                    <div class="factor-name">Job Fit</div>
+                    <div class="factor-desc">Past achievements predict future success</div>
+                </div>
+                <div class="factor-item">
+                    <div class="factor-name">Managerial Fit</div>
+                    <div class="factor-desc">Chemistry drives engagement & retention</div>
+                </div>
+                <div class="factor-item">
+                    <div class="factor-name">Culture Fit</div>
+                    <div class="factor-desc">Value alignment ensures thriving talent</div>
+                </div>
+                <div class="factor-item">
+                    <div class="factor-name">Intrinsic Motivation</div>
+                    <div class="factor-desc">Internal drive delivers 50% higher productivity</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-row">
+            <div class="stat-item">
+                <div class="stat-number">73%</div>
+                <div class="stat-label">Reduction in Bad Hires</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">2.3x</div>
+                <div class="stat-label">Better New Hire Performance</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">91%</div>
+                <div class="stat-label">2-Year Retention Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">90%+</div>
+                <div class="stat-label">Success Rate for High Scorers</div>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <h2>Stop Guessing. Start Measuring What Matters.</h2>
+            <p>Transform your hiring success with evidence-based assessment</p>
+            <a href="https://hiring.tips/Moneyball_Signup4" class="cta-button">Access the Free Assessment Tool</a>
+        </div>
+    </div>
+</body>
+</html>
