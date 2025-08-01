@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PBJD Viewer & Editor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+  <div class="max-w-4xl mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-2">Performance-Based Job Description (PBJD) Viewer</h1>
+    <p class="text-sm text-gray-600 mb-4">This editor is for refining PBJDs created through the PBJD Wizard GPT. To begin, please visit the GPT to convert a traditional job description first.</p>
+
+    <div id="notice" class="bg-yellow-100 text-yellow-700 border border-yellow-300 p-4 rounded mb-6">
+      <strong>Note:</strong> This tool does not support creating PBJDs from scratch. Please use the <a href="https://chat.openai.com/g/g-688bfe55984081919bb4b6d4ac9db896-the-performance-based-job-description-builder" class="underline text-blue-700" target="_blank">PBJD Wizard GPT</a> to generate your PBJD and it will load here automatically.
+    </div>
+
+    <div id="editorContainer" class="hidden">
+      <h2 class="text-xl font-semibold mb-3">Your PBJD:</h2>
+      <textarea id="convertedPBJD" rows="30" class="w-full border border-gray-300 rounded p-4 mb-4 whitespace-pre-wrap"></textarea>
+      <div class="flex gap-4">
+        <button onclick="exportToDoc()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Export to .DOC</button>
+        <button onclick="exportToJSON()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Export to .JSON</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function exportToDoc() {
+      const content = document.getElementById("convertedPBJD").value;
+      const blob = new Blob([content], { type: "application/msword" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "Converted_PBJD.doc";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function exportToJSON() {
+      const pbjd = document.getElementById("convertedPBJD").value;
+      const json = JSON.stringify({ pbjd });
+      const blob = new Blob([json], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "Converted_PBJD.json";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    window.onload = function () {
+      const params = new URLSearchParams(window.location.search);
+      const pbjdEncoded = params.get("pbjd");
+      if (pbjdEncoded) {
+        const decodedPBJD = decodeURIComponent(pbjdEncoded);
+        document.getElementById("convertedPBJD").value = decodedPBJD;
+        document.getElementById("editorContainer").classList.remove("hidden");
+        document.getElementById("notice").classList.add("hidden");
+      }
+    };
+  </script>
+</body>
+</html>
