@@ -1,0 +1,2642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality of Hire Talent Scorecard - Enhanced (Technical Skills Updated)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        /* Import Panel Styles */
+        .import-panel {
+            background: #fff;
+            border: 2px dashed #3498db;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .import-panel h3 {
+            color: #2a5298;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        
+        .import-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .import-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .import-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .import-btn.secondary {
+            background: #27ae60;
+        }
+        
+        .import-btn.secondary:hover {
+            background: #229954;
+        }
+        
+        .import-status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .import-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .import-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Evidence Panel Styles */
+        .evidence-panel {
+            position: fixed;
+            right: 20px;
+            top: 100px;
+            width: 300px;
+            max-height: 80vh;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .evidence-panel.collapsed {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .evidence-panel-header {
+            background: #2a5298;
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .evidence-panel-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .evidence-count {
+            background: #1e3c72;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .toggle-evidence {
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .evidence-panel.collapsed .toggle-evidence {
+            transform: rotate(180deg);
+        }
+        
+        .evidence-panel-content {
+            max-height: calc(80vh - 60px);
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .evidence-panel.collapsed .evidence-panel-content {
+            display: none;
+        }
+        
+        .evidence-filter {
+            margin-bottom: 15px;
+        }
+        
+        .evidence-filter select {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .evidence-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #2a5298;
+            font-size: 14px;
+        }
+        
+        .evidence-category {
+            font-weight: 600;
+            color: #2a5298;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        
+        .evidence-text {
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+        
+        .evidence-competencies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        
+        .competency-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+        
+        .evidence-link {
+            color: #2a5298;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        
+        .evidence-link:hover {
+            color: #1e3c72;
+        }
+        
+        .info-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-field {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-field label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .info-field input {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .info-field input:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+        
+        .interview-notes-section {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 2px solid #f39c12;
+        }
+        
+        .interview-notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .interview-notes-title {
+            color: #e67e22;
+            font-weight: 600;
+            font-size: 1.2em;
+        }
+        
+        .toggle-notes {
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .interview-notes-content {
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .interview-notes-content.show {
+            display: block;
+        }
+        
+        .note-step {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #f39c12;
+        }
+        
+        .note-step-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .note-step-content {
+            color: #555;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+        
+        .scorecard-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #2a5298;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .factor-row {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        
+        .factor-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        
+        .factor-row.has-evidence {
+            border: 2px solid #4CAF50;
+        }
+        
+        .factor-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .evidence-indicator {
+            background: #4CAF50;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: normal;
+        }
+        
+        .rating-options {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .rating-option {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .rating-option:hover {
+            background: #f0f4f8;
+            border-color: #2a5298;
+            z-index: 10;
+        }
+        
+        .rating-option.selected {
+            background: #2a5298;
+            color: white;
+            border-color: #2a5298;
+        }
+        
+        .rating-option.suggested {
+            border-color: #4CAF50;
+            border-width: 3px;
+        }
+        
+        .rating-option.suggested::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .rating-option input[type="radio"] {
+            display: none;
+        }
+        
+        .rating-option .level {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .rating-option .description {
+            font-size: 0.85em;
+            line-height: 1.3;
+        }
+        
+        /* Enhanced Tooltip Styles */
+        .evidence-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 10px;
+            padding: 15px;
+            background: #333;
+            color: white;
+            border-radius: 8px;
+            width: 350px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 1000;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        .evidence-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #333;
+        }
+        
+        .rating-option:hover .evidence-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .evidence-tooltip h4 {
+            color: #4CAF50;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .evidence-tooltip ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .evidence-tooltip li {
+            margin-bottom: 5px;
+        }
+        
+        .evidence-tooltip .warning {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        
+        .evidence-tooltip .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .comment-section {
+            margin-top: 15px;
+        }
+        
+        .comment-section textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+            min-height: 80px;
+        }
+        
+        .comment-section textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+        
+        .related-evidence {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f4f8;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+        
+        .related-evidence-title {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 5px;
+        }
+        
+        .related-evidence-item {
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .related-evidence-item::before {
+            content: '•';
+            position: absolute;
+            left: 5px;
+            color: #1976d2;
+        }
+        
+        .overall-evidence {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .overall-evidence textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: vertical;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #2a5298;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3c72;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .score-display {
+            position: fixed;
+            top: 20px;
+            right: 340px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 200px;
+            z-index: 100;
+        }
+        
+        .evidence-panel.collapsed ~ .score-display {
+            right: 100px;
+        }
+        
+        .score-display h3 {
+            color: #2a5298;
+            margin-bottom: 10px;
+        }
+        
+        .score-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 20px 20px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        .footer a {
+            color: #2a5298;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer em {
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .rating-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .score-display {
+                position: static;
+                margin-bottom: 20px;
+            }
+            
+            .evidence-panel {
+                position: static;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            
+            .evidence-tooltip {
+                width: 280px;
+                font-size: 0.85em;
+            }
+        }
+        
+        @media print {
+            .action-buttons {
+                display: none;
+            }
+            
+            .score-display {
+                position: static;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            
+            .evidence-panel {
+                display: none;
+            }
+            
+            .evidence-tooltip {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Quality of Hire Talent Scorecard</h1>
+            <p>Performance-based Interview Assessment Tool with Evidence Integration</p>
+        </div>
+        
+        <!-- Import Panel - New Addition -->
+        <div class="import-panel" id="importPanel">
+            <h3>Import Interview Data (Optional)</h3>
+            <p style="margin-bottom: 20px; color: #666;">You can use this scorecard standalone or import data from a previous interview:</p>
+            <div class="import-buttons">
+                <button class="import-btn" onclick="importPreloadedData()">
+                    <span>📥</span> Import Preloaded Data
+                </button>
+                <button class="import-btn secondary" onclick="document.getElementById('file-import').click()">
+                    <span>📄</span> Import Candidate JSON File
+                </button>
+                <button class="import-btn" style="background: #6c757d;" onclick="skipImport()">
+                    <span>✏️</span> Skip - Enter Data Manually
+                </button>
+                <input type="file" id="file-import" accept=".json" style="display: none;" onchange="importJSONFile(event)">
+            </div>
+            <div class="import-status" id="importStatus"></div>
+        </div>
+        
+        <!-- Evidence Panel -->
+        <div class="evidence-panel" id="evidencePanel">
+            <div class="evidence-panel-header" onclick="toggleEvidencePanel()">
+                <div class="evidence-panel-title">
+                    <span>📋 Evidence Basket</span>
+                    <span class="evidence-count" id="evidenceCount">0</span>
+                </div>
+                <span class="toggle-evidence">◀</span>
+            </div>
+            <div class="evidence-panel-content">
+                <div class="evidence-filter">
+                    <select id="evidenceFilter" onchange="filterEvidence()">
+                        <option value="all">All Evidence</option>
+                        <option value="General Fit">General Fit</option>
+                        <option value="Work History">Work History</option>
+                        <option value="Accomplishments">Accomplishments</option>
+                        <option value="Technical Skills">Technical Skills</option>
+                        <option value="Team">Team Skills</option>
+                        <option value="Problem Solving">Problem Solving</option>
+                        <option value="Interest">Interest/Motivation</option>
+                    </select>
+                </div>
+                <div id="evidenceList">
+                    <p style="color: #999; text-align: center; padding: 20px;">No evidence loaded</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="score-display">
+            <h3>Average Score</h3>
+            <div class="score-value" id="totalScore">0.0 / 5.0</div>
+        </div>
+        
+        <div class="info-section">
+            <div class="info-grid">
+                <div class="info-field">
+                    <label for="candidate">Candidate Name</label>
+                    <input type="text" id="candidate" placeholder="Enter candidate name">
+                </div>
+                <div class="info-field">
+                    <label for="position">Position</label>
+                    <input type="text" id="position" placeholder="Enter position">
+                </div>
+                <div class="info-field">
+                    <label for="interviewer">Interviewer</label>
+                    <input type="text" id="interviewer" placeholder="Enter interviewer name">
+                </div>
+                <div class="info-field">
+                    <label for="date">Date</label>
+                    <input type="date" id="date">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Interview Notes Section -->
+        <div class="interview-notes-section" id="interviewNotesSection" style="display: none;">
+            <div class="interview-notes-header">
+                <div class="interview-notes-title">📝 Interview Notes</div>
+                <button class="toggle-notes" onclick="toggleInterviewNotes()">Show/Hide</button>
+            </div>
+            <div class="interview-notes-content" id="interviewNotesContent">
+                <!-- Notes will be populated here -->
+            </div>
+        </div>
+        
+        <!-- NEW: Work History Review Section -->
+        <div class="scorecard-section">
+            <h2 class="section-title">WORK HISTORY REVIEW</h2>
+            
+            <div class="factor-row" data-factor="workHistoryReview">
+                <div class="factor-name">
+                    Work History Review
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="workHistoryReview" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Has trouble explaining work history or job transitions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Work History Review</h4>
+                            <ul>
+                                <li>Has trouble explaining work history or job transitions</li>
+                                <li>Evidence of a lack of depth or pattern in roles</li>
+                                <li>Little explanation of career decisions</li>
+                                <li class="warning">Red flag: Cannot articulate career progression</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="workHistoryReview" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Some detail but narrative unclear or lacks depth.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Work History Review</h4>
+                            <ul>
+                                <li>Provides some detail about past jobs</li>
+                                <li>Narrative is unclear or lacks depth</li>
+                                <li>Limited progression rationale for moves</li>
+                                <li>Basic consistency but missing strategic direction</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="workHistoryReview" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Clear logical progression with evidence of growth.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Work History Review</h4>
+                            <ul>
+                                <li>Explains work history clearly with logical career progression</li>
+                                <li>Evidence of growth, skill development, and logical transitions</li>
+                                <li>Person has been assigned projects doing comparable work</li>
+                                <li class="success">Shows achiever pattern through assignments</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="workHistoryReview" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Deliberate strategic path with increasing responsibility.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Work History Review</h4>
+                            <ul>
+                                <li>Shows deliberate and strategic career path</li>
+                                <li>Clear evidence of increasing responsibility</li>
+                                <li>Job transitions are well-justified and supported</li>
+                                <li>Consistent pattern of being selected for key roles</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="workHistoryReview" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Outstanding trajectory with strategic moves and deep insights.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Work History Review</h4>
+                            <ul>
+                                <li>Outstanding career trajectory with clear, deliberate progression</li>
+                                <li>Moves are highly strategic with deep insights</li>
+                                <li>Consistent evidence of being top performer</li>
+                                <li class="success">Career path demonstrates elite achiever pattern</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Work History Review..." data-factor="workHistoryReview"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Basic Competencies Section -->
+        <div class="scorecard-section">
+            <h2 class="section-title">BASIC COMPETENCIES</h2>
+            
+            <div class="factor-row" data-factor="technicalSkills">
+                <div class="factor-name">
+                    Technical Skills
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="technicalSkills" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Has difficulty articulating specific technical skills or provides vague responses.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Technical Skills</h4>
+                            <ul>
+                                <li>Has difficulty articulating specific technical skills</li>
+                                <li>Provides vague, general responses with no concrete examples of expertise</li>
+                                <li>Cannot demonstrate working on comparable projects</li>
+                                <li class="warning">Red flag: No evidence of handling similar technical challenges</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="technicalSkills" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Can describe a few technical skills but lacks practical evidence.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Technical Skills</h4>
+                            <ul>
+                                <li>Can describe a few technical skills</li>
+                                <li>Does not provide in-depth evidence of applying them in practical situations</li>
+                                <li>Limited examples of solving technical problems</li>
+                                <li>Needs significant support for technical challenges</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="technicalSkills" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Strong competence with specific examples in relevant job settings.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Technical Skills</h4>
+                            <ul>
+                                <li>Describes technical skills with specific examples of use in relevant job settings</li>
+                                <li>Evidence supports strong competence in key technical areas</li>
+                                <li>Has worked on comparable projects handling similar problems</li>
+                                <li class="success">Demonstrates practical application of technical knowledge</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="technicalSkills" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Deep expertise applying skills to solve complex problems consistently.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Technical Skills</h4>
+                            <ul>
+                                <li>Demonstrates deep technical expertise</li>
+                                <li>Evidence of applying skills to solve complex problems</li>
+                                <li>Consistently performs at a high level in technical tasks</li>
+                                <li>Has used advanced systems, tools, or methods successfully</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="technicalSkills" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Superior skills with innovation and leadership in high-impact projects.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Technical Skills</h4>
+                            <ul>
+                                <li>Displays superior technical skills</li>
+                                <li>Multiple examples of innovation and leadership</li>
+                                <li>Applied skills to high-impact, high-stakes projects</li>
+                                <li class="success">Recognized as technical expert who drives innovation</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Technical Skills..." data-factor="technicalSkills"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                    <!-- Evidence will be populated here -->
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="experience">
+                <div class="factor-name">
+                    Experience
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="experience" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Minimum threshold.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Experience</h4>
+                            <ul>
+                                <li>Less than minimum years required</li>
+                                <li>Unrelated industry or role background</li>
+                                <li>Examples: Career changer, recent graduate</li>
+                                <li class="warning">Will need significant ramp-up time</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="experience" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Meets most, but not all needs.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Experience</h4>
+                            <ul>
+                                <li>Has 70% of required experience</li>
+                                <li>Similar role in different industry</li>
+                                <li>Examples: Transferable skills, adjacent experience</li>
+                                <li>Some gaps that can be addressed</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="experience" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Meets all experience needs.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Experience</h4>
+                            <ul>
+                                <li>Matches all job requirements</li>
+                                <li>Same industry and similar role</li>
+                                <li>Examples: Direct competitor experience, proven track record</li>
+                                <li class="success">Ready to perform from day one</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="experience" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Broader and related experience.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Experience</h4>
+                            <ul>
+                                <li>Exceeds requirements with added value</li>
+                                <li>Multiple relevant industries/roles</li>
+                                <li>Examples: International experience, M&A, turnarounds</li>
+                                <li>Brings best practices from other contexts</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="experience" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Excellent background for role.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Experience</h4>
+                            <ul>
+                                <li>Ideal progression and preparation</li>
+                                <li>Built similar functions from scratch</li>
+                                <li>Examples: IPO experience, scaled teams 10x</li>
+                                <li class="success">Perfect strategic fit for company stage</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Experience..." data-factor="experience"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="achieverPattern">
+                <div class="factor-name">
+                    Achiever Pattern & Growth Trend
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="achieverPattern" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">No evidence the person is in the top 50%. Spotty trend.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Achiever Pattern</h4>
+                            <ul>
+                                <li>Job hopping without progression</li>
+                                <li>No significant accomplishments cited</li>
+                                <li>Examples: Lateral moves, short tenures</li>
+                                <li class="warning">Pattern of underperformance</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="achieverPattern" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Some, but not sure if person is in top 50%. Flatter trend.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Achiever Pattern</h4>
+                            <ul>
+                                <li>Steady contributor but not standout</li>
+                                <li>Some achievements but not consistent</li>
+                                <li>Examples: Met goals, maintained status quo</li>
+                                <li>Limited evidence of exceeding expectations</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="achieverPattern" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Evidence clearly indicates person is in top 25%! Upward growth.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Achiever Pattern</h4>
+                            <ul>
+                                <li>Consistent promotions every 2-3 years</li>
+                                <li>Exceeded goals by 20-30%</li>
+                                <li>Examples: Award winner, top performer ratings</li>
+                                <li class="success">Clear upward trajectory</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="achieverPattern" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Evidence clearly indicates person is in top 10-15%. Steep upward path.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Achiever Pattern</h4>
+                            <ul>
+                                <li>Fast-track promotions ahead of peers</li>
+                                <li>Exceeded goals by 40-50%+</li>
+                                <li>Examples: Youngest VP, President's Club multiple years</li>
+                                <li>Recruited away by top companies</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="achieverPattern" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Evidence clearly indicates person is in top 5%. Handles big stretch roles.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Achiever Pattern</h4>
+                            <ul>
+                                <li>Exceptional progression (e.g., IC to VP in 5 years)</li>
+                                <li>Transformed departments/companies</li>
+                                <li>Examples: Turned around failing division, 10x growth</li>
+                                <li class="success">Pattern of impossible achievements</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Achiever Pattern..." data-factor="achieverPattern"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scorecard-section">
+            <h2 class="section-title">ESSENTIAL CORE COMPETENCES</h2>
+            
+            <div class="factor-row" data-factor="technicalAbility">
+                <div class="factor-name">
+                    Talent & Overall Technical Ability
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="technicalAbility" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Nothing remarkable. Needs too much extra training and support.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Technical Ability</h4>
+                            <ul>
+                                <li>Cannot explain technical concepts clearly</li>
+                                <li>No evidence of technical problem-solving</li>
+                                <li>Examples: Failed technical assessment, vague answers</li>
+                                <li class="warning">Would struggle with technical demands</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="technicalAbility" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Can do the work, but needs added training, support or coaching.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Technical Ability</h4>
+                            <ul>
+                                <li>Basic technical competence demonstrated</li>
+                                <li>Needs guidance on complex problems</li>
+                                <li>Examples: Solved simple cases, familiar with tools</li>
+                                <li>6-12 months to full productivity</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="technicalAbility" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Technically tops. An asset. Can learn quickly. Covers all job needs.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Technical Ability</h4>
+                            <ul>
+                                <li>Strong technical foundation across stack</li>
+                                <li>Self-sufficient problem solver</li>
+                                <li>Examples: Built similar systems, optimized performance</li>
+                                <li class="success">Can handle all technical requirements</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="technicalAbility" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Top-notch. Trains others. Constantly improving. Brings more to the table.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Technical Ability</h4>
+                            <ul>
+                                <li>Go-to expert for technical decisions</li>
+                                <li>Mentors team on best practices</li>
+                                <li>Examples: Architected scalable solutions, reduced tech debt</li>
+                                <li>Introduces new technologies/methodologies</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="technicalAbility" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Brilliant. Sets standards. Leader in field. Sought out. Recognized.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Technical Ability</h4>
+                            <ul>
+                                <li>Industry-recognized technical leader</li>
+                                <li>Speaks at conferences, publishes papers</li>
+                                <li>Examples: Open source maintainer, technical advisor</li>
+                                <li class="success">Will attract top talent to company</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Technical Ability..." data-factor="technicalAbility"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="managementAbility">
+                <div class="factor-name">
+                    Management & Organizational Ability
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="managementAbility" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Seems reactive. Misses most deadlines or projects aren't comparable.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Management Ability</h4>
+                            <ul>
+                                <li>No clear project management approach</li>
+                                <li>Cannot describe planning methodology</li>
+                                <li>Examples: Missed deadlines, scope creep, budget overruns</li>
+                                <li class="warning">Lacks organizational skills</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managementAbility" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Projects are comparable but seems more reactive than forward-looking.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Management Ability</h4>
+                            <ul>
+                                <li>Basic project management skills</li>
+                                <li>Delivers but with some issues</li>
+                                <li>Examples: Met deadlines with overtime, reactive to problems</li>
+                                <li>Needs structure and oversight</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managementAbility" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Has planned, organized and executed comparable projects.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Management Ability</h4>
+                            <ul>
+                                <li>Proven track record of delivery</li>
+                                <li>Uses project management tools effectively</li>
+                                <li>Examples: On-time, on-budget delivery, stakeholder satisfaction</li>
+                                <li class="success">Can manage complex initiatives</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managementAbility" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Excellent. Plans, anticipates, communicates, and succeeds.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Management Ability</h4>
+                            <ul>
+                                <li>Proactive risk management</li>
+                                <li>Excellent stakeholder communication</li>
+                                <li>Examples: Recovered troubled projects, improved processes</li>
+                                <li>Delivers early and under budget</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managementAbility" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Outstanding organizational results with comparable projects and teams.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Management Ability</h4>
+                            <ul>
+                                <li>Transformed organizational capability</li>
+                                <li>Managed $10M+ initiatives flawlessly</li>
+                                <li>Examples: Led digital transformation, merger integration</li>
+                                <li class="success">Executive-level program management</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Management Ability..." data-factor="managementAbility"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+            
+            <!-- NEW: Soft Skills Factor -->
+            <div class="factor-row" data-factor="softSkills">
+                <div class="factor-name">
+                    Soft Skills
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="softSkills" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Poor communication or interpersonal skills.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Soft Skills</h4>
+                            <ul>
+                                <li>Shows poor communication or interpersonal skills</li>
+                                <li>Struggles to connect with others</li>
+                                <li>Cannot demonstrate empathy</li>
+                                <li class="warning">May create interpersonal friction</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="softSkills" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Some soft skills but lacks consistency.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Soft Skills</h4>
+                            <ul>
+                                <li>Displays some soft skills</li>
+                                <li>Lacks consistency in communication</li>
+                                <li>Limited empathy or relationship-building</li>
+                                <li>Meets basic requirements but nothing exceptional</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="softSkills" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Strong communication and interpersonal skills.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Soft Skills</h4>
+                            <ul>
+                                <li>Demonstrates strong communication skills</li>
+                                <li>Evidence of building relationships</li>
+                                <li>Fosters collaboration effectively</li>
+                                <li class="success">Examples of handling conflict well</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="softSkills" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Exceptional soft skills with empathy and EQ.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Soft Skills</h4>
+                            <ul>
+                                <li>Exhibits exceptional soft skills</li>
+                                <li>Consistently demonstrates empathy</li>
+                                <li>High emotional intelligence</li>
+                                <li>Strong relationship-building abilities</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="softSkills" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Outstanding influence and deep organizational connections.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Soft Skills</h4>
+                            <ul>
+                                <li>Outstanding soft skills proven track record</li>
+                                <li>Influencing and inspiring others</li>
+                                <li>Building deep connections across organization</li>
+                                <li class="success">Examples of convincing executives</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Soft Skills..." data-factor="softSkills"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="teamSkills">
+                <div class="factor-name">
+                    Team Skills (EQ) & Development, Leadership
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="teamSkills" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Hasn't worked on comparable teams or little team growth.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Team Skills</h4>
+                            <ul>
+                                <li>Prefers working alone</li>
+                                <li>No examples of collaboration</li>
+                                <li>Examples: Conflict with teammates, poor communication</li>
+                                <li class="warning">May disrupt team dynamics</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="teamSkills" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Has worked on comparable teams and has some team growth.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Team Skills</h4>
+                            <ul>
+                                <li>Basic team player</li>
+                                <li>Some mentoring experience</li>
+                                <li>Examples: Participated in team projects, helped onboard</li>
+                                <li>Developing leadership skills</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="teamSkills" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Good fit on comparable teams. Has developed strong comparable teams.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Team Skills</h4>
+                            <ul>
+                                <li>Strong collaborator and communicator</li>
+                                <li>Successfully led small teams</li>
+                                <li>Examples: Built high-performing team, resolved conflicts</li>
+                                <li class="success">Creates positive team environment</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="teamSkills" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Clear positive team track. Coaches others. Recognized for strong team skills.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Team Skills</h4>
+                            <ul>
+                                <li>Sought out as mentor/coach</li>
+                                <li>Builds diverse, inclusive teams</li>
+                                <li>Examples: Developed future leaders, culture champion</li>
+                                <li>High employee engagement scores</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="teamSkills" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Impressive x-func team growth. Asked to lead. Persuades, motivates, coaches.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Team Skills</h4>
+                            <ul>
+                                <li>Inspirational leader across organization</li>
+                                <li>Built multiple successful teams</li>
+                                <li>Examples: Turned around toxic culture, 95%+ retention</li>
+                                <li class="success">Executive presence and influence</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Team Skills..." data-factor="teamSkills"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="problemSolving">
+                <div class="factor-name">
+                    Thinking & Job-related Problem-solving
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="problemSolving" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Didn't understand any key issues or develop any solutions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Problem Solving</h4>
+                            <ul>
+                                <li>Surface-level thinking only</li>
+                                <li>Missed obvious issues</li>
+                                <li>Examples: Couldn't analyze case study, no framework</li>
+                                <li class="warning">Lacks analytical capability</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="problemSolving" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Understood most job related issues, developed okay solutions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Problem Solving</h4>
+                            <ul>
+                                <li>Basic problem identification</li>
+                                <li>Standard solutions proposed</li>
+                                <li>Examples: Used common frameworks, obvious answers</li>
+                                <li>Needs help with complex problems</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="problemSolving" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Clearly understood all key issues and developed strong solutions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Problem Solving</h4>
+                            <ul>
+                                <li>Structured thinking approach</li>
+                                <li>Creative, practical solutions</li>
+                                <li>Examples: Root cause analysis, data-driven decisions</li>
+                                <li class="success">Can tackle ambiguous problems</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="problemSolving" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Understood all key & less obvious issues. Reaches out for best solutions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Problem Solving</h4>
+                            <ul>
+                                <li>Sees hidden connections</li>
+                                <li>Leverages diverse perspectives</li>
+                                <li>Examples: Prevented future issues, innovative approaches</li>
+                                <li>Strategic and tactical thinking</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="problemSolving" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Provides deeper level of insight. Offers multiple unique solutions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Problem Solving</h4>
+                            <ul>
+                                <li>Visionary problem solver</li>
+                                <li>Reframes problems entirely</li>
+                                <li>Examples: Created new business model, paradigm shift</li>
+                                <li class="success">Solves "unsolvable" problems</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Problem-solving..." data-factor="problemSolving"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scorecard-section">
+            <h2 class="section-title">SITUATIONAL FIT FACTORS – WEIGHT THESE FACTORS HIGHER</h2>
+            
+            <div class="factor-row" data-factor="jobFit">
+                <div class="factor-name">
+                    Job Fit: Evaluate Major Accomplishments to the Critical KPOs for the Role
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="jobFit" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Accomplishments are not directly comparable or not recent.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Job Fit</h4>
+                            <ul>
+                                <li>No similar role experience</li>
+                                <li>Achievements from 5+ years ago</li>
+                                <li>Examples: Different industry, smaller scale, different context</li>
+                                <li class="warning">High risk of performance gap</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="jobFit" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Some comparable accomplishments, but inconsistent or not recent.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Job Fit</h4>
+                            <ul>
+                                <li>Partial overlap with requirements</li>
+                                <li>Similar but smaller scope</li>
+                                <li>Examples: Related function, different level</li>
+                                <li>Will need time to adjust</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="jobFit" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Major and subtask accomplishments are recent, strong and comparable.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Job Fit</h4>
+                            <ul>
+                                <li>Direct match with job requirements</li>
+                                <li>Recent wins in similar context</li>
+                                <li>Examples: Same problems solved, comparable team size</li>
+                                <li class="success">Can replicate past success</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="jobFit" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Achieved outstanding results under similar conditions.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Job Fit</h4>
+                            <ul>
+                                <li>Exceeded expectations in same role</li>
+                                <li>Harder conditions, better results</li>
+                                <li>Examples: Larger scope, faster growth, fewer resources</li>
+                                <li>Proven ability to excel</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="jobFit" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Full job match with exceptional results – scope, pace, team, resources.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Job Fit</h4>
+                            <ul>
+                                <li>Perfect match on all dimensions</li>
+                                <li>Exceptional results repeatedly</li>
+                                <li>Examples: Built what we need, at our stage, our industry</li>
+                                <li class="success">Immediate high impact guaranteed</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Job Fit..." data-factor="jobFit"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="managerialFit">
+                <div class="factor-name">
+                    Managerial Fit
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="managerialFit" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Mismatch between candidate's & manager's style.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Managerial Fit</h4>
+                            <ul>
+                                <li>Conflicting work styles identified</li>
+                                <li>Different expectations on autonomy</li>
+                                <li>Examples: Needs structure vs. hands-off manager</li>
+                                <li class="warning">Likely friction and frustration</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managerialFit" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Limited, but has worked with similar managers.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Managerial Fit</h4>
+                            <ul>
+                                <li>Some style alignment</li>
+                                <li>Can adapt with effort</li>
+                                <li>Examples: Worked with similar personality before</li>
+                                <li>Will require adjustment period</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managerialFit" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Successfully worked with similar managers.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Managerial Fit</h4>
+                            <ul>
+                                <li>Compatible communication styles</li>
+                                <li>Aligned on work approach</li>
+                                <li>Examples: Thrived under similar leadership</li>
+                                <li class="success">Natural working relationship</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managerialFit" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Person easily adapts to a variety of manager styles.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Managerial Fit</h4>
+                            <ul>
+                                <li>High adaptability demonstrated</li>
+                                <li>Success with diverse managers</li>
+                                <li>Examples: Worked with 5+ management styles</li>
+                                <li>Manages up effectively</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="managerialFit" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Super fit. Coaches upwards. Both are flexible.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Managerial Fit</h4>
+                            <ul>
+                                <li>Perfect chemistry observed</li>
+                                <li>Complementary strengths</li>
+                                <li>Examples: Finishing each other's thoughts, shared vision</li>
+                                <li class="success">Will elevate each other</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Managerial Fit..." data-factor="managerialFit"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="culture">
+                <div class="factor-name">
+                    Culture & Environment
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="culture" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Complete mismatch on culture & environment.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Culture Fit</h4>
+                            <ul>
+                                <li>Values misalignment identified</li>
+                                <li>Prefers opposite environment</li>
+                                <li>Examples: Corporate vs. startup, formal vs. casual</li>
+                                <li class="warning">Unlikely to thrive or stay</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="culture" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Reasonable match on culture and environment.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Culture Fit</h4>
+                            <ul>
+                                <li>Some cultural alignment</li>
+                                <li>Can work in our environment</li>
+                                <li>Examples: Similar pace, partial value match</li>
+                                <li>May take time to integrate</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="culture" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Close match on culture and environment.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Culture Fit</h4>
+                            <ul>
+                                <li>Strong value alignment</li>
+                                <li>Comfortable with our pace/style</li>
+                                <li>Examples: Similar companies, work-life balance fit</li>
+                                <li class="success">Will integrate smoothly</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="culture" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Excellent match and has made similar transfers.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Culture Fit</h4>
+                            <ul>
+                                <li>Proven cultural adaptability</li>
+                                <li>Thrived in similar environments</li>
+                                <li>Examples: Multiple successful transitions</li>
+                                <li>Will enhance our culture</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="culture" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Thrives in this type of environment, culture.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Culture Fit</h4>
+                            <ul>
+                                <li>Perfect cultural match</li>
+                                <li>Embodies our values naturally</li>
+                                <li>Examples: Built similar cultures, culture champion</li>
+                                <li class="success">Will strengthen culture significantly</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Culture & Environment..." data-factor="culture"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+            
+            <div class="factor-row" data-factor="motivation">
+                <div class="factor-name">
+                    Intrinsic Motivation – in the Hiring Formula for Success
+                    <span class="evidence-indicator" style="display: none;">Has Evidence</span>
+                </div>
+                <div class="rating-options">
+                    <label class="rating-option">
+                        <input type="radio" name="motivation" value="1">
+                        <span class="level">Level 1</span>
+                        <span class="description">Little evidence of motivation to do this type of work.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 1 - Intrinsic Motivation</h4>
+                            <ul>
+                                <li>Lacks enthusiasm for role</li>
+                                <li>Money is only motivator</li>
+                                <li>Examples: Couldn't articulate why interested</li>
+                                <li class="warning">Flight risk from day one</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="motivation" value="2">
+                        <span class="level">Level 2</span>
+                        <span class="description">Will do the core work but needs extra pushing.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 2 - Intrinsic Motivation</h4>
+                            <ul>
+                                <li>Moderate interest shown</li>
+                                <li>Sees it as a job, not passion</li>
+                                <li>Examples: Will do what's asked, minimal initiative</li>
+                                <li>Needs external motivation</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="motivation" value="3">
+                        <span class="level">Level 3</span>
+                        <span class="description">Self-motivated to do work with normal supervision.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 3 - Intrinsic Motivation</h4>
+                            <ul>
+                                <li>Genuine interest in the work</li>
+                                <li>Self-directed and proactive</li>
+                                <li>Examples: Researched company, asks good questions</li>
+                                <li class="success">Intrinsically motivated</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="motivation" value="4">
+                        <span class="level">Level 4</span>
+                        <span class="description">Takes initiative to learn and do more, faster and better.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 4 - Intrinsic Motivation</h4>
+                            <ul>
+                                <li>High drive and ambition</li>
+                                <li>Goes above and beyond</li>
+                                <li>Examples: Already has ideas, side projects in field</li>
+                                <li>Passionate about excellence</li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="motivation" value="5">
+                        <span class="level">Level 5</span>
+                        <span class="description">Totally committed to get it done. Constantly gets better.</span>
+                        <div class="evidence-tooltip">
+                            <h4>Evidence for Level 5 - Intrinsic Motivation</h4>
+                            <ul>
+                                <li>Mission-driven alignment</li>
+                                <li>This is their calling</li>
+                                <li>Examples: Personal mission matches company, lifelong learner</li>
+                                <li class="success">Unstoppable force for success</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div class="comment-section">
+                    <textarea placeholder="Add evidence and comments for Intrinsic Motivation..." data-factor="motivation"></textarea>
+                </div>
+                <div class="related-evidence" style="display: none;">
+                    <div class="related-evidence-title">Related Interview Evidence:</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="overall-evidence">
+            <h2 class="section-title">OVERALL FIT BASED ON SHARED EVIDENCE</h2>
+            <textarea id="overallEvidence" placeholder="Provide specific evidence to justify any very low rankings, less than 2, or extremely high rankings, above 3."></textarea>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="calculateScore()">Calculate Score</button>
+            <button class="btn btn-secondary" onclick="exportToPDF()">Export as PDF</button>
+            <button class="btn btn-success" onclick="exportToJSON()">Export as JSON</button>
+        </div>
+        
+        <div class="footer">
+            <p>Based on Lou Adler's <em>Hire With Your Head</em> and <em>The Essential Guide for Hiring & Getting Hired</em></p>
+            <p>The Adler Group, Inc. • Irvine, CA • <a href="https://www.winwinhiring.com" target="_blank">www.winwinhiring.com</a> • <a href="mailto:info@performancebasedhiring.com">info@performancebasedhiring.com</a></p>
+            <p>©2025. All Rights Reserved. The Adler Group, Inc.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let interviewData = null;
+        let evidenceBasket = [];
+        
+        // Competency to Factor mapping - UPDATED with new factors
+        const competencyToFactor = {
+            'Work History Review': 'workHistoryReview',
+            'Technical Skills': 'technicalSkills',
+            'Soft Skills': 'softSkills',
+            'Motivation': 'motivation',
+            'Culture & Environment': 'culture',
+            'Experience': 'experience',
+            'Achiever Pattern & Growth Trend': 'achieverPattern',
+            'Talent & Overall Technical Ability': 'technicalAbility',
+            'Job Fit with Recent Comparable Results': 'jobFit',
+            'Team Skills (EQ) & Development, Leadership': 'teamSkills',
+            'Management & Organizational Ability': 'managementAbility',
+            'Thinking & Job-related Problem-solving': 'problemSolving',
+            'Managerial Fit': 'managerialFit'
+        };
+        
+        // Factor weights for situational fit factors - UPDATED with new factors
+        const factorWeights = {
+            workHistoryReview: 1,
+            technicalSkills: 1,
+            experience: 1,
+            achieverPattern: 1,
+            technicalAbility: 1,
+            managementAbility: 1,
+            softSkills: 1,
+            teamSkills: 1,
+            problemSolving: 1,
+            jobFit: 1.5,
+            managerialFit: 1.5,
+            culture: 1.5,
+            motivation: 1.5
+        };
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date
+            document.getElementById('date').value = new Date().toISOString().substr(0, 10);
+            
+            // Check if there's preloaded data in localStorage
+            checkForPreloadedData();
+            
+            // Add event listeners
+            setupEventListeners();
+        });
+        
+        function checkForPreloadedData() {
+            const storedData = localStorage.getItem('interviewDataForScorecard');
+            if (storedData) {
+                // Show indicator that data is available
+                const importStatus = document.getElementById('importStatus');
+                importStatus.textContent = '✓ Interview data detected. Click "Import Preloaded Data" to load it.';
+                importStatus.className = 'import-status success';
+                importStatus.style.display = 'block';
+            }
+        }
+        
+        function skipImport() {
+            const importPanel = document.getElementById('importPanel');
+            importPanel.style.display = 'none';
+            
+            // Focus on the first input field
+            document.getElementById('candidate').focus();
+        }
+        
+        function importPreloadedData() {
+            const importStatus = document.getElementById('importStatus');
+            
+            try {
+                const storedData = localStorage.getItem('interviewDataForScorecard');
+                
+                if (!storedData) {
+                    importStatus.textContent = '❌ No preloaded data found. Please complete the interview guide first or import a JSON file.';
+                    importStatus.className = 'import-status error';
+                    importStatus.style.display = 'block';
+                    return;
+                }
+                
+                const data = JSON.parse(storedData);
+                loadInterviewData(data);
+                
+                // Success feedback
+                importStatus.textContent = '✓ Interview data loaded successfully!';
+                importStatus.className = 'import-status success';
+                importStatus.style.display = 'block';
+                
+                // Hide import panel after successful import
+                setTimeout(() => {
+                    document.getElementById('importPanel').style.display = 'none';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error loading preloaded data:', error);
+                importStatus.textContent = '❌ Error loading data: ' + error.message;
+                importStatus.className = 'import-status error';
+                importStatus.style.display = 'block';
+            }
+        }
+        
+        function importJSONFile(event) {
+            const file = event.target.files[0];
+            const importStatus = document.getElementById('importStatus');
+            
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Validate the JSON structure
+                    if (!validateImportedData(data)) {
+                        throw new Error('Invalid interview data format');
+                    }
+                    
+                    // Process the data based on format (could be from interview guide or another scorecard)
+                    if (data.interviewInfo && data.interviewNotes) {
+                        // This is from the interview guide export
+                        loadInterviewGuideExport(data);
+                    } else if (data.metadata && data.ratings) {
+                        // This is from a scorecard export
+                        loadScorecardExport(data);
+                    } else {
+                        throw new Error('Unrecognized data format');
+                    }
+                    
+                    // Success feedback
+                    importStatus.textContent = '✓ Data imported successfully!';
+                    importStatus.className = 'import-status success';
+                    importStatus.style.display = 'block';
+                    
+                    // Hide import panel after successful import
+                    setTimeout(() => {
+                        document.getElementById('importPanel').style.display = 'none';
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.error('Import error:', error);
+                    importStatus.textContent = '❌ Error importing file: ' + error.message;
+                    importStatus.className = 'import-status error';
+                    importStatus.style.display = 'block';
+                }
+            };
+            
+            reader.onerror = function() {
+                importStatus.textContent = '❌ Error reading file';
+                importStatus.className = 'import-status error';
+                importStatus.style.display = 'block';
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        function validateImportedData(data) {
+            // Check for interview guide format
+            if (data.interviewInfo) {
+                return data.interviewInfo.candidateName !== undefined;
+            }
+            
+            // Check for scorecard format
+            if (data.metadata) {
+                return data.metadata.candidate !== undefined;
+            }
+            
+            // Check for direct interview data format
+            if (data.candidateName !== undefined) {
+                return true;
+            }
+            
+            return false;
+        }
+        
+        function loadInterviewGuideExport(data) {
+            // Convert interview guide export format to internal format
+            const interviewData = {
+                candidateName: data.interviewInfo.candidateName,
+                jobPosition: data.interviewInfo.jobPosition,
+                interviewerName: data.interviewInfo.interviewerName,
+                interviewDate: data.interviewInfo.interviewDate,
+                evidenceBasket: data.evidenceBasket || [],
+                notes: {},
+                jobDescription: data.jobDescription
+            };
+            
+            // Convert notes format
+            if (data.interviewNotes) {
+                Object.entries(data.interviewNotes).forEach(([step, content]) => {
+                    const stepNum = step.replace('Step ', '');
+                    interviewData.notes[`notes-step-${stepNum}`] = content.notes;
+                });
+            }
+            
+            loadInterviewData(interviewData);
+        }
+        
+        function loadScorecardExport(data) {
+            // Load data from a previous scorecard export
+            document.getElementById('candidate').value = data.metadata.candidate || '';
+            document.getElementById('position').value = data.metadata.position || '';
+            document.getElementById('interviewer').value = data.metadata.interviewer || '';
+            document.getElementById('date').value = data.metadata.date || '';
+            
+            // Load ratings
+            if (data.ratings) {
+                Object.entries(data.ratings).forEach(([factor, rating]) => {
+                    const radio = document.querySelector(`input[name="${factor}"][value="${rating.value}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                        radio.closest('.rating-option').classList.add('selected');
+                    }
+                });
+            }
+            
+            // Load comments
+            if (data.comments) {
+                Object.entries(data.comments).forEach(([factor, comment]) => {
+                    const textarea = document.querySelector(`textarea[data-factor="${factor}"]`);
+                    if (textarea) {
+                        textarea.value = comment;
+                    }
+                });
+            }
+            
+            // Load overall evidence
+            if (data.overallEvidence) {
+                document.getElementById('overallEvidence').value = data.overallEvidence;
+            }
+            
+            // Load evidence basket
+            if (data.evidenceBasket) {
+                evidenceBasket = data.evidenceBasket;
+                updateEvidencePanel();
+                analyzeEvidenceForSuggestions();
+            }
+            
+            // Calculate score
+            calculateScore();
+        }
+        
+        function loadInterviewData(data) {
+            if (!data) return;
+            
+            interviewData = data;
+            
+            // Populate fields
+            document.getElementById('candidate').value = data.candidateName || '';
+            document.getElementById('position').value = data.jobPosition || '';
+            document.getElementById('interviewer').value = data.interviewerName || '';
+            document.getElementById('date').value = data.interviewDate || '';
+            
+            // Load evidence basket
+            if (data.evidenceBasket && data.evidenceBasket.length > 0) {
+                evidenceBasket = data.evidenceBasket;
+                updateEvidencePanel();
+                analyzeEvidenceForSuggestions();
+            }
+            
+            // Show interview notes section if notes exist
+            if (data.notes && Object.keys(data.notes).length > 0) {
+                displayInterviewNotes();
+            }
+        }
+        
+        function updateEvidencePanel() {
+            const evidenceCount = document.getElementById('evidenceCount');
+            const evidenceList = document.getElementById('evidenceList');
+            
+            evidenceCount.textContent = evidenceBasket.length;
+            
+            if (evidenceBasket.length === 0) {
+                evidenceList.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">No evidence loaded</p>';
+                return;
+            }
+            
+            // Filter evidence based on selection
+            const filterValue = document.getElementById('evidenceFilter').value;
+            const filteredEvidence = filterValue === 'all' 
+                ? evidenceBasket 
+                : evidenceBasket.filter(e => e.category === filterValue);
+            
+            let html = '';
+            filteredEvidence.forEach(item => {
+                html += `
+                    <div class="evidence-item">
+                        <div class="evidence-category">${item.category}</div>
+                        <div class="evidence-text">${item.text.substring(0, 150)}${item.text.length > 150 ? '...' : ''}</div>
+                        <div class="evidence-competencies">
+                            ${item.competencies.map(c => `<span class="competency-tag">${c}</span>`).join('')}
+                        </div>
+                        ${item.competencies.map(c => competencyToFactor[c]).filter(f => f).map(factor => 
+                            `<span class="evidence-link" onclick="scrollToFactor('${factor}')">→ View in ${getFactorName(factor)}</span>`
+                        ).join(' ')}
+                    </div>
+                `;
+            });
+            
+            evidenceList.innerHTML = html;
+        }
+        
+        function getFactorName(factor) {
+            const factorNames = {
+                workHistoryReview: 'Work History Review',
+                technicalSkills: 'Technical Skills',
+                experience: 'Experience',
+                achieverPattern: 'Achiever Pattern',
+                technicalAbility: 'Technical Ability',
+                managementAbility: 'Management Ability',
+                softSkills: 'Soft Skills',
+                teamSkills: 'Team Skills',
+                problemSolving: 'Problem Solving',
+                jobFit: 'Job Fit',
+                managerialFit: 'Managerial Fit',
+                culture: 'Culture',
+                motivation: 'Intrinsic Motivation'
+            };
+            return factorNames[factor] || factor;
+        }
+        
+        function analyzeEvidenceForSuggestions() {
+            // Mark factors that have evidence
+            Object.keys(competencyToFactor).forEach(competency => {
+                const factor = competencyToFactor[competency];
+                const hasEvidence = evidenceBasket.some(e => e.competencies.includes(competency));
+                
+                if (hasEvidence) {
+                    const factorRow = document.querySelector(`[data-factor="${factor}"]`);
+                    if (factorRow) {
+                        factorRow.classList.add('has-evidence');
+                        const indicator = factorRow.querySelector('.evidence-indicator');
+                        if (indicator) indicator.style.display = 'inline-block';
+                        
+                        // Add related evidence
+                        displayRelatedEvidence(factor, competency);
+                    }
+                }
+            });
+            
+            // Suggest ratings based on evidence content
+            suggestRatingsBasedOnEvidence();
+        }
+        
+        function displayRelatedEvidence(factor, competency) {
+            const factorRow = document.querySelector(`[data-factor="${factor}"]`);
+            if (!factorRow) return;
+            
+            const relatedEvidenceDiv = factorRow.querySelector('.related-evidence');
+            if (!relatedEvidenceDiv) return;
+            
+            const relatedEvidence = evidenceBasket.filter(e => e.competencies.includes(competency));
+            if (relatedEvidence.length === 0) return;
+            
+            let html = '<div class="related-evidence-title">Related Interview Evidence:</div>';
+            relatedEvidence.forEach(item => {
+                html += `<div class="related-evidence-item">${item.text.substring(0, 100)}${item.text.length > 100 ? '...' : ''}</div>`;
+            });
+            
+            relatedEvidenceDiv.innerHTML = html;
+            relatedEvidenceDiv.style.display = 'block';
+        }
+        
+        function suggestRatingsBasedOnEvidence() {
+            // Analyze evidence text for keywords that suggest rating levels
+            const positiveKeywords = ['exceptional', 'outstanding', 'excellent', 'strong', 'proven', 'successful', 'achieved', 'led', 'transformed'];
+            const negativeKeywords = ['struggled', 'limited', 'basic', 'needs improvement', 'lacking', 'minimal', 'difficulty'];
+            
+            evidenceBasket.forEach(item => {
+                const textLower = item.text.toLowerCase();
+                let suggestedLevel = 3; // Default to middle
+                
+                // Count positive and negative indicators
+                const positiveCount = positiveKeywords.filter(keyword => textLower.includes(keyword)).length;
+                const negativeCount = negativeKeywords.filter(keyword => textLower.includes(keyword)).length;
+                
+                if (positiveCount > 2) suggestedLevel = 4;
+                if (positiveCount > 4) suggestedLevel = 5;
+                if (negativeCount > 1) suggestedLevel = 2;
+                if (negativeCount > 2) suggestedLevel = 1;
+                
+                // Apply suggestions to relevant factors
+                item.competencies.forEach(competency => {
+                    const factor = competencyToFactor[competency];
+                    if (factor) {
+                        suggestRating(factor, suggestedLevel);
+                    }
+                });
+            });
+        }
+        
+        function suggestRating(factor, level) {
+            const ratingOption = document.querySelector(`input[name="${factor}"][value="${level}"]`);
+            if (ratingOption) {
+                const optionLabel = ratingOption.closest('.rating-option');
+                if (optionLabel && !optionLabel.classList.contains('suggested')) {
+                    optionLabel.classList.add('suggested');
+                }
+            }
+        }
+        
+        function displayInterviewNotes() {
+            const notesSection = document.getElementById('interviewNotesSection');
+            const notesContent = document.getElementById('interviewNotesContent');
+            
+            if (!interviewData.notes) return;
+            
+            notesSection.style.display = 'block';
+            
+            let html = '';
+            const stepNames = {
+                'notes-step-1': 'Step 1: Welcome and Review Job/Motivation',
+                'notes-step-2': 'Step 2: Measure Impact of First Impression',
+                'notes-step-3': 'Step 3: Review Work History and Background',
+                'notes-step-4': 'Step 4: Assess Major Accomplishments',
+                'notes-step-4a': 'Step 4a: Assess Team Accomplishments',
+                'notes-step-5': 'Step 5: Discuss Major Job-related Problems',
+                'notes-step-6': 'Step 6: Let the Candidate Ask Questions',
+                'notes-step-7': 'Step 7: Recruit Using Win-Win Opportunity',
+                'notes-step-8': 'Step 8: Measure First Impression Again'
+            };
+            
+            Object.entries(interviewData.notes).forEach(([noteId, content]) => {
+                if (content && content.trim()) {
+                    html += `
+                        <div class="note-step">
+                            <div class="note-step-title">${stepNames[noteId] || noteId}</div>
+                            <div class="note-step-content">${content}</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            notesContent.innerHTML = html;
+        }
+        
+        function toggleInterviewNotes() {
+            const content = document.getElementById('interviewNotesContent');
+            content.classList.toggle('show');
+        }
+        
+        function toggleEvidencePanel() {
+            const panel = document.getElementById('evidencePanel');
+            panel.classList.toggle('collapsed');
+        }
+        
+        function filterEvidence() {
+            updateEvidencePanel();
+        }
+        
+        function scrollToFactor(factor) {
+            const factorRow = document.querySelector(`[data-factor="${factor}"]`);
+            if (factorRow) {
+                factorRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Highlight the factor briefly
+                factorRow.style.transition = 'background-color 0.5s';
+                factorRow.style.backgroundColor = '#ffe4b5';
+                setTimeout(() => {
+                    factorRow.style.backgroundColor = '';
+                }, 2000);
+            }
+        }
+        
+        function setupEventListeners() {
+            // Add event listeners to rating options
+            document.querySelectorAll('.rating-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    const factorName = radio.name;
+                    
+                    // Remove selected class from all options in this factor
+                    document.querySelectorAll(`input[name="${factorName}"]`).forEach(r => {
+                        r.closest('.rating-option').classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    radio.checked = true;
+                    
+                    // Auto-calculate score
+                    calculateScore();
+                });
+            });
+            
+            // Add auto-save for comments
+            document.querySelectorAll('textarea[data-factor]').forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    // Could implement auto-save here
+                });
+            });
+        }
+        
+        function calculateScore() {
+            let totalWeightedScore = 0;
+            let totalWeight = 0;
+            let factorsRated = 0;
+            
+            Object.keys(factorWeights).forEach(factor => {
+                const selectedRating = document.querySelector(`input[name="${factor}"]:checked`);
+                if (selectedRating) {
+                    const value = parseInt(selectedRating.value);
+                    const weight = factorWeights[factor];
+                    totalWeightedScore += value * weight;
+                    totalWeight += weight;
+                    factorsRated++;
+                }
+            });
+            
+            // Calculate average score
+            const averageScore = totalWeight > 0 ? (totalWeightedScore / totalWeight) : 0;
+            
+            document.getElementById('totalScore').textContent = `${averageScore.toFixed(1)} / 5.0`;
+            
+            // Change color based on score
+            const scoreElement = document.getElementById('totalScore');
+            
+            if (averageScore >= 4.0) {
+                scoreElement.style.color = '#28a745';
+            } else if (averageScore >= 3.0) {
+                scoreElement.style.color = '#ffc107';
+            } else {
+                scoreElement.style.color = '#dc3545';
+            }
+        }
+        
+        function getFormData() {
+            const data = {
+                metadata: {
+                    candidate: document.getElementById('candidate').value,
+                    position: document.getElementById('position').value,
+                    interviewer: document.getElementById('interviewer').value,
+                    date: document.getElementById('date').value,
+                    timestamp: new Date().toISOString()
+                },
+                ratings: {},
+                comments: {},
+                overallEvidence: document.getElementById('overallEvidence').value,
+                averageScore: document.getElementById('totalScore').textContent,
+                evidenceBasket: evidenceBasket,
+                interviewNotes: interviewData ? interviewData.notes : {}
+            };
+            
+            // Collect ratings and comments
+            Object.keys(factorWeights).forEach(factor => {
+                const selectedRating = document.querySelector(`input[name="${factor}"]:checked`);
+                if (selectedRating) {
+                    data.ratings[factor] = {
+                        value: parseInt(selectedRating.value),
+                        weight: factorWeights[factor],
+                        weightedScore: parseInt(selectedRating.value) * factorWeights[factor]
+                    };
+                }
+                
+                const comment = document.querySelector(`textarea[data-factor="${factor}"]`);
+                if (comment && comment.value) {
+                    data.comments[factor] = comment.value;
+                }
+            });
+            
+            return data;
+        }
+        
+        function exportToJSON() {
+            const data = getFormData();
+            const jsonString = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `talent-scorecard-${data.metadata.candidate || 'unnamed'}-${new Date().toISOString().substr(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const data = getFormData();
+            
+            // Title
+            doc.setFontSize(20);
+            doc.text('Quality of Hire Talent Scorecard', 105, 20, { align: 'center' });
+            
+            // Metadata
+            doc.setFontSize(12);
+            let y = 40;
+            doc.text(`Candidate: ${data.metadata.candidate}`, 20, y);
+            doc.text(`Position: ${data.metadata.position}`, 120, y);
+            y += 10;
+            doc.text(`Interviewer: ${data.metadata.interviewer}`, 20, y);
+            doc.text(`Date: ${data.metadata.date}`, 120, y);
+            y += 10;
+            doc.text(`Average Score: ${data.averageScore}`, 20, y);
+            
+            // Ratings
+            y += 20;
+            doc.setFontSize(14);
+            doc.text('Factor Ratings:', 20, y);
+            y += 10;
+            
+            doc.setFontSize(10);
+            const factorNames = {
+                workHistoryReview: 'Work History Review',
+                technicalSkills: 'Technical Skills',
+                experience: 'Experience',
+                achieverPattern: 'Achiever Pattern & Growth Trend',
+                technicalAbility: 'Talent & Overall Technical Ability',
+                managementAbility: 'Management & Organizational Ability',
+                softSkills: 'Soft Skills',
+                teamSkills: 'Team Skills (EQ) & Development',
+                problemSolving: 'Thinking & Problem-solving',
+                jobFit: 'Job Fit: Major Accomplishments to KPOs',
+                managerialFit: 'Managerial Fit',
+                culture: 'Culture & Environment',
+                motivation: 'Intrinsic Motivation'
+            };
+            
+            Object.entries(data.ratings).forEach(([factor, rating]) => {
+                if (y > 250) {
+                    doc.addPage();
+                    y = 20;
+                }
+                doc.text(`${factorNames[factor]}: Level ${rating.value} (Score: ${rating.weightedScore})`, 20, y);
+                y += 8;
+                
+                if (data.comments[factor]) {
+                    const lines = doc.splitTextToSize(`Comments: ${data.comments[factor]}`, 170);
+                    lines.forEach(line => {
+                        if (y > 270) {
+                            doc.addPage();
+                            y = 20;
+                        }
+                        doc.text(line, 25, y);
+                        y += 6;
+                    });
+                    y += 5;
+                }
+            });
+            
+            // Evidence Summary
+            if (data.evidenceBasket && data.evidenceBasket.length > 0) {
+                if (y > 220) {
+                    doc.addPage();
+                    y = 20;
+                }
+                doc.setFontSize(14);
+                doc.text('Evidence Summary:', 20, y);
+                y += 10;
+                doc.setFontSize(10);
+                doc.text(`Total evidence items collected: ${data.evidenceBasket.length}`, 20, y);
+                y += 10;
+            }
+            
+            // Overall Evidence
+            if (data.overallEvidence) {
+                if (y > 220) {
+                    doc.addPage();
+                    y = 20;
+                }
+                doc.setFontSize(14);
+                doc.text('Overall Evidence:', 20, y);
+                y += 10;
+                doc.setFontSize(10);
+                const evidenceLines = doc.splitTextToSize(data.overallEvidence, 170);
+                evidenceLines.forEach(line => {
+                    if (y > 270) {
+                        doc.addPage();
+                        y = 20;
+                    }
+                    doc.text(line, 20, y);
+                    y += 6;
+                });
+            }
+            
+            // Save the PDF
+            doc.save(`talent-scorecard-${data.metadata.candidate || 'unnamed'}-${new Date().toISOString().substr(0, 10)}.pdf`);
+        }
+    </script>
+</body>
+</html>
