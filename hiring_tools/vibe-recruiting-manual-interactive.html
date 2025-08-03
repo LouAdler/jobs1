@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Vibe Recruiting Manual - Interactive Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --accent: #f59e0b;
+            --text: #1f2937;
+            --bg: #ffffff;
+            --bg-light: #f9fafb;
+            --border: #e5e7eb;
+            --success: #10b981;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg-light);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            background: var(--bg);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success) 0%, var(--accent) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--text);
+        }
+        
+        /* Main Content */
+        main {
+            padding: 40px 0;
+        }
+        
+        /* Expandable Sections */
+        .section {
+            background: var(--bg);
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .section.expanded {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .section-header {
+            padding: 25px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg);
+            transition: all 0.3s ease;
+        }
+        
+        .section-header:hover {
+            background: var(--bg-light);
+        }
+        
+        .section-header h2 {
+            color: var(--primary);
+            font-size: 1.5em;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .section-number {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .expand-icon {
+            color: var(--primary);
+            font-size: 24px;
+            transition: transform 0.3s ease;
+            user-select: none;
+        }
+        
+        .section.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        
+        .section.expanded .section-content {
+            max-height: none;
+        }
+        
+        .section-inner {
+            padding: 0 30px 30px;
+        }
+        
+        /* Subsections */
+        .subsection {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .subsection h3 {
+            color: var(--secondary);
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+        
+        .subsection h4 {
+            color: var(--text);
+            font-size: 1.1em;
+            margin: 15px 0 10px;
+        }
+        
+        /* Interactive Elements */
+        .checklist {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .checklist-item:hover {
+            background: var(--bg-light);
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        
+        .checklist-item.checked {
+            background: #f0fdf4;
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:hover {
+            background: var(--bg-light);
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        /* Highlight Boxes */
+        .highlight {
+            background: #fef3c7;
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+        
+        .highlight strong {
+            color: var(--accent);
+        }
+        
+        /* Buttons */
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            margin: 10px 5px;
+        }
+        
+        .button:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .button.secondary {
+            background: var(--bg);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .button.secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Control Panel */
+        .controls {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section-header h2 {
+                font-size: 1.2em;
+            }
+            
+            .section-number {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9em;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .controls, .progress-container {
+                display: none;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+            
+            .section-content {
+                max-height: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>The Vibe Recruiting Manual</h1>
+            <p>Performance-Based Hiring Meets AI Orchestration</p>
+            <p>Interactive Guide to Win-Win Hiring</p>
+        </div>
+    </header>
+    
+    <div class="progress-container">
+        <div class="container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="progress-text" id="progress-text">0 of 10 sections completed</div>
+        </div>
+    </div>
+    
+    <main class="container">
+        <div class="controls">
+            <button class="button" onclick="expandAll()">Expand All Sections</button>
+            <button class="button secondary" onclick="collapseAll()">Collapse All</button>
+            <button class="button secondary" onclick="resetProgress()">Reset Progress</button>
+        </div>
+        
+        <!-- Section 1 -->
+        <div class="section" id="section1">
+            <div class="section-header" onclick="toggleSection('section1')">
+                <h2>
+                    <span class="section-number">1</span>
+                    The Orchestration Mindset
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="highlight">
+                        <strong>Core Principle:</strong> Modern recruiters orchestrate AI for repetitive tasks while focusing human expertise on trust, motivation, and complex decisions.
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>The Evolution of Recruiting</h3>
+                        <p>In modern tech, "vibe coding" means developers set the blueprint while AI handles repetitive tasks. Vibe Recruiting follows this same principle.</p>
+                        
+                        <h4>The Parallel Framework</h4>
+                        <table>
+                            <tr>
+                                <th>Vibe Coding</th>
+                                <th>PBH Vibe Recruiting</th>
+                            </tr>
+                            <tr>
+                                <td>System spec, test suite</td>
+                                <td>PBJD defines success outcomes</td>
+                            </tr>
+                            <tr>
+                                <td>AI writes code snippets</td>
+                                <td>AI runs sourcing and screens</td>
+                            </tr>
+                            <tr>
+                                <td>Developer integrates</td>
+                                <td>Recruiter orchestrates</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Automation Balance</h3>
+                        <div class="checklist">
+                            <h4>✅ Tasks to Automate:</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Boolean searches and filtering</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Outreach sequences</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Calendar scheduling</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Transcription</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 2 -->
+        <div class="section" id="section2">
+            <div class="section-header" onclick="toggleSection('section2')">
+                <h2>
+                    <span class="section-number">2</span>
+                    Performance-Based Job Description
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="highlight">
+                        <strong>Key Principle:</strong> The PBJD is your single source of truth - it anchors everything in measurable outcomes.
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>15-Step PBJD Process</h3>
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>1. Confirm business reason</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>2. Define 3-5 Major Objectives</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>3. Break into 5-7 Subtasks</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>4. Integrate AI considerations</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>5. Write Title Block</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>6. Create Role Overview</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>7. Develop EVP</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>8. Define Culture Fit</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>9. Include AI subtask</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>10. Use plain language</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>11. Make everything SMARTe</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>12. Focus on deliverables</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>13. Validate with manager</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>14. Test interview-ability</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>15. Convert to structured format</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>SMARTe Framework</h3>
+                        <ul>
+                            <li><strong>S</strong>pecific - Clear and detailed</li>
+                            <li><strong>M</strong>easurable - Quantifiable outcomes</li>
+                            <li><strong>A</strong>ction-oriented - Starts with verb</li>
+                            <li><strong>R</strong>esults-oriented - Focused on outcomes</li>
+                            <li><strong>T</strong>ime-bound - Has deadlines</li>
+                            <li><strong>E</strong>ngaging - Compelling and motivating</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 3 -->
+        <div class="section" id="section3">
+            <div class="section-header" onclick="toggleSection('section3')">
+                <h2>
+                    <span class="section-number">3</span>
+                    Ideal Candidate Persona
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>4 Core Elements</h3>
+                        <h4>1. Career Pattern</h4>
+                        <p>Typical titles, industries, and Achiever Pattern evidence</p>
+                        
+                        <h4>2. Career Zones</h4>
+                        <table>
+                            <tr>
+                                <th>Zone</th>
+                                <th>Description</th>
+                                <th>Approach</th>
+                            </tr>
+                            <tr>
+                                <td>Passive</td>
+                                <td>Not looking</td>
+                                <td>Strong value prop needed</td>
+                            </tr>
+                            <tr>
+                                <td>Explorer</td>
+                                <td>Open to 30% better</td>
+                                <td>Career leap messaging</td>
+                            </tr>
+                            <tr>
+                                <td>Tiptoer</td>
+                                <td>Quietly considering</td>
+                                <td>Discretion and trust</td>
+                            </tr>
+                            <tr>
+                                <td>Active</td>
+                                <td>Actively searching</td>
+                                <td>Filter for quality</td>
+                            </tr>
+                        </table>
+                        
+                        <h4>3. Boolean Search Example</h4>
+                        <div class="code-block">
+site:linkedin.com/in/ ("Customer Insights Manager" OR "Consumer Insights Lead")
+AND ("survey research" OR "customer analytics")
+AND ("executive briefing" OR "VP presentation")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 4 -->
+        <div class="section" id="section4">
+            <div class="section-header" onclick="toggleSection('section4')">
+                <h2>
+                    <span class="section-number">4</span>
+                    Push-Pull Messaging
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>The Framework</h3>
+                        <ol>
+                            <li><strong>Subject Line:</strong> Your [X project] caught my eye - 30% leap?</li>
+                            <li><strong>Pull:</strong> Compelling problem matching their work</li>
+                            <li><strong>Push:</strong> "It's not for everyone..."</li>
+                            <li><strong>Invite:</strong> "If you'd want to hear more..."</li>
+                            <li><strong>Trust Signal:</strong> Real name and context</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Explorer Message Template</h3>
+                        <div class="code-block">
+Subject: Your work at [Company] caught my eye - could this be your next 30% leap?
+
+Hi Taylor,
+
+I came across the project you ran on [specific achievement] - impressive scale and real impact.
+
+We're tackling something similar but messier: a multi-source insights overhaul that links voice-of-customer to actual product pivots. 
+
+It's not for everyone - high visibility, lots of ambiguity, and we need someone who loves connecting data to real business moves.
+
+If you'd ever want to hear how this could stretch your influence 30% beyond where you are now, I'd love 15 minutes to share the details. No pressure if timing's off.
+
+Best,
+Jordan - Senior Recruiter, Atlas Consumer Products
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 5 -->
+        <div class="section" id="section5">
+            <div class="section-header" onclick="toggleSection('section5')">
+                <h2>
+                    <span class="section-number">5</span>
+                    The Career Move Call
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>7-Point Flow</h3>
+                        <table>
+                            <tr>
+                                <th>Step</th>
+                                <th>Script</th>
+                            </tr>
+                            <tr>
+                                <td>1. Warm Rapport</td>
+                                <td>"Your [project] caught my attention..."</td>
+                            </tr>
+                            <tr>
+                                <td>2. Universal Yes</td>
+                                <td>"Would you explore something clearly superior?"</td>
+                            </tr>
+                            <tr>
+                                <td>3. 30% Frame</td>
+                                <td>"This should stretch you 30% beyond current"</td>
+                            </tr>
+                            <tr>
+                                <td>4. Test Results</td>
+                                <td>"Tell me about your biggest comparable project"</td>
+                            </tr>
+                            <tr>
+                                <td>5. Career Logic</td>
+                                <td>"Why did you move from X to Y?"</td>
+                            </tr>
+                            <tr>
+                                <td>6. Money Talk</td>
+                                <td>"Let's see if the work is a step up first"</td>
+                            </tr>
+                            <tr>
+                                <td>7. Conditional Yes</td>
+                                <td>"If this is a true career move, would you proceed?"</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 6 -->
+        <div class="section" id="section6">
+            <div class="section-header" onclick="toggleSection('section6')">
+                <h2>
+                    <span class="section-number">6</span>
+                    Performance-Based Interviews
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>The 2 Core Questions</h3>
+                        <h4>1. Work History Review</h4>
+                        <p>"Walk me through your last 3 roles - what were you hired to do, what did you accomplish, why did you leave?"</p>
+                        
+                        <h4>2. Most Significant Accomplishment (MSA)</h4>
+                        <p>"Tell me about your most significant accomplishment related to [Major Objective]. Walk me through start to finish."</p>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Quality of Hire Scorecard</h3>
+                        <table>
+                            <tr>
+                                <th>Factor</th>
+                                <th>Score Range</th>
+                                <th>What to Look For</th>
+                            </tr>
+                            <tr>
+                                <td>Skills & Experience</td>
+                                <td>1-5 or NME</td>
+                                <td>Comparable depth</td>
+                            </tr>
+                            <tr>
+                                <td>Achiever Pattern</td>
+                                <td>1-5 or NME</td>
+                                <td>Top 25% performance</td>
+                            </tr>
+                            <tr>
+                                <td>Problem Solving</td>
+                                <td>1-5 or NME</td>
+                                <td>Critical thinking</td>
+                            </tr>
+                            <tr>
+                                <td>Team/Leadership Fit</td>
+                                <td>1-5 or NME</td>
+                                <td>Influence ability</td>
+                            </tr>
+                            <tr>
+                                <td>Motivation²</td>
+                                <td>1-5 or NME</td>
+                                <td>Intrinsic drive</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 7 -->
+        <div class="section" id="section7">
+            <div class="section-header" onclick="toggleSection('section7')">
+                <h2>
+                    <span class="section-number">7</span>
+                    Closing Win-Win Offers
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>The 5 Rules</h3>
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Never offer until verbal "Yes"</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Always run 1-10 Test</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Close on scope first, then comp</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Test dealbreakers early</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Be the last offer standing</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>The 1-10 Test</h3>
+                        <p>"On a scale of 1-10, where does this rank vs other options?"</p>
+                        <ul>
+                            <li>9-10: Ready to close</li>
+                            <li>7-8: "What would make it a 10?"</li>
+                            <li>Below 7: Probe deeper</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 8 -->
+        <div class="section" id="section8">
+            <div class="section-header" onclick="toggleSection('section8')">
+                <h2>
+                    <span class="section-number">8</span>
+                    Onboarding & First 90 Days
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>Post-Acceptance Check</h3>
+                        <ul>
+                            <li>Any second thoughts?</li>
+                            <li>Clear on 30-90 day success?</li>
+                            <li>Anything changed?</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>30-60-90 Day Plan</h3>
+                        <table>
+                            <tr>
+                                <th>Timeline</th>
+                                <th>Focus</th>
+                                <th>Deliverables</th>
+                            </tr>
+                            <tr>
+                                <td>First 30 Days</td>
+                                <td>Audit and meet stakeholders</td>
+                                <td>Resource map</td>
+                            </tr>
+                            <tr>
+                                <td>First 60 Days</td>
+                                <td>Execute first objective</td>
+                                <td>Initial findings</td>
+                            </tr>
+                            <tr>
+                                <td>First 90 Days</td>
+                                <td>Deliver PBJD milestone</td>
+                                <td>Complete project</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 9 -->
+        <div class="section" id="section9">
+            <div class="section-header" onclick="toggleSection('section9')">
+                <h2>
+                    <span class="section-number">9</span>
+                    Custom Development Plans
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>Using Scorecard for Growth</h3>
+                        <ul>
+                            <li><strong>Scores 4-5:</strong> Leverage as strengths</li>
+                            <li><strong>Scores 2.5-3:</strong> Build through stretch</li>
+                            <li><strong>NME:</strong> Gather evidence and develop</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Development Framework</h3>
+                        <table>
+                            <tr>
+                                <th>Factor</th>
+                                <th>Current</th>
+                                <th>Action</th>
+                                <th>Timeline</th>
+                            </tr>
+                            <tr>
+                                <td>Skills (Strength)</td>
+                                <td>4.0</td>
+                                <td>Lead high-impact project</td>
+                                <td>Month 1-3</td>
+                            </tr>
+                            <tr>
+                                <td>Leadership (Gap)</td>
+                                <td>2.5</td>
+                                <td>Shadow then lead team</td>
+                                <td>Month 2-4</td>
+                            </tr>
+                            <tr>
+                                <td>AI Skills (NME)</td>
+                                <td>NME</td>
+                                <td>Pilot one AI tool</td>
+                                <td>Month 1-2</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 10 -->
+        <div class="section" id="section10">
+            <div class="section-header" onclick="toggleSection('section10')">
+                <h2>
+                    <span class="section-number">10</span>
+                    The Complete Playbook
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="highlight">
+                        <strong>The Vibe Recruiter Promise:</strong> "We're not just hiring you to fill a seat—we're investing in you to deliver visible results, stretch your skills, and keep you motivated. We'll measure it. We'll back it up. That's Win-Win Hiring."
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Master Checklist</h3>
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>PBJD with SMARTe objectives</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Persona mapped to PBJD</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Push-Pull by Career Zone</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Career Move Calls framed</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>MSA tied to objectives</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Scorecards with evidence</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>1-10 Test before offer</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Post-acceptance check</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Manager problem call</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>30-60-90 plan set</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Development plan created</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Save state to localStorage
+        function saveState() {
+            const sections = document.querySelectorAll('.section');
+            const state = {};
+            sections.forEach(section => {
+                state[section.id] = {
+                    expanded: section.classList.contains('expanded'),
+                    checkboxes: []
+                };
+                const checkboxes = section.querySelectorAll('.checkbox');
+                checkboxes.forEach(checkbox => {
+                    state[section.id].checkboxes.push(checkbox.checked);
+                });
+            });
+            localStorage.setItem('vibeManualState', JSON.stringify(state));
+            updateProgress();
+        }
+        
+        // Load state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('vibeManualState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                Object.keys(state).forEach(sectionId => {
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        if (state[sectionId].expanded) {
+                            section.classList.add('expanded');
+                        }
+                        const checkboxes = section.querySelectorAll('.checkbox');
+                        checkboxes.forEach((checkbox, index) => {
+                            checkbox.checked = state[sectionId].checkboxes[index] || false;
+                            if (checkbox.checked) {
+                                checkbox.parentElement.classList.add('checked');
+                            }
+                        });
+                    }
+                });
+            }
+            updateProgress();
+        }
+        
+        // Toggle section expand/collapse
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('expanded');
+            saveState();
+        }
+        
+        // Toggle checkbox
+        function toggleCheck(item) {
+            const checkbox = item.querySelector('.checkbox');
+            checkbox.checked = !checkbox.checked;
+            item.classList.toggle('checked');
+            saveState();
+        }
+        
+        // Expand all sections
+        function expandAll() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('expanded');
+            });
+            saveState();
+        }
+        
+        // Collapse all sections
+        function collapseAll() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('expanded');
+            });
+            saveState();
+        }
+        
+        // Reset progress
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress?')) {
+                localStorage.removeItem('vibeManualState');
+                location.reload();
+            }
+        }
+        
+        // Update progress bar
+        function updateProgress() {
+            const totalCheckboxes = document.querySelectorAll('.checkbox').length;
+            const checkedCheckboxes = document.querySelectorAll('.checkbox:checked').length;
+            const totalSections = 10;
+            
+            // Calculate section completion
+            let completedSections = 0;
+            document.querySelectorAll('.section').forEach(section => {
+                const sectionCheckboxes = section.querySelectorAll('.checkbox');
+                const sectionChecked = section.querySelectorAll('.checkbox:checked');
+                if (sectionCheckboxes.length > 0 && sectionCheckboxes.length === sectionChecked.length) {
+                    completedSections++;
+                }
+            });
+            
+            const progressPercent = (checkedCheckboxes / totalCheckboxes) * 100;
+            document.getElementById('progress').style.width = progressPercent + '%';
+            document.getElementById('progress-text').textContent = 
+                `${completedSections} of ${totalSections} sections completed (${checkedCheckboxes}/${totalCheckboxes} tasks)`;
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+        });
+    </script>
+</body>
+</html>

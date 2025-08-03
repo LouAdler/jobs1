@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Vibe Recruiting Manual - Transform Your Hiring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --text: #1f2937;
+            --bg: #ffffff;
+            --bg-light: #f9fafb;
+            --border: #e5e7eb;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg-light);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+        
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 800;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero .tagline {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Value Prop Section */
+        .value-prop {
+            padding: 60px 20px;
+            text-align: center;
+            background: white;
+        }
+        
+        .value-prop h2 {
+            font-size: 2.5em;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .value-prop p {
+            font-size: 1.2em;
+            color: var(--text);
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+        
+        /* Sections Container */
+        .sections {
+            padding: 40px 0;
+        }
+        
+        /* Section Cards */
+        .section {
+            background: white;
+            margin-bottom: 25px;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .section:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .section.expanded {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            border-color: var(--primary);
+        }
+        
+        .section-header {
+            padding: 30px;
+            cursor: pointer;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .section:hover .section-header {
+            background: var(--bg-light);
+        }
+        
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .section-info {
+            flex: 1;
+        }
+        
+        .section-title {
+            font-size: 1.6em;
+            color: var(--text);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .section-teaser {
+            color: #6b7280;
+            font-size: 1.05em;
+        }
+        
+        .expand-icon {
+            color: var(--primary);
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+        
+        .section.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: var(--bg-light);
+        }
+        
+        .section.expanded .section-content {
+            max-height: 800px;
+        }
+        
+        .section-inner {
+            padding: 30px;
+        }
+        
+        .benefit-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .benefit-list li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            font-size: 1.05em;
+        }
+        
+        .benefit-list li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .key-value {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .key-value strong {
+            color: var(--accent);
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .cta-section p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 18px 40px;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        /* Trust Badges */
+        .trust-section {
+            padding: 60px 20px;
+            text-align: center;
+            background: white;
+        }
+        
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            text-align: center;
+        }
+        
+        .badge-icon {
+            font-size: 3em;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .badge-text {
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            
+            .hero .tagline {
+                font-size: 1.2em;
+            }
+            
+            .hero .stats {
+                gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2em;
+            }
+            
+            .section-header {
+                padding: 20px;
+                gap: 15px;
+            }
+            
+            .section-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5em;
+            }
+            
+            .section-title {
+                font-size: 1.3em;
+            }
+            
+            .trust-badges {
+                gap: 40px;
+            }
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>The Vibe Recruiting Manual</h1>
+        <p class="tagline">Transform Your Hiring with Performance-Based Recruiting + AI Orchestration</p>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">85%</div>
+                <div class="stat-label">First-Year Retention</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">3x</div>
+                <div class="stat-label">Faster Productivity</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">60%</div>
+                <div class="stat-label">Less Hiring Time</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">2x</div>
+                <div class="stat-label">Quality of Hire</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Value Proposition -->
+    <div class="value-prop">
+        <div class="container">
+            <h2>Stop Hiring on Gut Feeling. Start Hiring for Proven Performance.</h2>
+            <p>Discover the revolutionary 10-step system that combines Lou Adler's Performance-Based Hiring methodology with cutting-edge AI orchestration. Click each section below to explore how to build a world-class recruiting engine.</p>
+        </div>
+    </div>
+    
+    <!-- Main Sections -->
+    <div class="container sections">
+        <!-- Section 1 -->
+        <div class="section" id="section1">
+            <div class="section-header" onclick="toggleSection('section1')">
+                <div class="section-icon">🎯</div>
+                <div class="section-info">
+                    <h3 class="section-title">1. The Orchestration Mindset</h3>
+                    <p class="section-teaser">Master the art of human expertise + AI efficiency</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <p>Just like modern developers orchestrate AI to handle repetitive coding, modern recruiters orchestrate AI to handle repetitive recruiting tasks.</p>
+                    
+                    <ul class="benefit-list">
+                        <li>Learn the Vibe Coding parallel and why it matters</li>
+                        <li>Discover what to automate vs. what to keep human</li>
+                        <li>10x your impact without losing the personal touch</li>
+                        <li>Build a scalable recruiting machine</li>
+                    </ul>
+                    
+                    <div class="key-value">
+                        <strong>Key Value:</strong> Free yourself from repetitive tasks to focus on what matters: building trust, reading deep motivation, and closing top talent.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 2 -->
+        <div class="section" id="section2">
+            <div class="section-header" onclick="toggleSection('section2')">
+                <div class="section-icon">📋</div>
+                <div class="section-info">
+                    <h3 class="section-title">2. Performance-Based Job Descriptions</h3>
+                    <p class="section-teaser">Create job specs that attract achievers, not job hoppers</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <p>Traditional job descriptions list requirements and scare away top talent. PBJDs describe real-world success and attract performers.</p>
+                    
+                    <ul class="benefit-list">
+                        <li>The 15-step process to build magnetic job descriptions</li>
+                        <li>Define success in measurable outcomes, not wishlist requirements</li>
+                        <li>Include the mandatory AI/automation subtask every modern role needs</li>
+                        <li>Create a single source of truth for the entire hiring process</li>
+                    </ul>
+                    
+                    <div class="key-value">
+                        <strong>Key Value:</strong> Your PBJD becomes the foundation that aligns sourcing, interviewing, onboarding, and performance management.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 3 -->
+        <div class="section" id="section3">
+            <div class="section-header" onclick="toggleSection('section3')">
+                <div class="section-icon">🎯</div>
+                <div class="section-info">
+                    <h3 class="section-title">3. Ideal Candidate Personas</h3>
+                    <p class="section-teaser">Target the right talent with surgical precision</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <p>Stop spray-and-pray sourcing. Start targeting performers who've already succeeded at similar challenges.</p>
+                    
+                    <ul class="benefit-list">
+                        <li>Master the 4 Career Zones: Passive, Explorer, Tiptoer, Active</li>
+                        <li>Build Boolean searches that find hidden achievers</li>
+                        <li>Identify the "Achiever Pattern" that predicts top performance</li>
+                        <li>Create personas that your AI tools can actually use</li>
+                    </ul>
+                    
+                    <div class="key-value">
+                        <strong>Key Value:</strong> Reduce sourcing time by 70% while improving candidate quality by focusing on proven performers.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 4 -->
+        <div class="section" id="section4">
+            <div class="section-header" onclick="toggleSection('section4')">
+                <div class="section-icon">💬</div>
+                <div class="section-info">
+                    <h3 class="section-title">4. Push-Pull Messaging</h3>
+                    <p class="section-teaser">Craft outreach that top talent actually responds to</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <p>"I have a great opportunity for you" gets ignored. Push-Pull messaging creates intrigue and gets responses.</p>
+                    
+                    <ul class="benefit-list">
+                        <li>Learn why generic pitches fail every time</li>
+                        <li>Master the psychology of the 30% career leap</li>
+                        <li>Get proven message templates for each Career Zone</li>
+                        <li>Triple your response rates from passive candidates</li>
+                    </ul>
+                    
+                    <div class="key-value">
+                        <strong>Key Value:</strong> Turn cold outreach into warm conversations by making top talent chase the opportunity, not the other way around.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 5 -->
+        <div class="section" id="section5">
+            <div class="section-header" onclick="toggleSection('section5')">
+                <div class="section-icon">📞</div>
+                <div class="section-info">
+                    <h3 class="section-title">5. The Career Move Call</h3>
+                    <p class="section-teaser">Convert explorers into excited candidates</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <p>This isn't a phone screen. It's a strategic conversation that positions your role as their best career move.</p>
+                    
+                    <ul class="benefit-list">
+                        <li>Master the 7-point conversation flow that builds trust fast</li>
+                        <li>Handle "What's the salary?" without losing momentum</li>
+                        <li>Get conditional commitment before you even pitch the role</li>
+                        <li>Test for real motivation vs. money chasers</li>
+                    </ul>
+                    
+                    <div class="key-value">
+                        <strong>Key Value:</strong> Convert 60%+ of exploratory calls into committed candidates by focusing on career growth, not job features.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 6 -->
+        <div class="section" id="section6">
+            <div class="section-header" onclick="toggleSection('section6')">
+                <div class="section-icon">🎤</div>
+                <div class="section-info">
+                    <h3 class="section-title">6. Performance-Based Interviews</h3>
+                    <p class="section-teaser">Predict success with just 2 powerful questions</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <p>Stop asking about strengths and weaknesses. Start gathering evidence of comparable performance.</p>
+                    
+                    <ul class="benefit-list">
+                        <li>The Work History Review technique that reveals patterns</li>
+                        <li>Most Significant Accomplishment (MSA) deep dives</li>
+                        <li>Master the 7-factor Quality of Hire Scorecard</li>
+                        <li>Eliminate 90% of bad hires with evidence-based selection</li>
+                    </ul>
+                    
+                    <div class="key-value">
+                        <strong>Key Value:</strong> Past performance doing comparable work predicts future performance. This method proves it with 85% accuracy.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 7 -->
+        <div class="section" id="section7">
+            <div class="section-header" onclick="toggleSection('section7')">
+                <div class="section-icon">🤝</div>
+                <div class="section-info">
+                    <h3 class="section-title">7. Closing Win-Win Offers</h3>
+                    <p class="section-teaser">Eliminate counteroffers and ghosting</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <p>Never lose another candidate to counteroffers or competing opportunities.</p>
+                    
+                    <ul class="benefit-list">
+                        <li>The 1-10 Test that reveals true interest levels</li>
+                        <li>Why you should never make an offer without a verbal "yes"</li>
+                        <li>Strategies for being the last offer standing</li>
+                        <li>Close on career growth first, compensation second</li>
+                    </ul>
+                    
+                    <div class="key-value">
+                        <strong>Key Value:</strong> Achieve 95%+ offer acceptance rates by testing and addressing every concern before the written offer.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 8 -->
+        <div class="section" id="section8">
+            <div class="section-header" onclick="toggleSection('section8')">
+                <div class="section-icon">🚀</div>
+                <div class="section-info">
+                    <h3 class="section-title">8. Onboarding Bridge</h3>
+                    <p class="section-teaser">Turn great hires into fast performers</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <p>The period between offer acceptance and Day 1 determines success or failure.</p>
+                    
+                    <ul class="benefit-list">
+                        <li>The Post-Acceptance Check that prevents ghosting</li>
+                        <li>Pre-Day 1 Manager Call strategy</li>
+                        <li>Connect new hires to real problems before they start</li>
+                        <li>Create momentum with 30-60-90 day success planning</li>
+                    </ul>
+                    
+                    <div class="key-value">
+                        <strong>Key Value:</strong> Reduce time-to-productivity by 50% and eliminate new hire ghosting with strategic pre-boarding.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 9 -->
+        <div class="section" id="section9">
+            <div class="section-header" onclick="toggleSection('section9')">
+                <div class="section-icon">📈</div>
+                <div class="section-info">
+                    <h3 class="section-title">9. Custom Development Plans</h3>
+                    <p class="section-teaser">Keep your Win-Win hiring promise</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <p>Show new hires you're invested in their growth, not just their output.</p>
+                    
+                    <ul class="benefit-list">
+                        <li>Use Scorecard data to build personalized growth plans</li>
+                        <li>Turn weaknesses into development opportunities</li>
+                        <li>Create the 60-90-180 day performance loop</li>
+                        <li>Build loyalty through investment in potential</li>
+                    </ul>
+                    
+                    <div class="key-value">
+                        <strong>Key Value:</strong> Increase 2-year retention to 85%+ by delivering on the career growth promise that got them to say yes.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 10 -->
+        <div class="section" id="section10">
+            <div class="section-header" onclick="toggleSection('section10')">
+                <div class="section-icon">🎯</div>
+                <div class="section-info">
+                    <h3 class="section-title">10. The Complete Playbook</h3>
+                    <p class="section-teaser">Your end-to-end orchestration system</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <p>Tie it all together into a repeatable system that gets better with every hire.</p>
+                    
+                    <ul class="benefit-list">
+                        <li>Master checklist for every stage of hiring</li>
+                        <li>Human vs. AI task allocation matrix</li>
+                        <li>The Moneyball approach to building winning teams</li>
+                        <li>Continuous improvement through data and feedback</li>
+                    </ul>
+                    
+                    <div class="key-value">
+                        <strong>Key Value:</strong> Create a hiring machine that runs itself, improves over time, and consistently delivers A-players.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trust Section -->
+    <div class="trust-section">
+        <div class="container">
+            <h2>Trusted by Leading Companies</h2>
+            <div class="trust-badges">
+                <div class="badge">
+                    <div class="badge-icon">🏆</div>
+                    <div class="badge-text">500+ Companies</div>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">👥</div>
+                    <div class="badge-text">10,000+ Hires</div>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">📊</div>
+                    <div class="badge-text">85% Retention</div>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">⏱️</div>
+                    <div class="badge-text">50% Faster</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <div class="cta-content">
+            <h2>Ready to Transform Your Hiring?</h2>
+            <p>Get instant access to the complete Vibe Recruiting Manual with templates, scripts, and tools.</p>
+            <a href="#" class="cta-button">Get the Full Manual Now</a>
+        </div>
+    </div>
+    
+    <script>
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('expanded');
+            
+            // Smooth scroll to section if expanding
+            if (section.classList.contains('expanded')) {
+                setTimeout(() => {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+        
+        // Add hover effect to sections
+        document.querySelectorAll('.section').forEach(section => {
+            section.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            section.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('expanded')) {
+                    this.style.transform = 'translateY(0)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
