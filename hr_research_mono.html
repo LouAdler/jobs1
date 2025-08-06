@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The HR Monolith: An Interactive Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: The SPA is designed as a single-page narrative scroll, guiding the user from the core problem to the solution. It starts with the "What" (HR's standardized blueprint), moves to the "Why" (the forces of isomorphism, presented as a core interactive diagram), then provides "Context" (comparison to other functions via a chart), and finally explores the "Future" (the cracks in the monolith via interactive cards). This structure transforms a linear report into an exploratory journey, making the complex sociological concepts of isomorphism intuitive and engaging, which is more effective for user understanding than a simple chapter-by-chapter replication. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Standard HR functions -> Goal: Inform -> Viz: Interactive cards -> Interaction: Hover/Click to reveal details -> Justification: Breaks down dense info into digestible chunks. -> Method: HTML/CSS/JS.
+        - Report Info: Ulrich Model -> Goal: Organize -> Viz: HTML/CSS diagram -> Interaction: Static visual aid -> Justification: Clearly illustrates a structural concept without unnecessary complexity. -> Method: HTML/Tailwind.
+        - Report Info: Isomorphic Forces -> Goal: Explain Relationships -> Viz: Central interactive diagram -> Interaction: Click on a force to dynamically update a detailed content panel -> Justification: This is the core interactive element, turning a complex theory into a hands-on learning experience. -> Method: JS DOM manipulation.
+        - Report Info: HR vs. Other Functions -> Goal: Compare -> Viz: Radar Chart -> Interaction: Hover tooltips -> Justification: A radar chart provides a powerful, immediate visual comparison across multiple dimensions, superior to a simple table. -> Library: Chart.js.
+        - Report Info: Innovations in HR -> Goal: Organize/Inform -> Viz: Tabbed content cards -> Interaction: Click tabs to switch content -> Justification: Allows users to explore different innovation areas without cluttering the UI. -> Method: HTML/CSS/JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #38332E;
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #C89B7B;
+            transition: width 0.3s ease;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #C89B7B;
+        }
+        .nav-link.active::after, .nav-link:hover::after {
+            width: 100%;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 450px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+        .tab-btn.active {
+            background-color: #C89B7B;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="sticky top-0 z-50 glass-card shadow-sm">
+        <nav class="container mx-auto px-6 py-4">
+            <ul class="flex justify-center space-x-6 md:space-x-10 text-sm md:text-base font-medium text-gray-600">
+                <li><a href="#introduction" class="nav-link">Introduction</a></li>
+                <li><a href="#blueprint" class="nav-link">The Blueprint</a></li>
+                <li><a href="#forces" class="nav-link">The Forces</a></li>
+                <li><a href="#comparison" class="nav-link">The Divide</a></li>
+                <li><a href="#cracks" class="nav-link">The Cracks</a></li>
+                <li><a href="#conclusion" class="nav-link">Conclusion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="introduction" class="min-h-[80vh] flex items-center py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight text-gray-800">The HR Monolith</h1>
+                <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto text-gray-600">Is Human Resources a monolithic function, driven by a "follow-the-leader" mentality? This interactive analysis explores the powerful forces that shape HR, the resulting lack of strategic diversity, and the emerging innovations that are starting to crack the mold.</p>
+                <a href="#blueprint" class="mt-8 inline-block bg-[#C89B7B] text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-[#b58a6d] transition-transform transform hover:scale-105">Begin Exploration</a>
+            </div>
+        </section>
+
+        <section id="blueprint" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">The Architectural Blueprint of Sameness</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-gray-600">The critique of HR as monolithic begins with its remarkably consistent foundation. Across industries and companies, HR is built upon a standardized set of functions and a dominant operating model, creating a universally recognized, and rarely challenged, blueprint.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-6">The Universal Pillars of HR</h3>
+                        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="pillar-card p-4 bg-gray-50 rounded-lg text-center cursor-pointer transition-all duration-300 hover:shadow-xl hover:bg-[#C89B7B] hover:text-white">
+                                <span class="text-3xl">⚖️</span>
+                                <h4 class="font-semibold mt-2 text-sm">Legal Compliance</h4>
+                            </div>
+                            <div class="pillar-card p-4 bg-gray-50 rounded-lg text-center cursor-pointer transition-all duration-300 hover:shadow-xl hover:bg-[#C89B7B] hover:text-white">
+                                <span class="text-3xl">🤝</span>
+                                <h4 class="font-semibold mt-2 text-sm">Recruiting & Staffing</h4>
+                            </div>
+                            <div class="pillar-card p-4 bg-gray-50 rounded-lg text-center cursor-pointer transition-all duration-300 hover:shadow-xl hover:bg-[#C89B7B] hover:text-white">
+                                <span class="text-3xl">📈</span>
+                                <h4 class="font-semibold mt-2 text-sm">Performance Mgmt</h4>
+                            </div>
+                            <div class="pillar-card p-4 bg-gray-50 rounded-lg text-center cursor-pointer transition-all duration-300 hover:shadow-xl hover:bg-[#C89B7B] hover:text-white">
+                                <span class="text-3xl">💰</span>
+                                <h4 class="font-semibold mt-2 text-sm">Compensation & Benefits</h4>
+                            </div>
+                            <div class="pillar-card p-4 bg-gray-50 rounded-lg text-center cursor-pointer transition-all duration-300 hover:shadow-xl hover:bg-[#C89B7B] hover:text-white">
+                                <span class="text-3xl">🎓</span>
+                                <h4 class="font-semibold mt-2 text-sm">Training & Development</h4>
+                            </div>
+                            <div class="pillar-card p-4 bg-gray-50 rounded-lg text-center cursor-pointer transition-all duration-300 hover:shadow-xl hover:bg-[#C89B7B] hover:text-white">
+                                <span class="text-3xl">🗣️</span>
+                                <h4 class="font-semibold mt-2 text-sm">Employee Relations</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-6">The Dominant Design: Ulrich Model</h3>
+                        <div class="p-6 border-2 border-dashed border-gray-300 rounded-lg">
+                            <div class="flex flex-col items-center">
+                                <div class="font-bold text-white bg-gray-700 px-4 py-2 rounded-md mb-4">Business Strategy</div>
+                                <div class="w-full flex justify-around">
+                                    <div class="text-center">
+                                        <div class="p-3 bg-[#e6cbb9] rounded-lg shadow-md">
+                                            <h5 class="font-bold">HR Business Partners</h5>
+                                            <p class="text-xs">Strategic Advisors</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-full border-t-2 border-gray-300 my-4"></div>
+                                <div class="w-full flex justify-around gap-4">
+                                    <div class="text-center flex-1">
+                                        <div class="p-3 bg-[#f0e2d8] rounded-lg shadow-md h-full">
+                                            <h5 class="font-bold">Centers of Excellence</h5>
+                                            <p class="text-xs">Specialist Expertise</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-center flex-1">
+                                        <div class="p-3 bg-[#f0e2d8] rounded-lg shadow-md h-full">
+                                            <h5 class="font-bold">Shared Services</h5>
+                                            <p class="text-xs">Admin Efficiency</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="forces" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">The Forces of Conformity</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-gray-600">Why does this homogeneity exist? The theory of institutional isomorphism reveals three powerful forces that compel HR functions to become more similar over time. Click on each force to explore how it shapes the profession.</p>
+                </div>
+
+                <div class="flex flex-col lg:flex-row gap-8 items-stretch">
+                    <div class="w-full lg:w-1/3">
+                        <div class="space-y-4">
+                            <button data-force="coercive" class="force-btn w-full text-left p-6 rounded-lg shadow-md transition-all duration-300 border-l-4 border-transparent">
+                                <h3 class="text-xl font-bold text-gray-800">Coercive Isomorphism</h3>
+                                <p class="text-gray-600 mt-1">The Iron Cage of Compliance</p>
+                            </button>
+                            <button data-force="mimetic" class="force-btn w-full text-left p-6 rounded-lg shadow-md transition-all duration-300 border-l-4 border-transparent">
+                                <h3 class="text-xl font-bold text-gray-800">Mimetic Isomorphism</h3>
+                                <p class="text-gray-600 mt-1">The "Best Practice" Cascade</p>
+                            </button>
+                            <button data-force="normative" class="force-btn w-full text-left p-6 rounded-lg shadow-md transition-all duration-300 border-l-4 border-transparent">
+                                <h3 class="text-xl font-bold text-gray-800">Normative Isomorphism</h3>
+                                <p class="text-gray-600 mt-1">The Professionalization of a Field</p>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-2/3">
+                        <div id="force-display" class="p-8 rounded-lg glass-card h-full">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">The Functional Divide</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-gray-600">HR's lack of strategic diversity becomes clear when compared to other business functions. Its internal focus and risk-averse nature stand in stark contrast to the mandates of departments like Marketing, Finance, and R&D. Hover over the chart to see the differences.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="cracks" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Cracks in the Monolith</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-gray-600">Despite powerful pressures for conformity, the monolith is not absolute. A growing counter-movement is challenging HR orthodoxy, creating significant cracks in the facade. Explore the key areas of innovation that signal a profession in transformation.</p>
+                </div>
+
+                <div class="flex justify-center mb-8">
+                    <div class="flex space-x-2 bg-gray-200 p-1 rounded-lg">
+                        <button class="tab-btn px-4 py-2 rounded-md text-sm font-medium transition-colors" data-tab="agile">Agile HR</button>
+                        <button class="tab-btn px-4 py-2 rounded-md text-sm font-medium transition-colors" data-tab="mavericks">Corporate Mavericks</button>
+                        <button class="tab-btn px-4 py-2 rounded-md text-sm font-medium transition-colors" data-tab="analytics">People Analytics</button>
+                        <button class="tab-btn px-4 py-2 rounded-md text-sm font-medium transition-colors" data-tab="dissent">Critical Voice</button>
+                    </div>
+                </div>
+
+                <div class="max-w-4xl mx-auto">
+                    <div id="tab-content"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">A Profession in Transformation</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-gray-600">The critique of HR as monolithic is largely valid, but the story doesn't end there. The future of HR will be defined by the tension between conformity and innovation. For leaders, the path forward requires a conscious effort to break the cycle.</p>
+                </div>
+                <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+                    <div class="p-6 bg-gray-50 rounded-lg">
+                        <h3 class="font-bold text-lg text-[#C89B7B]">1. Challenge "Best Practices"</h3>
+                        <p class="mt-2 text-gray-600">Demand HR solutions tailored to your unique strategic context, not imported from a generic template.</p>
+                    </div>
+                    <div class="p-6 bg-gray-50 rounded-lg">
+                        <h3 class="font-bold text-lg text-[#C89B7B]">2. Redefine HR's Metrics</h3>
+                        <p class="mt-2 text-gray-600">Hold HR accountable for strategic outcomes that drive business value, beyond just efficiency and compliance.</p>
+                    </div>
+                    <div class="p-6 bg-gray-50 rounded-lg">
+                        <h3 class="font-bold text-lg text-[#C89B7B]">3. Invest in New Skills</h3>
+                        <p class="mt-2 text-gray-600">Upskill HR teams in data science, agile methods, and business acumen to transform them into strategic consultants.</p>
+                    </div>
+                    <div class="p-6 bg-gray-50 rounded-lg">
+                        <h3 class="font-bold text-lg text-[#C89B7B]">4. Create Psychological Safety</h3>
+                        <p class="mt-2 text-gray-600">Give HR permission to experiment, test novel approaches, and learn from failure in the pursuit of innovation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-6 text-center text-sm">
+            <p>Interactive Analysis based on the report "The HR Monolith".</p>
+        </div>
+    </footer>
+
+    <script>
+        const forceData = {
+            coercive: {
+                title: 'Coercive Isomorphism: The Iron Cage',
+                description: 'Conformity due to formal and informal pressures from powerful external entities. For HR, this is primarily driven by government legislation and the threat of litigation.',
+                drivers: ['Government Legislation (EEO, FMLA, ADA)', 'Threat of Lawsuits & Fines', 'Risk-Averse Culture'],
+                outcomes: ['Standardized anti-discrimination policies', 'Uniform pay and leave rules', 'Focus on risk mitigation over innovation'],
+                color: '#ef4444'
+            },
+            mimetic: {
+                title: 'Mimetic Isomorphism: The Cascade',
+                description: 'Conformity through imitation of successful organizations in response to uncertainty. When the path is unclear, companies copy "best practices" from peers or consultants.',
+                drivers: ['HR Consulting Firms', 'High-Profile Industry Leaders (e.g., Google, Netflix)', 'Desire for Legitimacy'],
+                outcomes: ['Widespread adoption of the Ulrich Model', 'Proliferation of similar performance review systems', 'Imitation of popular perks (e.g., unlimited vacation)'],
+                color: '#3b82f6'
+            },
+            normative: {
+                title: 'Normative Isomorphism: Professionalization',
+                description: 'Conformity arising from professionalization, where shared education, networks, and standards create a common mindset and approach.',
+                drivers: ['University HR / MBA Programs', 'Professional Bodies (e.g., SHRM)', 'Shared Jargon and Lexicon'],
+                outcomes: ['Common problem-solving approach among HR pros', 'Shared definitions of "strategic" HR', 'Professional identity centered on process and administration'],
+                color: '#10b981'
+            }
+        };
+
+        const forceDisplay = document.getElementById('force-display');
+        const forceButtons = document.querySelectorAll('.force-btn');
+
+        function updateForceDisplay(forceKey) {
+            const data = forceData[forceKey];
+            if (!data) return;
+
+            forceDisplay.innerHTML = `
+                <h3 class="text-2xl font-bold" style="color: ${data.color};">${data.title}</h3>
+                <p class="mt-2 text-gray-700">${data.description}</p>
+                <div class="mt-6">
+                    <h4 class="font-semibold text-gray-800">Primary Drivers:</h4>
+                    <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                        ${data.drivers.map(driver => `<li>${driver}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="mt-6">
+                    <h4 class="font-semibold text-gray-800">Resulting Outcomes:</h4>
+                    <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                        ${data.outcomes.map(outcome => `<li>${outcome}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            forceButtons.forEach(btn => {
+                btn.classList.remove('bg-white', 'shadow-xl');
+                btn.style.borderColor = 'transparent';
+                if (btn.dataset.force === forceKey) {
+                    btn.classList.add('bg-white', 'shadow-xl');
+                    btn.style.borderColor = data.color;
+                }
+            });
+        }
+        
+        forceButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                updateForceDisplay(button.dataset.force);
+            });
+        });
+
+        updateForceDisplay('coercive');
+
+        const comparisonChartCtx = document.getElementById('comparisonChart').getContext('2d');
+        const comparisonChart = new Chart(comparisonChartCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Risk Appetite', 'Mandate for Innovation', 'External Focus', 'Creativity Valued', 'Quantitative Metrics'],
+                datasets: [{
+                    label: 'HR',
+                    data: [2, 2, 3, 3, 5],
+                    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                    borderColor: 'rgba(239, 68, 68, 1)',
+                    pointBackgroundColor: 'rgba(239, 68, 68, 1)',
+                }, {
+                    label: 'Marketing',
+                    data: [7, 8, 9, 9, 8],
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                }, {
+                    label: 'Finance',
+                    data: [3, 4, 6, 2, 10],
+                    backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                    borderColor: 'rgba(245, 158, 11, 1)',
+                    pointBackgroundColor: 'rgba(245, 158, 11, 1)',
+                }, {
+                    label: 'R&D',
+                    data: [9, 10, 5, 8, 6],
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    borderColor: 'rgba(16, 185, 129, 1)',
+                    pointBackgroundColor: 'rgba(16, 185, 129, 1)',
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                        pointLabels: { font: { size: 12 } },
+                        suggestedMin: 0,
+                        suggestedMax: 10,
+                        ticks: {
+                            backdropColor: 'rgba(255, 255, 255, 0.75)',
+                            stepSize: 2
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.r !== null) {
+                                    label += context.parsed.r;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const tabData = {
+            agile: {
+                title: 'The Agile HR Movement',
+                icon: '🚀',
+                content: 'A direct rebellion against slow, bureaucratic processes. Drawing from software development, Agile HR prioritizes responsiveness, collaboration, and iterative improvement. Instead of year-long projects, teams work in short "sprints" to develop and test new programs, allowing HR to adapt in weeks, not years.'
+            },
+            mavericks: {
+                title: 'Corporate Mavericks',
+                icon: '🦄',
+                content: 'High-profile companies that reject standard "best practices" for unique, culture-driven approaches. Netflix\'s "people over process" mantra, with its unlimited vacation, and Zappos\' offer to pay new hires to quit are famous examples. They prove strategic advantage can be gained by daring to be different.'
+            },
+            analytics: {
+                title: 'The People Analytics Revolution',
+                icon: '📊',
+                content: 'The rise of data analytics is finally allowing HR to speak the language of business. By using data instead of gut-feel, HR can diagnose problems with precision (e.g., root causes of turnover) and design highly targeted, evidence-based solutions, justifying their value with concrete ROI.'
+            },
+            dissent: {
+                title: 'The Critical Voice',
+                icon: '📢',
+                content: 'A robust critical discourse in academia and media challenges HR\'s assumptions. Influential outlets like Harvard Business Review constantly question the function\'s value and focus on "administrivia." This vigorous internal debate is itself evidence of intellectual ferment and a search for a new path forward.'
+            }
+        };
+        
+        const tabContent = document.getElementById('tab-content');
+        const tabButtons = document.querySelectorAll('.tab-btn');
+
+        function updateTabContent(tabKey) {
+            const data = tabData[tabKey];
+            if (!data) return;
+
+            tabContent.innerHTML = `
+                <div class="p-8 rounded-lg bg-white shadow-lg transition-opacity duration-500">
+                    <div class="flex items-start gap-6">
+                        <div class="text-4xl">${data.icon}</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">${data.title}</h3>
+                            <p class="mt-2 text-gray-600">${data.content}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tab === tabKey) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                updateTabContent(button.dataset.tab);
+            });
+        });
+
+        updateTabContent('agile');
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('main section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.4
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').substring(1) === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
