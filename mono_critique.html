@@ -48,15 +48,15 @@
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
-            height: 400px;
-            max-height: 500px;
+            height: 450px;
+            max-height: 600px;
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 500px;
+                height: 550px;
             }
         }
     </style>
@@ -80,20 +80,20 @@
         <section id="introduction" class="py-20">
             <div class="container mx-auto px-6 text-center">
                 <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">A Critical Analysis for HR Leaders</h1>
-                <p class="mt-4 text-lg max-w-3xl mx-auto text-slate-600">A series of reports claim the $100+ billion annual spend on HR technology has been a 25-year failure. This analysis directly tests that provocative hypothesis. We will examine the reports' data, deconstruct their "marketing hype," and weigh them against a respected analyst's sharp critiques on data integrity and professional competence. The goal is to move beyond confusing debates and deliver a clear, actionable verdict: Is the core claim of failure correct? And if so, what must be done?</p>
+                <p class="mt-4 text-lg max-w-3xl mx-auto text-slate-600">A series of reports claim the $100+ billion annual spend on HR technology has been a 25-year failure. This analysis directly tests that provocative hypothesis. We will examine the reports' complete data set, separate the valid trends from the "marketing hype," and weigh them against a respected analyst's sharp critiques. The goal is to move beyond confusing debates and deliver a clear, actionable verdict: Is the core claim of failure correct? And if so, what must be done?</p>
             </div>
         </section>
 
         <section id="claim" class="py-20 bg-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900">The Provocative Claim: A $2.5 Trillion Failure</h2>
-                    <p class="mt-4 max-w-3xl mx-auto text-slate-600">The source reports present a deliberately provocative, marketing-oriented narrative: despite over $100 billion in annual spending on HR tech and services, core metrics like hiring success and employee engagement have stagnated for 25 years. The data below visualizes this central, "over-hyped" claim.</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900">The Provocative Claim vs. The Stark Data</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-slate-600">The source reports use provocative framing (e.g., a "$2.5 Trillion Failure") to capture attention. While this rhetoric can be debated, it is built on the stark, normalized data presented below. This chart, including all eight business functions from the source material, visualizes the central claim: that human-centric functions have stagnated while operational functions have soared.</p>
                 </div>
                 <div class="chart-container">
                     <canvas id="impactChart"></canvas>
                 </div>
-                <p class="text-center mt-8 text-sm text-slate-500 max-w-3xl mx-auto">Note: This chart reflects the data as presented in the source reports. Its purpose is to frame the argument that will be critically examined in the following sections.</p>
+                <p class="text-center mt-8 text-sm text-slate-500 max-w-3xl mx-auto">Note: This chart reflects the complete data as presented in the source reports. The critical question is whether this trend is a valid basis for the reports' conclusions, even if the framing is "hype."</p>
             </div>
         </section>
 
@@ -167,17 +167,17 @@
         <section id="conclusion" class="py-20 bg-red-700 text-white">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold">The Verdict: The Reports Are Substantially Correct</h2>
-                    <p class="mt-4 max-w-3xl mx-auto opacity-90">After critically evaluating the source reports against the analyst's counterpoints, the conclusion is clear: the central hypothesis that the $100+ billion annual spend on HR technology has been largely ineffective is correct. The "hype" is stylistic, but the data trend is real. Furthermore, the analyst's critiques do not refute the hypothesis; they powerfully explain *why* it is true.</p>
+                    <h2 class="text-3xl md:text-4xl font-bold">The Verdict: The Reports' Core Data is Valid and The Hypothesis is Correct</h2>
+                    <p class="mt-4 max-w-3xl mx-auto opacity-90">After critically evaluating the source reports against the analyst's counterpoints, the conclusion is clear. While the reports' rhetorical framing is "hype," their central hypothesis—that the $100+ billion annual spend on HR technology has been largely ineffective—is correct. The analyst's critiques do not refute this; they powerfully explain *why* it is true.</p>
                 </div>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="bg-white/10 p-6 rounded-lg">
-                        <h3 class="font-bold text-lg">1. The Data is Undisputed</h3>
-                        <p class="mt-2 text-sm opacity-90">No counter-argument changes the core data point: a massive performance gap exists between customer-facing tech and people-facing tech. The 103-point gap between Marketing and Hiring effectiveness is the central, undeniable fact.</p>
+                        <h3 class="font-bold text-lg">1. The Data Trend is Real and Undisputed</h3>
+                        <p class="mt-2 text-sm opacity-90">The marketing language is debatable; the data is not. The chart shows a massive performance gap between operational tech and human-centric tech. This is the central, undeniable fact that grounds the entire analysis. The hypothesis stands on this data.</p>
                     </div>
                     <div class="bg-white/10 p-6 rounded-lg">
                         <h3 class="font-bold text-lg">2. The "Leadership Gap" is a Cause, Not an Excuse</h3>
-                        <p class="mt-2 text-sm opacity-90">The analyst's point about a skills gap among HR leaders is correct and crucial. It explains *why* the flawed "efficiency trap" technology was purchased and poorly implemented. It's a primary cause of the failure, not a reason to dismiss it.</p>
+                        <p class="mt-2 text-sm opacity-90">The analyst's point about a skills gap among HR leaders is correct and crucial. It explains *why* the flawed "efficiency trap" technology was purchased and poorly implemented. It is a primary cause of the failure, not a reason to dismiss it.</p>
                     </div>
                     <div class="bg-white/10 p-6 rounded-lg">
                         <h3 class="font-bold text-lg">3. "Ownership" is a Red Herring</h3>
@@ -212,10 +212,44 @@
                         {
                             label: 'Marketing Effectiveness',
                             data: [100, 125, 150, 180, 200, 215],
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            fill: true,
-                            tension: 0.3
+                            borderColor: '#2563eb',
+                            tension: 0.3,
+                            borderWidth: 2
+                        },
+                         {
+                            label: 'Sales Revenue Growth',
+                            data: [100, 115, 135, 160, 185, 196],
+                            borderColor: '#16a34a',
+                            tension: 0.3,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Engineering Quality',
+                            data: [100, 118, 138, 155, 170, 178],
+                            borderColor: '#0891b2',
+                            tension: 0.3,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Manufacturing Quality',
+                            data: [100, 120, 145, 165, 180, 185],
+                            borderColor: '#4f46e5',
+                            tension: 0.3,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Logistics On-Time Delivery',
+                            data: [100, 115, 130, 150, 162, 168],
+                            borderColor: '#6b7280',
+                            tension: 0.3,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Healthcare Outcomes',
+                            data: [100, 110, 120, 130, 138, 142],
+                            borderColor: '#ca8a04',
+                            tension: 0.3,
+                            borderWidth: 2
                         },
                         {
                             label: 'Hiring Success',
@@ -224,7 +258,7 @@
                             backgroundColor: 'rgba(220, 38, 38, 0.1)',
                             fill: true,
                             tension: 0.3,
-                            borderWidth: 3,
+                            borderWidth: 4,
                         },
                         {
                             label: 'Employee Engagement',
@@ -233,7 +267,7 @@
                             backgroundColor: 'rgba(249, 115, 22, 0.1)',
                             fill: true,
                             tension: 0.3,
-                            borderWidth: 3,
+                            borderWidth: 4,
                         }
                     ]
                 },
@@ -241,10 +275,15 @@
                     maintainAspectRatio: false,
                     responsive: true,
                     plugins: {
-                        title: { display: true, text: 'Claimed 25-Year Tech Impact (2000=100)', font: { size: 16 } },
+                        title: { display: true, text: '25-Year Technology Impact Trends by Business Function (2000=100)', font: { size: 16 } },
                         legend: { position: 'bottom' }
                     },
-                    scales: { y: { beginAtZero: false } }
+                    scales: { 
+                        y: { 
+                            beginAtZero: false,
+                            suggestedMin: 90
+                        } 
+                    }
                 }
             });
 
