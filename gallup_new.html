@@ -9,10 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutrals with Slate Blue Accent -->
-    <!-- Application Structure Plan: A 4-part interactive narrative scroll. 1) The National Crisis (headline stats, trend chart). 2) The New Hire Cliff (interactive timeline of first-year turnover). 3) The Root Cause (interactive 'Disengaged Leader Cascade' diagram). 4) The Solution (interactive onboarding framework, recommendations). This structure guides the user through the report's core argument from problem to solution, making a complex narrative digestible and engaging. -->
-    <!-- Visualization & Content Choices: 1) Crisis: Goal=Inform/Impact. Viz=Key metric cards + Chart.js line chart. Interaction=Hover/Tooltips. Justification=Quickly establish the scale of the problem. 2) Cliff: Goal=Show Urgency. Viz=HTML/CSS timeline. Interaction=Click to reveal stats. Justification=Visualize the rapid timeline of new hire attrition. 3) Cascade: Goal=Explain Relationship. Viz=Custom HTML/JS diagram. Interaction=Click steps to update details. Justification=Make the report's central, complex argument clear and interactive. 4) Solution: Goal=Organize/Actionable. Viz=Interactive HTML table/cards. Interaction=Filter by phase. Justification=Make the dense framework easily explorable. All choices use HTML/Canvas, no SVG/Mermaid. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -171,8 +167,7 @@
                 </div>
 
                 <div id="cascade-details" class="bg-white p-6 rounded-lg shadow-lg min-h-[300px] sticky top-24">
-                    <!-- JS will populate this -->
-                </div>
+                    </div>
             </div>
         </section>
 
@@ -190,15 +185,26 @@
                     <button class="onboarding-phase-btn bg-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-semibold" data-phase="Days 31-90">Days 31-90</button>
                 </div>
                 <div id="onboarding-content" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- JS will populate this -->
-                </div>
+                    </div>
             </div>
 
             <h3 class="text-2xl font-bold text-slate-900 mb-6 text-center">Key Recommendations</h3>
             <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg shadow-md mb-8">
                 <h4 class="font-bold text-lg text-slate-800 mb-2">1. Adopt Performance-based Hiring</h4>
                 <p class="text-slate-600 mb-4">Define roles by the results a person needs to achieve, not a list of skills. This forces clarity, eliminates the expectation-reality gap, and breaks the "Disengaged Leader Cascade" by ensuring managers are hired for leadership ability.</p>
-                <p class="text-sm text-slate-500 font-medium">Potential Impact: Higher quality of hire, drastic reduction in early turnover, and a clear foundation for onboarding.</p>
+                
+                <div class="mt-4 pt-4 border-t border-blue-200">
+                    <h5 class="font-semibold text-slate-700 mb-2">Add Two Pre-Offer Safety Checks:</h5>
+                    <ol class="list-decimal list-inside space-y-2 text-slate-600">
+                        <li>
+                            <strong>Ask the candidate:</strong> "Forget the compensation for a moment, why do you want this job and why do you think if represents a good career move?" If the answer is vague or general and not about the work itself, don't make an offer.
+                        </li>
+                        <li>
+                            <strong>Ask the hiring manager:</strong> "What does the person need to do in this role to be considered a strong performer and why is the person both qualified and motivated to do this work?" If the evidence is vague, emotional, or filled with hyperbole, don't approve the offer.
+                        </li>
+                    </ol>
+                </div>
+                <p class="text-sm text-slate-500 font-medium mt-4"><strong>Potential Impact:</strong> Higher quality of hire, drastic reduction in early turnover, and a clear foundation for onboarding.</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                  <div class="bg-white p-6 rounded-lg shadow-md">
