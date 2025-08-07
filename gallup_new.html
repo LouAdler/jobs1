@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The New Hire Dilemma: An Interactive Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals with Slate Blue Accent -->
+    <!-- Application Structure Plan: A 4-part interactive narrative scroll. 1) The National Crisis (headline stats, trend chart). 2) The New Hire Cliff (interactive timeline of first-year turnover). 3) The Root Cause (interactive 'Disengaged Leader Cascade' diagram). 4) The Solution (interactive onboarding framework, recommendations). This structure guides the user through the report's core argument from problem to solution, making a complex narrative digestible and engaging. -->
+    <!-- Visualization & Content Choices: 1) Crisis: Goal=Inform/Impact. Viz=Key metric cards + Chart.js line chart. Interaction=Hover/Tooltips. Justification=Quickly establish the scale of the problem. 2) Cliff: Goal=Show Urgency. Viz=HTML/CSS timeline. Interaction=Click to reveal stats. Justification=Visualize the rapid timeline of new hire attrition. 3) Cascade: Goal=Explain Relationship. Viz=Custom HTML/JS diagram. Interaction=Click steps to update details. Justification=Make the report's central, complex argument clear and interactive. 4) Solution: Goal=Organize/Actionable. Viz=Interactive HTML table/cards. Interaction=Filter by phase. Justification=Make the dense framework easily explorable. All choices use HTML/Canvas, no SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #1e293b; /* slate-800 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+            opacity: 0;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #2563eb; /* blue-600 */
+        }
+        .cascade-step.active {
+            border-color: #2563eb; /* blue-600 */
+            background-color: #eff6ff; /* blue-50 */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-lg md:text-xl font-bold text-slate-900">The New Hire Dilemma</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#crisis" class="nav-link text-slate-600 font-medium">The Crisis</a>
+                <a href="#cliff" class="nav-link text-slate-600 font-medium">The First-Year Cliff</a>
+                <a href="#cascade" class="nav-link text-slate-600 font-medium">The Root Cause</a>
+                <a href="#solution" class="nav-link text-slate-600 font-medium">The Solution</a>
+            </div>
+            <div class="md:hidden">
+                <select id="mobile-nav" class="bg-white border border-slate-300 rounded-md p-2 text-slate-700">
+                    <option value="#crisis">The Crisis</option>
+                    <option value="#cliff">The First-Year Cliff</option>
+                    <option value="#cascade">The Root Cause</option>
+                    <option value="#solution">The Solution</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+        
+        <section id="crisis" class="mb-20 md:mb-32 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">A Workforce in Crisis</h2>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-12">The U.S. workforce is experiencing a sustained and systemic disengagement crisis. The data reveals a landscape of profound detachment, costing the economy billions and signaling a fundamental breakdown in the employer-employee relationship.</p>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-amber-400">
+                    <div class="text-5xl font-bold text-amber-500 mb-2">31%</div>
+                    <h3 class="text-xl font-semibold text-slate-800">Engaged</h3>
+                    <p class="text-slate-500">Only a fraction of employees are psychologically committed to their work and company goals.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-red-500">
+                    <div class="text-5xl font-bold text-red-600 mb-2">17%</div>
+                    <h3 class="text-xl font-semibold text-slate-800">Actively Disengaged</h3>
+                    <p class="text-slate-500">These employees are miserable and actively spread their negativity to colleagues.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-sky-500">
+                    <div class="text-5xl font-bold text-sky-600 mb-2">51%</div>
+                    <h3 class="text-xl font-semibold text-slate-800">Seeking to Leave</h3>
+                    <p class="text-slate-500">Over half the workforce is watching for or actively seeking a new job, a decade-high.</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-2xl font-bold text-slate-900 mb-2">Satisfaction vs. Intent to Leave</h3>
+                <p class="text-slate-600 mb-6 max-w-2xl mx-auto">This chart illustrates the growing chasm between job satisfaction and retention. While the desire to leave remains high, the percentage of employees who are "extremely satisfied" has plummeted since the pandemic.</p>
+                <div class="chart-container">
+                    <canvas id="satisfactionTrendChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="cliff" class="mb-20 md:mb-32">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 text-center">The First-Year Cliff</h2>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-12 text-center">The first year is not a gentle integration but a high-stakes cliff where retention battles are won or lost with alarming speed. An employee's long-term commitment is often decided within the first fiscal quarter. Click the milestones to see the data.</p>
+            
+            <div class="relative w-full p-8">
+                <div class="absolute left-0 top-1/2 w-full h-1 bg-slate-200 -translate-y-1/2"></div>
+                <div id="timeline-bar" class="absolute left-0 top-1/2 h-1 bg-blue-600 -translate-y-1/2 transition-all duration-500" style="width: 0%;"></div>
+                <div class="relative flex justify-between">
+                    <div class="timeline-milestone" data-day="0" data-stat="Start" data-info="The journey begins. New hires often start with high optimism and engagement.">
+                        <div class="w-4 h-4 rounded-full bg-blue-600 border-2 border-white"></div>
+                        <span class="mt-2 text-sm font-semibold">Day 1</span>
+                    </div>
+                    <div class="timeline-milestone" data-day="45" data-stat="22%" data-info="of all new hire turnover occurs within the first 45 days.">
+                        <div class="w-4 h-4 rounded-full bg-slate-300 border-2 border-white"></div>
+                        <span class="mt-2 text-sm font-semibold">45 Days</span>
+                    </div>
+                    <div class="timeline-milestone" data-day="90" data-stat="86%" data-info="of new hires decide whether to stay long-term within the first 90 days.">
+                        <div class="w-4 h-4 rounded-full bg-slate-300 border-2 border-white"></div>
+                        <span class="mt-2 text-sm font-semibold">90 Days</span>
+                    </div>
+                    <div class="timeline-milestone" data-day="180" data-stat="33%" data-info="of new hires quit within the first 6 months.">
+                        <div class="w-4 h-4 rounded-full bg-slate-300 border-2 border-white"></div>
+                        <span class="mt-2 text-sm font-semibold">6 Months</span>
+                    </div>
+                    <div class="timeline-milestone" data-day="365" data-stat="1 in 3" data-info="new hires quit before their first anniversary.">
+                        <div class="w-4 h-4 rounded-full bg-slate-300 border-2 border-white"></div>
+                        <span class="mt-2 text-sm font-semibold">1 Year</span>
+                    </div>
+                </div>
+            </div>
+            <div id="timeline-info-box" class="mt-8 bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg text-slate-800 max-w-2xl mx-auto min-h-[120px] flex items-center justify-center text-center transition-opacity duration-300">
+                <p class="text-lg"><span class="font-bold text-3xl text-blue-600 mr-2">Start</span> The journey begins. New hires often start with high optimism and engagement.</p>
+            </div>
+        </section>
+
+        <section id="cascade" class="mb-20 md:mb-32">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 text-center">The Root Cause: A Disengaged Leader Cascade</h2>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-12 text-center">New hire disengagement isn't random. It's often a predictable, downstream consequence of a cycle that begins with how we promote and support new managers. Explore the steps of this vicious cycle to understand its impact.</p>
+            
+            <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-start">
+                <div class="grid grid-cols-1 gap-4 mb-8 lg:mb-0">
+                    <div id="step-1" class="cascade-step p-4 border-2 border-slate-200 rounded-lg cursor-pointer transition-all duration-300 active">
+                        <h4 class="font-bold text-lg text-slate-800">1. Promotion into Peril</h4>
+                        <p class="text-sm text-slate-500">A top performer is promoted to manager based on technical skill, not leadership aptitude.</p>
+                    </div>
+                    <div class="text-center my-1">↓</div>
+                    <div id="step-2" class="cascade-step p-4 border-2 border-slate-200 rounded-lg cursor-pointer transition-all duration-300">
+                        <h4 class="font-bold text-lg text-slate-800">2. Inadequate Training</h4>
+                        <p class="text-sm text-slate-500">The new manager gets little to no training, leading to stress and burnout.</p>
+                    </div>
+                    <div class="text-center my-1">↓</div>
+                    <div id="step-3" class="cascade-step p-4 border-2 border-slate-200 rounded-lg cursor-pointer transition-all duration-300">
+                        <h4 class="font-bold text-lg text-slate-800">3. Manager Disengagement</h4>
+                        <p class="text-sm text-slate-500">The unsupported manager joins the 70% of their peers who are not engaged.</p>
+                    </div>
+                    <div class="text-center my-1">↓</div>
+                    <div id="step-4" class="cascade-step p-4 border-2 border-slate-200 rounded-lg cursor-pointer transition-all duration-300">
+                        <h4 class="font-bold text-lg text-slate-800">4. Poor Onboarding Delivery</h4>
+                        <p class="text-sm text-slate-500">A new professional is hired, but their disengaged manager provides a poor, unstructured onboarding experience.</p>
+                    </div>
+                    <div class="text-center my-1">↓</div>
+                    <div id="step-5" class="cascade-step p-4 border-2 border-slate-200 rounded-lg cursor-pointer transition-all duration-300">
+                        <h4 class="font-bold text-lg text-slate-800">5. New Hire Flight Risk</h4>
+                        <p class="text-sm text-slate-500">Within 90 days, the new hire's optimism fades, and they become a high flight risk.</p>
+                    </div>
+                </div>
+
+                <div id="cascade-details" class="bg-white p-6 rounded-lg shadow-lg min-h-[300px] sticky top-24">
+                    <!-- JS will populate this -->
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 text-center">The Solution: Strategic Onboarding & Enablement</h2>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-12 text-center">Reversing these trends requires a deliberate shift from transactional processes to strategic investment in people. The solution lies in engineering a high-impact onboarding journey and proactively enabling new managers.</p>
+            
+            <div class="bg-white p-6 rounded-lg shadow-lg mb-16">
+                <h3 class="text-2xl font-bold text-slate-900 mb-2">The Strategic Onboarding Framework</h3>
+                <p class="text-slate-600 mb-6">A best-in-class onboarding journey addresses four key needs over 90 days. Select a phase to see example activities for new professionals and managers.</p>
+                <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-200 pb-4">
+                    <button class="onboarding-phase-btn active bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold" data-phase="Pre-Boarding">Pre-Boarding</button>
+                    <button class="onboarding-phase-btn bg-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-semibold" data-phase="First Week">First Week</button>
+                    <button class="onboarding-phase-btn bg-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-semibold" data-phase="First 30 Days">First 30 Days</button>
+                    <button class="onboarding-phase-btn bg-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-semibold" data-phase="Days 31-90">Days 31-90</button>
+                </div>
+                <div id="onboarding-content" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- JS will populate this -->
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-bold text-slate-900 mb-6 text-center">Key Recommendations</h3>
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg shadow-md mb-8">
+                <h4 class="font-bold text-lg text-slate-800 mb-2">1. Adopt Performance-based Hiring</h4>
+                <p class="text-slate-600 mb-4">Define roles by the results a person needs to achieve, not a list of skills. This forces clarity, eliminates the expectation-reality gap, and breaks the "Disengaged Leader Cascade" by ensuring managers are hired for leadership ability.</p>
+                <p class="text-sm text-slate-500 font-medium">Potential Impact: Higher quality of hire, drastic reduction in early turnover, and a clear foundation for onboarding.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                 <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-bold text-lg text-slate-800 mb-2">2. Engineer Onboarding</h4>
+                    <p class="text-slate-600">Design distinct, 90-day onboarding journeys for professionals and managers to improve retention by up to 82%.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-bold text-lg text-slate-800 mb-2">3. Enable New Managers</h4>
+                    <p class="text-slate-600">Provide leadership training *before* or immediately upon promotion to break the "Disengaged Leader Cascade."</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-bold text-lg text-slate-800 mb-2">4. Systematize Feedback</h4>
+                    <p class="text-slate-600">Implement frequent recognition and mandate weekly check-ins for new hires to build rapport and clarify expectations.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-bold text-lg text-slate-800 mb-2">5. Activate Career Paths</h4>
+                    <p class="text-slate-600">Discuss growth opportunities from Day 1 to show long-term investment in high-potential talent.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>Interactive report based on "The New Hire Dilemma."</p>
+            <p class="text-sm mt-2">Data synthesized from Gallup, Mercer, BambooHR, and other sources cited in the report.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const satisfactionData = {
+                labels: ['Jan 2014', 'Jan 2016', 'Jan 2017', 'Jan 2019', 'Mar 2021', 'Feb 2022', 'Feb 2023', 'Jan 2024', 'Jan 2025'],
+                satisfied: [28, 27, 27, 26, 26, 18, 20, 21, 20],
+                seeking: [51, 46, 46, 46, 48, 46, 49, 52, 51]
+            };
+
+            function initSatisfactionChart() {
+                const ctx = document.getElementById('satisfactionTrendChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: satisfactionData.labels,
+                        datasets: [{
+                            label: '% Extremely Satisfied',
+                            data: satisfactionData.satisfied,
+                            borderColor: '#2563eb', // blue-600
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            yAxisID: 'y'
+                        }, {
+                            label: '% Seeking New Job',
+                            data: satisfactionData.seeking,
+                            borderColor: '#f59e0b', // amber-500
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            fill: false,
+                            tension: 0.3,
+                            yAxisID: 'y'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Percentage (%)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ${context.formattedValue}%`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function initTimeline() {
+                const milestones = document.querySelectorAll('.timeline-milestone');
+                const infoBox = document.getElementById('timeline-info-box');
+                const timelineBar = document.getElementById('timeline-bar');
+
+                milestones.forEach(milestone => {
+                    milestone.addEventListener('click', () => {
+                        const day = milestone.dataset.day;
+                        const stat = milestone.dataset.stat;
+                        const info = milestone.dataset.info;
+                        
+                        infoBox.style.opacity = 0;
+                        setTimeout(() => {
+                           infoBox.innerHTML = `<p class="text-lg"><span class="font-bold text-3xl text-blue-600 mr-2">${stat}</span> ${info}</p>`;
+                           infoBox.style.opacity = 1;
+                        }, 300);
+
+                        milestones.forEach(m => m.querySelector('div').classList.replace('bg-blue-600', 'bg-slate-300'));
+                        milestone.querySelector('div').classList.replace('bg-slate-300', 'bg-blue-600');
+                        
+                        const percentage = (parseInt(day) / 365) * 100;
+                        timelineBar.style.width = `${percentage}%`;
+                    });
+                });
+            }
+
+            const cascadeData = {
+                'step-1': {
+                    title: '1. Promotion into Peril',
+                    content: `Organizations often promote their best individual contributors into management. However, technical proficiency rarely translates to leadership skill. This common practice sets the stage for failure by placing individuals in roles they are not equipped for.`,
+                    stat: `Based on technical skill, not leadership aptitude.`
+                },
+                'step-2': {
+                    title: '2. Inadequate Training & Support',
+                    content: `A shocking number of companies provide little to no formal training for their new managers. Left to "sink or swim," these new leaders grapple with delegation, performance management, and team motivation, leading to high stress and burnout.`,
+                    stat: `35% of companies spend $0 on onboarding.`
+                },
+                'step-3': {
+                    title: '3. Manager Disengagement',
+                    content: `The result is a predictable decline in the new manager's own engagement. They become part of the 70% of U.S. managers who are not engaged or are actively disengaged, feeling overwhelmed and disconnected from their new role.`,
+                    stat: `Only 30% of U.S. managers are engaged.`
+                },
+                'step-4': {
+                    title: '4. Poor Onboarding Delivery',
+                    content: `This disengaged manager is now responsible for their team's engagement. When a new professional joins, they receive a poor onboarding experience lacking clarity, connection, and support. The manager, struggling themselves, cannot provide what they don't have.`,
+                    stat: `A manager accounts for 70% of variance in team engagement.`
+                },
+                'step-5': {
+                    title: '5. New Hire Flight Risk',
+                    content: `The new hire's initial optimism quickly erodes. The gap between their expectations and reality widens. Within the critical first 90 days, they become disengaged and start looking for other opportunities, perpetuating the costly cycle of turnover.`,
+                    stat: `86% decide to stay or leave within 90 days.`
+                },
+            };
+
+            function initCascade() {
+                const steps = document.querySelectorAll('.cascade-step');
+                const detailsContainer = document.getElementById('cascade-details');
+
+                function updateDetails(stepId) {
+                    const data = cascadeData[stepId];
+                    detailsContainer.innerHTML = `
+                        <div class="fade-in">
+                            <h3 class="text-2xl font-bold text-slate-900 mb-4">${data.title}</h3>
+                            <p class="text-slate-600 mb-4">${data.content}</p>
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <p class="font-semibold text-blue-800">Key Stat:</p>
+                                <p class="text-blue-700">${data.stat}</p>
+                            </div>
+                        </div>
+                    `;
+                    steps.forEach(s => s.classList.remove('active'));
+                    document.getElementById(stepId).classList.add('active');
+                }
+
+                steps.forEach(step => {
+                    step.addEventListener('click', () => {
+                        updateDetails(step.id);
+                    });
+                });
+
+                updateDetails('step-1');
+            }
+            
+            const onboardingData = {
+                'Pre-Boarding': [
+                    { c: 'Compliance', text: 'Automate and digitize all necessary paperwork (I-9, W-4, benefits) to be completed before Day 1.' },
+                    { c: 'Clarification', text: 'Send a detailed first-week schedule. For Managers: provide an org chart and team bios.' },
+                    { c: 'Culture', text: 'Send a personalized welcome kit with company swag and a note from the CEO.' },
+                    { c: 'Connection', text: 'Hiring manager sends a personal welcome email. Assign a "buddy" and facilitate an initial virtual intro.' }
+                ],
+                'First Week': [
+                    { c: 'Compliance', text: 'Confirm all IT access and equipment is fully functional on Day 1.' },
+                    { c: 'Clarification', text: 'Manager conducts a 1:1 to review the 30-60-90 day plan and assign a small first task.' },
+                    { c: 'Culture', text: 'Host a team welcome lunch (in-person or virtual) to begin social integration.' },
+                    { c: 'Connection', text: 'Schedule introductory 1:1s with all immediate team members and key partners.' }
+                ],
+                'First 30 Days': [
+                    { c: 'Compliance', text: 'Complete any mandatory role-specific compliance training.' },
+                    { c: 'Clarification', text: 'Manager holds weekly check-ins to provide feedback and adjust priorities.' },
+                    { c: 'Culture', text: 'Invite the new hire to an employee resource group (ERG) or company social event.' },
+                    { c: 'Connection', text: 'For Managers: Assign a peer mentor (a tenured manager) to discuss leadership challenges.' }
+                ],
+                'Days 31-90': [
+                    { c: 'Compliance', text: 'Conduct a 90-day review to formally check in on progress.' },
+                    { c: 'Clarification', text: 'Transition to bi-weekly check-ins, focusing more on performance coaching and development.' },
+                    { c: 'Culture', text: 'Solicit feedback from the new hire on the onboarding process itself for continuous improvement.' },
+                    { c: 'Connection', text: 'Facilitate an informal check-in with a senior leader to provide broader context and visibility.' }
+                ]
+            };
+
+            function initOnboarding() {
+                const phaseBtns = document.querySelectorAll('.onboarding-phase-btn');
+                const contentContainer = document.getElementById('onboarding-content');
+
+                function updateContent(phase) {
+                    const data = onboardingData[phase];
+                    contentContainer.innerHTML = data.map(item => `
+                        <div class="p-4 bg-slate-50 rounded-lg fade-in">
+                            <h5 class="font-bold text-md text-blue-700 mb-2">${item.c}</h5>
+                            <p class="text-sm text-slate-600">${item.text}</p>
+                        </div>
+                    `).join('');
+                }
+
+                phaseBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        phaseBtns.forEach(b => {
+                            b.classList.remove('active', 'bg-blue-600', 'text-white');
+                            b.classList.add('bg-slate-200', 'text-slate-700');
+                        });
+                        btn.classList.add('active', 'bg-blue-600', 'text-white');
+                        btn.classList.remove('bg-slate-200', 'text-slate-700');
+                        updateContent(btn.dataset.phase);
+                    });
+                });
+                
+                updateContent('Pre-Boarding');
+            }
+
+            function initMobileNav() {
+                const mobileNav = document.getElementById('mobile-nav');
+                mobileNav.addEventListener('change', (e) => {
+                    window.location.hash = e.target.value;
+                });
+            }
+
+            initSatisfactionChart();
+            initTimeline();
+            initCascade();
+            initOnboarding();
+            initMobileNav();
+        });
+    </script>
+</body>
+</html>
