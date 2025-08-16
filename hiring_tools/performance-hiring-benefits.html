@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance-based Hiring: Transform Your Talent Acquisition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Call to Action Banner */
+        .cta-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-banner h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .cta-banner p {
+            font-size: 18px;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: #f8f9fa;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .header .subtitle {
+            font-size: 20px;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Primary Benefit - No Number */
+        .primary-benefit {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .primary-benefit::before {
+            content: '★';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            opacity: 0.2;
+        }
+
+        .primary-benefit h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .primary-benefit p {
+            font-size: 18px;
+            line-height: 1.6;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Benefits Grid */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .benefit-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .benefit-card:hover::before {
+            opacity: 1;
+        }
+
+        .benefit-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .benefit-card h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .benefit-card p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Legal Link */
+        .legal-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .legal-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        /* Summary Section */
+        .summary {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+
+        .summary h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .summary h2 a {
+            color: #667eea;
+            text-decoration: underline;
+            transition: all 0.3s ease;
+        }
+
+        .summary h2 a:hover {
+            color: #764ba2;
+            text-decoration-thickness: 2px;
+        }
+
+        .summary .contact-demo {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #e9ecef;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .summary .contact-demo a {
+            color: #667eea;
+            text-decoration: underline;
+            transition: all 0.3s ease;
+        }
+
+        .summary .contact-demo a:hover {
+            color: #764ba2;
+            text-decoration-thickness: 2px;
+        }
+
+        .summary p {
+            font-size: 18px;
+            color: #555;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 36px;
+            }
+
+            .header .subtitle {
+                font-size: 18px;
+            }
+
+            .cta-banner {
+                padding: 25px;
+            }
+
+            .cta-banner h2 {
+                font-size: 20px;
+            }
+
+            .cta-banner p {
+                font-size: 16px;
+            }
+
+            .primary-benefit {
+                padding: 30px 20px;
+            }
+
+            .primary-benefit h3 {
+                font-size: 24px;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .summary {
+                padding: 30px 20px;
+            }
+
+            .summary h2 {
+                font-size: 26px;
+            }
+
+            .summary p {
+                font-size: 16px;
+            }
+        }
+
+        /* Animation for cards on scroll */
+        .primary-benefit {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .benefit-card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .benefit-card:nth-child(1) { animation-delay: 0.2s; }
+        .benefit-card:nth-child(2) { animation-delay: 0.3s; }
+        .benefit-card:nth-child(3) { animation-delay: 0.4s; }
+        .benefit-card:nth-child(4) { animation-delay: 0.5s; }
+        .benefit-card:nth-child(5) { animation-delay: 0.6s; }
+        .benefit-card:nth-child(6) { animation-delay: 0.7s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Call to Action Banner -->
+        <div class="cta-banner">
+            <div class="cta-content">
+                <h2>🚀 Beta Test Our Revolutionary AI-Powered Hiring Platform</h2>
+                <p>We're seeking volunteers to beta test our new Performance-based Hiring Talent Hub - a fully AI-powered system that transforms how hiring managers and recruiters find and hire top talent.</p>
+                <a href="https://hiring.tips/AG_contactmain4" class="cta-button">Join Our Beta Program</a>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>Performance-based Hiring</h1>
+            <p class="subtitle">Transform Your Talent Acquisition Strategy with AI-Powered Excellence</p>
+        </div>
+
+        <!-- Primary Benefit - No Number -->
+        <div class="primary-benefit">
+            <h3>Enables Hiring Managers to Build Outstanding Teams</h3>
+            <p>Empowers managers to consistently identify and hire top performers who complement existing team strengths and drive collective success - perhaps the most important benefit of all!</p>
+        </div>
+
+        <!-- Benefits Grid -->
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-number">1</div>
+                <h3>Defines Work as Career Moves Not Ill-defined Lateral Transfers</h3>
+                <p>Candidates are offered compelling growth opportunities by defining the work as performance objectives rather than a list of skills and experiences.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-number">2</div>
+                <h3>Dramatically Reduces Hiring Bias and Increases Diversity</h3>
+                <p>Structures interviews around evidence of past performance, naturally expanding the candidate pool beyond traditional profiles.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-number">3</div>
+                <h3>Improves Quality of Hire and Reduces Turnover</h3>
+                <p>Ensures alignment between job requirements and proven candidate capabilities, leading to better performance and retention.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-number">4</div>
+                <h3>Attracts Stronger Talent Including Passive Candidates</h3>
+                <p>Engages high performers who aren't actively job seeking but would explore the right opportunity to make significant impact.</p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-number">5</div>
+                <h3>Provides Validated Legal Defensibility for Hiring Decisions</h3>
+                <p>Creates objective, documented evidence for all hiring decisions, validated by top labor attorneys as more defensible than traditional methods.
+                <br><a href="https://hiring.tips/Littler2" class="legal-link">Learn More →</a></p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-number">6</div>
+                <h3>Conduct Instant In-depth Job Analysis for Any Role</h3>
+                <p>This AI-enabled system allows hiring managers and recruiters to fully understand the drivers of job success for types of roles from entry-level to CEO.</p>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="summary">
+            <h2><a href="https://hiring.tips/AG_Main2video">A Complete Business Process for Talent Excellence</a></h2>
+            <p>Performance-based Hiring is a fully integrated end-to-end business process that aligns every aspect of talent acquisition - from job definition through onboarding - around what actually matters: the ability to deliver specific results in your specific environment. This comprehensive approach transforms hiring from a series of disconnected activities into a strategic competitive advantage.</p>
+            <div class="contact-demo">
+                <a href="https://hiring.tips/AG_contactmain4">Contact Us for a Demo of the Entire AI-enabled Performance-based Hiring Process</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
