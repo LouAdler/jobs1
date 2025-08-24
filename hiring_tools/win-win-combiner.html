@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Win-Win Hiring Success Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .import-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .import-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .import-box {
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .import-box.loaded {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .import-box h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-label {
+            display: inline-block;
+            background: #2c3e50;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .file-label:hover {
+            background: #34495e;
+            transform: translateY(-1px);
+        }
+        
+        .loaded-indicator {
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .manual-entry {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .manual-input {
+            width: 100px;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        
+        .results-section {
+            display: none;
+        }
+        
+        .probability-display {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .main-probability {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .probability-circle {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 30px;
+            position: relative;
+            background: conic-gradient(
+                #28a745 0deg,
+                #28a745 var(--probability),
+                #e9ecef var(--probability)
+            );
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .probability-inner {
+            width: 210px;
+            height: 210px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .probability-value {
+            font-size: 4em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .probability-label {
+            font-size: 1.1em;
+            color: #6c757d;
+        }
+        
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .component-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .component-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+        
+        .component-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        
+        .alignment-matrix {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .matrix-item {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .matrix-header {
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .matrix-match {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .matrix-gap {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .matrix-critical {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .recommendations-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .rec-category {
+            margin-bottom: 30px;
+        }
+        
+        .rec-category h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .recommendation-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .recommendation-item.critical {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        
+        .recommendation-item.opportunity {
+            border-left-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .rec-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .rec-impact {
+            display: inline-block;
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-left: 10px;
+        }
+        
+        .rec-impact.high {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .rec-impact.medium {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .action-items {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+        
+        .action-items li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .action-items li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #0066cc;
+            font-weight: bold;
+        }
+        
+        .gap-analysis {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .gap-chart {
+            margin-top: 20px;
+        }
+        
+        .gap-factor {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .gap-factor-name {
+            flex: 0 0 200px;
+            font-weight: 600;
+        }
+        
+        .gap-bars {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 0 20px;
+        }
+        
+        .gap-bar {
+            flex: 1;
+            position: relative;
+        }
+        
+        .gap-bar-fill {
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gap-bar-value {
+            height: 100%;
+            background: #0066cc;
+            transition: width 0.5s;
+        }
+        
+        .gap-bar-label {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        .gap-indicator {
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        
+        .gap-indicator.match {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .gap-indicator.minor {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .gap-indicator.major {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+        
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .export-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Win-Win Hiring Success Analyzer</h1>
+            <p>Combine Company and Candidate assessments to predict mutual success</p>
+        </div>
+        
+        <div class="import-section">
+            <h2 class="section-title">Import Assessment Data</h2>
+            <div class="import-grid">
+                <div class="import-box" id="companyBox">
+                    <h3>Company Assessment (QoH)</h3>
+                    <input type="file" id="companyFile" class="file-input" accept=".json" onchange="loadCompanyData(event)">
+                    <label for="companyFile" class="file-label">Import Company JSON</label>
+                    <div class="loaded-indicator" id="companyLoaded" style="display: none;">✓ Data Loaded</div>
+                    <div class="manual-entry">
+                        <p>Or enter score manually:</p>
+                        <input type="number" class="manual-input" id="companyManual" min="0" max="100" placeholder="0-100%">
+                    </div>
+                </div>
+                
+                <div class="import-box" id="candidateBox">
+                    <h3>Candidate Assessment (Career)</h3>
+                    <input type="file" id="candidateFile" class="file-input" accept=".json" onchange="loadCandidateData(event)">
+                    <label for="candidateFile" class="file-label">Import Candidate JSON</label>
+                    <div class="loaded-indicator" id="candidateLoaded" style="display: none;">✓ Data Loaded</div>
+                    <div class="manual-entry">
+                        <p>Or enter score manually:</p>
+                        <input type="number" class="manual-input" id="candidateManual" min="0" max="100" placeholder="0-100%">
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <button onclick="calculateCombined()" id="calculateBtn">Calculate Win-Win Probability</button>
+            </div>
+        </div>
+        
+        <div class="results-section" id="resultsSection">
+            <div class="probability-display">
+                <div class="main-probability">
+                    <div class="probability-circle" style="--probability: 0deg;">
+                        <div class="probability-inner">
+                            <div class="probability-value" id="winWinScore">0%</div>
+                            <div class="probability-label">Win-Win Probability</div>
+                        </div>
+                    </div>
+                    <h2 id="verdictText" style="color: #2c3e50;">Calculate to see verdict</h2>
+                </div>
+                
+                <div class="components-grid">
+                    <div class="component-card">
+                        <div class="component-label">Company QoH Score</div>
+                        <div class="component-value" id="companyScoreDisplay">0%</div>
+                    </div>
+                    <div class="component-card">
+                        <div class="component-label">Candidate Career Score</div>
+                        <div class="component-value" id="candidateScoreDisplay">0%</div>
+                    </div>
+                    <div class="component-card">
+                        <div class="component-label">Alignment Factor</div>
+                        <div class="component-value" id="alignmentDisplay">0%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gap-analysis" id="gapAnalysis">
+                <h2 class="section-title">Factor-by-Factor Analysis</h2>
+                <div class="gap-chart" id="gapChart">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+            
+            <div class="recommendations-section">
+                <h2 class="section-title">Recommendations to Improve Win-Win Probability</h2>
+                
+                <div class="rec-category">
+                    <h3>🚨 Critical Actions (Must Address)</h3>
+                    <div id="criticalActions">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                
+                <div class="rec-category">
+                    <h3>⚠️ Important Improvements (Should Address)</h3>
+                    <div id="importantActions">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                
+                <div class="rec-category">
+                    <h3>💡 Opportunity Areas (Nice to Have)</h3>
+                    <div id="opportunityActions">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alignment-matrix">
+                <h2 class="section-title">What-Who-How Alignment Matrix</h2>
+                <div class="matrix-grid">
+                    <div class="matrix-item matrix-header">Factor</div>
+                    <div class="matrix-item matrix-header">Company Needs</div>
+                    <div class="matrix-item matrix-header">Candidate Offers</div>
+                    <div class="matrix-item matrix-header">Alignment</div>
+                    
+                    <div class="matrix-item">Job Requirements</div>
+                    <div class="matrix-item" id="jobReqCompany">-</div>
+                    <div class="matrix-item" id="jobReqCandidate">-</div>
+                    <div class="matrix-item" id="jobReqAlign">-</div>
+                    
+                    <div class="matrix-item">Growth & Impact</div>
+                    <div class="matrix-item" id="growthCompany">-</div>
+                    <div class="matrix-item" id="growthCandidate">-</div>
+                    <div class="matrix-item" id="growthAlign">-</div>
+                    
+                    <div class="matrix-item">Culture Fit</div>
+                    <div class="matrix-item" id="cultureCompany">-</div>
+                    <div class="matrix-item" id="cultureCandidate">-</div>
+                    <div class="matrix-item" id="cultureAlign">-</div>
+                    
+                    <div class="matrix-item">Compensation</div>
+                    <div class="matrix-item" id="compCompany">-</div>
+                    <div class="matrix-item" id="compCandidate">-</div>
+                    <div class="matrix-item" id="compAlign">-</div>
+                </div>
+            </div>
+            
+            <div class="export-section">
+                <button onclick="exportFullReport()">Export Full Win-Win Analysis</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let companyData = null;
+        let candidateData = null;
+        
+        function loadCompanyData(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        companyData = JSON.parse(e.target.result);
+                        document.getElementById('companyBox').classList.add('loaded');
+                        document.getElementById('companyLoaded').style.display = 'block';
+                        document.getElementById('companyManual').value = parseInt(companyData.score);
+                    } catch (error) {
+                        alert('Invalid company JSON file');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+        
+        function loadCandidateData(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        candidateData = JSON.parse(e.target.result);
+                        document.getElementById('candidateBox').classList.add('loaded');
+                        document.getElementById('candidateLoaded').style.display = 'block';
+                        // Use the after-Maslow score for candidates
+                        const score = candidateData.scoreAfterMaslow || candidateData.score;
+                        document.getElementById('candidateManual').value = parseInt(score);
+                    } catch (error) {
+                        alert('Invalid candidate JSON file');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+        
+        function calculateCombined() {
+            // Get scores from manual input or loaded data
+            const companyScore = parseInt(document.getElementById('companyManual').value) || 0;
+            const candidateScore = parseInt(document.getElementById('candidateManual').value) || 0;
+            
+            if (companyScore === 0 || candidateScore === 0) {
+                alert('Please load both assessments or enter scores manually');
+                return;
+            }
+            
+            // Calculate alignment factor
+            const alignment = Math.min(companyScore, candidateScore) / Math.max(companyScore, candidateScore);
+            
+            // Calculate win-win probability
+            const winWinProbability = (companyScore / 100) * (candidateScore / 100) * alignment * 100;
+            
+            // Show results section
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Update displays
+            document.getElementById('companyScoreDisplay').textContent = companyScore + '%';
+            document.getElementById('candidateScoreDisplay').textContent = candidateScore + '%';
+            document.getElementById('alignmentDisplay').textContent = Math.round(alignment * 100) + '%';
+            document.getElementById('winWinScore').textContent = Math.round(winWinProbability) + '%';
+            
+            // Update probability circle
+            const degrees = (winWinProbability / 100) * 360;
+            document.querySelector('.probability-circle').style.setProperty('--probability', degrees + 'deg');
+            
+            // Update verdict
+            updateVerdict(winWinProbability);
+            
+            // Generate recommendations
+            generateRecommendations(companyScore, candidateScore, alignment);
+            
+            // Update gap analysis if detailed data available
+            if (companyData && candidateData && companyData.ratings && candidateData.ratings) {
+                updateGapAnalysis();
+                updateAlignmentMatrix();
+            }
+            
+            // Scroll to results
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function updateVerdict(probability) {
+            const verdictText = document.getElementById('verdictText');
+            if (probability >= 80) {
+                verdictText.textContent = 'Excellent Match - Strong mutual success likely';
+                verdictText.style.color = '#28a745';
+            } else if (probability >= 60) {
+                verdictText.textContent = 'Good Match - Success probable with adjustments';
+                verdictText.style.color = '#ffc107';
+            } else if (probability >= 40) {
+                verdictText.textContent = 'Moderate Risk - Significant improvements needed';
+                verdictText.style.color = '#fd7e14';
+            } else {
+                verdictText.textContent = 'High Risk - Major gaps to address';
+                verdictText.style.color = '#dc3545';
+            }
+        }
+        
+        function generateRecommendations(companyScore, candidateScore, alignment) {
+            const critical = document.getElementById('criticalActions');
+            const important = document.getElementById('importantActions');
+            const opportunity = document.getElementById('opportunityActions');
+            
+            // Clear previous recommendations
+            critical.innerHTML = '';
+            important.innerHTML = '';
+            opportunity.innerHTML = '';
+            
+            // Analyze gaps and generate recommendations
+            const recommendations = [];
+            
+            // Check desperation level if available
+            if (candidateData && candidateData.ratings && candidateData.ratings.desperation >= 4) {
+                recommendations.push({
+                    priority: 'critical',
+                    title: 'Address Candidate Desperation',
+                    impact: 'high',
+                    actions: [
+                        'Consider accelerating the decision timeline',
+                        'Provide interim consulting or project work if possible',
+                        'Be transparent about timeline and next steps',
+                        'Consider sign-on bonus or relocation assistance'
+                    ]
+                });
+            }
+            
+            // Company score too low
+            if (companyScore < 60) {
+                recommendations.push({
+                    priority: 'critical',
+                    title: 'Candidate May Not Meet Requirements',
+                    impact: 'high',
+                    actions: [
+                        'Re-evaluate must-have vs nice-to-have requirements',
+                        'Consider creating a development plan for skill gaps',
+                        'Assess if role can be modified to match candidate strengths',
+                        'Consider probationary period with clear milestones'
+                    ]
+                });
+            }
+            
+            // Candidate score too low
+            if (candidateScore < 60) {
+                recommendations.push({
+                    priority: 'critical',
+                    title: 'Role May Not Meet Candidate Needs',
+                    impact: 'high',
+                    actions: [
+                        'Enhance compensation package if below market',
+                        'Improve growth opportunities and career path clarity',
+                        'Address work-life balance concerns',
+                        'Consider remote work or flexible arrangements'
+                    ]
+                });
+            }
+            
+            // Misalignment issues
+            if (alignment < 0.7) {
+                recommendations.push({
+                    priority: 'important',
+                    title: 'Expectation Misalignment',
+                    impact: 'medium',
+                    actions: [
+                        'Facilitate detailed discussion about role expectations',
+                        'Create clear 30-60-90 day plan',
+                        'Define success metrics for both parties',
+                        'Consider mentor or buddy system for onboarding'
+                    ]
+                });
+            }
+            
+            // Specific factor analysis if detailed data available
+            if (companyData && candidateData && companyData.ratings && candidateData.ratings) {
+                analyzeDetailedGaps(recommendations);
+            }
+            
+            // Always add some opportunity recommendations
+            recommendations.push({
+                priority: 'opportunity',
+                title: 'Strengthen Long-term Success',
+                impact: 'low',
+                actions: [
+                    'Create personalized development plan',
+                    'Establish regular check-in cadence',
+                    'Connect with team members before start date',
+                    'Share company culture materials and values'
+                ]
+            });
+            
+            // Render recommendations
+            recommendations.forEach(rec => {
+                const html = createRecommendationHTML(rec);
+                if (rec.priority === 'critical') {
+                    critical.innerHTML += html;
+                } else if (rec.priority === 'important') {
+                    important.innerHTML += html;
+                } else {
+                    opportunity.innerHTML += html;
+                }
+            });
+        }
+        
+        function analyzeDetailedGaps(recommendations) {
+            const companyRatings = companyData.ratings;
+            const candidateRatings = candidateData.ratings;
+            
+            // Check for specific gaps
+            if (companyRatings.culture <= 2 || candidateRatings.compCulture <= 2) {
+                recommendations.push({
+                    priority: 'critical',
+                    title: 'Culture Fit Concerns',
+                    impact: 'high',
+                    actions: [
+                        'Schedule culture fit interviews with multiple team members',
+                        'Provide detailed day-in-the-life overview',
+                        'Share employee testimonials and experiences',
+                        'Consider culture ambassador or onboarding buddy'
+                    ]
+                });
+            }
+            
+            if (candidateRatings.compensation <= 2) {
+                recommendations.push({
+                    priority: 'important',
+                    title: 'Compensation Gap',
+                    impact: 'medium',
+                    actions: [
+                        'Review market data and adjust offer if needed',
+                        'Highlight total compensation including benefits',
+                        'Consider performance-based increases',
+                        'Discuss long-term earning potential'
+                    ]
+                });
+            }
+            
+            if (companyRatings.skills <= 2 && candidateRatings.growth >= 4) {
+                recommendations.push({
+                    priority: 'important',
+                    title: 'Skills-Growth Mismatch',
+                    impact: 'medium',
+                    actions: [
+                        'Create detailed skills development plan',
+                        'Identify mentors and training resources',
+                        'Set realistic timeline for skill acquisition',
+                        'Consider adjusted responsibilities initially'
+                    ]
+                });
+            }
+        }
+        
+        function createRecommendationHTML(rec) {
+            const impactClass = rec.impact === 'high' ? 'high' : rec.impact === 'medium' ? 'medium' : '';
+            const itemClass = rec.priority === 'critical' ? 'critical' : rec.priority === 'opportunity' ? 'opportunity' : '';
+            
+            let html = `
+                <div class="recommendation-item ${itemClass}">
+                    <div class="rec-title">
+                        ${rec.title}
+                        <span class="rec-impact ${impactClass}">Impact: ${rec.impact.toUpperCase()}</span>
+                    </div>
+                    <ul class="action-items">
+            `;
+            
+            rec.actions.forEach(action => {
+                html += `<li>${action}</li>`;
+            });
+            
+            html += `
+                    </ul>
+                </div>
+            `;
+            
+            return html;
+        }
+        
+        function updateGapAnalysis() {
+            const gapChart = document.getElementById('gapChart');
+            gapChart.innerHTML = '';
+            
+            // Map company factors to candidate factors
+            const factorMap = [
+                { name: 'Skills & Experience', company: 'skills', candidate: null },
+                { name: 'Growth & Achievement', company: 'achiever', candidate: 'growth' },
+                { name: 'Impact & Challenge', company: 'talent', candidate: 'impact' },
+                { name: 'Management Fit', company: 'mgrfit', candidate: 'manager' },
+                { name: 'Culture Alignment', company: 'culture', candidate: 'compCulture' },
+                { name: 'Team Dynamics', company: 'team', candidate: 'teamQuality' },
+                { name: 'Work-Life Balance', company: null, candidate: 'balance' },
+                { name: 'Compensation Value', company: null, candidate: 'compensation' },
+                { name: 'Motivation Level', company: 'motivation', candidate: null }
+            ];
+            
+            factorMap.forEach(factor => {
+                const companyValue = factor.company ? (companyData.ratings[factor.company] || 0) : 0;
+                const candidateValue = factor.candidate ? (candidateData.ratings[factor.candidate] || 0) : 0;
+                
+                if (companyValue > 0 || candidateValue > 0) {
+                    const gap = Math.abs(companyValue - candidateValue);
+                    const gapClass = gap <= 1 ? 'match' : gap <= 2 ? 'minor' : 'major';
+                    const gapText = gap <= 1 ? 'Aligned' : gap <= 2 ? 'Minor Gap' : 'Major Gap';
+                    
+                    const html = `
+                        <div class="gap-factor">
+                            <div class="gap-factor-name">${factor.name}</div>
+                            <div class="gap-bars">
+                                <div class="gap-bar">
+                                    <div class="gap-bar-fill">
+                                        <div class="gap-bar-value" style="width: ${companyValue * 20}%; background: #2c3e50;">
+                                            <span class="gap-bar-label">${companyValue}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="gap-bar">
+                                    <div class="gap-bar-fill">
+                                        <div class="gap-bar-value" style="width: ${candidateValue * 20}%; background: #0066cc;">
+                                            <span class="gap-bar-label">${candidateValue}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="gap-indicator ${gapClass}">${gapText}</div>
+                        </div>
+                    `;
+                    
+                    gapChart.innerHTML += html;
+                }
+            });
+        }
+        
+        function updateAlignmentMatrix() {
+            // Job Requirements
+            const jobReq = companyData.ratings.skills || 0;
+            document.getElementById('jobReqCompany').textContent = jobReq + '/5';
+            document.getElementById('jobReqCandidate').textContent = jobReq + '/5';
+            document.getElementById('jobReqAlign').textContent = 'Direct';
+            document.getElementById('jobReqAlign').className = 'matrix-item matrix-match';
+            
+            // Growth & Impact
+            const growthCompany = companyData.ratings.achiever || 0;
+            const growthCandidate = candidateData.ratings.growth || 0;
+            document.getElementById('growthCompany').textContent = growthCompany + '/5';
+            document.getElementById('growthCandidate').textContent = growthCandidate + '/5';
+            const growthGap = Math.abs(growthCompany - growthCandidate);
+            document.getElementById('growthAlign').textContent = growthGap <= 1 ? 'Good' : growthGap <= 2 ? 'Fair' : 'Poor';
+            document.getElementById('growthAlign').className = growthGap <= 1 ? 'matrix-item matrix-match' : growthGap <= 2 ? 'matrix-item matrix-gap' : 'matrix-item matrix-critical';
+            
+            // Culture
+            const cultureCompany = companyData.ratings.culture || 0;
+            const cultureCandidate = candidateData.ratings.compCulture || 0;
+            document.getElementById('cultureCompany').textContent = cultureCompany + '/5';
+            document.getElementById('cultureCandidate').textContent = cultureCandidate + '/5';
+            const cultureGap = Math.abs(cultureCompany - cultureCandidate);
+            document.getElementById('cultureAlign').textContent = cultureGap <= 1 ? 'Good' : cultureGap <= 2 ? 'Fair' : 'Poor';
+            document.getElementById('cultureAlign').className = cultureGap <= 1 ? 'matrix-item matrix-match' : cultureGap <= 2 ? 'matrix-item matrix-gap' : 'matrix-item matrix-critical';
+            
+            // Compensation
+            const compCandidate = candidateData.ratings.compensation || 0;
+            document.getElementById('compCompany').textContent = 'Market';
+            document.getElementById('compCandidate').textContent = compCandidate + '/5';
+            document.getElementById('compAlign').textContent = compCandidate >= 3 ? 'Good' : compCandidate >= 2 ? 'Fair' : 'Poor';
+            document.getElementById('compAlign').className = compCandidate >= 3 ? 'matrix-item matrix-match' : compCandidate >= 2 ? 'matrix-item matrix-gap' : 'matrix-item matrix-critical';
+        }
+        
+        function exportFullReport() {
+            const report = {
+                date: new Date().toISOString(),
+                winWinProbability: document.getElementById('winWinScore').textContent,
+                companyScore: document.getElementById('companyScoreDisplay').textContent,
+                candidateScore: document.getElementById('candidateScoreDisplay').textContent,
+                alignmentFactor: document.getElementById('alignmentDisplay').textContent,
+                verdict: document.getElementById('verdictText').textContent,
+                companyData: companyData,
+                candidateData: candidateData,
+                recommendations: {
+                    critical: extractRecommendations('criticalActions'),
+                    important: extractRecommendations('importantActions'),
+                    opportunity: extractRecommendations('opportunityActions')
+                }
+            };
+            
+            const dataStr = JSON.stringify(report, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', 'win-win-analysis-' + Date.now() + '.json');
+            linkElement.click();
+        }
+        
+        function extractRecommendations(elementId) {
+            const element = document.getElementById(elementId);
+            const recs = [];
+            const items = element.querySelectorAll('.recommendation-item');
+            
+            items.forEach(item => {
+                const title = item.querySelector('.rec-title').textContent.trim();
+                const actions = [];
+                item.querySelectorAll('.action-items li').forEach(li => {
+                    actions.push(li.textContent.trim());
+                });
+                recs.push({ title, actions });
+            });
+            
+            return recs;
+        }
+    </script>
+</body>
+</html>

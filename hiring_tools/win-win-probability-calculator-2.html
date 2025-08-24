@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Win-Win Probability Calculator - Moneyball for HR!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .probability-display {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .probability-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .probability-meter {
+            text-align: center;
+        }
+        
+        .probability-circle {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px;
+            position: relative;
+            background: conic-gradient(
+                #28a745 0deg,
+                #28a745 var(--probability),
+                #e9ecef var(--probability)
+            );
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .probability-inner {
+            width: 150px;
+            height: 150px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .probability-value {
+            font-size: 3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .probability-label {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        
+        .probability-breakdown {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        
+        .breakdown-label {
+            color: #495057;
+        }
+        
+        .breakdown-value {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .gap-analysis {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .gap-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .gap-item {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .gap-item::before {
+            content: '⚠';
+            position: absolute;
+            left: 0;
+            color: #f0ad4e;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .probability-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .assessment-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .factor-group {
+            margin-bottom: 25px;
+            position: relative;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .factor-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .factor-score {
+            background: #6c757d;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+        
+        .factor-score.low {
+            background: #dc3545;
+        }
+        
+        .factor-score.medium {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .factor-score.high {
+            background: #28a745;
+        }
+        
+        .factor-description {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        
+        .rating-scale {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .rating-button {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .rating-button:hover {
+            border-color: #6c757d;
+            background: #f8f9fa;
+        }
+        
+        .rating-button.selected {
+            background: #2c3e50;
+            color: white;
+            border-color: #2c3e50;
+        }
+        
+        .evidence-popup {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            width: 280px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            font-size: 0.85em;
+        }
+        
+        .evidence-popup::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #2c3e50;
+        }
+        
+        .rating-button:hover .evidence-popup {
+            display: block;
+        }
+        
+        .evidence-popup h4 {
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        
+        .evidence-popup ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 0.9em;
+        }
+        
+        .evidence-popup li {
+            margin-bottom: 4px;
+        }
+        
+        .evidence-box {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 0.85em;
+            resize: vertical;
+            min-height: 50px;
+            margin-top: 8px;
+        }
+        
+        .formula-display {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .formula {
+            font-size: 1.2em;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .formula-explanation {
+            font-size: 0.9em;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .summary-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .summary-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .summary-card.warning {
+            border-left-color: #ffc107;
+        }
+        
+        .summary-card.danger {
+            border-left-color: #dc3545;
+        }
+        
+        .summary-card.success {
+            border-left-color: #28a745;
+        }
+        
+        .summary-card h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .action-items {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .action-items ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .action-items li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .action-items li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #0066cc;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        button {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        button:hover {
+            background: #34495e;
+            transform: translateY(-1px);
+        }
+        
+        .export-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Complete Win-Win Hiring Probability Calculator</h1>
+            <p>18-Factor Evidence-Based Assessment for Predicting Mutual Success</p>
+        </div>
+        
+        <div class="probability-display">
+            <div class="probability-grid">
+                <div class="probability-meter">
+                    <div class="probability-circle" style="--probability: 0deg;">
+                        <div class="probability-inner">
+                            <div class="probability-value" id="mainProbability">0%</div>
+                            <div class="probability-label">Win-Win Probability</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="probability-breakdown">
+                    <h3>Probability Components</h3>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Quality of Hire Score (10 factors)</span>
+                        <span class="breakdown-value" id="qohScore">0%</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Career Move Score (8 factors)</span>
+                        <span class="breakdown-value" id="cmScore">0%</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Alignment Score</span>
+                        <span class="breakdown-value" id="alignScore">0%</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Evidence Strength</span>
+                        <span class="breakdown-value" id="evidenceScore">0%</span>
+                    </div>
+                </div>
+                
+                <div class="probability-meter">
+                    <div class="probability-value" id="confidenceLevel">No Data</div>
+                    <div class="probability-label">Confidence Level</div>
+                </div>
+            </div>
+            
+            <div class="gap-analysis" id="gapAnalysis">
+                <div class="gap-title">Assessment Status</div>
+                <div class="gap-item">No factors have been rated yet</div>
+            </div>
+        </div>
+        
+        <div class="formula-display">
+            <p class="formula">Win-Win = (QoH Average × Career Move Average × Alignment Factor) ^ Motivation</p>
+            <p class="formula-explanation">
+                Based on 10 Quality of Hire factors and 8 Career Decision factors. 
+                Motivation has exponential impact on final probability.
+            </p>
+        </div>
+        
+        <div class="main-grid">
+            <!-- Company Side: Quality of Hire Assessment -->
+            <div class="assessment-section">
+                <h2 class="section-title">Company Side: Quality of Hire Assessment (10 Factors)</h2>
+                
+                <!-- Factor 1: Skills & Experience + Education -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        1. Skills, Experience & Education
+                        <span class="factor-score" id="skillsScore">0</span>
+                    </div>
+                    <p class="factor-description">Technical competency, relevant experience, and educational background</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('skills', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Minimal</h4>
+                                <ul>
+                                    <li>Missing key skills</li>
+                                    <li>No relevant experience</li>
+                                    <li>Education gaps</li>
+                                    <li>Needs extensive training</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('skills', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Basic</h4>
+                                <ul>
+                                    <li>Some relevant skills</li>
+                                    <li>Limited experience</li>
+                                    <li>Basic education met</li>
+                                    <li>Significant gaps remain</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('skills', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Adequate</h4>
+                                <ul>
+                                    <li>Meets core requirements</li>
+                                    <li>Solid experience base</li>
+                                    <li>Appropriate education</li>
+                                    <li>Can perform role</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('skills', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Strong</h4>
+                                <ul>
+                                    <li>Exceeds requirements</li>
+                                    <li>Deep relevant experience</li>
+                                    <li>Advanced education/certs</li>
+                                    <li>Brings extra value</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('skills', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Exceptional</h4>
+                                <ul>
+                                    <li>Industry expert level</li>
+                                    <li>Pioneering experience</li>
+                                    <li>Thought leader</li>
+                                    <li>Can elevate team</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Specific skills demonstrated, years of experience, education credentials..."></textarea>
+                </div>
+                
+                <!-- Factor 2: Achiever Pattern -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        2. Achiever Pattern & Growth
+                        <span class="factor-score" id="achieverScore">0</span>
+                    </div>
+                    <p class="factor-description">Consistent top performance and upward career trajectory</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('achiever', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - No Pattern</h4>
+                                <ul>
+                                    <li>Job hopping</li>
+                                    <li>Lateral moves only</li>
+                                    <li>No promotions</li>
+                                    <li>Declining scope</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('achiever', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Inconsistent</h4>
+                                <ul>
+                                    <li>Some growth</li>
+                                    <li>Mixed reviews</li>
+                                    <li>Average performer</li>
+                                    <li>Plateaued recently</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('achiever', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Solid</h4>
+                                <ul>
+                                    <li>Steady progression</li>
+                                    <li>Good performer</li>
+                                    <li>Some recognition</li>
+                                    <li>Reliable contributor</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('achiever', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Top Performer</h4>
+                                <ul>
+                                    <li>Rapid progression</li>
+                                    <li>Multiple promotions</li>
+                                    <li>Exceeds goals</li>
+                                    <li>Go-to person</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('achiever', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Star</h4>
+                                <ul>
+                                    <li>Fastest progression</li>
+                                    <li>Recruited by others</li>
+                                    <li>Creates opportunities</li>
+                                    <li>Multiplier effect</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Career progression, promotions, recognition, performance ratings..."></textarea>
+                </div>
+                
+                <!-- Factor 3: Technical Talent -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        3. Talent & Technical Ability
+                        <span class="factor-score" id="talentScore">0</span>
+                    </div>
+                    <p class="factor-description">Natural aptitude and technical expertise in role-specific areas</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('talent', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Limited</h4>
+                                <ul>
+                                    <li>Struggles with basics</li>
+                                    <li>Slow learner</li>
+                                    <li>Needs hand-holding</li>
+                                    <li>Poor quality output</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('talent', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Developing</h4>
+                                <ul>
+                                    <li>Grasps fundamentals</li>
+                                    <li>Some expertise areas</li>
+                                    <li>Adequate quality</li>
+                                    <li>Needs guidance</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('talent', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Competent</h4>
+                                <ul>
+                                    <li>Solid technical skills</li>
+                                    <li>Good problem solver</li>
+                                    <li>Quality work</li>
+                                    <li>Self-sufficient</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('talent', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Expert</h4>
+                                <ul>
+                                    <li>Deep expertise</li>
+                                    <li>Innovative solutions</li>
+                                    <li>Teaches others</li>
+                                    <li>High quality standards</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('talent', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Genius</h4>
+                                <ul>
+                                    <li>Breakthrough thinking</li>
+                                    <li>Industry recognized</li>
+                                    <li>Patents/publications</li>
+                                    <li>Transforms practices</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Technical achievements, innovations, quality of work examples..."></textarea>
+                </div>
+                
+                <!-- Factor 4: Management & Organization -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        4. Management & Organizational Ability
+                        <span class="factor-score" id="managementScore">0</span>
+                    </div>
+                    <p class="factor-description">Planning, organizing, executing, and managing resources effectively</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('management', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Disorganized</h4>
+                                <ul>
+                                    <li>Misses deadlines</li>
+                                    <li>Poor planning</li>
+                                    <li>Reactive only</li>
+                                    <li>Overwhelmed easily</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('management', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Basic</h4>
+                                <ul>
+                                    <li>Some organization</li>
+                                    <li>Meets most deadlines</li>
+                                    <li>Simple project mgmt</li>
+                                    <li>Needs structure</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('management', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Effective</h4>
+                                <ul>
+                                    <li>Good planner</li>
+                                    <li>Reliable delivery</li>
+                                    <li>Manages resources well</li>
+                                    <li>Proactive approach</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('management', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Excellent</h4>
+                                <ul>
+                                    <li>Complex project success</li>
+                                    <li>Optimizes resources</li>
+                                    <li>Risk management</li>
+                                    <li>Process improvement</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('management', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Master</h4>
+                                <ul>
+                                    <li>Transforms operations</li>
+                                    <li>Enterprise-level mgmt</li>
+                                    <li>Creates systems</li>
+                                    <li>Scales excellence</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Project management examples, budget responsibility, team size managed..."></textarea>
+                </div>
+                
+                <!-- Factor 5: Team Skills -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        5. Team Skills & Leadership
+                        <span class="factor-score" id="teamScore">0</span>
+                    </div>
+                    <p class="factor-description">Collaboration, influence, team building, and leadership capabilities</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('team', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Solo Only</h4>
+                                <ul>
+                                    <li>Avoids teamwork</li>
+                                    <li>Creates conflict</li>
+                                    <li>Poor communicator</li>
+                                    <li>No leadership</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('team', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Contributor</h4>
+                                <ul>
+                                    <li>Works with others</li>
+                                    <li>Basic collaboration</li>
+                                    <li>Follows leadership</li>
+                                    <li>Limited influence</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('team', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Team Player</h4>
+                                <ul>
+                                    <li>Good collaborator</li>
+                                    <li>Leads when needed</li>
+                                    <li>Positive influence</li>
+                                    <li>Mentors peers</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('team', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Leader</h4>
+                                <ul>
+                                    <li>Builds strong teams</li>
+                                    <li>Cross-functional influence</li>
+                                    <li>Develops others</li>
+                                    <li>Culture carrier</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('team', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Transformer</h4>
+                                <ul>
+                                    <li>Creates winning teams</li>
+                                    <li>Org-wide influence</li>
+                                    <li>Succession builder</li>
+                                    <li>Culture shaper</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Team achievements, leadership examples, collaboration successes..."></textarea>
+                </div>
+                
+                <!-- Factor 6: Problem Solving -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        6. Problem Solving & Critical Thinking
+                        <span class="factor-score" id="problemScore">0</span>
+                    </div>
+                    <p class="factor-description">Analytical ability, innovation, and handling ambiguity</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('problem', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Limited</h4>
+                                <ul>
+                                    <li>Avoids problems</li>
+                                    <li>Needs direction</li>
+                                    <li>Surface thinking</li>
+                                    <li>Gives up easily</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('problem', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Basic</h4>
+                                <ul>
+                                    <li>Solves routine issues</li>
+                                    <li>Follows frameworks</li>
+                                    <li>Some analysis</li>
+                                    <li>Needs guidance</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('problem', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Good</h4>
+                                <ul>
+                                    <li>Independent solver</li>
+                                    <li>Handles ambiguity</li>
+                                    <li>Creative approaches</li>
+                                    <li>Learn from failure</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('problem', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Excellent</h4>
+                                <ul>
+                                    <li>Complex problem solver</li>
+                                    <li>Innovative thinking</li>
+                                    <li>Anticipates issues</li>
+                                    <li>Teaches methods</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('problem', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Visionary</h4>
+                                <ul>
+                                    <li>Breakthrough solutions</li>
+                                    <li>Reframes problems</li>
+                                    <li>Industry innovations</li>
+                                    <li>Thought leader</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Problem-solving examples, innovations, handling of ambiguous situations..."></textarea>
+                </div>
+                
+                <!-- Factor 7: Job Fit -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        7. Job Fit - Comparable Past Performance
+                        <span class="factor-score" id="jobfitScore">0</span>
+                    </div>
+                    <p class="factor-description">Direct evidence of success in similar roles/environments</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('jobfit', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - No Fit</h4>
+                                <ul>
+                                    <li>No similar experience</li>
+                                    <li>Different industry/scale</li>
+                                    <li>Unrelated background</li>
+                                    <li>Major stretch</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('jobfit', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Partial</h4>
+                                <ul>
+                                    <li>Some related work</li>
+                                    <li>Different context</li>
+                                    <li>Smaller scale</li>
+                                    <li>Transferable skills</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('jobfit', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Good Fit</h4>
+                                <ul>
+                                    <li>Similar role success</li>
+                                    <li>Comparable environment</li>
+                                    <li>Proven results</li>
+                                    <li>Right level</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('jobfit', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Strong Fit</h4>
+                                <ul>
+                                    <li>Multiple successes</li>
+                                    <li>Exact match experience</li>
+                                    <li>Exceeded similar goals</li>
+                                    <li>Ready to excel</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('jobfit', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Perfect Fit</h4>
+                                <ul>
+                                    <li>Done this exact role</li>
+                                    <li>Industry leader</li>
+                                    <li>Transformed similar orgs</li>
+                                    <li>Plug and play</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Specific comparable achievements, similar challenges overcome..."></textarea>
+                </div>
+                
+                <!-- Factor 8: Managerial Fit -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        8. Managerial Fit
+                        <span class="factor-score" id="mgrfitScore">0</span>
+                    </div>
+                    <p class="factor-description">Compatibility with hiring manager's style and expectations</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('mgrfit', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Mismatch</h4>
+                                <ul>
+                                    <li>Conflicting styles</li>
+                                    <li>Communication issues</li>
+                                    <li>Different expectations</li>
+                                    <li>Personality clash</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('mgrfit', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Concerns</h4>
+                                <ul>
+                                    <li>Some style differences</li>
+                                    <li>May need adjustment</li>
+                                    <li>Unclear expectations</li>
+                                    <li>Potential friction</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('mgrfit', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Compatible</h4>
+                                <ul>
+                                    <li>Styles align well</li>
+                                    <li>Clear communication</li>
+                                    <li>Mutual respect</li>
+                                    <li>Can work together</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('mgrfit', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Strong Match</h4>
+                                <ul>
+                                    <li>Complementary styles</li>
+                                    <li>Trust established</li>
+                                    <li>Shared vision</li>
+                                    <li>Proven chemistry</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('mgrfit', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Perfect Match</h4>
+                                <ul>
+                                    <li>Ideal partnership</li>
+                                    <li>Multiplier effect</li>
+                                    <li>Finish each other's thoughts</li>
+                                    <li>Dream team combo</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Manager interaction observations, style compatibility, past manager relationships..."></textarea>
+                </div>
+                
+                <!-- Factor 9: Culture Fit -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        9. Culture & Situation Fit
+                        <span class="factor-score" id="cultureScore">0</span>
+                    </div>
+                    <p class="factor-description">Alignment with company values, pace, and work environment</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('culture', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Misaligned</h4>
+                                <ul>
+                                    <li>Values conflict</li>
+                                    <li>Wrong pace preference</li>
+                                    <li>Environment mismatch</li>
+                                    <li>Won't adapt</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('culture', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Gaps</h4>
+                                <ul>
+                                    <li>Some value differences</li>
+                                    <li>Pace concerns</li>
+                                    <li>May struggle initially</li>
+                                    <li>Needs time to adapt</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('culture', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Good Fit</h4>
+                                <ul>
+                                    <li>Values align</li>
+                                    <li>Comfortable with pace</li>
+                                    <li>Fits environment</li>
+                                    <li>Will contribute</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('culture', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Strong Fit</h4>
+                                <ul>
+                                    <li>Embodies values</li>
+                                    <li>Thrives in pace</li>
+                                    <li>Enhances culture</li>
+                                    <li>Natural fit</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('culture', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Culture Champion</h4>
+                                <ul>
+                                    <li>Culture ambassador</li>
+                                    <li>Sets the pace</li>
+                                    <li>Elevates others</li>
+                                    <li>Born for this culture</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Values alignment examples, pace preference, work style compatibility..."></textarea>
+                </div>
+                
+                <!-- Factor 10: Motivation -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        10. Overall Motivation to Do Work (Power Factor)
+                        <span class="factor-score" id="motivationScore">0</span>
+                    </div>
+                    <p class="factor-description">Intrinsic drive and passion for THIS specific work</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('motivation', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Wrong Fit</h4>
+                                <ul>
+                                    <li>Just needs any job</li>
+                                    <li>No passion evident</li>
+                                    <li>Clock watcher</li>
+                                    <li>Minimal effort pattern</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('motivation', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - External</h4>
+                                <ul>
+                                    <li>Money motivated only</li>
+                                    <li>Title focused</li>
+                                    <li>Does minimum</li>
+                                    <li>No extra effort</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('motivation', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Engaged</h4>
+                                <ul>
+                                    <li>Enjoys the work</li>
+                                    <li>Professional pride</li>
+                                    <li>Steady effort</li>
+                                    <li>Some initiative</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('motivation', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Passionate</h4>
+                                <ul>
+                                    <li>Goes above and beyond</li>
+                                    <li>Self-improvement drive</li>
+                                    <li>Volunteers for more</li>
+                                    <li>Energizes others</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('motivation', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Mission-Driven</h4>
+                                <ul>
+                                    <li>Life's calling</li>
+                                    <li>Obsessed with excellence</li>
+                                    <li>Inspires everyone</li>
+                                    <li>Unstoppable force</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Examples of going above and beyond, self-directed learning, passion indicators..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Candidate Side: Career Move Assessment -->
+            <div class="assessment-section">
+                <h2 class="section-title">Candidate Side: Career Decision Factors (8 Factors)</h2>
+                
+                <!-- Factor 1: Growth Opportunity -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        1. Growth Opportunity
+                        <span class="factor-score" id="growthScore">0</span>
+                    </div>
+                    <p class="factor-description">Long-term career advancement, skill development, learning opportunities</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('growth', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Dead End</h4>
+                                <ul>
+                                    <li>No advancement path</li>
+                                    <li>Limited learning</li>
+                                    <li>Stagnant role</li>
+                                    <li>Career step back</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('growth', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Limited</h4>
+                                <ul>
+                                    <li>Slow growth potential</li>
+                                    <li>Few new skills</li>
+                                    <li>Unclear path</li>
+                                    <li>Lateral move</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('growth', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Good Growth</h4>
+                                <ul>
+                                    <li>Clear next steps</li>
+                                    <li>Skill expansion</li>
+                                    <li>12-24 month path</li>
+                                    <li>Meaningful development</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('growth', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Excellent</h4>
+                                <ul>
+                                    <li>Accelerated path</li>
+                                    <li>Major skill gains</li>
+                                    <li>Leadership track</li>
+                                    <li>Stretch opportunity</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('growth', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Transformational</h4>
+                                <ul>
+                                    <li>Career-defining role</li>
+                                    <li>Quantum leap</li>
+                                    <li>C-suite trajectory</li>
+                                    <li>Industry visibility</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Specific growth opportunities discussed, timeline, skill development plan..."></textarea>
+                </div>
+                
+                <!-- Factor 2: Work Impact -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        2. Work Impact & Challenge
+                        <span class="factor-score" id="impactScore">0</span>
+                    </div>
+                    <p class="factor-description">Meaningful work that creates measurable value and provides stretch</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('impact', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Low Impact</h4>
+                                <ul>
+                                    <li>Routine tasks only</li>
+                                    <li>No real challenge</li>
+                                    <li>Minimal visibility</li>
+                                    <li>Commodity work</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('impact', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Some Impact</h4>
+                                <ul>
+                                    <li>Departmental scope</li>
+                                    <li>Modest challenges</li>
+                                    <li>Support role</li>
+                                    <li>Limited influence</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('impact', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Good Impact</h4>
+                                <ul>
+                                    <li>Business unit impact</li>
+                                    <li>Meaningful projects</li>
+                                    <li>Visible results</li>
+                                    <li>Strategic contribution</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('impact', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - High Impact</h4>
+                                <ul>
+                                    <li>Company-wide influence</li>
+                                    <li>Critical initiatives</li>
+                                    <li>P&L responsibility</li>
+                                    <li>Market-facing role</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('impact', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Game Changer</h4>
+                                <ul>
+                                    <li>Transform the business</li>
+                                    <li>Industry impact</li>
+                                    <li>CEO visibility</li>
+                                    <li>Legacy opportunity</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Specific projects, budget responsibility, strategic importance..."></textarea>
+                </div>
+                
+                <!-- Factor 3: Manager & Mentorship -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        3. Manager & Mentorship
+                        <span class="factor-score" id="managerScore">0</span>
+                    </div>
+                    <p class="factor-description">Quality of leadership and commitment to your development</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('manager', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Poor Manager</h4>
+                                <ul>
+                                    <li>Bad reputation</li>
+                                    <li>High team turnover</li>
+                                    <li>No development focus</li>
+                                    <li>Micromanager</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('manager', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Adequate</h4>
+                                <ul>
+                                    <li>Hands-off style</li>
+                                    <li>Limited mentoring</li>
+                                    <li>Task focused only</li>
+                                    <li>Neutral reputation</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('manager', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Good Manager</h4>
+                                <ul>
+                                    <li>Supportive approach</li>
+                                    <li>Regular 1-on-1s</li>
+                                    <li>Career discussions</li>
+                                    <li>Team success history</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('manager', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Great Leader</h4>
+                                <ul>
+                                    <li>Known talent developer</li>
+                                    <li>Sponsors advancement</li>
+                                    <li>Teaching mentality</li>
+                                    <li>Opens doors</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('manager', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Career Maker</h4>
+                                <ul>
+                                    <li>Industry legend</li>
+                                    <li>CEO/founder track record</li>
+                                    <li>Life-changing mentor</li>
+                                    <li>Builds dynasties</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Manager's track record, team feedback, development approach..."></textarea>
+                </div>
+                
+                <!-- Factor 4: Company Culture -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        4. Company Culture & Values
+                        <span class="factor-score" id="compCultureScore">0</span>
+                    </div>
+                    <p class="factor-description">Company's commitment to employees and cultural alignment</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('compCulture', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Toxic</h4>
+                                <ul>
+                                    <li>High turnover</li>
+                                    <li>Poor Glassdoor</li>
+                                    <li>No work-life balance</li>
+                                    <li>Fear-based culture</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('compCulture', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Concerning</h4>
+                                <ul>
+                                    <li>Mixed reviews</li>
+                                    <li>Some cultural issues</li>
+                                    <li>Limited investment</li>
+                                    <li>Unclear values</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('compCulture', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Solid Culture</h4>
+                                <ul>
+                                    <li>Good reputation</li>
+                                    <li>Clear values</li>
+                                    <li>Employee programs</li>
+                                    <li>Stable environment</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('compCulture', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Great Culture</h4>
+                                <ul>
+                                    <li>Best place to work</li>
+                                    <li>Strong values lived</li>
+                                    <li>Innovation encouraged</li>
+                                    <li>People first</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('compCulture', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - World Class</h4>
+                                <ul>
+                                    <li>Culture icon</li>
+                                    <li>Industry benchmark</li>
+                                    <li>Life-changing experience</li>
+                                    <li>Alumni network value</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Employee feedback, company values in action, cultural observations..."></textarea>
+                </div>
+                
+                <!-- Factor 5: Team Quality -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        5. Team Quality
+                        <span class="factor-score" id="teamQualityScore">0</span>
+                    </div>
+                    <p class="factor-description">Caliber of teammates and collaborative environment</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('teamQuality', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Weak Team</h4>
+                                <ul>
+                                    <li>Low performers</li>
+                                    <li>High turnover</li>
+                                    <li>Poor collaboration</li>
+                                    <li>Dysfunction evident</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('teamQuality', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Mixed Bag</h4>
+                                <ul>
+                                    <li>Some strong players</li>
+                                    <li>Inconsistent quality</li>
+                                    <li>Limited collaboration</li>
+                                    <li>Silos exist</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('teamQuality', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Solid Team</h4>
+                                <ul>
+                                    <li>Competent colleagues</li>
+                                    <li>Good collaboration</li>
+                                    <li>Stable team</li>
+                                    <li>Mutual respect</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('teamQuality', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Strong Team</h4>
+                                <ul>
+                                    <li>High caliber talent</li>
+                                    <li>Great collaboration</li>
+                                    <li>Learn from peers</li>
+                                    <li>Winning culture</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('teamQuality', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Dream Team</h4>
+                                <ul>
+                                    <li>Industry all-stars</li>
+                                    <li>Incredible synergy</li>
+                                    <li>Career acceleration</li>
+                                    <li>Lifelong connections</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Team member backgrounds, collaboration examples, team achievements..."></textarea>
+                </div>
+                
+                <!-- Factor 6: Work-Life Balance -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        6. Work-Life Balance
+                        <span class="factor-score" id="balanceScore">0</span>
+                    </div>
+                    <p class="factor-description">Flexibility, autonomy, and sustainable work-life integration</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('balance', 1)">
+                
