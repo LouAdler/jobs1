@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Vibe Recruiting Manual - Interactive Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --accent: #f59e0b;
+            --text: #1f2937;
+            --bg: #ffffff;
+            --bg-light: #f9fafb;
+            --border: #e5e7eb;
+            --success: #10b981;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg-light);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            background: var(--bg);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success) 0%, var(--accent) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--text);
+        }
+        
+        /* Main Content */
+        main {
+            padding: 40px 0;
+        }
+        
+        /* Expandable Sections */
+        .section {
+            background: var(--bg);
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .section.expanded {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .section-header {
+            padding: 25px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg);
+            transition: all 0.3s ease;
+        }
+        
+        .section-header:hover {
+            background: var(--bg-light);
+        }
+        
+        .section-header h2 {
+            color: var(--primary);
+            font-size: 1.5em;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .section-number {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .expand-icon {
+            color: var(--primary);
+            font-size: 24px;
+            transition: transform 0.3s ease;
+            user-select: none;
+        }
+        
+        .section.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        
+        .section.expanded .section-content {
+            max-height: none;
+        }
+        
+        .section-inner {
+            padding: 0 30px 30px;
+        }
+        
+        /* Subsections */
+        .subsection {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .subsection h3 {
+            color: var(--secondary);
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+        
+        .subsection h4 {
+            color: var(--text);
+            font-size: 1.1em;
+            margin: 15px 0 10px;
+        }
+        
+        /* Interactive Elements */
+        .checklist {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .checklist-item:hover {
+            background: var(--bg-light);
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        
+        .checklist-item.checked {
+            background: #f0fdf4;
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:hover {
+            background: var(--bg-light);
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        /* Highlight Boxes */
+        .highlight {
+            background: #fef3c7;
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+        
+        .highlight strong {
+            color: var(--accent);
+        }
+        
+        /* Buttons */
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            margin: 10px 5px;
+        }
+        
+        .button:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .button.secondary {
+            background: var(--bg);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .button.secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Control Panel */
+        .controls {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        /* Objection Responses */
+        .objection-response {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .objection-response h5 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+        
+        .objection-response .concern {
+            background: #fee2e2;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-style: italic;
+            border-left: 4px solid #dc2626;
+        }
+        
+        .objection-response .response {
+            background: #dbeafe;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section-header h2 {
+                font-size: 1.2em;
+            }
+            
+            .section-number {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9em;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .controls, .progress-container {
+                display: none;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+            
+            .section-content {
+                max-height: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>The Vibe Recruiting Manual</h1>
+            <p>Performance-Based Hiring Meets AI Orchestration</p>
+            <p>Interactive Guide to Win-Win Hiring</p>
+        </div>
+    </header>
+    
+    <div class="progress-container">
+        <div class="container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="progress-text" id="progress-text">0 of 11 sections completed</div>
+        </div>
+    </div>
+    
+    <main class="container">
+        <div class="controls">
+            <button class="button" onclick="expandAll()">Expand All Sections</button>
+            <button class="button secondary" onclick="collapseAll()">Collapse All</button>
+            <button class="button secondary" onclick="resetProgress()">Reset Progress</button>
+        </div>
+        
+        <!-- Section 1 -->
+        <div class="section" id="section1">
+            <div class="section-header" onclick="toggleSection('section1')">
+                <h2>
+                    <span class="section-number">1</span>
+                    The Orchestration Mindset
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="highlight">
+                        <strong>Core Principle:</strong> Modern recruiters orchestrate AI for repetitive tasks while focusing human expertise on trust, motivation, and complex decisions.
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>The Evolution of Recruiting</h3>
+                        <p>In modern tech, "vibe coding" means developers set the blueprint while AI handles repetitive tasks. Vibe Recruiting follows this same principle.</p>
+                        
+                        <h4>The Parallel Framework</h4>
+                        <table>
+                            <tr>
+                                <th>Vibe Coding</th>
+                                <th>PBH Vibe Recruiting</th>
+                            </tr>
+                            <tr>
+                                <td>System spec, test suite</td>
+                                <td>PBJD defines success outcomes</td>
+                            </tr>
+                            <tr>
+                                <td>AI writes code snippets</td>
+                                <td>AI runs sourcing and screens</td>
+                            </tr>
+                            <tr>
+                                <td>Developer integrates</td>
+                                <td>Recruiter orchestrates</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Automation Balance</h3>
+                        <div class="checklist">
+                            <h4>✅ Tasks to Automate:</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Boolean searches and filtering</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Outreach sequences</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Calendar scheduling</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Transcription</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 2 -->
+        <div class="section" id="section2">
+            <div class="section-header" onclick="toggleSection('section2')">
+                <h2>
+                    <span class="section-number">2</span>
+                    Performance-Based Job Description
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="highlight">
+                        <strong>Key Principle:</strong> The PBJD is your single source of truth - it anchors everything in measurable outcomes.
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>15-Step PBJD Process</h3>
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>1. Confirm business reason</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>2. Define 3-5 Major Objectives</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>3. Break into 5-7 Subtasks</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>4. Integrate AI considerations</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>5. Write Title Block</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>6. Create Role Overview</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>7. Develop EVP</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>8. Define Culture Fit</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>9. Include AI subtask</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>10. Use plain language</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>11. Make everything SMARTe</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>12. Focus on deliverables</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>13. Validate with manager</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>14. Test interview-ability</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>15. Convert to structured format</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>SMARTe Framework</h3>
+                        <ul>
+                            <li><strong>S</strong>pecific - Clear and detailed</li>
+                            <li><strong>M</strong>easurable - Quantifiable outcomes</li>
+                            <li><strong>A</strong>ction-oriented - Starts with verb</li>
+                            <li><strong>R</strong>esults-oriented - Focused on outcomes</li>
+                            <li><strong>T</strong>ime-bound - Has deadlines</li>
+                            <li><strong>E</strong>ngaging - Compelling and motivating</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 3 -->
+        <div class="section" id="section3">
+            <div class="section-header" onclick="toggleSection('section3')">
+                <h2>
+                    <span class="section-number">3</span>
+                    Ideal Candidate Persona
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>4 Core Elements</h3>
+                        <h4>1. Career Pattern</h4>
+                        <p>Typical titles, industries, and Achiever Pattern evidence</p>
+                        
+                        <h4>2. Career Zones</h4>
+                        <table>
+                            <tr>
+                                <th>Zone</th>
+                                <th>Description</th>
+                                <th>Approach</th>
+                            </tr>
+                            <tr>
+                                <td>Passive</td>
+                                <td>Not looking</td>
+                                <td>Strong value prop needed</td>
+                            </tr>
+                            <tr>
+                                <td>Explorer</td>
+                                <td>Open to 30% better</td>
+                                <td>Career leap messaging</td>
+                            </tr>
+                            <tr>
+                                <td>Tiptoer</td>
+                                <td>Quietly considering</td>
+                                <td>Discretion and trust</td>
+                            </tr>
+                            <tr>
+                                <td>Active</td>
+                                <td>Actively searching</td>
+                                <td>Filter for quality</td>
+                            </tr>
+                        </table>
+                        
+                        <h4>3. Boolean Search Example</h4>
+                        <div class="code-block">
+site:linkedin.com/in/ ("Customer Insights Manager" OR "Consumer Insights Lead")
+AND ("survey research" OR "customer analytics")
+AND ("executive briefing" OR "VP presentation")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 4 -->
+        <div class="section" id="section4">
+            <div class="section-header" onclick="toggleSection('section4')">
+                <h2>
+                    <span class="section-number">4</span>
+                    Push-Pull Messaging
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>The Framework</h3>
+                        <ol>
+                            <li><strong>Subject Line:</strong> Your [X project] caught my eye - 30% leap?</li>
+                            <li><strong>Pull:</strong> Compelling problem matching their work</li>
+                            <li><strong>Push:</strong> "It's not for everyone..."</li>
+                            <li><strong>Invite:</strong> "If you'd want to hear more..."</li>
+                            <li><strong>Trust Signal:</strong> Real name and context</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Explorer Message Template</h3>
+                        <div class="code-block">
+Subject: Your work at [Company] caught my eye - could this be your next 30% leap?
+
+Hi Taylor,
+
+I came across the project you ran on [specific achievement] - impressive scale and real impact.
+
+We're tackling something similar but messier: a multi-source insights overhaul that links voice-of-customer to actual product pivots. 
+
+It's not for everyone - high visibility, lots of ambiguity, and we need someone who loves connecting data to real business moves.
+
+If you'd ever want to hear how this could stretch your influence 30% beyond where you are now, I'd love 15 minutes to share the details. No pressure if timing's off.
+
+Best,
+Jordan - Senior Recruiter, Atlas Consumer Products
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 5 -->
+        <div class="section" id="section5">
+            <div class="section-header" onclick="toggleSection('section5')">
+                <h2>
+                    <span class="section-number">5</span>
+                    The Career Move Call
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>7-Point Flow</h3>
+                        <table>
+                            <tr>
+                                <th>Step</th>
+                                <th>Script</th>
+                            </tr>
+                            <tr>
+                                <td>1. Warm Rapport</td>
+                                <td>"Your [project] caught my attention..."</td>
+                            </tr>
+                            <tr>
+                                <td>2. Universal Yes</td>
+                                <td>"Would you explore something clearly superior?"</td>
+                            </tr>
+                            <tr>
+                                <td>3. 30% Frame</td>
+                                <td>"This should stretch you 30% beyond current"</td>
+                            </tr>
+                            <tr>
+                                <td>4. Test Results</td>
+                                <td>"Tell me about your biggest comparable project"</td>
+                            </tr>
+                            <tr>
+                                <td>5. Career Logic</td>
+                                <td>"Why did you move from X to Y?"</td>
+                            </tr>
+                            <tr>
+                                <td>6. Money Talk</td>
+                                <td>"Let's see if the work is a step up first"</td>
+                            </tr>
+                            <tr>
+                                <td>7. Conditional Yes</td>
+                                <td>"If this is a true career move, would you proceed?"</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 6 -->
+        <div class="section" id="section6">
+            <div class="section-header" onclick="toggleSection('section6')">
+                <h2>
+                    <span class="section-number">6</span>
+                    Performance-Based Interviews
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>The 2 Core Questions</h3>
+                        <h4>1. Work History Review</h4>
+                        <p>"Walk me through your last 3 roles - what were you hired to do, what did you accomplish, why did you leave?"</p>
+                        
+                        <h4>2. Most Significant Accomplishment (MSA)</h4>
+                        <p>"Tell me about your most significant accomplishment related to [Major Objective]. Walk me through start to finish."</p>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Quality of Hire Scorecard</h3>
+                        <table>
+                            <tr>
+                                <th>Factor</th>
+                                <th>Score Range</th>
+                                <th>What to Look For</th>
+                            </tr>
+                            <tr>
+                                <td>Skills & Experience</td>
+                                <td>1-5 or NME</td>
+                                <td>Comparable depth</td>
+                            </tr>
+                            <tr>
+                                <td>Achiever Pattern</td>
+                                <td>1-5 or NME</td>
+                                <td>Top 25% performance</td>
+                            </tr>
+                            <tr>
+                                <td>Problem Solving</td>
+                                <td>1-5 or NME</td>
+                                <td>Critical thinking</td>
+                            </tr>
+                            <tr>
+                                <td>Team/Leadership Fit</td>
+                                <td>1-5 or NME</td>
+                                <td>Influence ability</td>
+                            </tr>
+                            <tr>
+                                <td>Motivation²</td>
+                                <td>1-5 or NME</td>
+                                <td>Intrinsic drive</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 7 - NEW: Overcoming Objections -->
+        <div class="section" id="section7">
+            <div class="section-header" onclick="toggleSection('section7')">
+                <h2>
+                    <span class="section-number">7</span>
+                    Overcoming Objections
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="highlight">
+                        <strong>Key Principle:</strong> Don't give too much information away early. Stay in control by being vague initially, then gain candidate interest before revealing details. The key to effective recruiting is to get the person's attention, obtain a quick profile, and then either convince them to proceed or network if not qualified.
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Universal Opening</h3>
+                        <div class="code-block">
+"Would you be open to exploring a situation if it was clearly superior to what you're doing today?"
+                        </div>
+                        <p>Never mention the title or location initially. Say: "I'm conducting a search for a senior-level position in [field], and your name came to my attention as someone I should connect with."</p>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Common Objections & Responses</h3>
+                        
+                        <div class="objection-response">
+                            <h5>Objection 1: "Tell me about the job first"</h5>
+                            <div class="concern">"Please tell me a little about the job first, to see if I'm interested."</div>
+                            <div class="response">
+                                <p><strong>Don't give details yet.</strong> Be vague and reiterate:</p>
+                                <p>"I'm conducting a very confidential senior-level search. I'll be happy to give as much information as you need, but I'd first like to just obtain a two-minute overview of your background."</p>
+                                <p>You can add: "I have a couple of different spots, so I need to know which one you're most qualified for" OR "I'd like consider you for future opportunities if this one isn't big enough or in the wrong area."</p>
+                            </div>
+                        </div>
+                        
+                        <div class="objection-response">
+                            <h5>Objection 2: "I'm too busy"</h5>
+                            <div class="concern">"I'm too busy to talk."</div>
+                            <div class="response">
+                                <p>Say "fine" and ask for just 4 minutes - 2 for their overview, 2 to explain the job. Everyone will give you 4 minutes.</p>
+                                <p>This is normally an "I'm not interested" objection disguised, so persist. Get their profile quickly, then describe the job in compelling fashion. Express slight concern that they might not be strong enough in a certain area (create job stretch) to build interest.</p>
+                                <p><strong>Critical:</strong> Get their home number. If you can't, you're not doing your job as a recruiter.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="objection-response">
+                            <h5>Objection 3: "Already interviewing elsewhere"</h5>
+                            <div class="concern">"I'm already well down the path with a few other companies."</div>
+                            <div class="response">
+                                <p><strong>This is a great sign</strong> - they're strong candidates if others want them too. Don't give up!</p>
+                                <p>"That's fine, but let me ask you this: If the position I'm representing is better than what you're now considering, wouldn't it make sense to at least compare the two?"</p>
+                                <p>Get their profile, ask about the other opportunities and comp. Position your role as having more stretch by describing what they'll learn, do, and become (use the performance profile).</p>
+                            </div>
+                        </div>
+                        
+                        <div class="objection-response">
+                            <h5>Objection 4: "Happy where I am"</h5>
+                            <div class="concern">"I like my job, and I don't want to consider anything else right now."</div>
+                            <div class="response">
+                                <p><strong>Two approaches:</strong></p>
+                                <p><strong>1. Delayed frontal attack:</strong> "That's great, but 95% of the people I call are at least open to exploring a situation. What about your job is so compelling that you wouldn't even consider evaluating something else?"</p>
+                                <p>During their response, interject: "Your background is great; I'd certainly like to consider you for this job, or perhaps something in the future. Would you be open to this?"</p>
+                                <p><strong>2. End-around approach:</strong> Use networking as the entry point. "Since you're not interested, let me tell you about it anyway - someone you know might find this right up their alley." Give your 2-minute compelling job profile, then either network or ask if they'd reconsider.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="objection-response">
+                            <h5>Objection 5: "Won't relocate"</h5>
+                            <div class="concern">"I don't want to relocate."</div>
+                            <div class="response">
+                                <p><strong>Don't try to overcome this in the first call.</strong> There are at least three steps to getting someone to consider relocation - this is a process, not a single conversation.</p>
+                                <p>For now, acknowledge it and focus on networking or future opportunities. Build the relationship first.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Close Upon an Objection Technique</h3>
+                        <p>Use this to uncover real concerns:</p>
+                        <div class="code-block">
+"I can certainly understand why that would be of concern. If we could address this issue satisfactorily, which I think we can, would this then be a position of interest for you?"
+                        </div>
+                        <p>This helps you identify if the objection is real or just a smokescreen for other concerns.</p>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Voice Mail Scripts</h3>
+                        <p>Leave compelling voice mails to boost callbacks by 50% or more:</p>
+                        <div class="code-block">
+Hi [Name]. My name is [Your Name]. I'm a recruiter with [Company]. You responded to our ad for [Position], and I wanted to get back to you right away. We had some great response to the ad, but I thought your background really stood out.
+
+Since we implemented some major new product initiatives we've really been growing. Looking at your background it seems like one of our critical open positions would be a career move worth exploring. Give me a call right away on [Phone] to discuss this.
+
+If you don't reach me, give me a few time slots where we could conduct a 20-minute screening interview.
+
+Again my name is [Your Name] and my number is [Phone]. I look forward to talking with you soon.
+                        </div>
+                        <p><strong>Pro tip:</strong> Add this to increase callbacks: "If you want to get to the top of this callback list, describe in your voice mail something you're very proud of in the area of [specific skill]. We've been enjoying great success in this area, and we need top people who really get satisfaction from this part of the job."</p>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Email Templates</h3>
+                        <h4>For "A" Candidates - Immediate Callback</h4>
+                        <div class="code-block">
+Subject: Your background caught my attention - let's connect
+
+Thank you for responding to our ad for [Position]. I left you a voice mail earlier and am sending this email to make sure we connect right away.
+
+We had great response to the ad, but your background was very impressive and I wanted to contact you personally. If you don't recall the ad here's a quick summary:
+
+[Include compelling highlights or link to full description]
+
+We're looking for candidates who want to stretch themselves and be at the top of their careers. We have extremely high selection standards, but for those who meet the requirements we offer compelling career opportunities, including [2-3 key motivators].
+
+Give me a call right away at [Phone] if you'd like to explore this in more depth. During the screening interview I'll want to dig into some of your major [relevant] accomplishments, so you might want to think about these before we connect.
+
+You can also email me with your schedule.
+                        </div>
+                        
+                        <h4>For "B" Candidates - Additional Qualification</h4>
+                        <div class="code-block">
+Subject: Response to [Position] - Next Steps
+
+Thank you for responding to our ad for [Position]. Your background was very impressive and I wanted to contact you personally.
+
+[Include job summary and link]
+
+If this sounds exciting and you'd like to explore further, send me an email right away to [email] with subject: Response to [Position] code [X].
+
+To better understand your background, please include a quick write-up describing something significant you've accomplished in the area of [specific skill]. This will help us select candidates who really get excited by this type of work.
+
+Include your schedule when we can talk in depth. I look forward to hearing from you soon.
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Handling Different Candidate Types</h3>
+                        <table>
+                            <tr>
+                                <th>Candidate Type</th>
+                                <th>Description</th>
+                                <th>Opening Approach</th>
+                            </tr>
+                            <tr>
+                                <td>Very Cold</td>
+                                <td>Passive, would consider a good move</td>
+                                <td>Network first, build relationship</td>
+                            </tr>
+                            <tr>
+                                <td>Pretty Cold</td>
+                                <td>Referred candidate, open to look</td>
+                                <td>Mention referral source, be consultative</td>
+                            </tr>
+                            <tr>
+                                <td>Lukewarm</td>
+                                <td>Resume online, looking for job</td>
+                                <td>Filter for quality, test motivation</td>
+                            </tr>
+                            <tr>
+                                <td>Warm</td>
+                                <td>Applied but doesn't know the job</td>
+                                <td>Quick profile, then compelling pitch</td>
+                            </tr>
+                            <tr>
+                                <td>Hot</td>
+                                <td>Referred and knows the job</td>
+                                <td>Move quickly to interview</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Setting Up the Interview</h3>
+                        <p>Goal: 100% of the best are willing to proceed. Use this multi-step approach:</p>
+                        
+                        <div class="checklist">
+                            <h4>Interview Setup Process</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Test Interest:</strong> "Based on what you now know, is this something you'd be interested in considering?"</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Scale Question:</strong> "How would you rank your interest on a scale of 1-10? What's the one thing to increase this by one point?"</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Confirm, Sizzle, Sell:</strong> "As you indicated earlier you wanted [their motivation]. One reason I believe this job might be a good career step is [describe with sizzle]."</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Create Urgency:</strong> "While we're seeing other strong candidates, I think this is something you should at least evaluate."</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Multi-Step Testing of Interest</h3>
+                        <ol>
+                            <li><strong>End of First Interview:</strong> Create supply and demand, test interest. Find out why candidate wants to move forward or not.</li>
+                            <li><strong>Test at Each Event:</strong> Get commitment at each level (e.g., 2nd interview callback)</li>
+                            <li><strong>Preliminary Offer Test:</strong> "If we could put an offer together in the range we discussed, what are your thoughts?"</li>
+                            <li><strong>Secondary Close:</strong> "If we could meet your needs on all these areas, when would you be in a position to start?"</li>
+                            <li><strong>Close Upon an Objection:</strong> "If we agree on that issue, when would you be in a position to accept?"</li>
+                            <li><strong>Final Offer:</strong> "If I can get a formal offer on these terms, when can you give me official acceptance?"</li>
+                        </ol>
+                        <p><strong>Note:</strong> If longer than 24 hours for acceptance, back up and continue testing for objections.</p>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Debriefing Candidates</h3>
+                        <div class="checklist">
+                            <h4>Post-Interview Debrief Questions</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>How did the interview go?</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>What did [interviewer] say to you?</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>How interested are you? Scale of 0-10? Biggest issues?</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>How does this job fit your career objectives?</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>What concerns do you have?</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>If we could resolve concerns, would you move forward?</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>When could you start if an offer was made?</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>What do you need to do to accept? (notice, relocate, etc.)</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Is a counter-offer a possibility?</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Balance Sheet Close Technique</h3>
+                        <p>Use this powerful closing technique when candidates are on the fence:</p>
+                        <ol>
+                            <li>Draw two columns: Pros and Cons</li>
+                            <li>Work together with candidate to list all the pros</li>
+                            <li>Let the candidate develop all the cons alone</li>
+                            <li>Compare lists side by side</li>
+                            <li>Use opportunity gap, growth potential, and stretch to offset any compensation concerns</li>
+                        </ol>
+                        <p><strong>Key phrase:</strong> "The best performers want opportunity more than immediate compensation."</p>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Key Success Factors</h3>
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Stay vague initially - don't give title or location</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Get candidate profile before giving job details</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Keep candidates talking - listen more than you speak</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Always get home number from serious candidates</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Use networking as fallback if not interested</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Create job stretch to build interest</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Position role as career move, not just a job</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Test offers naturally - don't rush the process</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Never make formal offer until verbal "YES"</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 8 (formerly 7) -->
+        <div class="section" id="section8">
+            <div class="section-header" onclick="toggleSection('section8')">
+                <h2>
+                    <span class="section-number">8</span>
+                    Closing Win-Win Offers
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>The 5 Rules</h3>
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Never offer until verbal "Yes"</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Always run 1-10 Test</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Close on scope first, then comp</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Test dealbreakers early</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Be the last offer standing</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>The 1-10 Test</h3>
+                        <p>"On a scale of 1-10, where does this rank vs other options?"</p>
+                        <ul>
+                            <li>9-10: Ready to close</li>
+                            <li>7-8: "What would make it a 10?"</li>
+                            <li>Below 7: Probe deeper</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>PBH Offer Testing Checklist</h3>
+                        <p>Follow this 8-step sequence to test and close offers systematically:</p>
+                        
+                        <div class="checklist">
+                            <h4>Step 1: Confirm Career Move First</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Prompt:</strong> "Compared to other roles you're considering, is this the best long-term career move, and if so, why?"</label>
+                            </div>
+                            <p style="margin-left: 32px; color: #6b7280; font-size: 0.9em;">Expected: Candidate affirms role is superior based on stretch, impact, growth, or satisfaction.</p>
+                            
+                            <h4>Step 2: Compensation Range Probe</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Prompt:</strong> "Would you move forward if this role only offered a modest pay increase but a major career opportunity?"</label>
+                            </div>
+                            <p style="margin-left: 32px; color: #6b7280; font-size: 0.9em;">Expected: Candidate confirms career move outweighs initial comp concerns.</p>
+                            
+                            <h4>Step 3: Unsigned Offer Sheet (Optional)</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Prompt:</strong> "Here's a draft offer (unofficial) – does anything concern you about title, benefits, location, or start date?"</label>
+                            </div>
+                            <p style="margin-left: 32px; color: #6b7280; font-size: 0.9em;">Expected: Uncovers hidden dealbreakers early.</p>
+                            
+                            <h4>Step 4: The 1–10 Test of Interest</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Prompt:</strong> "On a scale of 1–10, where do we stand compared to everything else you're considering? What would make this a 10?"</label>
+                            </div>
+                            <p style="margin-left: 32px; color: #6b7280; font-size: 0.9em;">Expected: If <9, recruiter identifies gaps and addresses them.</p>
+                            
+                            <h4>Step 5: Close Upon a Concern</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Prompt:</strong> "If we can address this issue to your satisfaction, would you then accept the offer?"</label>
+                            </div>
+                            <p style="margin-left: 32px; color: #6b7280; font-size: 0.9em;">Expected: Confirms if concern is real or a smokescreen.</p>
+                            
+                            <h4>Step 6: Trial Close with Start Date</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Prompt:</strong> "If everything is as we've discussed, when could you start?"</label>
+                            </div>
+                            <p style="margin-left: 32px; color: #6b7280; font-size: 0.9em;">Expected: Candidate gives a clear start date = high intent.</p>
+                            
+                            <h4>Step 7: Final Close</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Prompt:</strong> "If I present this exact offer, can you give me your formal acceptance?"</label>
+                            </div>
+                            <p style="margin-left: 32px; color: #6b7280; font-size: 0.9em;">Expected: Verbal acceptance before formal offer letter is drafted.</p>
+                            
+                            <h4>Step 8: Buyer's Remorse Guardrail</h4>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label><strong>Prompt:</strong> "Is there anything you'd like to reconsider before we finalize?"</label>
+                            </div>
+                            <p style="margin-left: 32px; color: #6b7280; font-size: 0.9em;">Expected: Surface concerns before official offer to reduce risk of counteroffers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 9 (formerly 8) -->
+        <div class="section" id="section9">
+            <div class="section-header" onclick="toggleSection('section9')">
+                <h2>
+                    <span class="section-number">9</span>
+                    Onboarding & First 90 Days
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>Post-Acceptance Check</h3>
+                        <ul>
+                            <li>Any second thoughts?</li>
+                            <li>Clear on 30-90 day success?</li>
+                            <li>Anything changed?</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>30-60-90 Day Plan</h3>
+                        <table>
+                            <tr>
+                                <th>Timeline</th>
+                                <th>Focus</th>
+                                <th>Deliverables</th>
+                            </tr>
+                            <tr>
+                                <td>First 30 Days</td>
+                                <td>Audit and meet stakeholders</td>
+                                <td>Resource map</td>
+                            </tr>
+                            <tr>
+                                <td>First 60 Days</td>
+                                <td>Execute first objective</td>
+                                <td>Initial findings</td>
+                            </tr>
+                            <tr>
+                                <td>First 90 Days</td>
+                                <td>Deliver PBJD milestone</td>
+                                <td>Complete project</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 10 (formerly 9) -->
+        <div class="section" id="section10">
+            <div class="section-header" onclick="toggleSection('section10')">
+                <h2>
+                    <span class="section-number">10</span>
+                    Custom Development Plans
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="subsection">
+                        <h3>Using Scorecard for Growth</h3>
+                        <ul>
+                            <li><strong>Scores 4-5:</strong> Leverage as strengths</li>
+                            <li><strong>Scores 2.5-3:</strong> Build through stretch</li>
+                            <li><strong>NME:</strong> Gather evidence and develop</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Development Framework</h3>
+                        <table>
+                            <tr>
+                                <th>Factor</th>
+                                <th>Current</th>
+                                <th>Action</th>
+                                <th>Timeline</th>
+                            </tr>
+                            <tr>
+                                <td>Skills (Strength)</td>
+                                <td>4.0</td>
+                                <td>Lead high-impact project</td>
+                                <td>Month 1-3</td>
+                            </tr>
+                            <tr>
+                                <td>Leadership (Gap)</td>
+                                <td>2.5</td>
+                                <td>Shadow then lead team</td>
+                                <td>Month 2-4</td>
+                            </tr>
+                            <tr>
+                                <td>AI Skills (NME)</td>
+                                <td>NME</td>
+                                <td>Pilot one AI tool</td>
+                                <td>Month 1-2</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 11 (formerly 10) -->
+        <div class="section" id="section11">
+            <div class="section-header" onclick="toggleSection('section11')">
+                <h2>
+                    <span class="section-number">11</span>
+                    The Complete Playbook
+                </h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="highlight">
+                        <strong>The Vibe Recruiter Promise:</strong> "We're not just hiring you to fill a seat—we're investing in you to deliver visible results, stretch your skills, and keep you motivated. We'll measure it. We'll back it up. That's Win-Win Hiring."
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3>Master Checklist</h3>
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>PBJD with SMARTe objectives</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Persona mapped to PBJD</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Push-Pull by Career Zone</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Career Move Calls framed</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>MSA tied to objectives</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Scorecards with evidence</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Objections handled systematically</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>1-10 Test before offer</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Post-acceptance check</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Manager problem call</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>30-60-90 plan set</label>
+                            </div>
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" class="checkbox">
+                                <label>Development plan created</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Save state to localStorage
+        function saveState() {
+            const sections = document.querySelectorAll('.section');
+            const state = {};
+            sections.forEach(section => {
+                state[section.id] = {
+                    expanded: section.classList.contains('expanded'),
+                    checkboxes: []
+                };
+                const checkboxes = section.querySelectorAll('.checkbox');
+                checkboxes.forEach(checkbox => {
+                    state[section.id].checkboxes.push(checkbox.checked);
+                });
+            });
+            localStorage.setItem('vibeManualState', JSON.stringify(state));
+            updateProgress();
+        }
+        
+        // Load state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('vibeManualState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                Object.keys(state).forEach(sectionId => {
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        if (state[sectionId].expanded) {
+                            section.classList.add('expanded');
+                        }
+                        const checkboxes = section.querySelectorAll('.checkbox');
+                        checkboxes.forEach((checkbox, index) => {
+                            checkbox.checked = state[sectionId].checkboxes[index] || false;
+                            if (checkbox.checked) {
+                                checkbox.parentElement.classList.add('checked');
+                            }
+                        });
+                    }
+                });
+            }
+            updateProgress();
+        }
+        
+        // Toggle section expand/collapse
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('expanded');
+            saveState();
+        }
+        
+        // Toggle checkbox
+        function toggleCheck(item) {
+            const checkbox = item.querySelector('.checkbox');
+            checkbox.checked = !checkbox.checked;
+            item.classList.toggle('checked');
+            saveState();
+        }
+        
+        // Expand all sections
+        function expandAll() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('expanded');
+            });
+            saveState();
+        }
+        
+        // Collapse all sections
+        function collapseAll() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('expanded');
+            });
+            saveState();
+        }
+        
+        // Reset progress
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress?')) {
+                localStorage.removeItem('vibeManualState');
+                location.reload();
+            }
+        }
+        
+        // Update progress bar
+        function updateProgress() {
+            const totalCheckboxes = document.querySelectorAll('.checkbox').length;
+            const checkedCheckboxes = document.querySelectorAll('.checkbox:checked').length;
+            const totalSections = 11;
+            
+            // Calculate section completion
+            let completedSections = 0;
+            document.querySelectorAll('.section').forEach(section => {
+                const sectionCheckboxes = section.querySelectorAll('.checkbox');
+                const sectionChecked = section.querySelectorAll('.checkbox:checked');
+                if (sectionCheckboxes.length > 0 && sectionCheckboxes.length === sectionChecked.length) {
+                    completedSections++;
+                }
+            });
+            
+            const progressPercent = (checkedCheckboxes / totalCheckboxes) * 100;
+            document.getElementById('progress').style.width = progressPercent + '%';
+            document.getElementById('progress-text').textContent = 
+                `${completedSections} of ${totalSections} sections completed (${checkedCheckboxes}/${totalCheckboxes} tasks)`;
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+        });
+    </script>
+</body>
+</html>
