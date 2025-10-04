@@ -1,27 +1,275 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VDC M&P</title>
-  <style>
-    :root { color-scheme: light; }
-    body { margin: 0; padding: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    .apply-section { background: #f3f4f6; padding: 2rem; margin: 0; border-top: 1px solid #e5e7eb; text-align: center; }
-    .apply-button { background: #2563eb; color: white; padding: 1rem 2rem; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
-    .apply-button:hover { background: #1d4ed8; }
-    .posting-frame { width: 100%; min-height: 100vh; border: 0; display: block; }
-  </style>
-  <link rel="canonical" href="/" />
-</head>
-<body>
-  <iframe class="posting-frame" src="data:text/html;charset=utf-8;base64,PGh0bWwgbGFuZz0iZW4iPjxoZWFkPgogICAgPG1ldGEgY2hhcnNldD0iVVRGLTgiPgogICAgPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLjAiPgogICAgPHRpdGxlPlNlbmlvciBWREMgRW5naW5lZXIgLSBWSUFUZWNobmlrIHwgQ2FyZWVyIE9wcG9ydHVuaXR5PC90aXRsZT4KICAgIDxzdHlsZT4KICAgICAgICBib2R5IHsKICAgICAgICAgICAgZm9udC1mYW1pbHk6IC1hcHBsZS1zeXN0ZW0sIEJsaW5rTWFjU3lzdGVtRm9udCwgQXJpYWwsIHNhbnMtc2VyaWY7CiAgICAgICAgICAgIG1hcmdpbjogMDsKICAgICAgICAgICAgcGFkZGluZzogMjBweDsKICAgICAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogI2U4ZWNmMDsKICAgICAgICB9CiAgICAgICAgCiAgICAgICAgLmFkLWNvbnRhaW5lciB7CiAgICAgICAgICAgIG1heC13aWR0aDogMTQwMHB4OwogICAgICAgICAgICBtYXJnaW46IDAgYXV0bzsKICAgICAgICAgICAgYmFja2dyb3VuZDogd2hpdGU7CiAgICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDIwcHg7CiAgICAgICAgICAgIGJveC1zaGFkb3c6IDAgMTBweCAzMHB4IHJnYmEoMCwwLDAsMC4xNSk7CiAgICAgICAgICAgIG92ZXJmbG93OiBoaWRkZW47CiAgICAgICAgICAgIGJvcmRlcjogM3B4IHNvbGlkICMxZTNjNzI7CiAgICAgICAgfQogICAgICAgIAogICAgICAgIC5hZC1oZWFkZXIgewogICAgICAgICAgICBiYWNrZ3JvdW5kOiBsaW5lYXItZ3JhZGllbnQoMTM1ZGVnLCAjMWUzYzcyIDAlLCAjMmE1Mjk4IDEwMCUpOwogICAgICAgICAgICBjb2xvcjogd2hpdGU7CiAgICAgICAgICAgIHBhZGRpbmc6IDI1cHggNDBweDsKICAgICAgICAgICAgZGlzcGxheTogZmxleDsKICAgICAgICAgICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuOwogICAgICAgICAgICBhbGlnbi1pdGVtczogY2VudGVyOwogICAgICAgIH0KICAgICAgICAKICAgICAgICAuYWQtaGVhZGVyLWxlZnQgeyBmbGV4OiAxOyB9CiAgICAgICAgCiAgICAgICAgLmFkLXBvc2l0aW9uLXRpdGxlIHsKICAgICAgICAgICAgZm9udC1zaXplOiAzMnB4OwogICAgICAgICAgICBmb250LXdlaWdodDogYm9sZDsKICAgICAgICAgICAgbWFyZ2luOiAwIDAgMTBweCAwOwogICAgICAgIH0KICAgICAgICAKICAgICAgICAuYWQtcG9zaXRpb24tbWV0YSB7CiAgICAgICAgICAgIGZvbnQtc2l6ZTogMTZweDsKICAgICAgICAgICAgb3BhY2l0eTogMC45OwogICAgICAgIH0KICAgICAgICAKICAgICAgICAudHdvLWNvbHVtbi1sYXlvdXQgewogICAgICAgICAgICBkaXNwbGF5OiBmbGV4OwogICAgICAgICAgICBtaW4taGVpZ2h0OiA2MDBweDsKICAgICAgICB9CiAgICAgICAgCiAgICAgICAgLmxlZnQtY29sdW1uIHsKICAgICAgICAgICAgZmxleDogMTsKICAgICAgICAgICAgcGFkZGluZzogNDBweDsKICAgICAgICAgICAgYmFja2dyb3VuZDogI2ZhZmJmYzsKICAgICAgICAgICAgYm9yZGVyLXJpZ2h0OiAxcHggc29saWQgI2UwZTBlMDsKICAgICAgICB9CiAgICAgICAgCiAgICAgICAgLnJpZ2h0LWNvbHVtbiB7CiAgICAgICAgICAgIGZsZXg6IDE7CiAgICAgICAgICAgIHBhZGRpbmc6IDQwcHg7CiAgICAgICAgICAgIGJhY2tncm91bmQ6IHdoaXRlOwogICAgICAgIH0KICAgICAgICAKICAgICAgICAuYWQtc2VjdGlvbiB7IG1hcmdpbi1ib3R0b206IDMwcHg7IH0KICAgICAgICAKICAgICAgICAuYWQtc2VjdGlvbi10aXRsZSB7CiAgICAgICAgICAgIGZvbnQtc2l6ZTogMjJweDsKICAgICAgICAgICAgZm9udC13ZWlnaHQ6IGJvbGQ7CiAgICAgICAgICAgIGNvbG9yOiAjMWUzYzcyOwogICAgICAgICAgICBtYXJnaW46IDAgMCAxNXB4IDA7CiAgICAgICAgfQogICAgICAgIAogICAgICAgIC5zdWItc2VjdGlvbi10aXRsZSB7CiAgICAgICAgICAgIGZvbnQtc2l6ZTogMTdweDsKICAgICAgICAgICAgZm9udC13ZWlnaHQ6IGJvbGQ7CiAgICAgICAgICAgIGNvbG9yOiAjMzMzOwogICAgICAgICAgICBtYXJnaW46IDIwcHggMCA4cHggMDsKICAgICAgICB9CiAgICAgICAgCiAgICAgICAgLmV2cC1ib3ggewogICAgICAgICAgICBiYWNrZ3JvdW5kOiB3aGl0ZTsKICAgICAgICAgICAgYm9yZGVyOiAycHggc29saWQgIzJhNTI5ODsKICAgICAgICAgICAgcGFkZGluZzogMjBweDsKICAgICAgICAgICAgbWFyZ2luOiAyMHB4IDA7CiAgICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDhweDsKICAgICAgICB9CiAgICAgICAgCiAgICAgICAgLmFkLXVsIHsKICAgICAgICAgICAgbWFyZ2luOiAxMHB4IDA7CiAgICAgICAgICAgIHBhZGRpbmctbGVmdDogMjVweDsKICAgICAgICB9CiAgICAgICAgCiAgICAgICAgLmFkLWxpIHsKICAgICAgICAgICAgbWFyZ2luLWJvdHRvbTogOHB4OwogICAgICAgICAgICBsaW5lLWhlaWdodDogMS41OwogICAgICAgIH0KICAgICAgICAKICAgICAgICAuY3RhLWJveCB7CiAgICAgICAgICAgIGJhY2tncm91bmQ6ICMxZTNjNzI7CiAgICAgICAgICAgIGNvbG9yOiB3aGl0ZTsKICAgICAgICAgICAgcGFkZGluZzogMjVweDsKICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogMTJweDsKICAgICAgICAgICAgdGV4dC1hbGlnbjogY2VudGVyOwogICAgICAgICAgICBtYXJnaW4tdG9wOiAyMHB4OwogICAgICAgIH0KICAgICAgICAKICAgICAgICAuY3RhLWJ1dHRvbiB7CiAgICAgICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jazsKICAgICAgICAgICAgYmFja2dyb3VuZDogd2hpdGU7CiAgICAgICAgICAgIGNvbG9yOiAjMWUzYzcyOwogICAgICAgICAgICBwYWRkaW5nOiAxMnB4IDMwcHg7CiAgICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDhweDsKICAgICAgICAgICAgdGV4dC1kZWNvcmF0aW9uOiBub25lOwogICAgICAgICAgICBmb250LXdlaWdodDogYm9sZDsKICAgICAgICAgICAgZm9udC1zaXplOiAxNnB4OwogICAgICAgICAgICBtYXJnaW4tdG9wOiAxNXB4OwogICAgICAgIH0KICAgICAgICAKICAgICAgICAuZW1waGFzaXMgewogICAgICAgICAgICBmb250LXdlaWdodDogYm9sZDsKICAgICAgICAgICAgY29sb3I6ICMxZTNjNzI7CiAgICAgICAgfQogICAgICAgIAogICAgICAgIC5hZC1wIHsKICAgICAgICAgICAgbGluZS1oZWlnaHQ6IDEuNjsKICAgICAgICAgICAgbWFyZ2luOiAxMHB4IDA7CiAgICAgICAgfQogICAgICAgIAogICAgICAgIC53aW4td2luLWJhZGdlIHsKICAgICAgICAgICAgYmFja2dyb3VuZDogd2hpdGU7CiAgICAgICAgICAgIGNvbG9yOiAjMWUzYzcyOwogICAgICAgICAgICBwYWRkaW5nOiA4cHggMjBweDsKICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogMjBweDsKICAgICAgICAgICAgZm9udC13ZWlnaHQ6IGJvbGQ7CiAgICAgICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jazsKICAgICAgICAgICAgbWFyZ2luLXRvcDogMTBweDsKICAgICAgICB9CiAgICAgICAgCiAgICAgICAgLm9iamVjdGl2ZXMtbGlzdCB7CiAgICAgICAgICAgIG1hcmdpbjogMjBweCAwOwogICAgICAgIH0KICAgICAgICAKICAgICAgICAub2JqZWN0aXZlLWl0ZW0gewogICAgICAgICAgICBiYWNrZ3JvdW5kOiB3aGl0ZTsKICAgICAgICAgICAgYm9yZGVyOiAxcHggc29saWQgI2UwZTBlMDsKICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogOHB4OwogICAgICAgICAgICBwYWRkaW5nOiAxNXB4OwogICAgICAgICAgICBtYXJnaW4tYm90dG9tOiAxNXB4OwogICAgICAgIH0KICAgICAgICAKICAgICAgICAub2JqZWN0aXZlLXRpdGxlIHsKICAgICAgICAgICAgZm9udC13ZWlnaHQ6IGJvbGQ7CiAgICAgICAgICAgIGNvbG9yOiAjMWUzYzcyOwogICAgICAgICAgICBtYXJnaW4tYm90dG9tOiA4cHg7CiAgICAgICAgICAgIGZvbnQtc2l6ZTogMTZweDsKICAgICAgICB9CiAgICAgICAgCiAgICAgICAgLm9iamVjdGl2ZS1kZXNjcmlwdGlvbiB7CiAgICAgICAgICAgIGNvbG9yOiAjNjY2OwogICAgICAgICAgICBsaW5lLWhlaWdodDogMS41OwogICAgICAgICAgICBmb250LXNpemU6IDE0cHg7CiAgICAgICAgfQogICAgICAgIAogICAgICAgIEBtZWRpYSAobWF4LXdpZHRoOiAxMDI0cHgpIHsKICAgICAgICAgICAgLnR3by1jb2x1bW4tbGF5b3V0IHsgZmxleC1kaXJlY3Rpb246IGNvbHVtbjsgfQogICAgICAgICAgICAubGVmdC1jb2x1bW4geyBib3JkZXItcmlnaHQ6IG5vbmU7IGJvcmRlci1ib3R0b206IDFweCBzb2xpZCAjZTBlMGUwOyB9CiAgICAgICAgICAgIC5hZC1oZWFkZXIgeyBmbGV4LWRpcmVjdGlvbjogY29sdW1uOyBhbGlnbi1pdGVtczogZmxleC1zdGFydDsgfQogICAgICAgIH0KICAgICAgICAKICAgICAgICBAbWVkaWEgcHJpbnQgewogICAgICAgICAgICBib2R5IHsgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7IH0KICAgICAgICAgICAgLmFkLWNvbnRhaW5lciB7IGJvcmRlcjogMXB4IHNvbGlkICNkZGQ7IGJveC1zaGFkb3c6IG5vbmU7IH0KICAgICAgICB9CiAgICA8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5PgogICAgPGRpdiBjbGFzcz0iYWQtY29udGFpbmVyIj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0iYWQtaGVhZGVyIj4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImFkLWhlYWRlci1sZWZ0Ij4KICAgICAgICAgICAgICAgICAgICA8aDEgY2xhc3M9ImFkLXBvc2l0aW9uLXRpdGxlIiBpZD0icG9zaXRpb25UaXRsZSI+ICAgICAgICAgICAgICAgICAgICBTZW5pb3IgVkRDIEVuZ2luZWVyPC9oMT4KICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJhZC1wb3NpdGlvbi1tZXRhIiBpZD0icG9zaXRpb25NZXRhIj4gICAgICAgICAgICAgICAgICAgIFJlbW90ZSBvciBTcGVjaWZpZWQgTG9jYXRpb24gfCBGdWxsLVRpbWUgfCBDb25zdHJ1Y3Rpb24gVGVjaG5vbG9neTwvZGl2PgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJhZC1oZWFkZXItcmlnaHQiPgogICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9Indpbi13aW4tYmFkZ2UiPiAgICAgICAgICAgICAgICAgICAgV2luLVdpbiBIaXJpbmfihKI8L2Rpdj4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgCiAgICAgICAgICAgIDxkaXYgY2xhc3M9InR3by1jb2x1bW4tbGF5b3V0Ij4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImxlZnQtY29sdW1uIj4KICAgICAgICAgICAgICAgICAgICA8c2VjdGlvbiBjbGFzcz0iYWQtc2VjdGlvbiI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxoMiBjbGFzcz0iYWQtc2VjdGlvbi10aXRsZSI+ICAgICAgICAgICAgICAgICAgICAgICAgUm9sZSBPdmVydmlldyBhbmQgS2V5IENoYWxsZW5nZXM8L2gyPgogICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGlkPSJyb2xlT3ZlcnZpZXdDb250ZW50IiBjbGFzcz0iZXhwYW5kYWJsZS1jb250ZW50IGV4cGFuZGVkIj48cCBjbGFzcz0iYWQtcCI+ICAgICAgICAgICAgICAgICAgICAgICAgQXMgYSBTZW5pb3IgVkRDIEVuZ2luZWVyIGF0IFZJQVRlY2huaWssIHlvdSB3aWxsIHBsYXkgYSBrZXkgcm9sZSBpbiBhcHBseWluZyBhZHZhbmNlZCBWREMgcHJvY2Vzc2VzIGFjcm9zcyBhbGwgc3RhZ2VzIG9mIG1ham9yIGNvbnN0cnVjdGlvbiBwcm9qZWN0cywgZnJvbSBjb25jZXB0IHRocm91Z2ggZGVzaWduLCBjb25zdHJ1Y3Rpb24sIGFuZCBmYWNpbGl0eSBvcGVyYXRpb25zLiBZb3Ugd2lsbCBzZXJ2ZSBhcyBhIGNsaWVudC1mYWNpbmcgY29uc3VsdGFudCB3aGlsZSBtYW5hZ2luZyBWREMgcHJvamVjdCBleGVjdXRpb24sIGVuc3VyaW5nIGRpZ2l0YWwgd29ya2Zsb3dzIGRlbGl2ZXIgdGFuZ2libGUgaW1wcm92ZW1lbnRzIGluIGNvbnN0cnVjdGFiaWxpdHksIGVmZmljaWVuY3ksIGFuZCBjb3N0IG1hbmFnZW1lbnQuIFdpdGhpbiB0aGUgZmlyc3QgeWVhciwgeW91IHdpbGwgaW5kZXBlbmRlbnRseSBkZWxpdmVyIG11bHRpcGxlIEJJTS9WREMgYXNzaWdubWVudHMsIGxlYWQgdHJhZGUgY29vcmRpbmF0aW9uIGVmZm9ydHMsIGFuZCBzZXJ2ZSBhcyBhIHRydXN0ZWQgYWR2aXNvciB0byBjbGllbnRzIG9uIGRpZ2l0YWwgY29uc3RydWN0aW9uIGJlc3QgcHJhY3RpY2VzLiBUaGUgcm9sZSByZXF1aXJlcyBleGNlcHRpb25hbCBvcmdhbml6YXRpb25hbCBza2lsbHMsIHRlY2huaWNhbCBleHBlcnRpc2UgaW4gbW9kZWwgY29vcmRpbmF0aW9uLCBhbmQgYSBwYXNzaW9uIGZvciBpbm5vdmF0aW9uIGluIEJJTS9WREMsIGluY2x1ZGluZyBhcHBseWluZyBBSSBhbmQgYXV0b21hdGlvbiB0byBhY2NlbGVyYXRlIG91dGNvbWVzLjwvcD48L2Rpdj4KICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgPC9zZWN0aW9uPgogICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgIDxzZWN0aW9uIGNsYXNzPSJhZC1zZWN0aW9uIj4KICAgICAgICAgICAgICAgICAgICAgICAgPGgyIGNsYXNzPSJhZC1zZWN0aW9uLXRpdGxlIj4gICAgICAgICAgICAgICAgICAgICAgICBLZXkgQ2hhbGxlbmdlcyBZb3UnbGwgT3duPC9oMj4KICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBpZD0ib2JqZWN0aXZlc0NvbnRlbnQiIGNsYXNzPSJvYmplY3RpdmVzLWxpc3QiPjxwIGNsYXNzPSJhZC1wIiBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMjBweDsgY29sb3I6ICM2NjY7Ij4gICAgICAgICAgICAgICAgICAgICAgICBKb2luIHVzIHRvIHRhY2tsZSB0aGVzZSBnYW1lLWNoYW5naW5nIGluaXRpYXRpdmVzOjwvcD4KICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJvYmplY3RpdmUtaXRlbSI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9Im9iamVjdGl2ZS10aXRsZSI+ICAgICAgICAgICAgICAgICAgICAgICAgTGVhZCBHYW1lLUNoYW5naW5nIFByb2plY3RzPC9kaXY+CiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9Im9iamVjdGl2ZS1kZXNjcmlwdGlvbiI+ICAgICAgICAgICAgICAgICAgICAgICAgVGFrZSBvd25lcnNoaXAgb2YgZmlyc3QgMTIgbW9udGhzIGhpZ2gtcHJvZmlsZSBpbml0aWF0aXZlcyB0aGF0IHJlc2hhcGUgaG93IGNvbnN0cnVjdGlvbiBnZXRzIGRvbmUuIFlvdSdsbCBsZWFkIHRoZSBleGVjdXRpb24gb2YgYXQgbGVhc3QgdGhyZWUgbWFqb3IgYmltL3ZkYyBwcm9qZWN0cyBmcm9tIGNvbmNlcHQgdGhyb3VnaCBjb25zdHJ1Y3Rpb24sIGZvY3VzaW5nIG9uIHRyYWRlIGNvb3JkaW5hdGlvbiwgY2xhc2ggZGV0ZWN0aW9uLCBhbmQgY29uc3RydWN0YWJpbGl0eSBpbXByb3ZlbWVudHMuPC9kaXY+CiAgICAgICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJvYmplY3RpdmUtaXRlbSI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9Im9iamVjdGl2ZS10aXRsZSI+ICAgICAgICAgICAgICAgICAgICAgICAgQmVjb21lIGEgVHJ1c3RlZCBJbmR1c3RyeSBBZHZpc29yPC9kaXY+CiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9Im9iamVjdGl2ZS1kZXNjcmlwdGlvbiI+ICAgICAgICAgICAgICAgICAgICAgICAgQnVpbGQgc3RyYXRlZ2ljIHJlbGF0aW9uc2hpcHMgd2l0aCBGb3J0dW5lIDUwMCBjbGllbnRzIGFuZCBpbmR1c3RyeSBsZWFkZXJzLiBZb3VyIGluc2lnaHRzIHdpbGwgZGlyZWN0bHkgaW5mbHVlbmNlIG1ham9yIGRlY2lzaW9ucyBhbmQgc2hhcGUgcHJvamVjdCBzdWNjZXNzLjwvZGl2PgogICAgICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0ib2JqZWN0aXZlLWl0ZW0iPgogICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJvYmplY3RpdmUtdGl0bGUiPiAgICAgICAgICAgICAgICAgICAgICAgIE9yY2hlc3RyYXRlIEdsb2JhbCBJbm5vdmF0aW9uPC9kaXY+CiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9Im9iamVjdGl2ZS1kZXNjcmlwdGlvbiI+ICAgICAgICAgICAgICAgICAgICAgICAgVW5pdGUgdGVhbXMgYWNyb3NzIGNvbnRpbmVudHMgdG8gZGVsaXZlciBmbGF3bGVzcyBleGVjdXRpb24uIEFjaGlldmUgYXQgbGVhc3QgOTUgcGVyZm9ybWFuY2Ugd2hpbGUgcGlvbmVlcmluZyBkaWdpdGFsIGNvbGxhYm9yYXRpb24uPC9kaXY+CiAgICAgICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgICAgICA8L3NlY3Rpb24+CiAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgPHNlY3Rpb24gY2xhc3M9ImFkLXNlY3Rpb24iPgogICAgICAgICAgICAgICAgICAgICAgICA8aDIgY2xhc3M9ImFkLXNlY3Rpb24tdGl0bGUiPiAgICAgICAgICAgICAgICAgICAgICAgIFdoeSBUaGlzIFJvbGUgTWF0dGVyczwvaDI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImV2cC1ib3giIGlkPSJldnBDb250ZW50Ij4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgaWQ9ImV2cFB1cnBvc2UiIGNsYXNzPSIiPjxwIHN0eWxlPSJtYXJnaW46IDA7Ij48c3Ryb25nPiAgICAgICAgICAgICAgICAgICAgICAgICAgICBQdXJwb3NlOiBUaGlzIHJvbGUgb2ZmZXJzIHRoZSBvcHBvcnR1bml0eSB0byBzaGFwZSBkaWdpdGFsIGNvbnN0cnVjdGlvbiBwcmFjdGljZXMgb24gaWNvbmljIHByb2plY3RzIHN1Y2ggYXMgYWlycG9ydHMsIHN0YWRpdW1zLCB0cmFuc2l0IHN5c3RlbXMsIGFuZCB0ZWNoIGNhbXB1c2VzLiBCeSBlbnN1cmluZyB0aGF0IEJJTSBhbmQgVkRDIHByb2Nlc3NlcyBhcmUgZW1iZWRkZWQgaW50byBldmVyeSBwaGFzZSwgeW91IHdpbGwgaGVscCBkZWxpdmVyIHNhZmVyLCBtb3JlIGVmZmljaWVudCwgYW5kIGhpZ2hlci1xdWFsaXR5IGJ1aWx0IGVudmlyb25tZW50cyB3aXRoIGxvbmctdGVybSBvcGVyYXRpb25hbCB2YWx1ZS48L3N0cm9uZz4gICAgICAgICAgICAgICAgICAgICAgICAgICAgR3Jvd3RoOiBZb3Ugd2lsbCBncm93IGludG8gYSByZWNvZ25pemVkIHN1YmplY3QgbWF0dGVyIGV4cGVydCBpbiBWREMgZGVsaXZlcnkgYnkgbWFuYWdpbmcgbGFyZ2Utc2NhbGUgY29vcmRpbmF0aW9uIHByb2plY3RzLCBlbmdhZ2luZyBkaXJlY3RseSB3aXRoIGNsaWVudHMsIGFuZCBleHBhbmRpbmcgeW91ciB0ZWNobmljYWwgcHJvZmljaWVuY3kgYWNyb3NzIG11bHRpcGxlIHNvZnR3YXJlIHBsYXRmb3Jtcy4gWW91ciBjYXJlZXIgd2lsbCBiZSBhY2NlbGVyYXRlZCBieSBleHBvc3VyZSB0byBoaWdoLXByb2ZpbGUgcHJvamVjdHMsIGdsb2JhbCBjb2xsYWJvcmF0aW9uLCBhbmQgb3Bwb3J0dW5pdGllcyB0byBpbmZsdWVuY2UgaW5kdXN0cnkgdGhvdWdodCBsZWFkZXJzaGlwLjwvcD48L2Rpdj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgaWQ9ImV2cEdyb3d0aCIgY2xhc3M9IiIgc3R5bGU9Im1hcmdpbi10b3A6IDE1cHg7Ij48cCBzdHlsZT0ibWFyZ2luOiAwOyI+PHN0cm9uZz4gICAgICAgICAgICAgICAgICAgICAgICAgICAgTW90aXZhdG9yczogWW91IHdpbGwgdGhyaXZlIGluIGEgZHluYW1pYywgZW50cmVwcmVuZXVyaWFsIGVudmlyb25tZW50IHRoYXQgdmFsdWVzIGluaXRpYXRpdmUsIGNyZWF0aXZpdHksIGFuZCBrbm93bGVkZ2Ugc2hhcmluZy4gVGhpcyByb2xlIHJld2FyZHMgY3VyaW9zaXR5LCBwcm9ibGVtLXNvbHZpbmcsIGFuZCB0aGUgYWJpbGl0eSB0byBiYWxhbmNlIGNsaWVudCByZWxhdGlvbnNoaXBzIHdpdGggdGVjaG5pY2FsIGV4ZWN1dGlvbi4gWW914oCZbGwgaGF2ZSB0aGUgb3Bwb3J0dW5pdHkgdG8gaW5ub3ZhdGUsIG1lbnRvciBvdGhlcnMsIGFuZCBpbXBsZW1lbnQgZGlnaXRhbCBwcm9jZXNzZXMgdGhhdCBzZXQgbmV3IHN0YW5kYXJkcyBmb3IgcHJvamVjdCBkZWxpdmVyeS48L3N0cm9uZz4gICAgICAgICAgICAgICAgICAgICAgICBXaGF0IE1ha2VzIFRoaXMgYSBXaW4tV2luIENhcmVlciBNb3ZlPC9wPjwvZGl2PgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBpZD0iZXZwTW90aXZhdG9ycyIgY2xhc3M9IiIgc3R5bGU9Im1hcmdpbi10b3A6IDE1cHg7Ij48cCBzdHlsZT0ibWFyZ2luOiAwOyI+PHN0cm9uZz4gICAgICAgICAgICAgICAgICAgICAgICBUaGlzIGlzbid0IGp1c3QgYW5vdGhlciBWREMgcG9zaXRpb24uIEl0J3MgYSBzdHJhdGVnaWMgbGVhZGVyc2hpcCBvcHBvcnR1bml0eSB0byBzaGFwZSB0aGUgZnV0dXJlIG9mIGNvbnN0cnVjdGlvbiB0ZWNobm9sb2d5IGFuZCBkZWxpdmVyIHdvcmxkLWNsYXNzIGluZnJhc3RydWN0dXJlIHByb2plY3RzLjwvc3Ryb25nPiAgICAgICAgICAgICAgICAgICAgICAgIFdlIGZvbGxvdyB0aGUgV2luLVdpbiBIaXJpbmfihKIgbW9kZWw6IG5vIG9mZmVycyB1bmxlc3MgaXQncyB0aGUgcmlnaHQgY2FyZWVyIG1vdmUgZm9yIHlvdSBhbmQgYSBzdHJhdGVnaWMgZ2FpbiBmb3IgdXMuPC9wPjwvZGl2PgogICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgICAgICA8L3NlY3Rpb24+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0icmlnaHQtY29sdW1uIj4KICAgICAgICAgICAgICAgICAgICA8c2VjdGlvbiBjbGFzcz0iYWQtc2VjdGlvbiI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxoMiBjbGFzcz0iYWQtc2VjdGlvbi10aXRsZSI+ICAgICAgICAgICAgICAgICAgICAgICAgQ3VsdHVyZSAmYW1wOyBFbnZpcm9ubWVudDwvaDI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzPSJhZC1wIj4gICAgICAgICAgICAgICAgICAgICAgICBUaGlzIHJvbGUgdGhyaXZlcyBpbiBhIGhpZ2gtZ3Jvd3RoLCBjbGllbnQtZmFjaW5nIGNvbnN1bHRpbmcgZW52aXJvbm1lbnQgd2hlcmUgcHJvamVjdHMgYXJlIGNvbXBsZXgsIGRlYWRsaW5lcyBhcmUgdGlnaHQsIGFuZCBnbG9iYWwgY29sbGFib3JhdGlvbiBpcyByb3V0aW5lLiBTdWNjZXNzIHJlcXVpcmVzIGJhbGFuY2luZyBpbmRlcGVuZGVudCBpbml0aWF0aXZlIHdpdGggdGVhbXdvcmssIG1hbmFnaW5nIGFtYmlndWl0eSwgYW5kIGNvbnNpc3RlbnRseSBkZWxpdmVyaW5nIG1lYXN1cmFibGUgcmVzdWx0cy4gVklBVGVjaG5pa+KAmXMgY3VsdHVyZSBpcyBlbnRyZXByZW5ldXJpYWwsIGlubm92YXRpdmUsIGFuZCBjb2xsYWJvcmF0aXZlLCB2YWx1aW5nIGtub3dsZWRnZS1zaGFyaW5nIGFuZCBjb250aW51b3VzIGltcHJvdmVtZW50LiBFbmdpbmVlcnMgaGVyZSBhcmUgZXhwZWN0ZWQgdG8gYmUgYm90aCB0ZWNobmljYWwgZXhwZXJ0cyBhbmQgdHJ1c3RlZCBhZHZpc29ycywgcHVzaGluZyB0aGUgYm91bmRhcmllcyBvZiBkaWdpdGFsIGNvbnN0cnVjdGlvbiB3aGlsZSBidWlsZGluZyBzdHJvbmcgY2xpZW50IHJlbGF0aW9uc2hpcHMuPHNwYW4gaWQ9InJvbGVUeXBlIj4gICAgICAgICAgICAgICAgICAgICAgICBIb3cgdG8gRXhwbG9yZSBUaGlzIE9wcG9ydHVuaXR5PC9zcGFuPiAgICAgICAgICAgICAgICAgICAgICAgIElmIHRoaXMgcm9sZSByZXByZXNlbnRzIHlvdXIgbmV4dCBzdHJhdGVnaWMgY2FyZWVyIG1vdmUsIGxldCdzIHRhbGsuPHNwYW4gaWQ9InRyYW5zZm9ybVN0YXRlbWVudCI+ICAgICAgICAgICAgICAgICAgICAgICAgRG9uJ3Qgc2VuZCBhIHJlc3VtZS4gSW5zdGVhZCwgc2hhcmU6PC9zcGFuPiAgICAgICAgICAgICAgICAgICAgICAgICAgICBZb3VyIExpbmtlZEluIHByb2ZpbGU8L3A+CiAgICAgICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzPSJhZC1wIj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgQSAyLTMgcGFyYWdyYXBoIHN0b3J5IG9yIGJyaWVmIHZpZGVvIGFib3V0IGEgbWFqb3IgcHJvamVjdCBjb29yZGluYXRpb24gYWNjb21wbGlzaG1lbnQ8c3BhbiBjbGFzcz0iZW1waGFzaXMiPiAgICAgICAgICAgICAgICAgICAgICAgIFRlbGwgdXM6PC9zcGFuPiAgICAgICAgICAgICAgICAgICAgICAgICAgICBXaGF0IHdhcyB0aGUgY2hhbGxlbmdlPzxzcGFuIHN0eWxlPSJmb250LXN0eWxlOiBpdGFsaWM7Ij4gICAgICAgICAgICAgICAgICAgICAgICAgICAgV2hhdCB3YXMgeW91ciByb2xlPzwvc3Bhbj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgV2hhdCBvdXRjb21lIGRpZCB5b3UgZHJpdmU/PC9wPgogICAgICAgICAgICAgICAgICAgIDwvc2VjdGlvbj4KICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICA8c2VjdGlvbiBjbGFzcz0iYWQtc2VjdGlvbiI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxoMiBjbGFzcz0iYWQtc2VjdGlvbi10aXRsZSI+ICAgICAgICAgICAgICAgICAgICAgICAgV2UnbGwgcGVyc29uYWxseSByZXZpZXcgZWFjaCBzdWJtaXNzaW9uIGFuZCBjb25uZWN0IHdpdGggYWxpZ25lZCBjYW5kaWRhdGVzIGZvciBhbiBleHBsb3JhdG9yeSBjb252ZXJzYXRpb24uPC9oMj4KICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBpZD0iY3VsdHVyZUNvbnRlbnQiIGNsYXNzPSJleHBhbmRhYmxlLWNvbnRlbnQgZXhwYW5kZWQiPjxwIGNsYXNzPSJhZC1wIj4gICAgICAgICAgICAgICAgICAgICAgICBTdWJtaXQgWW91ciBBY2NvbXBsaXNobWVudDwvcD48L2Rpdj4KICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgPC9zZWN0aW9uPgogICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgIDxzZWN0aW9uIGNsYXNzPSJhZC1zZWN0aW9uIj4KICAgICAgICAgICAgICAgICAgICAgICAgPGgyIGNsYXNzPSJhZC1zZWN0aW9uLXRpdGxlIj4gICAgICAgICAgICAgICAgICAgICAgICBHZXQgU3RhcnRlZDwvaDI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzPSJhZC1wIj5JZiB0aGlzIHJvbGUgcmVwcmVzZW50cyB5b3VyIG5leHQgc3RyYXRlZ2ljIGNhcmVlciBtb3ZlLCBsZXQncyB0YWxrLjwvcD4KICAgICAgICAgICAgICAgICAgICAgICAgPHAgY2xhc3M9ImFkLXAiPjxzdHJvbmc+RG9uJ3Qgc2VuZCBhIHJlc3VtZS48L3N0cm9uZz4gSW5zdGVhZCwgc2hhcmU6PC9wPgogICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgPHVsIGNsYXNzPSJhZC11bCI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8bGkgY2xhc3M9ImFkLWxpIj5Zb3VyIDxzdHJvbmc+TGlua2VkSW4gcHJvZmlsZTwvc3Ryb25nPjwvbGk+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8bGkgY2xhc3M9ImFkLWxpIj5BIDxzdHJvbmc+Mi0zIHBhcmFncmFwaCBzdG9yeTwvc3Ryb25nPiBvciA8c3Ryb25nPmJyaWVmIHZpZGVvPC9zdHJvbmc+IGFib3V0IGEgbWFqb3IgPHNwYW4gaWQ9ImFjY29tcGxpc2htZW50VHlwZSI+cHJvamVjdCBjb29yZGluYXRpb248L3NwYW4+IGFjY29tcGxpc2htZW50PC9saT4KICAgICAgICAgICAgICAgICAgICAgICAgPC91bD4KICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzPSJhZC1wIj5UZWxsIHVzOjwvcD4KICAgICAgICAgICAgICAgICAgICAgICAgPHVsIGNsYXNzPSJhZC11bCI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8bGkgY2xhc3M9ImFkLWxpIj5XaGF0IHdhcyB0aGUgY2hhbGxlbmdlPzwvbGk+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8bGkgY2xhc3M9ImFkLWxpIj5XaGF0IHdhcyB5b3VyIHJvbGU/PC9saT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsaSBjbGFzcz0iYWQtbGkiPldoYXQgb3V0Y29tZSBkaWQgeW91IGRyaXZlPzwvbGk+CiAgICAgICAgICAgICAgICAgICAgICAgIDwvdWw+CiAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICA8cCBjbGFzcz0iYWQtcCI+V2UnbGwgcGVyc29uYWxseSByZXZpZXcgZWFjaCBzdWJtaXNzaW9uIGFuZCBjb25uZWN0IHdpdGggYWxpZ25lZCBjYW5kaWRhdGVzIGZvciBhbiBleHBsb3JhdG9yeSBjb252ZXJzYXRpb24uPC9wPgogICAgICAgICAgICAgICAgICAgIDwvc2VjdGlvbj4KICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJjdGEtYm94Ij4KICAgICAgICAgICAgICAgICAgICAgICAgPGgzIHN0eWxlPSJtYXJnaW46IDAgMCAxMHB4IDA7IGZvbnQtc2l6ZTogMjBweDsiIGNsYXNzPSIiPlN1Ym1pdCBZb3VyIEFjY29tcGxpc2htZW50PC9oMz4KICAgICAgICAgICAgICAgICAgICAgICAgPGEgaHJlZj0ibWFpbHRvOmluZm9AcGVyZm9ybWFuY2ViYXNlZGhpcmluZy5jb20/c3ViamVjdD1BcHBsaWNhdGlvbiUyMGZvciUyMFNlbmlvciUyMFZEQyUyMEVuZ2luZWVyIiBjbGFzcz0iY3RhLWJ1dHRvbiIgaWQ9ImN0YUJ1dHRvbiI+R2V0IFN0YXJ0ZWQ8L2E+CiAgICAgICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9kaXY+Cgo8L2JvZHk+PC9odG1sPg=="></iframe>
-  
-  <div class="apply-section">
-    <h2>How to Apply</h2>
-    <p>We're looking for outstanding performers who see this as a career move, not just a job change.</p>
-    <a href="mailto:info@performancebasedhiring.com?subject=Application: VDC%20M%26P" class="apply-button">Email Your Application</a>
-    <p style="margin-top: 1rem; color: #6b7280; font-size: 0.9rem;">Send to: info@performancebasedhiring.com</p>
-  </div>
-</body>
-</html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VDC M&amp;P</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #e8ecf0;
+        }
+        
+        .ad-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 3px solid #1e3c72;
+        }
+        
+        .ad-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .ad-header-left { flex: 1; }
+        
+        .ad-position-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+        }
+        
+        .ad-position-meta {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .two-column-layout {
+            display: flex;
+            min-height: 600px;
+        }
+        
+        .left-column {
+            flex: 1;
+            padding: 40px;
+            background: #fafbfc;
+            border-right: 1px solid #e0e0e0;
+        }
+        
+        .right-column {
+            flex: 1;
+            padding: 40px;
+            background: white;
+        }
+        
+        .ad-section { margin-bottom: 30px; }
+        
+        .ad-section-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1e3c72;
+            margin: 0 0 15px 0;
+        }
+        
+        .sub-section-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0 8px 0;
+        }
+        
+        .evp-box {
+            background: white;
+            border: 2px solid #2a5298;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .ad-ul {
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+        
+        .ad-li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .cta-box {
+            background: #1e3c72;
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #1e3c72;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        
+        .emphasis {
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        .ad-p {
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+        
+        .win-win-badge {
+            background: white;
+            color: #1e3c72;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .objectives-list {
+            margin: 20px 0;
+        }
+        
+        .objective-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .objective-title {
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .objective-description {
+            color: #666;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 1024px) {
+            .two-column-layout { flex-direction: column; }
+            .left-column { border-right: none; border-bottom: 1px solid #e0e0e0; }
+            .ad-header { flex-direction: column; align-items: flex-start; }
+        }
+        
+        @media print {
+            body { background-color: white; }
+            .ad-container { border: 1px solid #ddd; box-shadow: none; }
+        }
+    </style>
+<style data-pbh="">
+              .apply-section { background:#f3f4f6; padding:1.5rem; margin-top:2rem; border-top:1px solid #e5e7eb; text-align:center }
+              .apply-button { background:#2563eb; color:#fff; padding:.75rem 1.25rem; border-radius:6px; font-weight:600; text-decoration:none }
+              .apply-button:hover { background:#1d4ed8 }
+            </style></head>
+<body><section class="apply-section">
+            <h2>How to Apply</h2>
+            <p>We're looking for outstanding performers who see this as a career move, not just a job change.</p>
+            <p class="contact-email">info@performancebasedhiring.com</p>
+            <p style="margin-top: .75rem; color: #6b7280; font-size: .9rem;">Send to: info@performancebasedhiring.com</p>
+          </section>
+    <div class="ad-container">
+            <div class="ad-header">
+                <div class="ad-header-left">
+                    <h1 class="ad-position-title" id="positionTitle">VDC M&amp;P</h1>
+                    <div class="ad-position-meta" id="positionMeta">                    Remote or Specified Location | Full-Time | Construction Technology</div>
+                </div>
+                <div class="ad-header-right">
+                    <div class="win-win-badge">                    Win-Win Hiring™</div>
+                </div>
+            </div>
+            
+            <div class="two-column-layout">
+                <div class="left-column">
+                    <section class="ad-section">
+                        <h2 class="ad-section-title">                        Role Overview and Key Challenges</h2>
+                        <div id="roleOverviewContent" class="expandable-content expanded"><p class="ad-p">                        As a Senior VDC Engineer at VIATechnik, you will play a key role in applying advanced VDC processes across all stages of major construction projects, from concept through design, construction, and facility operations. You will serve as a client-facing consultant while managing VDC project execution, ensuring digital workflows deliver tangible improvements in constructability, efficiency, and cost management. Within the first year, you will independently deliver multiple BIM/VDC assignments, lead trade coordination efforts, and serve as a trusted advisor to clients on digital construction best practices. The role requires exceptional organizational skills, technical expertise in model coordination, and a passion for innovation in BIM/VDC, including applying AI and automation to accelerate outcomes.</p></div>
+                        
+                    </section>
+                    
+                    <section class="ad-section">
+                        <h2 class="ad-section-title">                        Key Challenges You'll Own</h2>
+                        <div id="objectivesContent" class="objectives-list"><p class="ad-p" style="margin-bottom: 20px; color: #666;">                        Join us to tackle these game-changing initiatives:</p>
+                    <div class="objective-item">
+                        <div class="objective-title">                        Lead Game-Changing Projects</div>
+                        <div class="objective-description">                        Take ownership of first 12 months high-profile initiatives that reshape how construction gets done. You'll lead the execution of at least three major bim/vdc projects from concept through construction, focusing on trade coordination, clash detection, and constructability improvements.</div>
+                    </div>
+                
+                    <div class="objective-item">
+                        <div class="objective-title">                        Become a Trusted Industry Advisor</div>
+                        <div class="objective-description">                        Build strategic relationships with Fortune 500 clients and industry leaders. Your insights will directly influence major decisions and shape project success.</div>
+                    </div>
+                
+                    <div class="objective-item">
+                        <div class="objective-title">                        Orchestrate Global Innovation</div>
+                        <div class="objective-description">                        Unite teams across continents to deliver flawless execution. Achieve at least 95 performance while pioneering digital collaboration.</div>
+                    </div>
+                </div>
+                    </section>
+                    
+                    <section class="ad-section">
+                        <h2 class="ad-section-title">                        Why This Role Matters</h2>
+                        <div class="evp-box" id="evpContent">
+                            <div id="evpPurpose" class=""><p style="margin: 0;"><strong>                            Purpose: This role offers the opportunity to shape digital construction practices on iconic projects such as airports, stadiums, transit systems, and tech campuses. By ensuring that BIM and VDC processes are embedded into every phase, you will help deliver safer, more efficient, and higher-quality built environments with long-term operational value.</strong>                            Growth: You will grow into a recognized subject matter expert in VDC delivery by managing large-scale coordination projects, engaging directly with clients, and expanding your technical proficiency across multiple software platforms. Your career will be accelerated by exposure to high-profile projects, global collaboration, and opportunities to influence industry thought leadership.</p></div>
+                            <div id="evpGrowth" class="" style="margin-top: 15px;"><p style="margin: 0;"><strong>                            Motivators: You will thrive in a dynamic, entrepreneurial environment that values initiative, creativity, and knowledge sharing. This role rewards curiosity, problem-solving, and the ability to balance client relationships with technical execution. You’ll have the opportunity to innovate, mentor others, and implement digital processes that set new standards for project delivery.</strong>                        What Makes This a Win-Win Career Move</p></div>
+                            <div id="evpMotivators" class="" style="margin-top: 15px;"><p style="margin: 0;"><strong>                        This isn't just another VDC position. It's a strategic leadership opportunity to shape the future of construction technology and deliver world-class infrastructure projects.</strong>                        We follow the Win-Win Hiring™ model: no offers unless it's the right career move for you and a strategic gain for us.</p></div>
+                        </div>
+                    </section>
+                </div>
+                
+                <div class="right-column">
+                    <section class="ad-section">
+                        <h2 class="ad-section-title">                        Culture &amp; Environment</h2>
+                        <p class="ad-p">                        This role thrives in a high-growth, client-facing consulting environment where projects are complex, deadlines are tight, and global collaboration is routine. Success requires balancing independent initiative with teamwork, managing ambiguity, and consistently delivering measurable results. VIATechnik’s culture is entrepreneurial, innovative, and collaborative, valuing knowledge-sharing and continuous improvement. Engineers here are expected to be both technical experts and trusted advisors, pushing the boundaries of digital construction while building strong client relationships.<span id="roleType">                        How to Explore This Opportunity</span>                        If this role represents your next strategic career move, let's talk.<span id="transformStatement">                        Don't send a resume. Instead, share:</span>                            Your LinkedIn profile</p>
+                        <p class="ad-p">                            A 2-3 paragraph story or brief video about a major project coordination accomplishment<span class="emphasis">                        Tell us:</span>                            What was the challenge?<span style="font-style: italic;">                            What was your role?</span>                            What outcome did you drive?</p>
+                    </section>
+                    
+                    <section class="ad-section">
+                        <h2 class="ad-section-title">                        We'll personally review each submission and connect with aligned candidates for an exploratory conversation.</h2>
+                        <div id="cultureContent" class="expandable-content expanded"><p class="ad-p">                        Submit Your Accomplishment</p></div>
+                        
+                    </section>
+                    
+                    <section class="ad-section">
+                        <h2 class="ad-section-title">                        Get Started</h2>
+                        <p class="ad-p">If this role represents your next strategic career move, let's talk.</p>
+                        <p class="ad-p"><strong>Don't send a resume.</strong> Instead, share:</p>
+                        
+                        <ul class="ad-ul">
+                            <li class="ad-li">Your <strong>LinkedIn profile</strong></li>
+                            <li class="ad-li">A <strong>2-3 paragraph story</strong> or <strong>brief video</strong> about a major <span id="accomplishmentType">project coordination</span> accomplishment</li>
+                        </ul>
+                        
+                        <p class="ad-p">Tell us:</p>
+                        <ul class="ad-ul">
+                            <li class="ad-li">What was the challenge?</li>
+                            <li class="ad-li">What was your role?</li>
+                            <li class="ad-li">What outcome did you drive?</li>
+                        </ul>
+                        
+                        <p class="ad-p">We'll personally review each submission and connect with aligned candidates for an exploratory conversation.</p>
+                    </section>
+                    
+                    <div class="cta-box">
+                        <h3 style="margin: 0 0 10px 0; font-size: 20px;" class="">Submit Your Accomplishment</h3>
+                        <a href="mailto:info@performancebasedhiring.com?subject=Application: VDC%20M%26P" class="cta-button" id="ctaButton">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</body></html>
