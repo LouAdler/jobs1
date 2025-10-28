@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance-based Hiring Job Descriptions - Moneyball for HR</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .tagline {
+            font-size: 1em;
+            opacity: 0.8;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .job-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .job-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+        .job-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            background-color: #fff;
+        }
+        .job-card h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 1.2em;
+        }
+        .job-card a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .job-card a:hover {
+            text-decoration: underline;
+        }
+        .category {
+            background-color: #ecf0f1;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        .tools-section {
+            background-color: #e8f4f8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .tools-section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .share-tip {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+        .share-tip code {
+            background-color: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d73a49;
+        }
+        .copy-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        .copy-button:hover {
+            background-color: #2980b9;
+        }
+        @media (max-width: 768px) {
+            .job-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Performance-based Hiring™</h1>
+        <div class="subtitle">Job Description Library by Lou Adler</div>
+        <div class="tagline">Moneyball for HR - Transform Your Hiring Process</div>
+    </div>
+
+    <div class="container">
+        <div class="share-tip">
+            <strong>📌 Quick Share:</strong> 
+            <code id="shareUrl">https://moneyballhr.netlify.app/jobpostings/</code>
+            <button class="copy-button" onclick="copyUrl()">Copy URL</button>
+        </div>
+
+        <div class="tools-section">
+            <h2>🛠️ Performance-based Hiring Resources</h2>
+            <ul>
+                <li><a href="PBH-2025-014.html">Performance-based Hiring Overview (PBH-2025-014)</a></li>
+                <li><a href="https://moneyballhr.netlify.app">Main Site Home</a></li>
+            </ul>
+        </div>
+
+        <h2>📋 Performance-based Job Descriptions</h2>
+        <p>Transform traditional job descriptions into performance-based ones that attract top talent. Click any job title below:</p>
+
+        <div class="job-grid">
+            <!-- Recently Updated -->
+            <div class="job-card">
+                <h3>Engineering Program Manager</h3>
+                <p>Trimble - Military GPS Systems</p>
+                <a href="Trimble_Engineering_Program_Manager_PBJD.html">View Performance-based JD →</a>
+                <span class="category">Engineering</span>
+                <span class="category" style="background-color: #d4edda; color: #155724;">Updated</span>
+            </div>
+
+            <!-- Engineering & Technical Roles -->
+            <div class="job-card">
+                <h3>Engineering Project Program Manager</h3>
+                <p>Military GPS Systems - Detailed Version</p>
+                <a href="engineering-project-program-manager-military-gps-systems-trimble.html">View Performance-based JD →</a>
+                <span class="category">Engineering</span>
+            </div>
+
+            <div class="job-card">
+                <h3>VDC Manager - Mechanical</h3>
+                <p>Virtual Design & Construction Leadership</p>
+                <a href="performance-based-job-description-vdc-manager-mechanical.html">View Performance-based JD →</a>
+                <span class="category">Construction Tech</span>
+            </div>
+
+            <div class="job-card">
+                <h3>Senior VDC Engineer</h3>
+                <p>Construction Technology Innovation</p>
+                <a href="senior-vdc-engineer-construction.html">View Performance-based JD →</a>
+                <span class="category">Engineering</span>
+            </div>
+
+            <!-- Executive & Leadership Roles -->
+            <div class="job-card">
+                <h3>Vice President of Financial Planning</h3>
+                <p>Strategic Financial Leadership</p>
+                <a href="performance-based-job-description-vice-president-of-financial.html">View Performance-based JD →</a>
+                <span class="category">Executive</span>
+            </div>
+
+            <!-- Sales Roles -->
+            <div class="job-card">
+                <h3>Enterprise Account Executive</h3>
+                <p>ViaTechnik - Strategic Sales</p>
+                <a href="enterprise-account-executive-viatechnik-career-opportunity-PBH-description.html">View Performance-based JD →</a>
+                <span class="category">Sales</span>
+            </div>
+
+            <!-- Finance Roles -->
+            <div class="job-card">
+                <h3>Senior Financial Analyst - FP&A</h3>
+                <p>Power Plan - Financial Planning & Analysis</p>
+                <a href="senior-financial-analyst-fp-a-power-plan-career-opportunity-PBH-description.html">View Performance-based JD →</a>
+                <span class="category">Finance</span>
+            </div>
+
+            <!-- Operations Roles -->
+            <div class="job-card">
+                <h3>Production Chef Manager</h3>
+                <p>PM Shift - Feedwell Operations</p>
+                <a href="production-chef-manager-pm-shift-feedwell-career-opportunity.html">View Performance-based JD →</a>
+                <span class="category">Operations</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 50px; padding: 20px; background-color: #f0f8ff; border-radius: 6px;">
+            <h3>📚 About Performance-based Hiring</h3>
+            <p>Performance-based Hiring focuses on what candidates need to accomplish in the role rather than just listing skills and requirements. This approach:</p>
+            <ul>
+                <li>Attracts stronger, more motivated candidates</li>
+                <li>Improves quality of hire metrics</li>
+                <li>Reduces time-to-fill positions</li>
+                <li>Creates more objective hiring decisions</li>
+            </ul>
+            <p><strong>Need help converting your job descriptions?</strong> Contact Lou Adler Associates for training and tools.</p>
+        </div>
+
+        <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #e0e0e0; text-align: center; color: #666;">
+            <p>© Lou Adler Associates, Inc. | Performance-based Hiring™ | Moneyball for HR</p>
+            <p style="font-size: 0.9em;">Transform your hiring process from skills-based to performance-based</p>
+        </div>
+    </div>
+
+    <script>
+        function copyUrl() {
+            const url = document.getElementById('shareUrl').textContent;
+            navigator.clipboard.writeText(url).then(function() {
+                alert('URL copied to clipboard!');
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
