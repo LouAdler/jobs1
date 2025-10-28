@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Performance-based Hiring Training Videos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 { color: #2c3e50; }
+        .video-link {
+            display: block;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .video-link:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+    <h1>Performance-based Hiring™ Training Videos</h1>
+    
+    <a href="trimble_demo.html" class="video-link">
+        <h3>Trimble Demo</h3>
+        <p>Performance-based job description example</p>
+    </a>
+    
+    <a href="intro-to-pbh.html" class="video-link">
+        <h3>Introduction to Performance-based Hiring</h3>
+        <p>Learn the fundamentals</p>
+    </a>
+    
+    <a href="interview-techniques.html" class="video-link">
+        <h3>Interview Techniques</h3>
+        <p>Master the performance-based interview</p>
+    </a>
+</body>
+</html>
