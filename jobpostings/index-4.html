@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance-based Job Descriptions - Lou Adler Associates</title>
+    <meta name="description" content="Browse performance-based job descriptions created using Lou Adler's Moneyball for HR methodology. Transform traditional job postings into compelling career opportunities.">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Performance-based Job Descriptions">
+    <meta property="og:description" content="Browse performance-based job descriptions that focus on performance objectives rather than skills-based requirements.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/jobpostings/">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #34a853;
+            --text-dark: #202124;
+            --text-light: #5f6368;
+            --background: #f8f9fa;
+            --card-background: #ffffff;
+            --border-color: #e0e0e0;
+            --hover-color: #f1f3f4;
+            --shadow: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-hover: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--background);
+        }
+
+        /* Header Section */
+        .header {
+            background-color: var(--card-background);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .tagline {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Search and Filter Section */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: var(--card-background);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .job-count {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Job Grid */
+        .job-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .job-card {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .job-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+        }
+
+        .job-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary-color);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .job-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .job-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .job-company {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-type {
+            display: inline-block;
+            background-color: var(--hover-color);
+            color: var(--text-dark);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .job-description {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .job-date {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            text-align: right;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--text-dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-content p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        /* No Results Message */
+        .no-results {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .job-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .job-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <a href="/" class="logo">Lou Adler Associates</a>
+                    <div class="tagline">Moneyball for HR™ - Performance-based Hiring</div>
+                </div>
+                <nav>
+                    <a href="https://louadlerassociates.com" target="_blank" style="color: var(--primary-color); text-decoration: none;">Learn More →</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Performance-based Job Descriptions</h1>
+            <p>Transform traditional job postings into compelling career opportunities that attract top talent. Browse our collection of job descriptions created using the Performance-based Hiring methodology.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Search and Filter Controls -->
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search job titles, companies, or keywords...">
+            </div>
+            <select id="categoryFilter" class="filter-select">
+                <option value="">All Categories</option>
+                <option value="engineering">Engineering</option>
+                <option value="viatechnik">ViaTechnik</option>
+                <option value="controller">Controller/Finance</option>
+                <option value="manager">Management</option>
+                <option value="senior">Senior Level</option>
+                <option value="principal">Principal</option>
+                <option value="production">Production</option>
+                <option value="enterprise">Enterprise</option>
+            </select>
+            <div class="job-count">
+                <span id="jobCount">0</span> job descriptions available
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            Loading job descriptions...
+        </div>
+
+        <!-- Job Grid -->
+        <div class="job-grid" id="jobGrid">
+            <!-- Job cards will be dynamically inserted here -->
+        </div>
+
+        <!-- No Results Message -->
+        <div class="no-results" id="noResults">
+            No job descriptions match your search criteria. Try adjusting your filters or search terms.
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>© 2025 Lou Adler Associates, Inc. All rights reserved.</p>
+                <p>Performance-based Hiring® is a registered trademark.</p>
+                <div class="footer-links">
+                    <a href="https://louadlerassociates.com">Website</a>
+                    <a href="https://www.linkedin.com/in/louadler/">LinkedIn</a>
+                    <a href="/readme.md">Documentation</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Job data - This would typically come from an API or be generated server-side
+        const jobs = [
+            {
+                title: "Lightmatters Optics Photonics",
+                company: "Lightmatters",
+                type: "Engineering",
+                description: "Performance-based job description for Lightmatters focusing on optics and photonics engineering excellence.",
+                url: "Lightmatters_Optics_Photonics.html",
+                date: "2025",
+                category: "engineering"
+            },
+            {
+                title: "Engineering Program Manager",
+                company: "Trimble",
+                type: "Management",
+                description: "Program management role reimagined through performance objectives for driving engineering initiatives.",
+                url: "Trimble_Engineering_Program_Manager_PBJD.html",
+                date: "2025",
+                category: ["engineering", "manager"]
+            },
+            {
+                title: "Controller - Career Opportunity",
+                company: "ViaTechnik",
+                type: "Finance",
+                description: "Controller position focused on performance outcomes and career growth opportunities.",
+                url: "controller-viatechnik-career-opportunity-PBH-2025-042.html",
+                date: "2025-04",
+                category: ["controller", "viatechnik"]
+            },
+            {
+                title: "Engineering Project Program Manager - Military GPS Systems",
+                company: "Engineering Division",
+                type: "Engineering",
+                description: "Lead military GPS systems projects with focus on performance objectives and strategic outcomes.",
+                url: "engineering-project-program-manager-military-gps-systems.html",
+                date: "2025",
+                category: ["engineering", "manager"]
+            },
+            {
+                title: "Enterprise Account Executive - Career Opportunity",
+                company: "ViaTechnik",
+                type: "Sales",
+                description: "Enterprise sales role designed around performance-based objectives and career development.",
+                url: "enterprise-account-executive-viatechnik-career-opportunity.html",
+                date: "2025",
+                category: ["enterprise", "viatechnik"]
+            },
+            {
+                title: "VDC Manager - Mechanical",
+                company: "Performance-based Hiring",
+                type: "Engineering",
+                description: "Virtual Design and Construction manager role focused on mechanical engineering excellence.",
+                url: "performance-based-job-description-vdc-manager-mechanical.html",
+                date: "2025",
+                category: ["manager", "engineering"]
+            },
+            {
+                title: "Vice President of Finance",
+                company: "Performance-based Hiring",
+                type: "Executive",
+                description: "Executive finance leadership role with clear performance objectives and strategic impact.",
+                url: "performance-based-job-description-vice-president-of-finance.html",
+                date: "2025",
+                category: ["senior", "manager"]
+            },
+            {
+                title: "Principal Product Line Manager - Optics/Photonics",
+                company: "Lightmatters",
+                type: "Product Management",
+                description: "Lead product strategy for optics and photonics with focus on innovation and market impact.",
+                url: "principal-product-line-manager-optics-photonics-lightmatters.html",
+                date: "2025",
+                category: ["principal", "manager", "engineering"]
+            },
+            {
+                title: "Production Chef Manager",
+                company: "Shift Feedwell",
+                type: "Operations",
+                description: "Culinary operations leadership role focused on production excellence and team development.",
+                url: "production-chef-manager-pm-shift-feedwell-career-opportunity.html",
+                date: "2025",
+                category: ["production", "manager"]
+            },
+            {
+                title: "Senior Financial Analyst - FP&A Power Plan",
+                company: "Career Opportunity",
+                type: "Finance",
+                description: "Senior financial planning and analysis role with strategic impact on power planning initiatives.",
+                url: "senior-financial-analyst-fp-a-power-plan-career-opportunity.html",
+                date: "2025",
+                category: ["senior"]
+            },
+            {
+                title: "Senior VDC Engineer - Construction",
+                company: "Performance-based Hiring",
+                type: "Engineering",
+                description: "Senior virtual design and construction engineering role focused on innovation and project success.",
+                url: "senior-vdc-engineer-construction.html",
+                date: "2025",
+                category: ["senior", "engineering", "viatechnik"]
+            }
+        ];
+
+        // DOM Elements
+        const jobGrid = document.getElementById('jobGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const jobCount = document.getElementById('jobCount');
+        const loadingState = document.getElementById('loadingState');
+        const noResults = document.getElementById('noResults');
+
+        // Initialize
+        function init() {
+            displayJobs(jobs);
+            updateJobCount(jobs.length);
+            
+            // Event listeners
+            searchInput.addEventListener('input', filterJobs);
+            categoryFilter.addEventListener('change', filterJobs);
+        }
+
+        // Display jobs
+        function displayJobs(jobsToDisplay) {
+            jobGrid.innerHTML = '';
+            noResults.style.display = 'none';
+            
+            if (jobsToDisplay.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            jobsToDisplay.forEach((job, index) => {
+                const jobCard = createJobCard(job, index);
+                jobGrid.appendChild(jobCard);
+            });
+        }
+
+        // Create job card
+        function createJobCard(job, index) {
+            const card = document.createElement('a');
+            card.href = job.url;
+            card.className = 'job-card';
+            card.style.animationDelay = `${index * 0.1}s`;
+            
+            card.innerHTML = `
+                <h2 class="job-title">${job.title}</h2>
+                <p class="job-company">${job.company}</p>
+                <span class="job-type">${job.type}</span>
+                <p class="job-description">${job.description}</p>
+                <div class="job-date">Added: ${job.date}</div>
+            `;
+            
+            return card;
+        }
+
+        // Filter jobs
+        function filterJobs() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedCategory = categoryFilter.value;
+            
+            const filteredJobs = jobs.filter(job => {
+                const matchesSearch = !searchTerm || 
+                    job.title.toLowerCase().includes(searchTerm) ||
+                    job.company.toLowerCase().includes(searchTerm) ||
+                    job.description.toLowerCase().includes(searchTerm) ||
+                    job.type.toLowerCase().includes(searchTerm);
+                
+                const matchesCategory = !selectedCategory ||
+                    (Array.isArray(job.category) ? 
+                        job.category.includes(selectedCategory) : 
+                        job.category === selectedCategory);
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            displayJobs(filteredJobs);
+            updateJobCount(filteredJobs.length);
+        }
+
+        // Update job count
+        function updateJobCount(count) {
+            jobCount.textContent = count;
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
