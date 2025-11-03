@@ -1,0 +1,6 @@
+# Test redirect for one job posting
+/j/test-job   /jobpostings/principal-product-line-manager-optics-photonics-lightmatter-pbh-2025-041.html   200
+
+# Prevent browsing to /j/ directory
+/j   /   301
+/j/   /   301
