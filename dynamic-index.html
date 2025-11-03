@@ -49,6 +49,47 @@
             text-decoration: underline;
         }
         
+        /* New Job Postings Section Styles */
+        .job-postings-banner {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .job-postings-banner h2 {
+            margin: 0 0 15px 0;
+            color: white;
+            font-size: 28px;
+        }
+        
+        .job-postings-banner p {
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            opacity: 0.95;
+        }
+        
+        .job-postings-btn {
+            display: inline-block;
+            background-color: white;
+            color: #2c3e50;
+            padding: 12px 35px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .job-postings-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
         .filter-container {
             margin-bottom: 30px;
             padding: 20px;
@@ -204,6 +245,15 @@
         
         <h1>Dynamic Hiring Tools Index</h1>
         
+        <!-- New Job Postings Section -->
+        <div class="job-postings-banner">
+            <h2>📋 Performance-based Job Descriptions</h2>
+            <p>Browse our collection of job descriptions created using the Performance-based Hiring methodology</p>
+            <a href="./jobpostings/" class="job-postings-btn">
+                View Job Postings →
+            </a>
+        </div>
+        
         <div class="collection-selector">
             <p><strong>Quick Collections:</strong> Select a pre-defined collection of tools for specific use cases</p>
             <div class="collection-buttons">
@@ -248,6 +298,14 @@
         
         // Define all tools with their categories
         const tools = [
+            {
+                name: "Job Postings Collection",
+                description: "Browse Performance-based Job Descriptions for various positions",
+                filename: "jobpostings/",
+                categories: ["methodology", "framework"],
+                collections: ["essential"],
+                isSpecial: true
+            },
             {
                 name: "Hiring Framework Analysis",
                 description: "Comprehensive analysis tool for evaluating your current hiring framework",
@@ -424,11 +482,17 @@
                     `<span class="tag">${cat}</span>`
                 ).join('');
                 
+                // Special styling for job postings
+                const buttonStyle = tool.isSpecial ? 
+                    'background-color: #2c3e50;' : '';
+                
                 card.innerHTML = `
                     <h3>${tool.name}</h3>
                     <p>${tool.description}</p>
                     <div class="tags">${tagsHTML}</div>
-                    <a href="${TOOLS_BASE_PATH}${tool.filename}" target="_blank">Open Tool</a>
+                    <a href="${TOOLS_BASE_PATH}${tool.filename}" target="_blank" style="${buttonStyle}">
+                        ${tool.isSpecial ? 'Browse Job Postings' : 'Open Tool'}
+                    </a>
                 `;
                 
                 grid.appendChild(card);
