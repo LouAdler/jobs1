@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Metrics to Performance-based Hiring Translation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+        
+        .table-wrapper {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 20px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        th:last-child {
+            border-right: none;
+        }
+        
+        th:nth-child(1) { width: 15%; }
+        th:nth-child(2) { width: 20%; }
+        th:nth-child(3) { width: 20%; }
+        th:nth-child(4) { width: 25%; }
+        th:nth-child(5) { width: 20%; }
+        
+        tbody tr {
+            border-bottom: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9ff;
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+        
+        td {
+            padding: 18px 15px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            vertical-align: top;
+        }
+        
+        /* Metric Name Column */
+        td:first-child {
+            font-weight: 700;
+            color: #764ba2;
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, transparent 100%);
+        }
+        
+        /* Sports Definition */
+        td:nth-child(2) {
+            color: #4b5563;
+            font-size: 0.85rem;
+        }
+        
+        /* Business Equivalent */
+        td:nth-child(3) {
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        /* What It Measures */
+        td:nth-child(4) {
+            color: #374151;
+        }
+        
+        /* PBH Tool */
+        td:nth-child(5) {
+            color: #059669;
+            font-style: italic;
+            font-weight: 500;
+            background: rgba(16, 185, 129, 0.05);
+        }
+        
+        /* Special highlighting for key terms */
+        .highlight {
+            background: linear-gradient(120deg, #ffd700 0%, #ffed4e 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        /* Acronym styling */
+        .acronym {
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 1200px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            th, td {
+                padding: 12px 10px;
+                font-size: 0.85rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .table-wrapper {
+                overflow-x: auto;
+            }
+            
+            table {
+                min-width: 800px;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .header {
+                color: #1f2937;
+            }
+            
+            .table-wrapper {
+                box-shadow: none;
+            }
+            
+            tbody tr:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Sports Analytics → Performance-based Hiring</h1>
+            <p>Translating Championship Metrics to Talent Acquisition Excellence</p>
+        </div>
+        
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sport Metric</th>
+                        <th>Sports Context</th>
+                        <th>Business / PBH Equivalent</th>
+                        <th>What It Measures in Hiring</th>
+                        <th>PBH Tool / Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="acronym">WAR</span><br>Wins Above Replacement</td>
+                        <td>Total wins a player contributes above a replacement-level player</td>
+                        <td><span class="highlight">PARH</span> (Performance Above Replacement Hire) or Quality of Hire Index</td>
+                        <td>Overall impact a hire makes above a competent "average performer"</td>
+                        <td>Quality of Hire Scorecard (aggregate 3.5+ vs 2.5 baseline)</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="acronym">EPA</span><br>Expected Points Added</td>
+                        <td>Change in expected points from a single play or sequence</td>
+                        <td><span class="highlight">EPA*</span> Expected Performance Added per KPO</td>
+                        <td>Incremental contribution per performance objective (KPO), measured via outcomes or project lift</td>
+                        <td>PBJD → QoH Factor Mapping</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="acronym">WPA</span><br>Win Probability Added</td>
+                        <td>Change in win probability caused by a player's actions in high-leverage moments</td>
+                        <td>Win Probability Added (Hiring Context)</td>
+                        <td>Effect of candidate's decisions or initiatives on key team or business outcomes</td>
+                        <td>Scorecard Factors: Thinking, Leadership, Motivation</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="acronym">RAPM</span><br>Regularized Adjusted Plus-Minus</td>
+                        <td>Team scoring impact per 100 possessions, adjusted for teammates/opponents</td>
+                        <td><span class="highlight">API</span> Adjusted Performance Impact</td>
+                        <td>True contribution after adjusting for manager, culture, and team support</td>
+                        <td>Fit Factors: Managerial Fit, Culture & Pace Fit</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="acronym">BPM</span><br>Box Plus-Minus</td>
+                        <td>Impact estimate derived from box-score stats</td>
+                        <td><span class="highlight">OOR</span> Observable Output Rating</td>
+                        <td>Visible short-term output or KPIs (e.g., deliverables, metrics)</td>
+                        <td>Baseline performance tracking in onboarding plan</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="acronym">PER</span><br>Player Efficiency Rating</td>
+                        <td>Normalized per-minute production</td>
+                        <td><span class="highlight">PER*</span> Productivity Efficiency Rating</td>
+                        <td>Efficiency of executing tasks vs peers</td>
+                        <td>PBJD Subtasks vs Time-to-Competency Tracking</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="acronym">Leverage Index</span><br>(Baseball)</td>
+                        <td>Weights performance by situational importance</td>
+                        <td><span class="highlight">COW</span> Critical Objective Weighting</td>
+                        <td>Prioritization of objectives by impact on strategic outcomes</td>
+                        <td>SMARTe Major Objectives / KPO weighting</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="acronym">Clutch / WPA+</span><br>(Football, Basketball)</td>
+                        <td>Weighted performance in decisive moments</td>
+                        <td>High-Stakes Impact Multiplier</td>
+                        <td>Ability to perform or lead under high pressure or ambiguity</td>
+                        <td>Scorecard Factors: Problem-Solving, Leadership, Intrinsic Motivation</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="acronym">xG / xA</span><br>Expected Goals/Assists (Soccer)</td>
+                        <td>Probability-weighted expected success on opportunities created</td>
+                        <td><span class="highlight">xROI</span> Expected Return on Initiative</td>
+                        <td>Probability-adjusted forecast of impact for initiatives led by candidate</td>
+                        <td>PBJD SMARTe validation + Motivation² scoring</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
