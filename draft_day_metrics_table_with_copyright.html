@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Day: Building Championship Teams with Performance-based Hiring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .header h1 .draft-badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #764ba2;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(255,215,0,0.4);
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.1rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        .formula-banner {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .formula {
+            font-size: 1.4rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .table-wrapper {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 20px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+        
+        th:last-child {
+            border-right: none;
+        }
+        
+        th:nth-child(1) { width: 12%; }
+        th:nth-child(2) { width: 20%; }
+        th:nth-child(3) { width: 22%; }
+        th:nth-child(4) { width: 23%; }
+        th:nth-child(5) { width: 23%; }
+        
+        tbody tr {
+            border-bottom: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        tbody tr:hover {
+            background: linear-gradient(90deg, #f8f9ff 0%, #f3f4ff 100%);
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+        
+        td {
+            padding: 18px 15px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            vertical-align: top;
+        }
+        
+        /* Metric Name Column - Team Colors */
+        td:first-child {
+            font-weight: 800;
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.08) 0%, transparent 100%);
+            position: relative;
+        }
+        
+        /* Different color coding for each metric */
+        tr:nth-child(1) td:first-child { color: #dc2626; } /* WFW - Red */
+        tr:nth-child(2) td:first-child { color: #059669; } /* EPA - Green */
+        tr:nth-child(3) td:first-child { color: #2563eb; } /* SSI - Blue */
+        tr:nth-child(4) td:first-child { color: #7c3aed; } /* TLI - Purple */
+        tr:nth-child(5) td:first-child { color: #ea580c; } /* CMJ - Orange */
+        tr:nth-child(6) td:first-child { color: #ca8a04; } /* M² - Gold */
+        
+        /* Metric acronym */
+        .metric-name {
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .metric-full {
+            font-size: 0.75rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+        
+        /* PBH Context */
+        td:nth-child(2) {
+            color: #1f2937;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        /* Definition */
+        td:nth-child(3) {
+            color: #374151;
+            font-style: italic;
+        }
+        
+        /* What It Measures */
+        td:nth-child(4) {
+            color: #4b5563;
+        }
+        
+        /* PBH Source */
+        td:nth-child(5) {
+            color: #059669;
+            font-weight: 500;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 4px;
+        }
+        
+        /* Special highlighting */
+        .highlight {
+            background: linear-gradient(120deg, #ffd700 0%, #ffed4e 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #1f2937;
+            display: inline-block;
+        }
+        
+        .emphasis {
+            font-weight: 700;
+            color: #764ba2;
+        }
+        
+        /* Draft Day badge for key metrics */
+        .draft-priority {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #ffd700;
+            color: #1f2937;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: white;
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+        
+        .footer .tagline {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 1200px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            th, td {
+                padding: 12px 10px;
+                font-size: 0.85rem;
+            }
+            
+            .formula {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .table-wrapper {
+                overflow-x: auto;
+            }
+            
+            table {
+                min-width: 900px;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .header {
+                color: #1f2937;
+            }
+            
+            .formula-banner {
+                background: #f3f4f6;
+                color: #1f2937;
+                border: 2px solid #9ca3af;
+            }
+            
+            .table-wrapper {
+                box-shadow: none;
+                border: 1px solid #d1d5db;
+            }
+            
+            tbody tr:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                🏆 
+                <span class="draft-badge">DRAFT DAY</span>
+                Building Championship Teams
+            </h1>
+            <p>Transform Your Hiring Process into a Winning Draft Strategy</p>
+            <p class="subtitle">Performance-based Hiring Metrics for Team Builders</p>
+        </div>
+        
+        <div class="formula-banner">
+            <div class="formula">
+                WFW = (EPA × SSI × TLI × CMJ) × M²
+            </div>
+            <div style="margin-top: 10px; font-size: 0.95rem; opacity: 0.9;">
+                Your Championship Formula: Wins for Work
+            </div>
+        </div>
+        
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Performance-based Hiring Context</th>
+                        <th>Definition</th>
+                        <th>What It Measures in Hiring</th>
+                        <th>PBH Source / Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="metric-name">WFW</span>
+                            <span class="metric-full">WAR for Work</span>
+                            <span class="draft-priority">MVP</span>
+                        </td>
+                        <td>Total Performance Above Replacement Hire</td>
+                        <td>Overall contribution potential above an average performer, integrating ability, leadership, and contextual fit</td>
+                        <td>The predicted <span class="emphasis">Quality of Hire impact</span> — how much this person improves the team's "win total"</td>
+                        <td>Derived from full <span class="highlight">PBH Scorecard</span> + PBJD</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <span class="metric-name">EPA</span>
+                            <span class="metric-full">Expected Performance Added</span>
+                        </td>
+                        <td>Work Output Impact per KPO</td>
+                        <td>Quantifies measurable impact per Major Objective or Critical Subtask relative to average performance</td>
+                        <td>Reflects <span class="emphasis">what they deliver</span> and how much above average that impact is</td>
+                        <td>PBJD + QoH Scorecard (Technical Talent, Problem Solving, Achiever Pattern)</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <span class="metric-name">SSI</span>
+                            <span class="metric-full">Super Skills Index</span>
+                        </td>
+                        <td>Core Capability Engine</td>
+                        <td>Aggregates the critical technical and cognitive skills required for top performance in this role — the "tools" that enable EPA</td>
+                        <td>Measures <span class="emphasis">potential repeatability</span> of performance based on technical mastery and skill scalability</td>
+                        <td>Derived from PBJD Review (Step 1.5) + O*NET mapping + Super Skills inference</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <span class="metric-name">TLI</span>
+                            <span class="metric-full">Team Leadership Impact</span>
+                            <span class="draft-priority">TEAM</span>
+                        </td>
+                        <td>Team Multiplier Effect</td>
+                        <td>Assesses how the candidate amplifies others through collaboration, leadership, and influence</td>
+                        <td>Reflects how they <span class="emphasis">win with others</span> and elevate team performance</td>
+                        <td>QoH Scorecard: Team Skills, Leadership, Upside Potential</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <span class="metric-name">CMJ</span>
+                            <span class="metric-full">Company/Manager/Job Fit Index</span>
+                        </td>
+                        <td>Contextual Alignment</td>
+                        <td>Fit with the company culture, manager's leadership style, and job structure</td>
+                        <td>Predicts <span class="emphasis">sustained success and retention</span></td>
+                        <td>Scorecard: Managerial Fit, Culture & Pace Fit, Job Fit</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <span class="metric-name">M²</span>
+                            <span class="metric-full">Intrinsic Motivation Multiplier</span>
+                            <span class="draft-priority">X-FACTOR</span>
+                        </td>
+                        <td>Discretionary Effort Amplifier</td>
+                        <td>Multiplies total performance by intrinsic motivation — energy directed toward the actual work</td>
+                        <td>Captures the <span class="emphasis">"why they'll excel"</span></td>
+                        <td><span class="highlight">Motivation² factor</span> (behavioral evidence)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <div class="tagline">📊 Moneyball for HR® | 🎯 Performance-based Hiring®</div>
+            <div>Build Your Championship Team with Data-Driven Talent Decisions</div>
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.3); font-size: 0.9rem; opacity: 0.8;">
+                ©2025 All Rights Reserved • Performance-based Hiring Learning Systems • 
+                <a href="mailto:info@performancebasedhiring.com" style="color: white; text-decoration: underline;">info@performancebasedhiring.com</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
