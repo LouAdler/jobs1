@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 12 Universal Traits of Top Performers - Performance-based Hiring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+        
+        .intro {
+            padding: 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .intro p {
+            font-size: 1.1em;
+            color: #495057;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .traits-grid {
+            padding: 40px;
+        }
+        
+        .trait-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .trait-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .trait-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            transition: background 0.3s ease;
+        }
+        
+        .trait-card.active .trait-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .trait-number {
+            width: 40px;
+            height: 40px;
+            background: white;
+            color: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 15px;
+        }
+        
+        .trait-card.active .trait-number {
+            background: white;
+            color: #764ba2;
+        }
+        
+        .trait-title {
+            flex: 1;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        
+        .expand-icon {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+        }
+        
+        .trait-card.active .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .trait-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: white;
+        }
+        
+        .trait-card.active .trait-content {
+            max-height: 600px;
+        }
+        
+        .trait-details {
+            padding: 25px;
+        }
+        
+        .trait-description {
+            font-size: 1.05em;
+            color: #495057;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .interview-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        
+        .interview-section h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .interview-section h4::before {
+            content: "💡";
+            margin-right: 8px;
+        }
+        
+        .interview-question {
+            background: white;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-style: italic;
+            color: #2c3e50;
+        }
+        
+        .behavior-indicators {
+            margin-top: 20px;
+        }
+        
+        .behavior-indicators h4 {
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .indicators-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .indicator {
+            background: #e7f3ff;
+            color: #0066cc;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            margin: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .trait-title {
+                font-size: 1.1em;
+            }
+            
+            .trait-number {
+                width: 35px;
+                height: 35px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>The 12 Universal Traits of Top Performers</h1>
+            <p class="subtitle">Transform Your Hiring with Performance-based Interview Methodology</p>
+        </header>
+        
+        <div class="intro">
+            <p>After 50 years of analyzing thousands of hires, these twelve behavioral patterns consistently separate exceptional performers from the average across all industries and roles. Click each trait to explore targeted interview questions and behavioral indicators.</p>
+        </div>
+        
+        <div class="traits-grid">
+            <!-- Trait 1 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">1</div>
+                    <div class="trait-title">Ownership Beyond Boundaries</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            The best take psychological ownership of outcomes beyond their job description. While others say "that's not my job," top performers can't walk past a problem without solving it. They view the organization's success as their personal responsibility.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Describe the biggest situation where you took on something that wasn't your responsibility. What drove you to do it, and what was the outcome?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Proactive problem identification</span>
+                                <span class="indicator">Cross-functional collaboration</span>
+                                <span class="indicator">Personal investment in outcomes</span>
+                                <span class="indicator">Initiative without permission</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trait 2 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">2</div>
+                    <div class="trait-title">Systems Thinking</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            Top performers see interconnections others miss. They solve root causes that eliminate multiple downstream issues, while average performers apply Band-Aids to symptoms. They understand how changes ripple through organizations.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Give an example where fixing one problem would create others. How did you handle the competing priorities and interconnected challenges?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Root cause analysis</span>
+                                <span class="indicator">Unintended consequences awareness</span>
+                                <span class="indicator">Holistic problem-solving</span>
+                                <span class="indicator">Process optimization</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trait 3 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">3</div>
+                    <div class="trait-title">Pattern Recognition</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            Excellence means spotting trends that predict future problems. The best prevent fires; the rest fight them. They connect dots others don't see and anticipate challenges before they materialize.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Tell me about a time when you identified a pattern or trend that others missed. How did you spot it, and what action did you take?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Predictive thinking</span>
+                                <span class="indicator">Data pattern analysis</span>
+                                <span class="indicator">Early warning systems</span>
+                                <span class="indicator">Preventive action</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trait 4 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">4</div>
+                    <div class="trait-title">Learning Velocity</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            Exceptional employees treat every project as education. They immediately apply new knowledge, making themselves more valuable with each assignment. Their learning curve is exponential, not linear.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Describe a situation where you had to quickly learn something completely new. How did you approach it, and how did you apply what you learned?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Self-directed learning</span>
+                                <span class="indicator">Knowledge application speed</span>
+                                <span class="indicator">Continuous improvement</span>
+                                <span class="indicator">Teaching others</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trait 5 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">5</div>
+                    <div class="trait-title">Influence Without Authority</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            Stars build trust that makes others want to follow. They achieve through relationships what others attempt through rules. They create buy-in without formal power structures.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Give me an example of when you had to get others to support your idea when you had no formal authority over them. How did you build consensus?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Relationship building</span>
+                                <span class="indicator">Trust development</span>
+                                <span class="indicator">Persuasion techniques</span>
+                                <span class="indicator">Coalition building</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trait 6 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">6</div>
+                    <div class="trait-title">Communication Clarity</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            The best translate complexity for any audience. They present solutions, not just problems, and speak in business impact, not technical jargon. They make the complex simple and actionable.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Describe a time when you had to explain a complex technical concept to non-technical stakeholders. How did you ensure understanding?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Audience adaptation</span>
+                                <span class="indicator">Simplification skills</span>
+                                <span class="indicator">Visual communication</span>
+                                <span class="indicator">Impact-focused messaging</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trait 7 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">7</div>
+                    <div class="trait-title">Growth Mindset</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            When facing failure or a challenge, top performers ask "What can I learn?" while others ask "Who can I blame?" They view setbacks as data, not defeats, and obstacles as opportunities to grow.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Tell me about your biggest professional failure and what changed because of it. How did it reshape your approach?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Failure ownership</span>
+                                <span class="indicator">Lesson extraction</span>
+                                <span class="indicator">Resilience demonstration</span>
+                                <span class="indicator">Applied improvements</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trait 8 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">8</div>
+                    <div class="trait-title">Multiplier Effect</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            Great employees make everyone around them better. They share knowledge freely and build systems that outlast their tenure. Their impact extends far beyond their individual contribution.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Give an example of how you've helped improve the performance of your team or colleagues. What systems or processes did you create?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Knowledge sharing</span>
+                                <span class="indicator">Mentoring behaviors</span>
+                                <span class="indicator">Process documentation</span>
+                                <span class="indicator">Team elevation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trait 9 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">9</div>
+                    <div class="trait-title">Strategic Perspective</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            The best understand why before determining how. They question requirements that don't align with real objectives and ensure tactical execution serves strategic goals.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Describe a time when you questioned or challenged the requirements or direction you were given. What was your reasoning and approach?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Big picture thinking</span>
+                                <span class="indicator">Goal alignment</span>
+                                <span class="indicator">Constructive challenging</span>
+                                <span class="indicator">Strategic recommendations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trait 10 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">10</div>
+                    <div class="trait-title">Comfort with Ambiguity</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            Excellence means moving forward intelligently with incomplete information, while others wait for perfect clarity that never comes. They make progress in uncertainty through structured experimentation.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Tell me about a project where you had to make important decisions with incomplete or conflicting information. How did you proceed?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Risk assessment</span>
+                                <span class="indicator">Hypothesis testing</span>
+                                <span class="indicator">Iterative approach</span>
+                                <span class="indicator">Decision frameworks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trait 11 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">11</div>
+                    <div class="trait-title">Stakeholder Obsession</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            Top performers deliver what's needed, not just what's requested. They solve for outcomes, not specifications, and deeply understand the underlying needs of their stakeholders.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Give an example of when you delivered something different from what was originally requested. Why did you make that decision?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Needs discovery</span>
+                                <span class="indicator">Solution validation</span>
+                                <span class="indicator">Outcome focus</span>
+                                <span class="indicator">Stakeholder empathy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trait 12 -->
+            <div class="trait-card" onclick="toggleTrait(this)">
+                <div class="trait-header">
+                    <div class="trait-number">12</div>
+                    <div class="trait-title">Intellectual Honesty</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="trait-content">
+                    <div class="trait-details">
+                        <p class="trait-description">
+                            The best admit what they don't know, own mistakes quickly, and value getting it right over being right. They create psychological safety through transparency and vulnerability.
+                        </p>
+                        <div class="interview-section">
+                            <h4>Targeted Interview Question</h4>
+                            <div class="interview-question">
+                                "Tell me about a time when you had to admit you were wrong about something important. How did you handle it?"
+                            </div>
+                        </div>
+                        <div class="behavior-indicators">
+                            <h4>What to Listen For:</h4>
+                            <div class="indicators-list">
+                                <span class="indicator">Mistake ownership</span>
+                                <span class="indicator">Learning orientation</span>
+                                <span class="indicator">Ego management</span>
+                                <span class="indicator">Trust building</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h2 style="margin-bottom: 20px; color: #2c3e50;">Transform Your Hiring Process</h2>
+            <p style="margin-bottom: 30px; color: #495057;">Organizations using these universal traits to guide hiring decisions build teams that continuously improve, adapt faster to change, and generate innovation from within.</p>
+            <a href="https://hiring.tips/AG_contactmain5" class="cta-button" target="_blank">Learn the Full Methodology</a>
+            <a href="https://hiring.tips/PbI_demo" class="cta-button" target="_blank">Download Interview Guide</a>
+            <p style="margin-top: 30px; color: #6c757d; font-size: 0.95em;">
+                © 2025 - All Rights Reserved - Performance-based Hiring<br>
+                <a href="mailto:info@performancehiring.com" style="color: #667eea; text-decoration: none;">info@performancehiring.com</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function toggleTrait(card) {
+            // Close all other cards
+            const allCards = document.querySelectorAll('.trait-card');
+            allCards.forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('active');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('active');
+        }
+        
+        // Add smooth scroll behavior
+        document.querySelectorAll('.trait-card').forEach(card => {
+            card.addEventListener('click', function() {
+                setTimeout(() => {
+                    if (this.classList.contains('active')) {
+                        this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>
