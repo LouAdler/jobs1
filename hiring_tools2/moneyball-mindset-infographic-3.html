@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Moneyball Mindset for Business Leaders</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0a1628;
+            --gold: #d4a852;
+            --gold-light: #e8c777;
+            --cream: #f5f1e8;
+            --green-turf: #2d5a3d;
+            --white: #ffffff;
+            --gray-subtle: #8a9bb3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--navy);
+            font-family: 'Source Serif 4', Georgia, serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .infographic {
+            width: 100%;
+            max-width: 900px;
+            background: linear-gradient(180deg, var(--navy) 0%, #0d1c33 100%);
+            border: 3px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Stadium light effect */
+        .infographic::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(ellipse at center, rgba(212, 168, 82, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: 50px 40px 30px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .eyebrow {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeInDown 0.6s ease-out 0.2s forwards;
+        }
+
+        .main-title {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: clamp(36px, 6vw, 56px);
+            text-transform: uppercase;
+            color: var(--white);
+            line-height: 1.1;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 0.4s forwards;
+        }
+
+        .main-title span {
+            color: var(--gold);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--cream);
+            font-style: italic;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 0.6s forwards;
+        }
+
+        /* Central Visual - The GM View */
+        .gm-section {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .field-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.8s forwards;
+        }
+
+        /* The Press Box */
+        .press-box {
+            background: linear-gradient(135deg, #1a2a44 0%, #0d1628 100%);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 25px 35px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            margin-bottom: -15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .press-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+        }
+
+        .gm-label {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .gm-role {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 28px;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .gm-desc {
+            font-size: 14px;
+            color: var(--gray-subtle);
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* The Field */
+        .field {
+            background: linear-gradient(180deg, var(--green-turf) 0%, #1e4030 100%);
+            border-radius: 0 0 50% 50% / 0 0 20% 20%;
+            padding: 50px 30px 60px;
+            position: relative;
+            border: 2px solid rgba(212, 168, 82, 0.3);
+            border-top: none;
+        }
+
+        /* Field lines */
+        .field::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 60%;
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 0 0 50% 50%;
+        }
+
+        .field::after {
+            content: '';
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30%;
+            height: 25%;
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 0 0 50% 50%;
+            border-top: none;
+        }
+
+        .field-message {
+            text-align: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .field-message p {
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.8;
+        }
+
+        .field-message p span {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        /* Connection lines from press box to field */
+        .sight-lines {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 30px;
+            z-index: 5;
+        }
+
+        .sight-lines::before,
+        .sight-lines::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--gold), transparent);
+        }
+
+        .sight-lines::before {
+            left: 20%;
+            transform: rotate(-15deg);
+        }
+
+        .sight-lines::after {
+            right: 20%;
+            transform: rotate(15deg);
+        }
+
+        /* Benefits Grid */
+        .benefits-section {
+            padding: 50px 40px;
+            position: relative;
+        }
+
+        .benefits-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .section-label {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 500;
+            font-size: 13px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 35px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 1s forwards;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .benefit-card {
+            background: linear-gradient(135deg, rgba(26, 42, 68, 0.8) 0%, rgba(13, 22, 40, 0.8) 100%);
+            border: 1px solid rgba(212, 168, 82, 0.3);
+            border-radius: 6px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(212, 168, 82, 0.15);
+        }
+
+        .benefit-card:nth-child(1) { animation: slideUp 0.5s ease-out 1.1s forwards; }
+        .benefit-card:nth-child(2) { animation: slideUp 0.5s ease-out 1.2s forwards; }
+        .benefit-card:nth-child(3) { animation: slideUp 0.5s ease-out 1.3s forwards; }
+        .benefit-card:nth-child(4) { animation: slideUp 0.5s ease-out 1.4s forwards; }
+        .benefit-card:nth-child(5) { animation: slideUp 0.5s ease-out 1.5s forwards; }
+        .benefit-card:nth-child(6) { animation: slideUp 0.5s ease-out 1.6s forwards; }
+
+        .benefit-number {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 48px;
+            color: rgba(212, 168, 82, 0.1);
+            line-height: 1;
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 15px;
+            color: var(--gold);
+        }
+
+        .benefit-title {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .benefit-desc {
+            font-size: 14px;
+            color: var(--gray-subtle);
+            line-height: 1.6;
+        }
+
+        /* Bottom Line */
+        .bottom-line {
+            background: linear-gradient(135deg, rgba(212, 168, 82, 0.15) 0%, rgba(212, 168, 82, 0.05) 100%);
+            border-top: 1px solid var(--gold);
+            padding: 30px 40px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 1.8s forwards;
+        }
+
+        .bottom-quote {
+            font-size: 17px;
+            color: var(--cream);
+            font-style: italic;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto 20px;
+        }
+
+        .bottom-quote strong {
+            color: var(--gold);
+            font-style: normal;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(212, 168, 82, 0.2);
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 2s forwards;
+        }
+
+        .brand {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .brand span {
+            color: var(--gold);
+        }
+
+        .tagline {
+            font-size: 13px;
+            color: var(--gray-subtle);
+            font-style: italic;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 40px 25px 25px;
+            }
+
+            .gm-section {
+                padding: 30px 20px;
+            }
+
+            .benefits-section {
+                padding: 40px 25px;
+            }
+
+            .footer {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="infographic">
+        <!-- Header -->
+        <header class="header">
+            <p class="eyebrow">Performance-based Hiring</p>
+            <h1 class="main-title">The <span>Moneyball</span> Mindset<br>for Business Leaders</h1>
+            <p class="subtitle">Build Teams That Perform and Self-Direct</p>
+        </header>
+
+        <!-- Central GM Visual -->
+        <section class="gm-section">
+            <div class="field-container">
+                <div class="press-box">
+                    <p class="gm-label">Your Role</p>
+                    <h2 class="gm-role">The Architect</h2>
+                    <p class="gm-desc">Strategic vision • Team design • System builder</p>
+                    <div class="sight-lines"></div>
+                </div>
+
+                <div class="field">
+                    <div class="field-message">
+                        <p><span>Selection</span> — Right player, every position</p>
+                        <p><span>Direction</span> — Everyone aligned on winning</p>
+                        <p><span>Execution</span> — The team runs itself</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Grid -->
+        <section class="benefits-section">
+            <p class="section-label">Six Strategic Advantages</p>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <span class="benefit-number">01</span>
+                    <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    <h3 class="benefit-title">Self-Directing Teams</h3>
+                    <p class="benefit-desc">People arrive knowing what success looks like. The team executes without constant oversight.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-number">02</span>
+                    <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <h3 class="benefit-title">Right Player, Every Position</h3>
+                    <p class="benefit-desc">Every seat filled by someone who can play that role at the level required. No carrying underperformers.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-number">03</span>
+                    <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <h3 class="benefit-title">Aligned Around Winning</h3>
+                    <p class="benefit-desc">Everyone understands their objectives and how they connect to department goals. One direction, shared purpose.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-number">04</span>
+                    <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
+                    </svg>
+                    <h3 class="benefit-title">Eliminate the Management Tax</h3>
+                    <p class="benefit-desc">Stop firefighting. Stop reacting to problems instead of building toward goals. The right roster gives you time back.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-number">05</span>
+                    <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                        <polyline points="17 6 23 6 23 12"/>
+                    </svg>
+                    <h3 class="benefit-title">Bench Strength Built In</h3>
+                    <p class="benefit-desc">Always thinking about future depth. Build a pipeline of people ready to step up—not perpetual crisis-hiring.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-number">06</span>
+                    <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="2" y1="12" x2="22" y2="12"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    <h3 class="benefit-title">Operator → Strategist</h3>
+                    <p class="benefit-desc">When the team performs, you focus on where the department is going—the work that moves the business.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Line -->
+        <div class="bottom-line">
+            <p class="bottom-quote">
+                <strong>The GM doesn't play the game.</strong> They build the roster, set the system, and ensure every player knows their role. Then they focus on the big picture.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="brand">Performance-based Hiring — <span>Moneyball for HR</span></div>
+            <div class="tagline">performancebasedhiring.com</div>
+        </footer>
+    </div>
+</body>
+</html>
