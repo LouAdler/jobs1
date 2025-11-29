@@ -1582,4 +1582,455 @@
                     <p class="factor-description">Flexibility, autonomy, and sustainable work-life integration</p>
                     <div class="rating-scale">
                         <div class="rating-button" onclick="setRating('balance', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Burnout Risk</h4>
+                                <ul>
+                                    <li>80+ hour weeks</li>
+                                    <li>No flexibility</li>
+                                    <li>Always on-call</li>
+                                    <li>High stress culture</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('balance', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Demanding</h4>
+                                <ul>
+                                    <li>60+ hour norm</li>
+                                    <li>Limited flexibility</li>
+                                    <li>Weekend work expected</li>
+                                    <li>Vacation discouraged</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('balance', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Reasonable</h4>
+                                <ul>
+                                    <li>45-50 hour weeks</li>
+                                    <li>Some flexibility</li>
+                                    <li>Respects boundaries</li>
+                                    <li>Normal vacation use</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('balance', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Flexible</h4>
+                                <ul>
+                                    <li>Results-focused</li>
+                                    <li>Remote options</li>
+                                    <li>Strong boundaries</li>
+                                    <li>Wellness prioritized</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('balance', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Optimal</h4>
+                                <ul>
+                                    <li>Full autonomy</li>
+                                    <li>Work from anywhere</li>
+                                    <li>Unlimited PTO used</li>
+                                    <li>Life integration model</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Work hours expectations, flexibility policies, remote work options..."></textarea>
+                </div>
                 
+                <!-- Factor 7: Compensation & Benefits -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        7. Compensation & Benefits
+                        <span class="factor-score" id="compensationScore">0</span>
+                    </div>
+                    <p class="factor-description">Total rewards package relative to market and personal needs</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('compensation', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Below Market</h4>
+                                <ul>
+                                    <li>20%+ below market</li>
+                                    <li>Minimal benefits</li>
+                                    <li>No equity/bonus</li>
+                                    <li>Financial stress</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('compensation', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Weak Package</h4>
+                                <ul>
+                                    <li>10-20% below market</li>
+                                    <li>Basic benefits only</li>
+                                    <li>Limited upside</li>
+                                    <li>No differentiation</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('compensation', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Market Rate</h4>
+                                <ul>
+                                    <li>Competitive base</li>
+                                    <li>Standard benefits</li>
+                                    <li>Some bonus/equity</li>
+                                    <li>Fair package</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('compensation', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Above Market</h4>
+                                <ul>
+                                    <li>Top quartile pay</li>
+                                    <li>Excellent benefits</li>
+                                    <li>Significant equity</li>
+                                    <li>Strong upside</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('compensation', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Life Changing</h4>
+                                <ul>
+                                    <li>Top 5% package</li>
+                                    <li>Wealth building</li>
+                                    <li>Major equity stake</li>
+                                    <li>Golden handcuffs</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Base salary, bonus structure, equity details, benefits summary..."></textarea>
+                </div>
+                
+                <!-- Factor 8: Location & Commute -->
+                <div class="factor-group">
+                    <div class="factor-title">
+                        8. Location & Commute
+                        <span class="factor-score" id="locationScore">0</span>
+                    </div>
+                    <p class="factor-description">Geographic desirability and commute impact on quality of life</p>
+                    <div class="rating-scale">
+                        <div class="rating-button" onclick="setRating('location', 1)">
+                            1
+                            <div class="evidence-popup">
+                                <h4>Level 1 - Major Issue</h4>
+                                <ul>
+                                    <li>Requires relocation</li>
+                                    <li>2+ hour commute</li>
+                                    <li>Undesirable area</li>
+                                    <li>Family disruption</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('location', 2)">
+                            2
+                            <div class="evidence-popup">
+                                <h4>Level 2 - Challenging</h4>
+                                <ul>
+                                    <li>60-90 min commute</li>
+                                    <li>Traffic concerns</li>
+                                    <li>OK location</li>
+                                    <li>Some sacrifice</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('location', 3)">
+                            3
+                            <div class="evidence-popup">
+                                <h4>Level 3 - Acceptable</h4>
+                                <ul>
+                                    <li>30-45 min commute</li>
+                                    <li>Good location</li>
+                                    <li>Transit options</li>
+                                    <li>Manageable</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('location', 4)">
+                            4
+                            <div class="evidence-popup">
+                                <h4>Level 4 - Convenient</h4>
+                                <ul>
+                                    <li>Under 30 min</li>
+                                    <li>Great area</li>
+                                    <li>Multiple options</li>
+                                    <li>Enhances life</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rating-button" onclick="setRating('location', 5)">
+                            5
+                            <div class="evidence-popup">
+                                <h4>Level 5 - Perfect</h4>
+                                <ul>
+                                    <li>Walk/bike distance</li>
+                                    <li>Dream location</li>
+                                    <li>Full remote option</li>
+                                    <li>Zero compromise</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="evidence-box" placeholder="Office location, commute options, remote work policy, relocation needs..."></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Summary Section -->
+        <div class="summary-section">
+            <h2 class="section-title">Analysis Summary</h2>
+            <div class="summary-grid">
+                <div class="summary-card" id="strengthCard">
+                    <h4>Key Strengths</h4>
+                    <p id="strengthText">Complete the assessment to see strengths</p>
+                </div>
+                <div class="summary-card" id="riskCard">
+                    <h4>Risk Factors</h4>
+                    <p id="riskText">Complete the assessment to see risks</p>
+                </div>
+                <div class="summary-card" id="recommendCard">
+                    <h4>Recommendation</h4>
+                    <p id="recommendText">Complete the assessment for recommendation</p>
+                </div>
+                <div class="summary-card" id="actionCard">
+                    <h4>Next Steps</h4>
+                    <p id="actionText">Complete the assessment for action items</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="export-section">
+            <button onclick="exportResults()">Export Full Report</button>
+        </div>
+    </div>
+    
+    <script>
+        // Store all ratings
+        const ratings = {
+            // Company side (Quality of Hire)
+            skills: 0,
+            achiever: 0,
+            talent: 0,
+            management: 0,
+            team: 0,
+            problem: 0,
+            jobfit: 0,
+            mgrfit: 0,
+            culture: 0,
+            motivation: 0,
+            // Candidate side (Career Move)
+            growth: 0,
+            impact: 0,
+            manager: 0,
+            compCulture: 0,
+            teamQuality: 0,
+            balance: 0,
+            compensation: 0,
+            location: 0
+        };
+        
+        // Set rating for a factor
+        function setRating(factor, value) {
+            ratings[factor] = value;
+            
+            // Update UI
+            const buttons = document.querySelectorAll(`[onclick*="setRating('${factor}'"]`);
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            // Update score display
+            const scoreElement = document.getElementById(factor + 'Score');
+            scoreElement.textContent = value;
+            scoreElement.className = 'factor-score';
+            if (value <= 2) scoreElement.classList.add('low');
+            else if (value === 3) scoreElement.classList.add('medium');
+            else scoreElement.classList.add('high');
+            
+            // Recalculate probability
+            calculateProbability();
+        }
+        
+        // Calculate the win-win probability
+        function calculateProbability() {
+            // Get company-side factors (Quality of Hire)
+            const qohFactors = ['skills', 'achiever', 'talent', 'management', 'team', 
+                               'problem', 'jobfit', 'mgrfit', 'culture'];
+            const qohRatings = qohFactors.map(f => ratings[f]).filter(r => r > 0);
+            
+            // Get candidate-side factors (Career Move)
+            const cmFactors = ['growth', 'impact', 'manager', 'compCulture', 
+                              'teamQuality', 'balance', 'compensation', 'location'];
+            const cmRatings = cmFactors.map(f => ratings[f]).filter(r => r > 0);
+            
+            // Get motivation (power factor)
+            const motivation = ratings.motivation || 3; // Default to 3 if not set
+            
+            // Calculate averages
+            const qohAverage = qohRatings.length > 0 ? 
+                qohRatings.reduce((a, b) => a + b) / qohRatings.length : 0;
+            const cmAverage = cmRatings.length > 0 ? 
+                cmRatings.reduce((a, b) => a + b) / cmRatings.length : 0;
+            
+            // Calculate alignment factor (how well the two sides match)
+            const alignmentFactor = Math.min(qohAverage, cmAverage) / Math.max(qohAverage, cmAverage) || 0;
+            
+            // Calculate base probability (normalized to 0-1)
+            const baseProbability = (qohAverage / 5) * (cmAverage / 5) * alignmentFactor;
+            
+            // Apply motivation as exponential factor
+            const motivationMultiplier = Math.pow(motivation / 3, 0.5); // Square root for balanced impact
+            const finalProbability = Math.min(baseProbability * motivationMultiplier, 1) * 100;
+            
+            // Calculate evidence strength
+            const totalRated = qohRatings.length + cmRatings.length;
+            const evidenceStrength = (totalRated / 18) * 100;
+            
+            // Update displays
+            document.getElementById('mainProbability').textContent = Math.round(finalProbability) + '%';
+            document.getElementById('qohScore').textContent = Math.round(qohAverage * 20) + '%';
+            document.getElementById('cmScore').textContent = Math.round(cmAverage * 20) + '%';
+            document.getElementById('alignScore').textContent = Math.round(alignmentFactor * 100) + '%';
+            document.getElementById('evidenceScore').textContent = Math.round(evidenceStrength) + '%';
+            
+            // Update probability circle
+            const degrees = (finalProbability / 100) * 360;
+            document.querySelector('.probability-circle').style.setProperty('--probability', degrees + 'deg');
+            
+            // Update confidence level
+            let confidence = 'Low';
+            if (evidenceStrength >= 80) confidence = 'High';
+            else if (evidenceStrength >= 50) confidence = 'Medium';
+            document.getElementById('confidenceLevel').textContent = confidence + ' Confidence';
+            
+            // Update gap analysis
+            updateGapAnalysis();
+            
+            // Update summary
+            updateSummary(finalProbability, qohAverage, cmAverage);
+        }
+        
+        // Update gap analysis
+        function updateGapAnalysis() {
+            const gapDiv = document.getElementById('gapAnalysis');
+            const unrated = Object.entries(ratings).filter(([k, v]) => v === 0);
+            
+            if (unrated.length === 0) {
+                gapDiv.innerHTML = '<div class="gap-title">Assessment Complete!</div>';
+                gapDiv.style.background = '#d4edda';
+                gapDiv.style.borderColor = '#c3e6cb';
+            } else {
+                let html = '<div class="gap-title">Missing Assessments (' + unrated.length + ' factors)</div>';
+                unrated.forEach(([factor, _]) => {
+                    const factorName = factor.charAt(0).toUpperCase() + factor.slice(1);
+                    html += '<div class="gap-item">' + factorName + ' not yet rated</div>';
+                });
+                gapDiv.innerHTML = html;
+            }
+        }
+        
+        // Update summary section
+        function updateSummary(probability, qohAvg, cmAvg) {
+            const strengthCard = document.getElementById('strengthCard');
+            const riskCard = document.getElementById('riskCard');
+            const recommendCard = document.getElementById('recommendCard');
+            const actionCard = document.getElementById('actionCard');
+            
+            // Find strengths and weaknesses
+            const allFactors = Object.entries(ratings).filter(([k, v]) => v > 0);
+            const strengths = allFactors.filter(([k, v]) => v >= 4).map(([k, v]) => k);
+            const weaknesses = allFactors.filter(([k, v]) => v <= 2).map(([k, v]) => k);
+            
+            // Update strength card
+            if (strengths.length > 0) {
+                strengthCard.classList.add('success');
+                let strengthText = '<ul>';
+                strengths.slice(0, 3).forEach(s => {
+                    strengthText += '<li>' + s.charAt(0).toUpperCase() + s.slice(1) + ' (Rating: ' + ratings[s] + ')</li>';
+                });
+                strengthText += '</ul>';
+                document.getElementById('strengthText').innerHTML = strengthText;
+            }
+            
+            // Update risk card
+            if (weaknesses.length > 0) {
+                riskCard.classList.add('danger');
+                let riskText = '<ul>';
+                weaknesses.slice(0, 3).forEach(w => {
+                    riskText += '<li>' + w.charAt(0).toUpperCase() + w.slice(1) + ' (Rating: ' + ratings[w] + ')</li>';
+                });
+                riskText += '</ul>';
+                document.getElementById('riskText').innerHTML = riskText;
+            }
+            
+            // Update recommendation
+            let recommendation = '';
+            if (probability >= 75) {
+                recommendCard.classList.add('success');
+                recommendation = 'Strong Win-Win Match! This hire has high probability of mutual success.';
+            } else if (probability >= 50) {
+                recommendCard.classList.add('warning');
+                recommendation = 'Moderate Match. Address key gaps before proceeding.';
+            } else {
+                recommendCard.classList.add('danger');
+                recommendation = 'Poor Match. Significant risks outweigh potential benefits.';
+            }
+            document.getElementById('recommendText').textContent = recommendation;
+            
+            // Update action items
+            let actions = '<ul>';
+            if (weaknesses.length > 0) {
+                actions += '<li>Address critical gaps in: ' + weaknesses.slice(0, 2).join(', ') + '</li>';
+            }
+            if (probability < 75) {
+                actions += '<li>Gather more evidence on low-scoring factors</li>';
+            }
+            actions += '<li>Validate assumptions with references</li>';
+            actions += '</ul>';
+            document.getElementById('actionText').innerHTML = actions;
+        }
+        
+        // Export results
+        function exportResults() {
+            const report = {
+                date: new Date().toISOString(),
+                probability: document.getElementById('mainProbability').textContent,
+                ratings: ratings,
+                summary: {
+                    qohScore: document.getElementById('qohScore').textContent,
+                    cmScore: document.getElementById('cmScore').textContent,
+                    alignScore: document.getElementById('alignScore').textContent,
+                    evidenceScore: document.getElementById('evidenceScore').textContent
+                }
+            };
+            
+            const dataStr = JSON.stringify(report, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'hiring-probability-report-' + Date.now() + '.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+        
+        // Initialize
+        calculateProbability();
+    </script>
+</body>
+</html>
