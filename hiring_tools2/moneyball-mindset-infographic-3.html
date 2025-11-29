@@ -72,6 +72,17 @@
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
         }
 
+        .header-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: opacity 0.2s ease;
+        }
+
+        .header-link:hover {
+            opacity: 0.9;
+        }
+
         .eyebrow {
             font-family: 'Oswald', sans-serif;
             font-weight: 500;
@@ -382,6 +393,33 @@
             font-style: normal;
         }
 
+        /* Reach Out CTA */
+        .reach-out {
+            margin-top: 15px;
+        }
+
+        .reach-out-link {
+            display: inline-block;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--navy);
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            padding: 12px 35px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 168, 82, 0.3);
+        }
+
+        .reach-out-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(212, 168, 82, 0.4);
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+        }
+
         /* Footer */
         .footer {
             padding: 25px 40px;
@@ -481,9 +519,11 @@
     <div class="infographic">
         <!-- Header -->
         <header class="header">
-            <p class="eyebrow">Performance-based Hiring</p>
-            <h1 class="main-title">The <span>Moneyball</span> Mindset<br>for Business Leaders</h1>
-            <p class="subtitle">Build Teams That Perform and Self-Direct</p>
+            <a href="https://hiring.tips/Moneyball_signup5" class="header-link" target="_blank">
+                <p class="eyebrow">Performance-based Hiring</p>
+                <h1 class="main-title">The <span>Moneyball</span> Mindset<br>for Business Leaders</h1>
+                <p class="subtitle">Build Teams That Perform and Self-Direct</p>
+            </a>
         </header>
 
         <!-- Central GM Visual -->
@@ -582,6 +622,9 @@
             <p class="bottom-quote">
                 <strong>The GM doesn't play the game.</strong> They build the roster, set the system, and ensure every player knows their role. Then they focus on the big picture.
             </p>
+            <div class="reach-out">
+                <a href="https://hiring.tips/AG_contactmain5" class="reach-out-link" target="_blank">Reach Out</a>
+            </div>
         </div>
 
         <!-- Footer -->
