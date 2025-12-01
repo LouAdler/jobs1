@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Director of Logistics & Supply Chain - Learning Resources | Career Opportunity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --deep-navy: #0a1628;
+      --rich-teal: #0d4f4f;
+      --accent-gold: #c9a227;
+      --warm-cream: #faf8f5;
+      --soft-gray: #e8e6e3;
+      --text-dark: #1a1a1a;
+      --text-muted: #5a5a5a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif; background: #e8ecf0; padding: 20px; }
+    .brochure-container { width: 8.5in; min-height: 11in; margin: 0 auto; background: var(--warm-cream); box-shadow: 0 20px 60px rgba(0,0,0,0.15); position: relative; overflow: hidden; }
+    .brochure-container::before { content: ''; position: absolute; top: 0; right: 0; width: 200px; height: 200px; background: linear-gradient(135deg, transparent 50%, rgba(201, 162, 39, 0.1) 50%); pointer-events: none; }
+    .brochure-header { background: linear-gradient(135deg, var(--deep-navy) 0%, var(--rich-teal) 100%); color: white; padding: 45px 50px 40px; position: relative; }
+    .brochure-header::after { content: ''; position: absolute; bottom: -30px; left: 0; right: 0; height: 60px; background: linear-gradient(135deg, var(--deep-navy) 0%, var(--rich-teal) 100%); clip-path: polygon(0 0, 100% 0, 100% 40%, 0 100%); }
+    .header-eyebrow { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-gold); font-weight: 600; margin-bottom: 12px; }
+    .header-title { font-family: 'Playfair Display', Georgia, serif; font-size: 36px; font-weight: 700; line-height: 1.15; margin-bottom: 15px; }
+    .header-meta { display: flex; gap: 20px; font-size: 14px; opacity: 0.9; flex-wrap: wrap; }
+    .header-meta span { display: flex; align-items: center; gap: 6px; }
+    .brochure-content { padding: 55px 50px 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .content-left, .content-right { display: flex; flex-direction: column; gap: 28px; }
+    .brochure-section { position: relative; }
+    .section-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-gold); font-weight: 700; margin-bottom: 8px; }
+    .section-title { font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 700; color: var(--deep-navy); margin-bottom: 12px; line-height: 1.3; }
+    .section-text { font-size: 13px; line-height: 1.65; color: var(--text-dark); }
+    .evp-highlight { background: white; border-left: 4px solid var(--accent-gold); padding: 20px 22px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+    .evp-highlight .evp-item { margin-bottom: 14px; }
+    .evp-highlight .evp-item:last-child { margin-bottom: 0; }
+    .evp-highlight .evp-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--rich-teal); font-weight: 700; margin-bottom: 4px; }
+    .evp-highlight .evp-text { font-size: 13px; line-height: 1.55; color: var(--text-dark); }
+    .challenges-list { list-style: none; }
+    .challenges-list li { position: relative; padding-left: 22px; margin-bottom: 12px; font-size: 13px; line-height: 1.5; color: var(--text-dark); }
+    .challenges-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent-gold); font-weight: 700; }
+    .challenges-list li strong { color: var(--deep-navy); }
+    .culture-quote { background: linear-gradient(135deg, var(--rich-teal) 0%, var(--deep-navy) 100%); color: white; padding: 22px 24px; border-radius: 4px; position: relative; }
+    .culture-quote::before { content: '"'; font-family: 'Playfair Display', Georgia, serif; font-size: 60px; position: absolute; top: 5px; left: 15px; opacity: 0.2; line-height: 1; }
+    .culture-quote p { font-size: 13px; line-height: 1.6; font-style: italic; position: relative; z-index: 1; }
+    .brochure-cta { background: var(--deep-navy); padding: 30px 50px; display: flex; justify-content: space-between; align-items: center; gap: 30px; }
+    .cta-text { color: white; }
+    .cta-text h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .cta-text p { font-size: 13px; opacity: 0.85; }
+    .cta-button { background: var(--accent-gold); color: var(--deep-navy); padding: 14px 32px; border-radius: 4px; font-weight: 700; font-size: 14px; text-decoration: none; white-space: nowrap; transition: all 0.3s ease; display: inline-block; }
+    .cta-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201, 162, 39, 0.4); }
+    .brochure-footer { padding: 18px 50px; background: var(--soft-gray); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-muted); }
+    .footer-brand { font-weight: 600; color: var(--deep-navy); }
+    .footer-tagline { font-style: italic; }
+    .winwin-badge { position: absolute; top: 45px; right: 50px; background: var(--accent-gold); color: var(--deep-navy); padding: 8px 16px; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border-radius: 2px; }
+    @media print { body { background: white; padding: 0; } .brochure-container { width: 100%; box-shadow: none; } .brochure-container::before { display: none; } @page { size: letter; margin: 0; } }
+  </style>
+</head>
+<body>
+  <div class="brochure-container">
+      <div class="winwin-badge">Win-Win Hiring™</div>
+
+      <header class="brochure-header">
+        <div class="header-eyebrow" id="headerEyebrow">Career Opportunity</div>
+        <h1 class="header-title" id="headerTitle">Director of Logistics &amp; Supply Chain</h1>
+        <div class="header-meta" id="headerMeta">
+        <span>📍 Chicago, IL</span>
+        <span>💼 Full-time</span>
+        <span>🏢 Learning Resources</span>
+      </div>
+      </header>
+
+      <main class="brochure-content">
+        <div class="content-left">
+          <section class="brochure-section">
+            <div class="section-label">The Opportunity</div>
+            <p class="section-text" id="roleOverview">This role leads end-to-end global logistics and supply chain operations for Learning Resources, ensuring that educational products sourced internationally reach U.S. customers with the highest reliability despite volatile tariff and import conditions. The leader in this position drives operational excellence across freight, customs, warehousing, and last-mile distribution while partnering closely with product, sales, and finance to support busine...</p>
+          </section>
+
+          <section class="brochure-section">
+            <div class="section-label">Why This Role Matters</div>
+            <div class="evp-highlight" id="evpBox">
+              <div class="evp-item">
+                <div class="evp-label">Purpose</div>
+                <div class="evp-text" id="evpPurpose">This role ensures that millions of students and educators receive essential learning tools on time by stabilizing the complex international supply chain that powers Learning Resour...</div>
+              </div>
+              <div class="evp-item">
+                <div class="evp-label">Growth</div>
+                <div class="evp-text" id="evpGrowth">The person hired will become the company’s strategic authority on global logistics, import risk management, and technology-enabled supply chain optimization while leading transform...</div>
+              </div>
+              <div class="evp-item">
+                <div class="evp-label">Impact</div>
+                <div class="evp-text" id="evpMotivators">Top talent will thrive in this environment by solving high-stakes operational challenges, influencing enterprise strategy, and modernizing a supply chain under real-time regulatory...</div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="content-right">
+          <section class="brochure-section">
+            <div class="section-label">Key Challenges You'll Own</div>
+            <ul class="challenges-list" id="challengesList"><li><strong>Optimize On-Time Delivery Performance</strong></li><li><strong>Build a Tariff-Adaptive Import Strategy</strong></li><li><strong>Strengthen Supplier and Carrier Reliability</strong></li><li><strong>Modernize ERP/TMS/WMS Visibility and Decision Flows</strong></li></ul>
+          </section>
+
+          <section class="brochure-section">
+            <div class="section-label">The Environment</div>
+            <div class="culture-quote">
+              <p id="cultureText">The person in this role will thrive in a fast-moving environment where global uncertainty is the norm and decisions must often be made with incomplete information. Success requires composure under pressure, a collaborative mindset, and the ability to translate complex international logistics challenges into clear guidance for teams and cross-functi...</p>
+            </div>
+          </section>
+
+          <section class="brochure-section">
+            <div class="section-label">The Outcome</div>
+            <p class="section-text" id="winWinStatement">This role offers the opportunity to stabilize and modernize a global supply chain undergoing rapid regulatory change while shaping enterprise strategy at a pivotal moment for Learning Resources. Success will deliver industry-leading reliability and t...</p>
+          </section>
+        </div>
+      </main>
+
+      <div class="brochure-cta">
+        <div class="cta-text">
+          <h3>Ready to Explore This Opportunity?</h3>
+          <p>Let's have a confidential conversation about your career trajectory.</p>
+        </div>
+        <a href="mailto:careers@company.com?subject=Interest in Director of Logistics &amp; Supply Chain Opportunity" class="cta-button" id="ctaButton">Start the Conversation</a>
+      </div>
+
+      <footer class="brochure-footer">
+        <div class="footer-brand" id="footerBrand">Learning Resources</div>
+        <div class="footer-tagline">Matching Top Talent with Career-Defining Opportunities</div>
+      </footer>
+    </div>
+</body>
+</html>
