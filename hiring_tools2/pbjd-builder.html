@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PBJD Builder | Performance-Based Job Description Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.2.0/docx.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    
+    /* Blueprint grid background */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      opacity: 0.03;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(251, 191, 36, 0.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(251, 191, 36, 0.5) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    
+    .container {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+    
+    header {
+      margin-bottom: 24px;
+    }
+    
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    
+    header p {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+    
+    /* Progress steps */
+    .progress {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    
+    .step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      flex-shrink: 0;
+      border: none;
+      cursor: default;
+      transition: all 0.2s;
+    }
+    
+    .step-dot.active {
+      background: #f59e0b;
+      color: #0f172a;
+    }
+    
+    .step-dot.completed {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      cursor: pointer;
+    }
+    
+    .step-dot.pending {
+      background: #1e293b;
+      color: #64748b;
+    }
+    
+    .step-line {
+      width: 16px;
+      height: 2px;
+      flex-shrink: 0;
+    }
+    
+    .step-line.completed {
+      background: rgba(245, 158, 11, 0.5);
+    }
+    
+    .step-line.pending {
+      background: #334155;
+    }
+    
+    /* Step header */
+    .step-header {
+      margin-bottom: 16px;
+    }
+    
+    .step-header h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    
+    .step-header p {
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+    
+    /* Option cards */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .option-card {
+      padding: 16px;
+      text-align: left;
+      border-radius: 8px;
+      border: 2px solid #475569;
+      background: rgba(30, 41, 59, 0.5);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .option-card:hover {
+      border-color: #64748b;
+    }
+    
+    .option-card.selected {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+    }
+    
+    .option-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    
+    .option-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .option-title h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    
+    .option-icon {
+      font-size: 1.25rem;
+    }
+    
+    .option-check {
+      color: #f59e0b;
+      font-size: 1.125rem;
+    }
+    
+    .option-desc {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+    
+    .option-meta {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+    
+    .option-meta span {
+      color: #94a3b8;
+    }
+    
+    .option-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .option-tag {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      background: rgba(51, 65, 85, 0.5);
+      border-radius: 4px;
+      color: #94a3b8;
+    }
+    
+    /* Form inputs */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+    
+    .form-group label span {
+      font-weight: 400;
+      color: #64748b;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background: #1e293b;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      color: #f1f5f9;
+      font-size: 0.875rem;
+      font-family: inherit;
+    }
+    
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #64748b;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #f59e0b;
+    }
+    
+    .form-group textarea {
+      resize: none;
+      min-height: 80px;
+    }
+    
+    /* Summary box */
+    .summary-box {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .summary-box h4 {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+    
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 0.75rem;
+    }
+    
+    .summary-grid .label {
+      color: #64748b;
+    }
+    
+    .summary-grid .value {
+      color: #cbd5e1;
+    }
+    
+    /* Review section */
+    .review-header {
+      background: linear-gradient(to right, rgba(245, 158, 11, 0.2), rgba(249, 115, 22, 0.2));
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .review-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: rgba(245, 158, 11, 0.8);
+      margin-bottom: 4px;
+    }
+    
+    .review-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+    }
+    
+    .review-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    
+    .review-tag {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      background: #1e293b;
+      border-radius: 4px;
+      color: #94a3b8;
+    }
+    
+    .review-section {
+      margin-bottom: 24px;
+    }
+    
+    .review-section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .review-section-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: #f59e0b;
+    }
+    
+    .review-section-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #f59e0b;
+    }
+    
+    .review-content {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    
+    .review-content p {
+      font-size: 0.875rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    
+    .review-content.italic p {
+      font-style: italic;
+    }
+    
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .review-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+    
+    .review-item-num {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #f59e0b;
+    }
+    
+    .review-item-text {
+      font-size: 0.875rem;
+      color: #cbd5e1;
+    }
+    
+    .review-question {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    
+    .review-question-cat {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: rgba(245, 158, 11, 0.8);
+      margin-bottom: 4px;
+    }
+    
+    .review-question-text {
+      font-size: 0.875rem;
+      color: #cbd5e1;
+      font-style: italic;
+    }
+    
+    .review-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    
+    .review-tool {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      background: #334155;
+      border-radius: 4px;
+      color: #cbd5e1;
+    }
+    
+    .review-tools-note {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+    
+    /* Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid #334155;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-family: inherit;
+    }
+    
+    .btn-back {
+      background: transparent;
+      color: #94a3b8;
+    }
+    
+    .btn-back:hover:not(:disabled) {
+      background: #1e293b;
+      color: #f1f5f9;
+    }
+    
+    .btn-back:disabled {
+      color: #475569;
+      cursor: not-allowed;
+    }
+    
+    .btn-primary {
+      background: #f59e0b;
+      color: #0f172a;
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      background: #fbbf24;
+    }
+    
+    .btn-primary:disabled {
+      background: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: #cbd5e1;
+    }
+    
+    .btn-secondary:hover {
+      background: #1e293b;
+      color: #f1f5f9;
+    }
+    
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .btn-icon {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .spinner {
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Hidden */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  
+  <div class="container">
+    <header>
+      <h1>PBJD Builder</h1>
+      <p>Performance-Based Job Description Generator</p>
+    </header>
+    
+    <!-- Progress -->
+    <div class="progress" id="progress"></div>
+    
+    <!-- Step Header -->
+    <div class="step-header">
+      <h2 id="step-title">Role Level</h2>
+      <p id="step-subtitle">What level of impact?</p>
+    </div>
+    
+    <!-- Step Content -->
+    <div id="step-content"></div>
+    
+    <!-- Navigation -->
+    <div class="nav">
+      <button class="btn btn-back" id="btn-back" disabled>← Back</button>
+      <div class="nav-actions">
+        <button class="btn btn-secondary hidden" id="btn-new">Start New</button>
+        <button class="btn btn-primary" id="btn-next">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // DATA
+    // ============================================
+    
+    const ROLE_LEVELS = [
+      {
+        id: 'modeler',
+        title: 'VDC Modeler / BIM Technician',
+        shortTitle: 'Modeler',
+        description: 'Builds and maintains 3D models following established standards',
+        tools: ['Revit (primary authoring)', 'Navisworks (viewing)', 'ACC/BIM 360 (file management)'],
+        outcomes: [
+          'Build accurate 3D models from 2D drawings or redlines within established standards',
+          'Complete model updates within 24-48 hour turnaround during active coordination',
+          'Maintain clash-free models within their discipline before cross-discipline coordination',
+          'Follow BIM Execution Plan standards with <5% QC rejection rate'
+        ],
+        challenges: [
+          'Managing high-volume model production with quality standards',
+          'Adapting to different client standards and templates across projects',
+          'Balancing speed with accuracy under coordination deadlines'
+        ]
+      },
+      {
+        id: 'engineer',
+        title: 'BIM/VDC Engineer',
+        shortTitle: 'Engineer',
+        description: 'Leads coordination and drives clash resolution across trades',
+        tools: ['Revit (advanced)', 'Navisworks (clash detection)', 'Solibri', 'ACC coordination tools', 'Dynamo (basic automation)'],
+        outcomes: [
+          'Run weekly clash detection across 5-15 trade models, reducing field conflicts by 70%+',
+          'Lead coordination meetings with subcontractors, resolving 50+ clashes per session',
+          'Create 4D sequences that identify schedule conflicts before mobilization',
+          'Train client teams on BIM workflows, achieving independent operation within 30 days'
+        ],
+        challenges: [
+          'Navigating trade contractor politics during clash resolution',
+          'Managing ambiguous scope and shifting client priorities',
+          'Maintaining coordination momentum across multiple project teams'
+        ]
+      },
+      {
+        id: 'senior',
+        title: 'Senior VDC Engineer',
+        shortTitle: 'Senior Engineer',
+        description: 'Manages complex projects and develops custom solutions',
+        tools: ['Full suite plus scripting (Dynamo/Python)', 'Custom integrations', 'Multiple platform administration'],
+        outcomes: [
+          'Manage BIM coordination for $100M+ projects with 20+ trade partners',
+          'Develop custom automation reducing model production time by 40%+',
+          'Identify constructability issues during design that save $500K+ in field rework',
+          'Build client relationships that generate repeat engagements and referrals'
+        ],
+        challenges: [
+          'Balancing technical delivery with client relationship management',
+          'Driving adoption with resistant stakeholders and trades',
+          'Staying ahead of rapidly evolving technology while maintaining project delivery'
+        ]
+      },
+      {
+        id: 'manager',
+        title: 'BIM/VDC Manager',
+        shortTitle: 'Manager',
+        description: 'Oversees portfolios, builds teams, drives business outcomes',
+        tools: ['Platform administration', 'Enterprise tools', 'Resource management systems'],
+        outcomes: [
+          'Oversee 3-5 concurrent projects totaling $500M+ in construction value',
+          'Build and develop teams of 5-10 engineers with retention above industry average',
+          'Establish BIM standards adopted across client organizations',
+          'Drive P&L responsibility for service line or regional portfolio'
+        ],
+        challenges: [
+          'Balancing utilization targets with team development and wellbeing',
+          'Managing client expectations while protecting team capacity',
+          'Scaling quality standards across growing team and project portfolio'
+        ]
+      }
+    ];
+
+    const PROJECT_PHASES = [
+      {
+        id: 'design',
+        title: 'Design Phase',
+        icon: '✏️',
+        description: 'Embedded with architects and engineers during design development',
+        focus: 'Design models, visualization, design validation',
+        keyMetrics: [
+          'Catch design conflicts before documents are issued',
+          'Enable design iteration through rapid model updates',
+          'Reduce RFIs during construction by 50%+'
+        ]
+      },
+      {
+        id: 'preconstruction',
+        title: 'Pre-Construction / Coordination',
+        icon: '🔧',
+        description: 'Working with GCs and trade contractors to coordinate systems',
+        focus: 'Coordinated models, clash reports, fabrication models',
+        keyMetrics: [
+          'Achieve "clash-free" milestone before construction',
+          'Enable prefabrication that reduces field labor by 30%+',
+          'Compress coordination timeline vs. traditional approach'
+        ]
+      },
+      {
+        id: 'construction',
+        title: 'Construction / Field Support',
+        icon: '🏗️',
+        description: 'Embedded with field teams supporting active construction',
+        focus: 'As-built updates, field issue resolution, reality capture',
+        keyMetrics: [
+          'Resolve field conflicts within 24 hours through model updates',
+          'Maintain model accuracy vs. as-built conditions',
+          'Support punch list reduction through proactive documentation'
+        ]
+      },
+      {
+        id: 'operations',
+        title: 'Operations / Digital Twin',
+        icon: '🏢',
+        description: 'Working with owners and facility managers post-turnover',
+        focus: 'Asset data, space management, lifecycle BIM',
+        keyMetrics: [
+          'Deliver models meeting owner FM requirements at turnover',
+          'Enable data-driven facility operations decisions',
+          'Maintain living digital twin with ongoing updates'
+        ]
+      }
+    ];
+
+    const DISCIPLINES = [
+      {
+        id: 'architectural',
+        title: 'Architectural',
+        icon: '🏛️',
+        tools: 'Revit Architecture, Enscape, rendering tools',
+        differentiator: 'Design intent accuracy, visualization quality, space planning'
+      },
+      {
+        id: 'structural',
+        title: 'Structural',
+        icon: '🔩',
+        tools: 'Revit Structure, Tekla, steel/concrete detailing',
+        differentiator: 'Fabrication-ready models, connection detailing, load path coordination'
+      },
+      {
+        id: 'mep',
+        title: 'MEP (Mechanical/Electrical/Plumbing)',
+        icon: '⚡',
+        tools: 'Revit MEP, Fabrication CADmep, system analysis',
+        differentiator: 'System coordination, prefab spool drawings, routing optimization'
+      },
+      {
+        id: 'reality',
+        title: 'Reality Capture',
+        icon: '📡',
+        tools: 'ReCap, Leica Cyclone, point cloud processing',
+        differentiator: 'Scan-to-BIM accuracy, existing conditions documentation, deviation analysis'
+      },
+      {
+        id: 'computational',
+        title: 'Computational / Automation',
+        icon: '🤖',
+        tools: 'Dynamo, Python, Revit API, platform integrations',
+        differentiator: 'Workflow automation, custom tool development, data integration'
+      },
+      {
+        id: 'generalist',
+        title: 'Multi-Discipline / Generalist',
+        icon: '🔄',
+        tools: 'Broad platform knowledge across disciplines',
+        differentiator: 'Cross-discipline coordination, client consulting, flexible deployment'
+      }
+    ];
+
+    const PROJECT_COMPLEXITY = [
+      {
+        id: 'standard',
+        title: 'Standard Projects',
+        description: '$10-50M construction value',
+        characteristics: ['5-10 trade partners', 'Single building', 'Standard BIM requirements', 'Regional client']
+      },
+      {
+        id: 'complex',
+        title: 'Complex Projects',
+        description: '$50-150M construction value',
+        characteristics: ['10-20 trade partners', 'Multi-building or phased', 'Advanced coordination needs', 'Sophisticated client']
+      },
+      {
+        id: 'mega',
+        title: 'Mega Projects',
+        description: '$150M+ construction value',
+        characteristics: ['20+ trade partners', 'Campus or infrastructure scale', 'Custom technology solutions', 'Enterprise client relationships']
+      }
+    ];
+
+    const STEPS = [
+      { id: 'level', title: 'Role Level', subtitle: 'What level of impact?' },
+      { id: 'phase', title: 'Project Phase', subtitle: 'Where in the lifecycle?' },
+      { id: 'discipline', title: 'Discipline Focus', subtitle: 'What systems expertise?' },
+      { id: 'complexity', title: 'Project Scale', subtitle: 'What size projects?' },
+      { id: 'customize', title: 'Customize', subtitle: 'Fine-tune the role' },
+      { id: 'review', title: 'Review', subtitle: 'Your PBJD' }
+    ];
+
+    // ============================================
+    // STATE
+    // ============================================
+    
+    let currentStep = 0;
+    let selections = {
+      level: null,
+      phase: null,
+      discipline: null,
+      complexity: null,
+      customTitle: '',
+      customObjective: ''
+    };
+    let isExporting = false;
+
+    // ============================================
+    // HELPERS
+    // ============================================
+    
+    const getSelectedLevel = () => ROLE_LEVELS.find(l => l.id === selections.level);
+    const getSelectedPhase = () => PROJECT_PHASES.find(p => p.id === selections.phase);
+    const getSelectedDiscipline = () => DISCIPLINES.find(d => d.id === selections.discipline);
+    const getSelectedComplexity = () => PROJECT_COMPLEXITY.find(c => c.id === selections.complexity);
+
+    function generateJobTitle() {
+      if (selections.customTitle) return selections.customTitle;
+      const level = getSelectedLevel();
+      const discipline = getSelectedDiscipline();
+      const phase = getSelectedPhase();
+      
+      if (!level) return 'BIM/VDC Professional';
+      
+      let title = level.title;
+      if (discipline && discipline.id !== 'generalist') {
+        title = title.replace('BIM/VDC', discipline.title);
+      }
+      if (phase && phase.id === 'design') {
+        title += ' - Design';
+      } else if (phase && phase.id === 'construction') {
+        title += ' - Field';
+      }
+      return title;
+    }
+
+    function generatePerformanceObjective() {
+      if (selections.customObjective) return selections.customObjective;
+      
+      const level = getSelectedLevel();
+      const phase = getSelectedPhase();
+      const complexity = getSelectedComplexity();
+      
+      if (!level || !phase || !complexity) return '';
+      
+      const timeframe = level.id === 'modeler' ? '90 days' : 'first year';
+      const projectDesc = complexity.id === 'mega' ? 'major projects ($100M+)' : 
+                         complexity.id === 'complex' ? 'complex projects ($50-100M)' : 
+                         'projects in the $10-50M range';
+      
+      if (level.id === 'modeler') {
+        return `Within the first ${timeframe}, become a productive team member capable of independently producing quality model content for ${projectDesc}, meeting turnaround requirements, and requiring minimal rework on QC review.`;
+      } else if (level.id === 'engineer') {
+        return `Within the ${timeframe}, lead BIM coordination on 2-3 ${projectDesc}, achieving clash-free milestones on schedule, building effective relationships with trade partners, and contributing to client satisfaction that drives repeat work.`;
+      } else if (level.id === 'senior') {
+        return `Within the ${timeframe}, own end-to-end BIM delivery on ${projectDesc}, develop custom solutions that measurably improve project outcomes, mentor junior team members, and contribute to business development through client relationship building.`;
+      } else {
+        return `Within the ${timeframe}, build and lead a high-performing team delivering across multiple ${projectDesc}, establish standards that scale quality, develop team members for promotion, and drive portfolio growth through client expansion.`;
+      }
+    }
+
+    function getInterviewQuestions() {
+      const questions = [];
+      
+      if (selections.level === 'modeler') {
+        questions.push({
+          category: 'Technical Execution',
+          question: 'Walk me through a project where you had to produce a high volume of model content under a tight deadline. How did you maintain quality while meeting the schedule?'
+        });
+      } else if (selections.level === 'engineer') {
+        questions.push({
+          category: 'Coordination Leadership',
+          question: 'Describe a clash coordination meeting where you had resistant trade contractors. How did you get them aligned and drive resolution?'
+        });
+      } else if (selections.level === 'senior') {
+        questions.push({
+          category: 'Strategic Impact',
+          question: 'Tell me about a time you identified a major constructability issue during coordination that would have been expensive to fix in the field. What was the issue and how did you drive the resolution?'
+        });
+      } else if (selections.level === 'manager') {
+        questions.push({
+          category: 'Team Development',
+          question: "Describe how you've built and developed a BIM/VDC team. What's your approach to balancing utilization with professional growth?"
+        });
+      }
+      
+      if (selections.phase === 'design') {
+        questions.push({
+          category: 'Design Integration',
+          question: 'Give me an example where you caught a significant design conflict before documents were issued. How did you communicate this to the design team and what was the outcome?'
+        });
+      } else if (selections.phase === 'preconstruction') {
+        questions.push({
+          category: 'Trade Coordination',
+          question: 'Describe your most complex clash resolution effort. How many trades were involved, what was the core conflict, and how did you drive it to completion?'
+        });
+      } else if (selections.phase === 'construction') {
+        questions.push({
+          category: 'Field Support',
+          question: 'Tell me about a time the field team discovered something different from the model. How did you respond and what was your turnaround time?'
+        });
+      }
+      
+      questions.push({
+        category: 'Growth Mindset',
+        question: "What's a BIM/VDC skill or technology you've taught yourself in the past year? What drove you to learn it and how have you applied it?"
+      });
+      
+      return questions;
+    }
+
+    function canProceed() {
+      if (currentStep === 0) return selections.level !== null;
+      if (currentStep === 1) return selections.phase !== null;
+      if (currentStep === 2) return selections.discipline !== null;
+      if (currentStep === 3) return selections.complexity !== null;
+      return true;
+    }
+
+    // ============================================
+    // RENDER FUNCTIONS
+    // ============================================
+    
+    function renderProgress() {
+      const container = document.getElementById('progress');
+      container.innerHTML = STEPS.map((step, i) => {
+        const dotClass = i === currentStep ? 'active' : i < currentStep ? 'completed' : 'pending';
+        const lineClass = i < currentStep ? 'completed' : 'pending';
+        
+        let html = `<button class="step-dot ${dotClass}" ${i < currentStep ? `onclick="goToStep(${i})"` : ''}>${i < currentStep ? '✓' : i + 1}</button>`;
+        if (i < STEPS.length - 1) {
+          html += `<div class="step-line ${lineClass}"></div>`;
+        }
+        return html;
+      }).join('');
+    }
+
+    function renderStepHeader() {
+      document.getElementById('step-title').textContent = STEPS[currentStep].title;
+      document.getElementById('step-subtitle').textContent = STEPS[currentStep].subtitle;
+    }
+
+    function renderOptions(items, selectedId, selectionKey, renderItem) {
+      return `<div class="options">${items.map(item => `
+        <div class="option-card ${item.id === selectedId ? 'selected' : ''}" onclick="selectOption('${selectionKey}', '${item.id}')">
+          ${renderItem(item, item.id === selectedId)}
+        </div>
+      `).join('')}</div>`;
+    }
+
+    function renderStepContent() {
+      const container = document.getElementById('step-content');
+      
+      switch (currentStep) {
+        case 0: // Level
+          container.innerHTML = renderOptions(ROLE_LEVELS, selections.level, 'level', (item, selected) => `
+            <div class="option-header">
+              <div class="option-title"><h3>${item.title}</h3></div>
+              ${selected ? '<span class="option-check">✓</span>' : ''}
+            </div>
+            <p class="option-desc">${item.description}</p>
+            <p class="option-meta"><span>Key outcome:</span> ${item.outcomes[0]}</p>
+          `);
+          break;
+          
+        case 1: // Phase
+          container.innerHTML = renderOptions(PROJECT_PHASES, selections.phase, 'phase', (item, selected) => `
+            <div class="option-header">
+              <div class="option-title">
+                <span class="option-icon">${item.icon}</span>
+                <h3>${item.title}</h3>
+              </div>
+              ${selected ? '<span class="option-check">✓</span>' : ''}
+            </div>
+            <p class="option-desc">${item.description}</p>
+            <p class="option-meta"><span>Focus:</span> ${item.focus}</p>
+          `);
+          break;
+          
+        case 2: // Discipline
+          container.innerHTML = renderOptions(DISCIPLINES, selections.discipline, 'discipline', (item, selected) => `
+            <div class="option-header">
+              <div class="option-title">
+                <span class="option-icon">${item.icon}</span>
+                <h3>${item.title}</h3>
+              </div>
+              ${selected ? '<span class="option-check">✓</span>' : ''}
+            </div>
+            <p class="option-meta" style="margin-bottom: 4px">${item.tools}</p>
+            <p class="option-desc">${item.differentiator}</p>
+          `);
+          break;
+          
+        case 3: // Complexity
+          container.innerHTML = renderOptions(PROJECT_COMPLEXITY, selections.complexity, 'complexity', (item, selected) => `
+            <div class="option-header">
+              <div class="option-title"><h3>${item.title}</h3></div>
+              ${selected ? '<span class="option-check">✓</span>' : ''}
+            </div>
+            <p class="option-desc" style="color: rgba(245, 158, 11, 0.8); font-weight: 500">${item.description}</p>
+            <div class="option-tags">
+              ${item.characteristics.map(c => `<span class="option-tag">${c}</span>`).join('')}
+            </div>
+          `);
+          break;
+          
+        case 4: // Customize
+          container.innerHTML = `
+            <div class="form-group">
+              <label>Custom Job Title <span>(optional)</span></label>
+              <input type="text" id="customTitle" value="${selections.customTitle}" placeholder="${generateJobTitle()}" oninput="updateCustomField('customTitle', this.value)">
+            </div>
+            <div class="form-group">
+              <label>Custom Performance Objective <span>(optional)</span></label>
+              <textarea id="customObjective" placeholder="${generatePerformanceObjective()}" oninput="updateCustomField('customObjective', this.value)">${selections.customObjective}</textarea>
+            </div>
+            <div class="summary-box">
+              <h4>Your Selections</h4>
+              <div class="summary-grid">
+                <span class="label">Level:</span><span class="value">${getSelectedLevel()?.shortTitle || '-'}</span>
+                <span class="label">Phase:</span><span class="value">${getSelectedPhase()?.title || '-'}</span>
+                <span class="label">Discipline:</span><span class="value">${getSelectedDiscipline()?.title || '-'}</span>
+                <span class="label">Scale:</span><span class="value">${getSelectedComplexity()?.title || '-'}</span>
+              </div>
+            </div>
+          `;
+          break;
+          
+        case 5: // Review
+          const level = getSelectedLevel();
+          const phase = getSelectedPhase();
+          const discipline = getSelectedDiscipline();
+          const complexity = getSelectedComplexity();
+          const questions = getInterviewQuestions();
+          
+          container.innerHTML = `
+            <div class="review-header">
+              <div class="review-label">Performance-Based Job Description</div>
+              <div class="review-title">${generateJobTitle()}</div>
+              <div class="review-tags">
+                <span class="review-tag">${phase?.title}</span>
+                <span class="review-tag">${discipline?.title}</span>
+                <span class="review-tag">${complexity?.title}</span>
+              </div>
+            </div>
+            
+            <div class="review-section">
+              <div class="review-section-header">
+                <span class="review-section-num">1</span>
+                <span class="review-section-title">Performance Objective</span>
+              </div>
+              <div class="review-content italic">
+                <p>${generatePerformanceObjective()}</p>
+              </div>
+            </div>
+            
+            <div class="review-section">
+              <div class="review-section-header">
+                <span class="review-section-num">2</span>
+                <span class="review-section-title">Key Performance Outcomes</span>
+              </div>
+              <div class="review-list">
+                ${level?.outcomes.map((o, i) => `
+                  <div class="review-item">
+                    <span class="review-item-num">${i + 1}.</span>
+                    <span class="review-item-text">${o}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            
+            <div class="review-section">
+              <div class="review-section-header">
+                <span class="review-section-num">3</span>
+                <span class="review-section-title">Job Challenges</span>
+              </div>
+              <div class="review-list">
+                ${level?.challenges.map(c => `
+                  <div class="review-item">
+                    <span class="review-item-text">${c}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            
+            <div class="review-section">
+              <div class="review-section-header">
+                <span class="review-section-num">4</span>
+                <span class="review-section-title">MSA Interview Questions</span>
+              </div>
+              <div class="review-list">
+                ${questions.map(q => `
+                  <div class="review-question">
+                    <div class="review-question-cat">${q.category}</div>
+                    <div class="review-question-text">"${q.question}"</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            
+            <div class="review-section">
+              <div class="review-section-header">
+                <span class="review-section-num">5</span>
+                <span class="review-section-title">Tools Context</span>
+              </div>
+              <div class="review-content">
+                <p class="review-tools-note">Tools used in this role (not the focus of the JD):</p>
+                <div class="review-tools">
+                  ${level?.tools.map(t => `<span class="review-tool">${t}</span>`).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+          break;
+      }
+    }
+
+    function renderNav() {
+      const btnBack = document.getElementById('btn-back');
+      const btnNext = document.getElementById('btn-next');
+      const btnNew = document.getElementById('btn-new');
+      
+      btnBack.disabled = currentStep === 0;
+      
+      if (currentStep === STEPS.length - 1) {
+        btnNext.innerHTML = isExporting 
+          ? `<span class="btn-icon"><svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>Exporting...</span>`
+          : `<span class="btn-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Export to Word</span>`;
+        btnNext.onclick = exportToWord;
+        btnNew.classList.remove('hidden');
+      } else {
+        btnNext.textContent = 'Continue →';
+        btnNext.onclick = nextStep;
+        btnNew.classList.add('hidden');
+      }
+      
+      btnNext.disabled = !canProceed();
+    }
+
+    function render() {
+      renderProgress();
+      renderStepHeader();
+      renderStepContent();
+      renderNav();
+    }
+
+    // ============================================
+    // ACTIONS
+    // ============================================
+    
+    function selectOption(key, value) {
+      selections[key] = value;
+      render();
+    }
+
+    function updateCustomField(key, value) {
+      selections[key] = value;
+    }
+
+    function nextStep() {
+      if (currentStep < STEPS.length - 1 && canProceed()) {
+        currentStep++;
+        render();
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        render();
+      }
+    }
+
+    function goToStep(step) {
+      if (step < currentStep) {
+        currentStep = step;
+        render();
+      }
+    }
+
+    function startNew() {
+      currentStep = 0;
+      selections = {
+        level: null,
+        phase: null,
+        discipline: null,
+        complexity: null,
+        customTitle: '',
+        customObjective: ''
+      };
+      render();
+    }
+
+    // ============================================
+    // WORD EXPORT
+    // ============================================
+    
+    async function exportToWord() {
+      if (isExporting) return;
+      isExporting = true;
+      renderNav();
+
+      try {
+        const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, LevelFormat } = docx;
+        
+        const level = getSelectedLevel();
+        const phase = getSelectedPhase();
+        const discipline = getSelectedDiscipline();
+        const complexity = getSelectedComplexity();
+        const questions = getInterviewQuestions();
+        const jobTitle = generateJobTitle();
+        const perfObjective = generatePerformanceObjective();
+
+        const doc = new Document({
+          styles: {
+            default: {
+              document: {
+                run: { font: "Arial", size: 22 }
+              }
+            },
+            paragraphStyles: [
+              {
+                id: "Title",
+                name: "Title",
+                basedOn: "Normal",
+                run: { size: 48, bold: true, color: "1a1a2e", font: "Arial" },
+                paragraph: { spacing: { before: 0, after: 200 }, alignment: AlignmentType.LEFT }
+              },
+              {
+                id: "Heading1",
+                name: "Heading 1",
+                basedOn: "Normal",
+                next: "Normal",
+                quickFormat: true,
+                run: { size: 28, bold: true, color: "d97706", font: "Arial" },
+                paragraph: { spacing: { before: 400, after: 120 }, outlineLevel: 0 }
+              }
+            ]
+          },
+          numbering: {
+            config: [
+              {
+                reference: "outcomes-list",
+                levels: [{
+                  level: 0,
+                  format: LevelFormat.DECIMAL,
+                  text: "%1.",
+                  alignment: AlignmentType.LEFT,
+                  style: { paragraph: { indent: { left: 720, hanging: 360 } } }
+                }]
+              },
+              {
+                reference: "bullet-list",
+                levels: [{
+                  level: 0,
+                  format: LevelFormat.BULLET,
+                  text: "•",
+                  alignment: AlignmentType.LEFT,
+                  style: { paragraph: { indent: { left: 720, hanging: 360 } } }
+                }]
+              },
+              {
+                reference: "questions-list",
+                levels: [{
+                  level: 0,
+                  format: LevelFormat.DECIMAL,
+                  text: "%1.",
+                  alignment: AlignmentType.LEFT,
+                  style: { paragraph: { indent: { left: 720, hanging: 360 } } }
+                }]
+              }
+            ]
+          },
+          sections: [{
+            properties: {
+              page: {
+                margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 }
+              }
+            },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "PERFORMANCE-BASED JOB DESCRIPTION", size: 20, color: "d97706", bold: true })]
+              }),
+              new Paragraph({
+                heading: HeadingLevel.TITLE,
+                children: [new TextRun({ text: jobTitle })]
+              }),
+              new Paragraph({
+                spacing: { after: 300 },
+                children: [new TextRun({ text: `${phase?.title}  •  ${discipline?.title}  •  ${complexity?.title}`, color: "6b7280" })]
+              }),
+              new Paragraph({
+                heading: HeadingLevel.HEADING_1,
+                children: [new TextRun({ text: "1. Performance Objective" })]
+              }),
+              new Paragraph({
+                spacing: { after: 200 },
+                children: [new TextRun({ text: perfObjective, italics: true })]
+              }),
+              new Paragraph({
+                heading: HeadingLevel.HEADING_1,
+                children: [new TextRun({ text: "2. Key Performance Outcomes" })]
+              }),
+              new Paragraph({
+                spacing: { after: 100 },
+                children: [new TextRun({ text: "Success in this role will be measured by achievement of the following outcomes:", color: "6b7280" })]
+              }),
+              ...level.outcomes.map(outcome => 
+                new Paragraph({
+                  numbering: { reference: "outcomes-list", level: 0 },
+                  spacing: { after: 80 },
+                  children: [new TextRun({ text: outcome })]
+                })
+              ),
+              ...(phase?.keyMetrics.slice(0, 2).map(metric =>
+                new Paragraph({
+                  numbering: { reference: "outcomes-list", level: 0 },
+                  spacing: { after: 80 },
+                  children: [new TextRun({ text: metric })]
+                })
+              ) || []),
+              new Paragraph({
+                heading: HeadingLevel.HEADING_1,
+                children: [new TextRun({ text: "3. Job Challenges" })]
+              }),
+              new Paragraph({
+                spacing: { after: 100 },
+                children: [new TextRun({ text: "What makes this role difficult—and what separates good from great:", color: "6b7280" })]
+              }),
+              ...level.challenges.map(challenge =>
+                new Paragraph({
+                  numbering: { reference: "bullet-list", level: 0 },
+                  spacing: { after: 80 },
+                  children: [new TextRun({ text: challenge })]
+                })
+              ),
+              new Paragraph({
+                heading: HeadingLevel.HEADING_1,
+                children: [new TextRun({ text: "4. Most Significant Accomplishment Questions" })]
+              }),
+              new Paragraph({
+                spacing: { after: 100 },
+                children: [new TextRun({ text: "Use these questions to uncover past performance that predicts future success:", color: "6b7280" })]
+              }),
+              ...questions.map(q =>
+                new Paragraph({
+                  numbering: { reference: "questions-list", level: 0 },
+                  spacing: { after: 80 },
+                  children: [
+                    new TextRun({ text: `[${q.category}] `, bold: true, color: "d97706" }),
+                    new TextRun({ text: q.question, italics: true })
+                  ]
+                })
+              ),
+              new Paragraph({
+                heading: HeadingLevel.HEADING_1,
+                children: [new TextRun({ text: "5. Tools & Technology Context" })]
+              }),
+              new Paragraph({
+                spacing: { after: 100 },
+                children: [new TextRun({ text: "The following tools are used in this role. Note: Focus interviews on outcomes achieved, not tool proficiency.", color: "6b7280" })]
+              }),
+              ...level.tools.map(tool =>
+                new Paragraph({
+                  numbering: { reference: "bullet-list", level: 0 },
+                  spacing: { after: 60 },
+                  children: [new TextRun({ text: tool })]
+                })
+              ),
+              new Paragraph({
+                spacing: { before: 600 },
+                children: [new TextRun({ text: "─".repeat(50), color: "e5e7eb" })]
+              }),
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [
+                  new TextRun({ text: "Generated by PBJD Builder  •  Performance-based Hiring  •  VIATechnik", size: 18, color: "9ca3af" })
+                ]
+              }),
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: { before: 100 },
+                children: [
+                  new TextRun({ text: `Created: ${new Date().toLocaleDateString()}`, size: 18, color: "9ca3af" })
+                ]
+              })
+            ]
+          }]
+        });
+
+        const blob = await Packer.toBlob(doc);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const safeTitle = jobTitle.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+        link.download = `PBJD-${safeTitle}.docx`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+      } catch (error) {
+        console.error('Error generating document:', error);
+        alert('Error generating document. Please try again.');
+      }
+      
+      isExporting = false;
+      renderNav();
+    }
+
+    // ============================================
+    // EVENT LISTENERS
+    // ============================================
+    
+    document.getElementById('btn-back').addEventListener('click', prevStep);
+    document.getElementById('btn-new').addEventListener('click', startNew);
+
+    // ============================================
+    // INIT
+    // ============================================
+    
+    render();
+  </script>
+</body>
+</html>
