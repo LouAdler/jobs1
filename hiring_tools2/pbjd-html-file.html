@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance-Based Job Description Builder | The 6×6 Matrix</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const engineeringDimensions = [
+      {
+        id: 'domain', name: "Technical Domain", question: "Which area of engineering?",
+        levels: [
+          { title: "Frontend", icon: "🖥️", kpo: "Build user interfaces and experiences. React, TypeScript, CSS, accessibility. Deliver responsive, performant UI components and user flows." },
+          { title: "Backend", icon: "⚙️", kpo: "Build APIs, services, and business logic. Python, Java, Go, databases. Deliver reliable, scalable services and data models." },
+          { title: "Full-Stack", icon: "🔄", kpo: "Deliver end-to-end features from UI to database. Own vertical slices. Comfortable across the entire stack." },
+          { title: "Data Engineering", icon: "📊", kpo: "Build data pipelines and warehouses. Enable analytics and ML teams with reliable, well-modeled data infrastructure." },
+          { title: "ML/AI", icon: "🤖", kpo: "Build and deploy machine learning models. Own the full lifecycle from experimentation to production ML systems." },
+          { title: "Infrastructure", icon: "☁️", kpo: "Build cloud infrastructure and internal platforms. Enable engineering team productivity and system reliability." }
+        ],
+        questions: ["Walk me through a recent technical project. What was your specific contribution?", "What's your preferred tech stack and why?", "How do you stay current in your area?"]
+      },
+      {
+        id: 'mastery', name: "Technical Mastery", question: "What depth of technical expertise?",
+        levels: [
+          { title: "Foundational", icon: "🌱", kpo: "Learning core skills. Completes well-defined tasks under guidance. Building mental models of how systems work." },
+          { title: "Developing", icon: "📈", kpo: "Builds features independently. Understands one area of the codebase well. Produces reliable code with standard supervision." },
+          { title: "Proficient", icon: "✅", kpo: "Delivers complex features independently. Makes sound technical decisions. Elevates code quality across the team." },
+          { title: "Advanced", icon: "⭐", kpo: "Owns critical systems. Makes architectural decisions that affect multiple teams. Recognized technical leader." },
+          { title: "Expert", icon: "💎", kpo: "Shapes technical direction for major product areas. Designs systems that scale to next order of magnitude." },
+          { title: "Industry SME", icon: "🏆", kpo: "Recognized authority beyond the organization. Shapes how the industry thinks about technology." }
+        ],
+        questions: ["Tell me about the most complex technical problem you've solved.", "Describe a system you architected. What trade-offs did you make?"]
+      },
+      {
+        id: 'productCycle', name: "Product Cycle", question: "What stage of product development?",
+        levels: [
+          { title: "0→1 Creation", icon: "💡", kpo: "Build something from nothing. Validate ideas quickly. Ship MVPs. Embrace uncertainty and rapid iteration." },
+          { title: "1→10 Early Scale", icon: "🌿", kpo: "Rebuild foundations for growth. Replace prototypes with real systems. Establish patterns and conventions." },
+          { title: "10→100 Growth", icon: "📈", kpo: "Scale systems by 10-100x. Performance optimization. Identify and fix bottlenecks before they hit." },
+          { title: "100→1K Scale", icon: "🚀", kpo: "Build for millions of users. Fault tolerance and disaster recovery. Operational excellence." },
+          { title: "Sustain & Optimize", icon: "🔧", kpo: "Maintain and improve running systems. Reduce tech debt strategically. Improve reliability metrics." },
+          { title: "Platform & Ecosystem", icon: "🌐", kpo: "Build platforms that others build upon. API design excellence. Developer experience." }
+        ],
+        questions: ["Tell me about building from scratch vs. improving existing systems.", "How do you decide when to refactor vs. rebuild?"]
+      },
+      {
+        id: 'collaboration', name: "Collaboration & Influence", question: "How do they work with others?",
+        levels: [
+          { title: "Self-Directed", icon: "👤", kpo: "Works independently on assigned tasks. Communicates status clearly. Asks for help appropriately." },
+          { title: "Team Collaborator", icon: "👥", kpo: "Works effectively with immediate team. Provides helpful code reviews. Shares knowledge proactively." },
+          { title: "Cross-Functional", icon: "🤝", kpo: "Collaborates across engineering and with PM, design, data science. Influences without authority." },
+          { title: "Multi-Team", icon: "🔗", kpo: "Drives alignment across multiple teams. Navigates organizational complexity. Builds coalitions." },
+          { title: "Org Leader", icon: "🎯", kpo: "Shapes organization-wide initiatives. Resolves cross-team conflicts. Trusted advisor to leadership." },
+          { title: "Executive Partner", icon: "👔", kpo: "Works effectively with executives. Translates technical reality to business strategy." }
+        ],
+        questions: ["Tell me about getting buy-in from people who didn't report to you.", "Describe a conflict with a stakeholder. How did you resolve it?"]
+      },
+      {
+        id: 'projectScope', name: "Project & Initiative Scope", question: "What scope of work can they drive?",
+        levels: [
+          { title: "Task Execution", icon: "✅", kpo: "Completes well-defined tasks accurately and on time. Follows established processes." },
+          { title: "Feature Delivery", icon: "📦", kpo: "Owns features from spec to production. Manages own workload and deadlines. Handles ambiguity." },
+          { title: "Project Lead", icon: "📋", kpo: "Leads projects involving 2-5 people. Coordinates work across team members. Manages dependencies." },
+          { title: "Initiative Lead", icon: "🎪", kpo: "Drives initiatives spanning multiple teams. Aligns diverse stakeholders. Manages complexity and risk." },
+          { title: "Program Lead", icon: "🏛️", kpo: "Leads programs with organization-wide impact. Shapes multi-quarter roadmaps." },
+          { title: "Strategic Lead", icon: "🌟", kpo: "Shapes multi-year technical strategy. Makes major investment decisions. Company-wide impact." }
+        ],
+        questions: ["Tell me about the largest initiative you've led.", "Describe a project that went off track. How did you course-correct?"]
+      },
+      {
+        id: 'peopleLeadership', name: "People & Team Leadership", question: "What level of people responsibility?",
+        levels: [
+          { title: "Self-Manager", icon: "🙋", kpo: "Manages own time, priorities, and development. Accountable for own output. No direct reports." },
+          { title: "Tech Lead/Mentor", icon: "🎓", kpo: "Informal leadership role. Mentors 1-2 junior engineers. Influences team direction without formal authority." },
+          { title: "Team Manager", icon: "👨‍👩‍👧", kpo: "Manages a team of 3-8 engineers. Full management responsibility: hiring, development, performance." },
+          { title: "Manager of Mgrs", icon: "🏢", kpo: "Manages 2-4 engineering managers. Builds leadership capability in others. 10-25 total engineers." },
+          { title: "Director", icon: "🏰", kpo: "Leads a department or major engineering area. Shapes strategy. Builds organization. 25-75+ engineers." },
+          { title: "VP/Function Lead", icon: "🏛️", kpo: "Leads entire engineering function. Executive team member. P&L accountability. 75-500+ engineers." }
+        ],
+        questions: ["Tell me about someone you've developed. What was your approach?", "How do you handle underperformance?"]
+      }
+    ];
+
+    const discoveryQuestions = [
+      { id: 'role', q: "What role are you hiring for?", placeholder: "e.g., Sales Manager, Product Designer, Financial Analyst" },
+      { id: 'success', q: "Think of your best performer. What makes them exceptional?", placeholder: "Tell a story about what they do differently..." },
+      { id: 'failure', q: "Think of someone who didn't work out. What was missing?", placeholder: "What gap surprised you?" },
+      { id: 'hard', q: "What makes some work much harder than other work in this role?", placeholder: "Scale, complexity, stakeholders..." },
+      { id: 'cantTeach', q: "What can't you teach — what must they walk in with?", placeholder: "Must-haves vs. can-develop..." },
+      { id: 'collaboration', q: "Who must they work with to succeed? What makes that hard?", placeholder: "Teams, stakeholders, customers..." }
+    ];
+
+    function PBJDApp() {
+      const [mode, setMode] = useState('intro');
+      const [demoStep, setDemoStep] = useState(0);
+      const [selections, setSelections] = useState({});
+      const [showInterview, setShowInterview] = useState(false);
+      const [customAnswers, setCustomAnswers] = useState({});
+      const [customStep, setCustomStep] = useState(0);
+
+      const handleSelect = (dimId, levelIndex) => {
+        setSelections(prev => ({ ...prev, [dimId]: levelIndex }));
+      };
+
+      const generateTitle = () => {
+        const m = selections.mastery ?? 2;
+        const p = selections.peopleLeadership ?? 0;
+        const domain = engineeringDimensions[0].levels[selections.domain ?? 0].title;
+        if (p >= 4) return ['', '', '', '', 'Director of Engineering', 'VP of Engineering'][p];
+        if (p === 3) return 'Senior Engineering Manager';
+        if (p === 2) return 'Engineering Manager';
+        const prefix = ['Junior', 'Mid-Level', 'Senior', 'Staff', 'Principal', 'Distinguished'][m];
+        return `${prefix} ${domain} Engineer`;
+      };
+
+      const renderIntro = () => (
+        <div className="text-center py-6 space-y-6">
+          <div className="text-5xl">🎯</div>
+          <h1 className="text-2xl font-bold text-gray-900">Performance-Based Job Descriptions</h1>
+          <p className="text-gray-600 max-w-md mx-auto">
+            Stop hiring for skills. Start hiring for performance outcomes.
+          </p>
+          
+          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-6 text-left max-w-lg mx-auto">
+            <h3 className="font-bold text-emerald-800 mb-3">The 6×6 Matrix</h3>
+            <p className="text-sm text-gray-700 mb-4">
+              Every job can be defined by <strong>6 dimensions</strong>, each with <strong>6 levels</strong> of performance. 
+              This creates 46,656 unique role combinations — far more precise than traditional job descriptions.
+            </p>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              {['Technical Mastery', 'Domain Expertise', 'Collaboration', 'Project Scope', 'People Leadership', 'Specialized Knowledge'].map((d, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-emerald-600 text-white text-xs flex items-center justify-center">{i+1}</span>
+                  <span className="text-gray-700">{d}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3 max-w-sm mx-auto">
+            <button
+              onClick={() => setMode('learn')}
+              className="w-full py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700"
+            >
+              Learn How It Works →
+            </button>
+            <button
+              onClick={() => { setMode('demo'); setDemoStep(0); setSelections({}); }}
+              className="w-full py-3 border-2 border-emerald-600 text-emerald-700 rounded-lg font-medium hover:bg-emerald-50"
+            >
+              Try the Engineering Example
+            </button>
+            <button
+              onClick={() => { setMode('customize'); setCustomStep(0); setCustomAnswers({}); }}
+              className="w-full py-3 border border-gray-300 text-gray-600 rounded-lg font-medium hover:bg-gray-50"
+            >
+              Build Your Own 6×6 Matrix
+            </button>
+            <div className="pt-2 text-center">
+              <a 
+                href="https://hiring.tips/AG_contactmain5" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-emerald-600 hover:underline"
+              >
+                Or talk to an expert about your hiring needs →
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+
+      const renderLearn = () => (
+        <div className="py-4 space-y-6">
+          <button onClick={() => setMode('intro')} className="text-emerald-600 text-sm hover:underline">← Back</button>
+          
+          <h2 className="text-xl font-bold text-gray-900 text-center">How the 6×6 Matrix Works</h2>
+          
+          <div className="space-y-4">
+            <div className="bg-white border rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">1️⃣</span>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Define 6 Dimensions</h3>
+                  <p className="text-sm text-gray-600">What are the 6 factors that determine success in this role? Not skills — <em>performance dimensions</em>.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white border rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">2️⃣</span>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Define 6 Levels for Each</h3>
+                  <p className="text-sm text-gray-600">What does Level 1 look like? Level 6? Each level has a clear Key Performance Objective.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white border rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">3️⃣</span>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Select Target Levels</h3>
+                  <p className="text-sm text-gray-600">For this specific role, what level do you need in each dimension? A Staff Engineer might be L4 Technical, L2 People Leadership.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white border rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">4️⃣</span>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Interview Against the Matrix</h3>
+                  <p className="text-sm text-gray-600">Each dimension has specific questions. You know exactly what "good" looks like for each level.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+            <div className="font-semibold text-amber-800">💡 The Key Insight</div>
+            <p className="text-sm text-amber-700 mt-1">
+              The dimensions aren't universal — they emerge from understanding <em>your</em> role. 
+              "Field Experience" matters for construction VDC. "Healthcare Codes" matters for hospital projects. 
+              You discover the dimensions by asking the right questions.
+            </p>
+          </div>
+
+          <button
+            onClick={() => { setMode('demo'); setDemoStep(0); setSelections({}); }}
+            className="w-full py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700"
+          >
+            See It In Action: Engineering Example →
+          </button>
+          
+          <a 
+            href="https://hiring.tips/AG_contactmain5" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full py-3 border border-emerald-600 text-emerald-700 rounded-lg font-medium hover:bg-emerald-50 text-center"
+          >
+            Get Help Building Your Matrix →
+          </a>
+        </div>
+      );
+
+      const currentDim = demoStep > 0 && demoStep <= 6 ? engineeringDimensions[demoStep - 1] : null;
+      
+      const renderDemoIntro = () => (
+        <div className="text-center py-6">
+          <button onClick={() => setMode('intro')} className="text-emerald-600 text-sm hover:underline mb-4 block mx-auto">← Back to Start</button>
+          <div className="text-5xl mb-4">⚡</div>
+          <h1 className="text-xl font-bold text-gray-900">Engineering PBJD Builder</h1>
+          <p className="text-gray-500 mt-2">Try building a role using the 6×6 Matrix</p>
+          <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-left max-w-md mx-auto">
+            <div className="font-semibold text-emerald-800 mb-3">The 6 Dimensions for Engineering:</div>
+            {engineeringDimensions.map((d, i) => (
+              <div key={i} className="flex items-center gap-3 py-1">
+                <span className="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs flex items-center justify-center font-bold">{i + 1}</span>
+                <span className="text-gray-700">{d.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+
+      const renderDemoDimension = () => (
+        <div>
+          <div className="text-center mb-4">
+            <div className="text-emerald-600 text-sm font-medium">Dimension {demoStep} of 6</div>
+            <h2 className="text-xl font-bold text-gray-900">{currentDim.name}</h2>
+            <p className="text-gray-500">{currentDim.question}</p>
+          </div>
+          <div className="space-y-2">
+            {currentDim.levels.map((level, i) => (
+              <button
+                key={i}
+                onClick={() => handleSelect(currentDim.id, i)}
+                className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                  selections[currentDim.id] === i
+                    ? 'border-emerald-500 bg-emerald-50'
+                    : 'border-gray-200 hover:border-emerald-300'
+                }`}
+              >
+                <div className="flex gap-3">
+                  <div className="text-2xl">{level.icon}</div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                        selections[currentDim.id] === i ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-600'
+                      }`}>Level {i + 1}</span>
+                      <span className="font-semibold text-gray-900">{level.title}</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">{level.kpo}</p>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+
+      const renderDemoOutput = () => (
+        <div>
+          {!showInterview ? (
+            <>
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-4 rounded-t-lg">
+                <div className="text-emerald-100 text-sm">Performance-Based Job Description</div>
+                <h2 className="text-xl font-bold">{generateTitle()}</h2>
+              </div>
+              <div className="border border-t-0 rounded-b-lg overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-gray-100 text-left">
+                      <th className="p-3 font-semibold">Dimension</th>
+                      <th className="p-3 font-semibold">Level</th>
+                      <th className="p-3 font-semibold">Key Performance Objective</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {engineeringDimensions.map((dim, i) => {
+                      const lvl = selections[dim.id] ?? 0;
+                      return (
+                        <tr key={i} className="border-t">
+                          <td className="p-3 font-medium text-gray-900">{dim.name}</td>
+                          <td className="p-3 whitespace-nowrap">
+                            <span className="inline-flex items-center gap-1">
+                              <span>{dim.levels[lvl].icon}</span>
+                              <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-xs font-medium">L{lvl + 1}</span>
+                              <span className="text-gray-700">{dim.levels[lvl].title}</span>
+                            </span>
+                          </td>
+                          <td className="p-3 text-gray-600 text-xs">{dim.levels[lvl].kpo}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <button onClick={() => setShowInterview(true)} className="w-full mt-4 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700">
+                🎤 View Interview Questions
+              </button>
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="font-semibold text-blue-800">Ready to build your own?</div>
+                <p className="text-sm text-blue-700 mt-1">This Engineering matrix is just an example. Your role has its own 6 dimensions.</p>
+                <div className="flex gap-2 mt-3">
+                  <button onClick={() => { setMode('customize'); setCustomStep(0); }} className="flex-1 py-2 border border-blue-300 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100">
+                    Try the Builder
+                  </button>
+                  <a 
+                    href="https://hiring.tips/AG_contactmain5" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 text-center"
+                  >
+                    Get Expert Help →
+                  </a>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-gray-900">Interview: {generateTitle()}</h2>
+                <button onClick={() => setShowInterview(false)} className="text-emerald-600 text-sm hover:underline">← Back</button>
+              </div>
+              <div className="space-y-4">
+                {engineeringDimensions.map((dim, i) => {
+                  const lvl = selections[dim.id] ?? 0;
+                  return (
+                    <div key={i} className="border rounded-lg overflow-hidden">
+                      <div className="bg-emerald-600 text-white px-4 py-2 flex justify-between">
+                        <span className="font-semibold">{dim.name}</span>
+                        <span className="text-xs bg-emerald-800 px-2 py-1 rounded">L{lvl + 1} {dim.levels[lvl].title}</span>
+                      </div>
+                      <div className="p-4">
+                        {dim.questions.map((q, j) => (
+                          <div key={j} className="flex gap-2 mb-2 text-sm">
+                            <span className="text-emerald-600 font-bold">{j + 1}.</span>
+                            <span className="text-gray-700">{q}</span>
+                          </div>
+                        ))}
+                        <div className="mt-3 p-2 bg-amber-50 border border-amber-200 rounded text-xs">
+                          <span className="font-semibold text-amber-700">🎯 Listen for:</span>
+                          <span className="text-amber-600 ml-1">{dim.levels[lvl].kpo}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+      );
+
+      const renderDemo = () => {
+        const canContinue = demoStep === 0 || (currentDim && selections[currentDim.id] !== undefined);
+        return (
+          <>
+            {demoStep > 0 && demoStep <= 6 && (
+              <div className="h-2 bg-gray-200 -mx-6 -mt-6 mb-6">
+                <div className="h-2 bg-emerald-500 transition-all" style={{ width: `${(demoStep / 6) * 100}%` }} />
+              </div>
+            )}
+            {demoStep === 0 && renderDemoIntro()}
+            {demoStep >= 1 && demoStep <= 6 && renderDemoDimension()}
+            {demoStep === 7 && renderDemoOutput()}
+            
+            {demoStep < 7 && (
+              <div className="flex gap-3 mt-6">
+                {demoStep > 0 && (
+                  <button onClick={() => setDemoStep(s => s - 1)} className="flex-1 py-3 border rounded-lg font-medium hover:bg-gray-50">← Back</button>
+                )}
+                <button
+                  onClick={() => setDemoStep(s => s + 1)}
+                  disabled={!canContinue}
+                  className={`flex-1 py-3 rounded-lg font-medium ${canContinue ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-gray-200 text-gray-400'}`}
+                >
+                  {demoStep === 0 ? 'Start Building →' : demoStep === 6 ? 'Generate PBJD →' : 'Continue →'}
+                </button>
+              </div>
+            )}
+            {demoStep === 7 && !showInterview && (
+              <button onClick={() => { setDemoStep(0); setSelections({}); }} className="w-full mt-2 py-2 text-gray-500 hover:text-gray-700 text-sm">
+                Start Over
+              </button>
+            )}
+          </>
+        );
+      };
+
+      const renderCustomize = () => (
+        <div className="py-4 space-y-6">
+          <button onClick={() => setMode('intro')} className="text-emerald-600 text-sm hover:underline">← Back</button>
+          
+          <div className="text-center">
+            <div className="text-4xl mb-2">🔧</div>
+            <h2 className="text-xl font-bold text-gray-900">Build Your Own 6×6 Matrix</h2>
+            <p className="text-gray-500 text-sm mt-1">Answer a few questions to discover your role's dimensions</p>
+          </div>
+
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+            <div className="font-semibold text-amber-800">How this works:</div>
+            <p className="text-sm text-amber-700 mt-1">
+              The 6 dimensions aren't guessed — they emerge from understanding the role. 
+              I'll ask you about your best performers, what makes work hard, and who they collaborate with. 
+              From your answers, we'll identify the dimensions that matter.
+            </p>
+          </div>
+
+          {customStep < discoveryQuestions.length ? (
+            <div className="space-y-4">
+              <div className="text-sm text-emerald-600 font-medium">Question {customStep + 1} of {discoveryQuestions.length}</div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="h-2 bg-emerald-500 rounded-full transition-all" style={{ width: `${((customStep + 1) / discoveryQuestions.length) * 100}%` }} />
+              </div>
+              <label className="block font-medium text-gray-800">{discoveryQuestions[customStep].q}</label>
+              <textarea
+                value={customAnswers[discoveryQuestions[customStep].id] || ''}
+                onChange={(e) => setCustomAnswers(prev => ({ ...prev, [discoveryQuestions[customStep].id]: e.target.value }))}
+                placeholder={discoveryQuestions[customStep].placeholder}
+                className="w-full p-3 border rounded-lg h-28 text-sm"
+              />
+              <div className="flex gap-3">
+                {customStep > 0 && (
+                  <button onClick={() => setCustomStep(s => s - 1)} className="flex-1 py-3 border rounded-lg font-medium hover:bg-gray-50">← Back</button>
+                )}
+                <button
+                  onClick={() => setCustomStep(s => s + 1)}
+                  disabled={!customAnswers[discoveryQuestions[customStep].id]}
+                  className={`flex-1 py-3 rounded-lg font-medium ${customAnswers[discoveryQuestions[customStep].id] ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-gray-200 text-gray-400'}`}
+                >
+                  {customStep === discoveryQuestions.length - 1 ? 'Generate Dimensions →' : 'Continue →'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                <div className="font-semibold text-emerald-800 mb-2">✨ Based on your answers, here are your 6 dimensions:</div>
+                <p className="text-xs text-emerald-600 mb-3">These emerged from your stories about success, failure, and complexity</p>
+                {[
+                  { name: "Domain Expertise", evidence: "From: What they must walk in with" },
+                  { name: "Technical Proficiency", evidence: "From: What makes great performers exceptional" },
+                  { name: "Collaboration & Influence", evidence: "From: Who they must work with" },
+                  { name: "Project Scope", evidence: "From: What makes work harder" },
+                  { name: "People Leadership", evidence: "From: How they lead and develop others" },
+                  { name: "Specialized Knowledge", evidence: "From: What can't be taught" }
+                ].map((d, i) => (
+                  <div key={i} className="flex items-center gap-3 py-2 border-b border-emerald-100 last:border-0">
+                    <span className="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs flex items-center justify-center font-bold">{i + 1}</span>
+                    <div>
+                      <div className="font-medium text-gray-900">{d.name}</div>
+                      <div className="text-xs text-gray-500">{d.evidence}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                <div className="text-blue-800 font-medium">Want help building your complete 6×6 Matrix?</div>
+                <p className="text-sm text-blue-600 mt-1">We'll work with you to define all 6 dimensions and levels for your specific role.</p>
+                <a 
+                  href="https://hiring.tips/AG_contactmain5" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mt-3 px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
+                >
+                  Get Started →
+                </a>
+              </div>
+              <button onClick={() => { setMode('intro'); setCustomStep(0); setCustomAnswers({}); }} className="w-full py-3 border rounded-lg font-medium hover:bg-gray-50">
+                ← Start Over
+              </button>
+            </div>
+          )}
+        </div>
+      );
+
+      return (
+        <div className="min-h-screen bg-gray-50 p-4">
+          <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="p-6">
+              {mode === 'intro' && renderIntro()}
+              {mode === 'learn' && renderLearn()}
+              {mode === 'demo' && renderDemo()}
+              {mode === 'customize' && renderCustomize()}
+            </div>
+          </div>
+          <p className="text-center text-xs text-gray-400 mt-4">Performance-Based Hiring • The 6×6 Matrix • Moneyball for HR</p>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<PBJDApp />);
+  </script>
+</body>
+</html>
