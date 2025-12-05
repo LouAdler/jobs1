@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PBJD Builder v5 | VIATechnik Role Generator</title>
+  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      opacity: 0.03;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(251, 191, 36, 0.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(251, 191, 36, 0.5) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    
+    .container {
+      position: relative;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 20px 16px;
+    }
+    
+    header { margin-bottom: 16px; }
+    header h1 { font-size: 1.2rem; font-weight: 700; color: #f1f5f9; }
+    header p { font-size: 0.7rem; color: #64748b; }
+    
+    .progress {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+    
+    .step-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 600;
+      flex-shrink: 0;
+      border: none;
+      cursor: default;
+      transition: all 0.2s;
+    }
+    
+    .step-dot.active { background: #f59e0b; color: #0f172a; }
+    .step-dot.completed { background: rgba(245, 158, 11, 0.2); color: #f59e0b; cursor: pointer; }
+    .step-dot.pending { background: #1e293b; color: #64748b; }
+    
+    .step-line { width: 8px; height: 2px; flex-shrink: 0; }
+    .step-line.completed { background: rgba(245, 158, 11, 0.5); }
+    .step-line.pending { background: #334155; }
+    
+    .step-header { margin-bottom: 12px; }
+    .step-header h2 { font-size: 1rem; font-weight: 700; color: #f1f5f9; }
+    .step-header p { font-size: 0.75rem; color: #94a3b8; }
+    
+    /* Building blocks */
+    .blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    
+    .block {
+      padding: 12px 14px;
+      text-align: left;
+      border-radius: 6px;
+      border: 2px solid #475569;
+      background: rgba(30, 41, 59, 0.5);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .block:hover { border-color: #64748b; }
+    .block.selected { border-color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
+    
+    .block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 4px;
+    }
+    
+    .block-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .block-title h3 { 
+      font-size: 0.9rem; 
+      font-weight: 600; 
+      color: #f1f5f9; 
+    }
+    
+    .block-icon { font-size: 1rem; }
+    .block-check { color: #f59e0b; font-size: 0.9rem; }
+    
+    .block-kpo {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+    
+    .block-kpo strong {
+      color: #f59e0b;
+      font-weight: 600;
+    }
+    
+    .block-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    
+    .block-tool {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      background: rgba(51, 65, 85, 0.7);
+      border-radius: 3px;
+      color: #94a3b8;
+    }
+    
+    .block-meta {
+      font-size: 0.7rem;
+      color: #64748b;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid #334155;
+    }
+    
+    .block-codes {
+      font-size: 0.7rem;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    
+    .block-codes strong {
+      color: #94a3b8;
+    }
+    
+    .block-examples {
+      font-size: 0.7rem;
+      color: #64748b;
+      margin-top: 4px;
+      font-style: italic;
+    }
+    
+    .block-examples strong {
+      color: #94a3b8;
+      font-style: normal;
+    }
+
+    /* Review styles */
+    .review-header {
+      background: linear-gradient(to right, rgba(245, 158, 11, 0.2), rgba(249, 115, 22, 0.2));
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    
+    .review-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: rgba(245, 158, 11, 0.8);
+      margin-bottom: 4px;
+    }
+    
+    .review-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+    }
+    
+    .review-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    
+    .review-tag {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      background: #1e293b;
+      border-radius: 4px;
+      color: #94a3b8;
+    }
+    
+    .review-section { margin-bottom: 16px; }
+    
+    .review-section-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    
+    .review-section-num {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: #f59e0b;
+    }
+    
+    .review-section-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #f59e0b;
+    }
+    
+    .review-content {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid #475569;
+      border-radius: 6px;
+      padding: 10px;
+    }
+    
+    .review-content p {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    
+    .review-content.italic p { font-style: italic; }
+    
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    
+    .review-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid #475569;
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+    
+    .review-item-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #f59e0b;
+      flex-shrink: 0;
+    }
+    
+    .review-item-text {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+    }
+    
+    .review-question {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid #475569;
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+    
+    .review-question-cat {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: rgba(245, 158, 11, 0.8);
+      margin-bottom: 3px;
+    }
+    
+    .review-question-text {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      font-style: italic;
+    }
+    
+    .review-tools { display: flex; flex-wrap: wrap; gap: 4px; }
+    
+    .review-tool {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      background: #334155;
+      border-radius: 4px;
+      color: #cbd5e1;
+    }
+    
+    .review-tools-note {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+    
+    .critical-req {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 8px;
+    }
+    
+    .critical-req-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: #ef4444;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+    
+    .critical-req-text {
+      font-size: 0.75rem;
+      color: #fca5a5;
+    }
+    
+    /* Nav */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid #334155;
+    }
+    
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-family: inherit;
+    }
+    
+    .btn-back { background: transparent; color: #94a3b8; }
+    .btn-back:hover:not(:disabled) { background: #1e293b; color: #f1f5f9; }
+    .btn-back:disabled { color: #475569; cursor: not-allowed; }
+    
+    .btn-primary { background: #f59e0b; color: #0f172a; }
+    .btn-primary:hover:not(:disabled) { background: #fbbf24; }
+    .btn-primary:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+    
+    .btn-secondary { background: transparent; color: #cbd5e1; }
+    .btn-secondary:hover { background: #1e293b; color: #f1f5f9; }
+    
+    .nav-actions { display: flex; gap: 6px; }
+    
+    .btn-icon { display: flex; align-items: center; gap: 6px; }
+    .btn-icon svg { width: 14px; height: 14px; }
+    
+    .spinner { animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  
+  <div class="container">
+    <header>
+      <h1>PBJD Builder</h1>
+      <p>VIATechnik — Build a Performance-Based Job Description</p>
+    </header>
+    
+    <div class="progress" id="progress"></div>
+    
+    <div class="step-header">
+      <h2 id="step-title">Vertical</h2>
+      <p id="step-subtitle">Which team?</p>
+    </div>
+    
+    <div id="step-content"></div>
+    
+    <div class="nav">
+      <button class="btn btn-back" id="btn-back" disabled>← Back</button>
+      <div class="nav-actions">
+        <button class="btn btn-secondary hidden" id="btn-new">Start New</button>
+        <button class="btn btn-primary" id="btn-next">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // DATA
+    // ============================================
+    
+    const VERTICALS = [
+      {
+        id: 'electrical',
+        title: 'Electrical',
+        icon: '⚡',
+        kpo: 'Coordinate electrical systems with all trades, deliver prefab-ready models, eliminate field conflicts',
+        teamLead: 'Jesse',
+        coreTools: ['Revit MEP', 'Navisworks', 'Bluebeam', 'Revizto', 'ACC']
+      },
+      {
+        id: 'mechanical',
+        title: 'Mechanical & Plumbing',
+        icon: '🔧',
+        kpo: 'Coordinate HVAC and piping systems, deliver fabrication-ready spools, enable prefabrication',
+        teamLead: 'Dan',
+        coreTools: ['Revit MEP', 'Navisworks', 'Fabrication CADmep', 'ACC']
+      },
+      {
+        id: 'general',
+        title: 'General Construction',
+        icon: '🏗️',
+        kpo: 'Lead full MEP coordination for GCs, run clash detection, deliver 4D schedules, support field',
+        teamLead: 'Paul',
+        coreTools: ['Navisworks', 'Revit', 'Revizto', 'OpenSpace', 'ACC']
+      },
+      {
+        id: 'owner',
+        title: 'Owner Services',
+        icon: '🏢',
+        kpo: 'Deliver digital assets to building owners, enable facilities teams to operate from day one',
+        teamLead: 'Maria',
+        coreTools: ['Revit', 'Navisworks', 'Digital Twin platforms', 'FM systems']
+      },
+      {
+        id: 'design',
+        title: 'Architecture & Design Phase',
+        icon: '✏️',
+        kpo: 'Support early-stage design, deliver visualization and design validation, work with owners',
+        teamLead: 'Maria',
+        coreTools: ['Revit', 'Enscape', 'Visualization tools', 'ACC']
+      }
+    ];
+
+    const FIELD_EXPERIENCE = [
+      {
+        id: 'none',
+        title: 'No Field Background',
+        kpo: 'Works from drawings and specs; learns field conditions through project experience',
+        warning: true
+      },
+      {
+        id: 'light',
+        title: 'Some Field Exposure',
+        kpo: 'Has visited job sites, understands basic installation sequences; reads field conditions in models'
+      },
+      {
+        id: 'moderate',
+        title: 'Field-Informed',
+        kpo: 'Worked on or closely with construction; understands how things actually get built vs. drawn'
+      },
+      {
+        id: 'heavy',
+        title: 'Field SME',
+        kpo: 'Came up through the trades or spent years on sites; trusted subject matter expert on constructability',
+        meta: 'This is the "native speaker" vs "took it in high school" difference'
+      }
+    ];
+
+    // Expanded Technical Modeling - 6 levels with specific tools
+    const TECHNICAL_MODELING = [
+      {
+        id: 'foundational',
+        title: 'Level 1: Foundational',
+        kpo: 'Navigate models, perform markups, support documentation tasks under direction',
+        tools: ['Revit (navigation)', 'Navisworks (viewing)', 'Bluebeam', 'ACC/BIM 360'],
+        meta: 'Entry-level, learning standards and workflows'
+      },
+      {
+        id: 'production',
+        title: 'Level 2: Production Modeler',
+        kpo: 'Produce accurate models independently, run standard coordination workflows, maintain quality with <5% rework',
+        tools: ['Revit (modeling)', 'Navisworks (clash detection)', 'ACC', 'Bluebeam'],
+        meta: 'Can deliver work packages without supervision'
+      },
+      {
+        id: 'advanced',
+        title: 'Level 3: Advanced Modeler',
+        kpo: 'Build complex models, develop custom families, lead multi-discipline coordination, train junior staff',
+        tools: ['Revit (advanced families)', 'Navisworks (full coordination)', 'Dynamo (basic)', 'Solibri'],
+        meta: 'Autodesk Certified User level; go-to person for complex challenges'
+      },
+      {
+        id: 'specialist',
+        title: 'Level 4: Automation Specialist',
+        kpo: 'Develop automation workflows, create reusable scripts, reduce team production time by 30%+',
+        tools: ['Dynamo (advanced)', 'Python basics', 'pyRevit', 'Revit API basics'],
+        meta: 'Autodesk Certified Professional; builds tools others use'
+      },
+      {
+        id: 'platform',
+        title: 'Level 5: Platform Expert',
+        kpo: 'Administer platforms, develop integrations, shape firm-wide standards and template libraries',
+        tools: ['Python/C#', 'Revit API', 'Custom add-in development', 'ACC administration'],
+        meta: 'Builds and maintains the technical infrastructure for the team'
+      },
+      {
+        id: 'thought_leader',
+        title: 'Level 6: Industry Thought Leader',
+        kpo: 'Published/speaks at conferences, influences vendor roadmaps, shapes how tools are used industry-wide',
+        tools: ['Full stack', 'Custom development', 'Vendor beta programs', 'API contributions'],
+        meta: 'Recognized at AU, BILT, or similar; vendors seek their input'
+      }
+    ];
+
+    // Expanded Codes Knowledge - by project type
+    const CODES_KNOWLEDGE = [
+      {
+        id: 'basic_awareness',
+        title: 'Basic Awareness',
+        kpo: 'Knows codes exist and when to ask; flags potential issues for senior review',
+        codes: 'Aware of IBC, IMC, IPC, NEC existence'
+      },
+      {
+        id: 'core_commercial',
+        title: 'Core Commercial Codes',
+        kpo: 'Working knowledge of base building codes; applies to standard commercial coordination',
+        codes: 'IBC, IMC, IPC, NEC, ASHRAE 90.1, ASHRAE 62.1, IECC',
+        meta: 'Sufficient for standard office, retail, multi-family projects'
+      },
+      {
+        id: 'healthcare',
+        title: 'Healthcare Specialist',
+        kpo: 'Deep expertise in healthcare facility codes; coordinates with AHJs and CMS requirements',
+        codes: 'FGI Guidelines, NFPA 99, ASHRAE 170, NEC Article 517, Joint Commission, OSHPD (CA)',
+        meta: 'Can navigate FGI + NFPA 99 + ASHRAE 170 conflicts; understands CMS certification'
+      },
+      {
+        id: 'data_center',
+        title: 'Data Center / Mission Critical',
+        kpo: 'Expertise in mission critical facility standards; coordinates cooling, power, redundancy requirements',
+        codes: 'ASHRAE TC 9.9, ASHRAE 90.4, Uptime Institute Tiers, TIA-942, NFPA 75, NEC 645',
+        meta: 'Understands PUE, tier classifications, thermal guidelines'
+      },
+      {
+        id: 'laboratory',
+        title: 'Laboratory / Research',
+        kpo: 'Expertise in lab ventilation and biosafety requirements; coordinates containment systems',
+        codes: 'ANSI Z9.5, ASHRAE 62.1 (labs), CDC-NIH BMBL, NFPA 45, BSL-1 through BSL-4',
+        meta: 'Understands fume hood requirements, pressure cascades, containment levels'
+      },
+      {
+        id: 'multi_sector',
+        title: 'Multi-Sector Expert',
+        kpo: 'Deep expertise across multiple specialized sectors; trusted to lead code compliance on any project type',
+        codes: 'Healthcare + Data Center + Lab + Industrial + Education codes',
+        meta: 'Can advise on code strategy for complex mixed-use or specialized facilities'
+      }
+    ];
+
+    // Expanded Project Management - 6 levels based on VIATechnik project complexity
+    const PROJECT_MANAGEMENT = [
+      {
+        id: 'task',
+        title: 'Task Support',
+        kpo: 'Supports modeling/coordination tasks on established projects; works within defined processes; receives direction from senior staff',
+        examples: 'Support role on single-building commercial project',
+        meta: 'Entry-level project involvement'
+      },
+      {
+        id: 'single_discipline',
+        title: 'Single-Discipline Lead',
+        kpo: 'Leads own discipline coordination on standard projects; manages workload and deliverables independently; <5% rework rate',
+        examples: 'Lead electrical BIM on mid-rise office; plumbing coordination on retail',
+        meta: 'Owns one discipline end-to-end'
+      },
+      {
+        id: 'multi_discipline',
+        title: 'Multi-Discipline Coordinator',
+        kpo: 'Coordinates multiple disciplines on complex single projects; runs coordination meetings; resolves clashes; manages submittal workflows',
+        examples: 'Full MEP coordination on 500K+ sq ft commercial or sports venue (Chase Arena)',
+        meta: 'The "air traffic controller" — keeps all trades moving'
+      },
+      {
+        id: 'specialized_sector',
+        title: 'Specialized Sector PM',
+        kpo: 'Leads projects in specialized sectors (healthcare, data center, aviation); navigates sector-specific codes and regulatory constraints',
+        examples: 'Texas Oncology Cancer Center; Tier III data center; active hospital renovation',
+        meta: 'Sector expertise + project leadership — knows the codes AND the workflows'
+      },
+      {
+        id: 'mega_project',
+        title: 'Mega-Project / Active Facility Lead',
+        kpo: 'Leads BIM/VDC on mega-scale projects OR active facility upgrades; coordinates across multiple stakeholders and phases; manages zero-disruption constraints',
+        examples: 'Hudson Yards multi-stakeholder coordination; O\'Hare Terminal 5 active expansion; BART Silicon Valley extension',
+        meta: '$500M+ projects or live environments where mistakes = millions in losses'
+      },
+      {
+        id: 'program_director',
+        title: 'Program Director / Multi-Site Scale',
+        kpo: 'Directs multi-site programs or enterprise digital transformation; establishes standards for 100s-1000s of locations; shapes client technology strategy',
+        examples: 'Chick-fil-A 2,000+ location program; Prologis enterprise transformation; Amazon 40-location rollout',
+        meta: 'Builds systems that scale — every location benefits from the playbook'
+      }
+    ];
+
+    const SENIORITY = [
+      {
+        id: 'designer',
+        title: 'Designer',
+        kpo: 'Entry point — produces model content under direction, builds foundational skills, learns VIATechnik standards'
+      },
+      {
+        id: 'senior_engineer',
+        title: 'Senior Engineer',
+        kpo: 'Delegates and monitors work with offshore designers; owns quality of deliverables; runs day-to-day coordination'
+      },
+      {
+        id: 'manager',
+        title: 'Manager',
+        kpo: 'Manages engineers; responsible for project delivery and client satisfaction; develops team members'
+      },
+      {
+        id: 'senior_manager',
+        title: 'Senior VDC Manager',
+        kpo: 'Manages a team of VDC Engineers while applying technical skills across projects; owns client relationships'
+      },
+      {
+        id: 'team_lead',
+        title: 'Team Lead',
+        kpo: 'Manages managers; shapes practice direction; accountable for vertical P&L; develops next generation of leaders'
+      }
+    ];
+
+    const STEPS = [
+      { id: 'vertical', title: 'Vertical', subtitle: 'Which team?' },
+      { id: 'field', title: 'Field Experience', subtitle: 'Construction site background?' },
+      { id: 'technical', title: 'Technical Modeling', subtitle: 'Tool expertise level?' },
+      { id: 'codes', title: 'Codes Knowledge', subtitle: 'Building/trade codes depth?' },
+      { id: 'pm', title: 'Project Management', subtitle: 'PM scope?' },
+      { id: 'seniority', title: 'Role Level', subtitle: 'Career framework position?' },
+      { id: 'review', title: 'Review & Export', subtitle: 'Your PBJD' }
+    ];
+
+    // ============================================
+    // STATE
+    // ============================================
+    
+    let currentStep = 0;
+    let selections = {
+      vertical: null,
+      field: null,
+      technical: null,
+      codes: null,
+      pm: null,
+      seniority: null
+    };
+    let isExporting = false;
+
+    // ============================================
+    // HELPERS
+    // ============================================
+    
+    const getSelected = (list, id) => list.find(item => item.id === id);
+    const getVertical = () => getSelected(VERTICALS, selections.vertical);
+    const getField = () => getSelected(FIELD_EXPERIENCE, selections.field);
+    const getTechnical = () => getSelected(TECHNICAL_MODELING, selections.technical);
+    const getCodes = () => getSelected(CODES_KNOWLEDGE, selections.codes);
+    const getPM = () => getSelected(PROJECT_MANAGEMENT, selections.pm);
+    const getSeniority = () => getSelected(SENIORITY, selections.seniority);
+
+    function generateJobTitle() {
+      const vertical = getVertical();
+      const seniority = getSeniority();
+      
+      if (!vertical || !seniority) return 'VDC Professional';
+      
+      let title = '';
+      if (seniority.id === 'designer') title = 'VDC Designer';
+      else if (seniority.id === 'senior_engineer') title = 'Senior VDC Engineer';
+      else if (seniority.id === 'manager') title = 'VDC Manager';
+      else if (seniority.id === 'senior_manager') title = 'Senior VDC Manager';
+      else if (seniority.id === 'team_lead') title = 'VDC Team Lead';
+      
+      if (vertical.id !== 'general') {
+        title += ` - ${vertical.title}`;
+      }
+      
+      return title;
+    }
+
+    function generatePerformanceObjective() {
+      const vertical = getVertical();
+      const seniority = getSeniority();
+      
+      if (!vertical || !seniority) return '';
+      
+      const objectives = {
+        'designer': `Within the first 90 days, become a productive member of ${vertical.teamLead}'s team, independently producing quality model content with minimal rework, maintaining strong documentation, and demonstrating the attention to detail that VIATechnik is known for.`,
+        'senior_engineer': `Within the first 6 months, own coordination deliverables on 2-3 ${vertical.title.toLowerCase()} projects, effectively delegate to and monitor offshore designers, achieve clash-free milestones on schedule, and build trusted relationships with trade partners.`,
+        'manager': `Within the first year, lead a team of engineers delivering ${vertical.title.toLowerCase()} projects, maintain exceptional quality standards across all deliverables, develop team members' skills, and drive client satisfaction that generates repeat business.`,
+        'senior_manager': `Within the first year, manage a team of VDC Engineers while applying your technical expertise across multiple ${vertical.title.toLowerCase()} projects, own key client relationships, and contribute to practice growth and innovation.`,
+        'team_lead': `Within the first year, shape the strategic direction of the ${vertical.title.toLowerCase()} practice, build and develop managers, establish standards that scale across the organization, and drive P&L performance for the vertical.`
+      };
+      
+      return objectives[seniority.id] || objectives['senior_engineer'];
+    }
+
+    function generateOutcomes() {
+      const vertical = getVertical();
+      const seniority = getSeniority();
+      const technical = getTechnical();
+      const codes = getCodes();
+      const pm = getPM();
+      
+      const outcomes = [];
+      
+      if (technical) outcomes.push(technical.kpo);
+      if (codes && codes.id !== 'basic_awareness') outcomes.push(codes.kpo);
+      if (pm) outcomes.push(pm.kpo);
+      
+      outcomes.push('Maintain exceptional documentation so every decision and issue is traceable — always have the receipts when things go sideways');
+      
+      if (vertical) outcomes.push(vertical.kpo);
+      
+      if (seniority?.id === 'manager' || seniority?.id === 'senior_manager' || seniority?.id === 'team_lead') {
+        outcomes.push('Build client relationships that generate repeat engagements and referrals');
+      }
+      
+      if (seniority?.id === 'senior_manager' || seniority?.id === 'team_lead') {
+        outcomes.push('Develop team members for promotion, maintaining retention above industry average');
+      }
+      
+      return outcomes;
+    }
+
+    function generateChallenges() {
+      const vertical = getVertical();
+      const pm = getPM();
+      const codes = getCodes();
+      
+      const challenges = [
+        'Every project is a firehose — staying organized and maintaining quality documentation under constant pressure',
+        'The details kill everyone in this industry — catching small issues before they become expensive field problems'
+      ];
+      
+      if (pm?.id === 'multi_discipline' || pm?.id === 'specialized_sector' || pm?.id === 'mega_project' || pm?.id === 'program_director') {
+        challenges.push('Managing competing priorities while maintaining attention to detail on each deliverable');
+      }
+      
+      if (pm?.id === 'mega_project') {
+        challenges.push('Coordinating across multiple stakeholders with different priorities, timelines, and communication styles');
+      }
+      
+      if (pm?.id === 'program_director') {
+        challenges.push('Building systems and standards that work at scale while remaining flexible to local conditions');
+      }
+      
+      if (vertical?.id === 'mechanical' || vertical?.id === 'electrical' || vertical?.id === 'general') {
+        challenges.push('Driving resolution when trade contractors disagree or resist coordination requirements');
+      }
+      
+      if (codes?.id === 'healthcare' || codes?.id === 'laboratory') {
+        challenges.push('Navigating overlapping and sometimes conflicting code requirements across multiple regulatory bodies');
+      }
+      
+      return challenges;
+    }
+
+    function generateInterviewQuestions() {
+      const vertical = getVertical();
+      const field = getField();
+      const pm = getPM();
+      const seniority = getSeniority();
+      const codes = getCodes();
+      const technical = getTechnical();
+      
+      const questions = [];
+      
+      if (field?.id === 'heavy' || field?.id === 'moderate') {
+        questions.push({
+          category: 'Field Experience (Critical)',
+          question: "Walk me through your field experience. What jobs have you worked on? What did you actually do on the job site? Give me a specific example where your field knowledge helped you catch something that someone without that background would have missed."
+        });
+      }
+      
+      questions.push({
+        category: 'Technical Knowledge',
+        question: `Describe the most complex ${vertical?.title.toLowerCase() || 'coordination'} challenge you've worked on. What made it difficult, how did you approach it, and what was the outcome?`
+      });
+      
+      if (technical?.id === 'specialist' || technical?.id === 'platform' || technical?.id === 'thought_leader') {
+        questions.push({
+          category: 'Automation & Tools',
+          question: "Tell me about an automation or workflow you developed. What problem did it solve, how did you build it, and what was the measurable impact on team productivity?"
+        });
+      }
+      
+      if (codes?.id !== 'basic_awareness' && codes?.id !== 'core_commercial') {
+        questions.push({
+          category: 'Codes & Standards',
+          question: `Tell me about a time you navigated a complex code issue on a ${codes?.id === 'healthcare' ? 'healthcare' : codes?.id === 'data_center' ? 'data center' : codes?.id === 'laboratory' ? 'lab' : 'specialized'} project. What was the conflict or challenge, how did you resolve it, and what would have happened if you'd missed it?`
+        });
+      }
+      
+      questions.push({
+        category: 'Organization & Documentation',
+        question: "Tell me about a time when having strong documentation saved you or your team. What was the situation, what did you have documented, and how did it help?"
+      });
+      
+      // PM Level-specific questions
+      if (pm?.id === 'multi_discipline' || pm?.id === 'specialized_sector') {
+        questions.push({
+          category: 'Project Management',
+          question: "Describe a project where everything was on fire — multiple issues, competing deadlines, difficult stakeholders. How did you stay on top of it? What was your system for making sure nothing fell through?"
+        });
+      }
+      
+      if (pm?.id === 'specialized_sector') {
+        questions.push({
+          category: 'Sector Expertise',
+          question: `What's different about managing ${codes?.id === 'healthcare' ? 'healthcare' : codes?.id === 'data_center' ? 'data center' : codes?.id === 'laboratory' ? 'lab' : 'specialized sector'} projects compared to standard commercial? Give me a specific example where that sector knowledge made a critical difference.`
+        });
+      }
+      
+      if (pm?.id === 'mega_project') {
+        questions.push({
+          category: 'Mega-Project Leadership',
+          question: "Tell me about leading coordination on a very large or complex project with multiple stakeholders and competing interests. How did you keep everyone aligned? What was your approach to managing dependencies across teams or phases?"
+        });
+        questions.push({
+          category: 'Active Facility / High-Stakes',
+          question: "Have you ever worked on a project where operational disruption was not an option — like an active airport, hospital, or data center? How did you plan around those constraints? What would have happened if something went wrong?"
+        });
+      }
+      
+      if (pm?.id === 'program_director') {
+        questions.push({
+          category: 'Program Scale',
+          question: "Tell me about a multi-site program or enterprise rollout you've led. How did you establish standards that worked across dozens or hundreds of locations? What was your approach to quality control at scale?"
+        });
+        questions.push({
+          category: 'Client Strategy',
+          question: "Describe how you've shaped a client's technology strategy or digital transformation roadmap. What was your process for understanding their needs and translating that into an actionable program?"
+        });
+      }
+      
+      if (seniority?.id === 'manager' || seniority?.id === 'senior_manager' || seniority?.id === 'team_lead') {
+        questions.push({
+          category: 'Leadership & Team Development',
+          question: "Tell me about someone you developed who got promoted or significantly grew their skills. What was your approach? How did you balance their development with project delivery?"
+        });
+      }
+      
+      if (vertical?.id === 'electrical' || vertical?.id === 'mechanical' || vertical?.id === 'general') {
+        questions.push({
+          category: 'Trade Coordination',
+          question: "Tell me about a coordination meeting where a trade contractor pushed back hard. How did you handle it? What was the resolution?"
+        });
+      }
+      
+      return questions;
+    }
+
+    function getAllTools() {
+      const vertical = getVertical();
+      const technical = getTechnical();
+      
+      const tools = new Set();
+      
+      if (vertical?.coreTools) {
+        vertical.coreTools.forEach(t => tools.add(t));
+      }
+      
+      if (technical?.tools) {
+        technical.tools.forEach(t => tools.add(t));
+      }
+      
+      return Array.from(tools);
+    }
+
+    function canProceed() {
+      const stepKeys = ['vertical', 'field', 'technical', 'codes', 'pm', 'seniority'];
+      if (currentStep < stepKeys.length) {
+        return selections[stepKeys[currentStep]] !== null;
+      }
+      return true;
+    }
+
+    // ============================================
+    // RENDER
+    // ============================================
+    
+    function renderProgress() {
+      const container = document.getElementById('progress');
+      container.innerHTML = STEPS.map((step, i) => {
+        const dotClass = i === currentStep ? 'active' : i < currentStep ? 'completed' : 'pending';
+        const lineClass = i < currentStep ? 'completed' : 'pending';
+        
+        let html = `<button class="step-dot ${dotClass}" ${i < currentStep ? `onclick="goToStep(${i})"` : ''}>${i < currentStep ? '✓' : i + 1}</button>`;
+        if (i < STEPS.length - 1) {
+          html += `<div class="step-line ${lineClass}"></div>`;
+        }
+        return html;
+      }).join('');
+    }
+
+    function renderStepHeader() {
+      document.getElementById('step-title').textContent = STEPS[currentStep].title;
+      document.getElementById('step-subtitle').textContent = STEPS[currentStep].subtitle;
+    }
+
+    function renderBlocks(items, selectedId, selectionKey) {
+      return `<div class="blocks">${items.map(item => `
+        <div class="block ${item.id === selectedId ? 'selected' : ''}" onclick="select('${selectionKey}', '${item.id}')">
+          <div class="block-header">
+            <div class="block-title">
+              ${item.icon ? `<span class="block-icon">${item.icon}</span>` : ''}
+              <h3>${item.title}</h3>
+            </div>
+            ${item.id === selectedId ? '<span class="block-check">✓</span>' : ''}
+          </div>
+          <p class="block-kpo"><strong>KPO:</strong> ${item.kpo}</p>
+          ${item.tools ? `<div class="block-tools">${item.tools.map(t => `<span class="block-tool">${t}</span>`).join('')}</div>` : ''}
+          ${item.codes ? `<p class="block-codes"><strong>Codes:</strong> ${item.codes}</p>` : ''}
+          ${item.examples ? `<p class="block-examples"><strong>Examples:</strong> ${item.examples}</p>` : ''}
+          ${item.meta ? `<p class="block-meta">${item.meta}</p>` : ''}
+          ${item.warning && item.id === selectedId ? `<p class="block-meta" style="color: #fca5a5;">⚠️ For MEP trade roles, candidates without field experience often struggle with construction realities</p>` : ''}
+        </div>
+      `).join('')}</div>`;
+    }
+
+    function renderStepContent() {
+      const container = document.getElementById('step-content');
+      
+      switch (currentStep) {
+        case 0:
+          container.innerHTML = renderBlocks(VERTICALS, selections.vertical, 'vertical');
+          break;
+        case 1:
+          container.innerHTML = renderBlocks(FIELD_EXPERIENCE, selections.field, 'field');
+          break;
+        case 2:
+          container.innerHTML = renderBlocks(TECHNICAL_MODELING, selections.technical, 'technical');
+          break;
+        case 3:
+          container.innerHTML = renderBlocks(CODES_KNOWLEDGE, selections.codes, 'codes');
+          break;
+        case 4:
+          container.innerHTML = renderBlocks(PROJECT_MANAGEMENT, selections.pm, 'pm');
+          break;
+        case 5:
+          container.innerHTML = renderBlocks(SENIORITY, selections.seniority, 'seniority');
+          break;
+        case 6:
+          renderReview(container);
+          break;
+      }
+    }
+
+    function renderReview(container) {
+      const vertical = getVertical();
+      const seniority = getSeniority();
+      const field = getField();
+      const technical = getTechnical();
+      const codes = getCodes();
+      const pm = getPM();
+      const outcomes = generateOutcomes();
+      const challenges = generateChallenges();
+      const questions = generateInterviewQuestions();
+      const allTools = getAllTools();
+      
+      container.innerHTML = `
+        <div class="review-header">
+          <div class="review-label">Performance-Based Job Description</div>
+          <div class="review-title">${generateJobTitle()}</div>
+          <div class="review-tags">
+            <span class="review-tag">${vertical?.title}</span>
+            <span class="review-tag">${seniority?.title}</span>
+            <span class="review-tag">Field: ${field?.title?.split(':')[0] || field?.title}</span>
+            <span class="review-tag">Tech: ${technical?.title?.split(':')[1]?.trim() || technical?.title}</span>
+            <span class="review-tag">Codes: ${codes?.title?.split(':')[0] || codes?.title}</span>
+          </div>
+        </div>
+        
+        ${field?.id === 'heavy' || field?.id === 'moderate' ? `
+        <div class="critical-req">
+          <div class="critical-req-label">⚠️ Critical Requirement</div>
+          <div class="critical-req-text">This role requires significant field/construction experience. Candidates from design-only backgrounds historically underperform — "the design side doesn't think about details that matter in the construction side."</div>
+        </div>
+        ` : ''}
+        
+        <div class="review-section">
+          <div class="review-section-header">
+            <span class="review-section-num">1</span>
+            <span class="review-section-title">Performance Objective</span>
+          </div>
+          <div class="review-content italic">
+            <p>${generatePerformanceObjective()}</p>
+          </div>
+        </div>
+        
+        <div class="review-section">
+          <div class="review-section-header">
+            <span class="review-section-num">2</span>
+            <span class="review-section-title">Key Performance Outcomes</span>
+          </div>
+          <div class="review-list">
+            ${outcomes.map((o, i) => `
+              <div class="review-item">
+                <span class="review-item-num">${i + 1}.</span>
+                <span class="review-item-text">${o}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="review-section">
+          <div class="review-section-header">
+            <span class="review-section-num">3</span>
+            <span class="review-section-title">Job Challenges</span>
+          </div>
+          <div class="review-list">
+            ${challenges.map(c => `
+              <div class="review-item">
+                <span class="review-item-text">${c}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="review-section">
+          <div class="review-section-header">
+            <span class="review-section-num">4</span>
+            <span class="review-section-title">VIATechnik Top Performer Traits</span>
+          </div>
+          <div class="review-list">
+            <div class="review-item"><span class="review-item-text"><strong>Technical Knowledge:</strong> "Native speaker" level — not someone who "took it in high school"</span></div>
+            <div class="review-item"><span class="review-item-text"><strong>Super Organized:</strong> Can handle the firehose while keeping everything tracked</span></div>
+            <div class="review-item"><span class="review-item-text"><strong>Attention to Detail:</strong> The details kill everyone — catches issues others miss</span></div>
+            <div class="review-item"><span class="review-item-text"><strong>Documentation Discipline:</strong> Always has the receipts when things go sideways</span></div>
+          </div>
+        </div>
+        
+        <div class="review-section">
+          <div class="review-section-header">
+            <span class="review-section-num">5</span>
+            <span class="review-section-title">MSA Interview Questions</span>
+          </div>
+          <div class="review-list">
+            ${questions.map(q => `
+              <div class="review-question">
+                <div class="review-question-cat">${q.category}</div>
+                <div class="review-question-text">"${q.question}"</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="review-section">
+          <div class="review-section-header">
+            <span class="review-section-num">6</span>
+            <span class="review-section-title">Tools & Technology</span>
+          </div>
+          <div class="review-content">
+            <p class="review-tools-note">Focus interviews on outcomes, not tool proficiency:</p>
+            <div class="review-tools">
+              ${allTools.map(t => `<span class="review-tool">${t}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+        
+        ${codes?.codes ? `
+        <div class="review-section">
+          <div class="review-section-header">
+            <span class="review-section-num">7</span>
+            <span class="review-section-title">Codes & Standards Context</span>
+          </div>
+          <div class="review-content">
+            <p>${codes.codes}</p>
+          </div>
+        </div>
+        ` : ''}
+      `;
+    }
+
+    function renderNav() {
+      const btnBack = document.getElementById('btn-back');
+      const btnNext = document.getElementById('btn-next');
+      const btnNew = document.getElementById('btn-new');
+      
+      btnBack.disabled = currentStep === 0;
+      
+      if (currentStep === STEPS.length - 1) {
+        btnNext.innerHTML = isExporting 
+          ? `<span class="btn-icon"><svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>Exporting...</span>`
+          : `<span class="btn-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Export to Word</span>`;
+        btnNext.onclick = exportToWord;
+        btnNew.classList.remove('hidden');
+      } else {
+        btnNext.textContent = 'Continue →';
+        btnNext.onclick = nextStep;
+        btnNew.classList.add('hidden');
+      }
+      
+      btnNext.disabled = !canProceed();
+    }
+
+    function render() {
+      renderProgress();
+      renderStepHeader();
+      renderStepContent();
+      renderNav();
+    }
+
+    // ============================================
+    // ACTIONS
+    // ============================================
+    
+    function select(key, id) {
+      selections[key] = id;
+      render();
+    }
+
+    function nextStep() {
+      if (currentStep < STEPS.length - 1 && canProceed()) {
+        currentStep++;
+        render();
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        render();
+      }
+    }
+
+    function goToStep(step) {
+      if (step < currentStep) {
+        currentStep = step;
+        render();
+      }
+    }
+
+    function startNew() {
+      currentStep = 0;
+      selections = { vertical: null, field: null, technical: null, codes: null, pm: null, seniority: null };
+      render();
+    }
+
+    // ============================================
+    // WORD EXPORT
+    // ============================================
+    
+    async function exportToWord() {
+      if (isExporting) return;
+      isExporting = true;
+      renderNav();
+
+      try {
+        if (typeof docx === 'undefined') {
+          throw new Error('Document library not loaded. Please refresh the page.');
+        }
+        
+        const vertical = getVertical();
+        const seniority = getSeniority();
+        const field = getField();
+        const technical = getTechnical();
+        const codes = getCodes();
+        const jobTitle = generateJobTitle();
+        const perfObjective = generatePerformanceObjective();
+        const outcomes = generateOutcomes();
+        const challenges = generateChallenges();
+        const questions = generateInterviewQuestions();
+        const allTools = getAllTools();
+
+        const children = [
+          new docx.Paragraph({
+            children: [new docx.TextRun({ text: "PERFORMANCE-BASED JOB DESCRIPTION", size: 20, color: "d97706", bold: true })]
+          }),
+          new docx.Paragraph({
+            heading: docx.HeadingLevel.TITLE,
+            children: [new docx.TextRun({ text: jobTitle })]
+          }),
+          new docx.Paragraph({
+            spacing: { after: 300 },
+            children: [new docx.TextRun({ text: `${vertical?.title}  |  ${seniority?.title}  |  Technical: ${technical?.title?.split(':')[1]?.trim() || ''}  |  Codes: ${codes?.title?.split(':')[0] || ''}`, color: "6b7280" })]
+          })
+        ];
+        
+        if (field?.id === 'heavy' || field?.id === 'moderate') {
+          children.push(
+            new docx.Paragraph({
+              spacing: { after: 200 },
+              children: [
+                new docx.TextRun({ text: "CRITICAL REQUIREMENT: ", bold: true, color: "DC2626" }),
+                new docx.TextRun({ text: "This role requires significant field/construction experience. Candidates from design-only backgrounds historically underperform.", color: "7F1D1D" })
+              ]
+            })
+          );
+        }
+        
+        children.push(
+          new docx.Paragraph({ heading: docx.HeadingLevel.HEADING_1, children: [new docx.TextRun({ text: "1. Performance Objective" })] }),
+          new docx.Paragraph({ spacing: { after: 200 }, children: [new docx.TextRun({ text: perfObjective, italics: true })] }),
+          new docx.Paragraph({ heading: docx.HeadingLevel.HEADING_1, children: [new docx.TextRun({ text: "2. Key Performance Outcomes" })] })
+        );
+        
+        outcomes.forEach(outcome => {
+          children.push(new docx.Paragraph({
+            numbering: { reference: "outcomes-list", level: 0 },
+            spacing: { after: 80 },
+            children: [new docx.TextRun({ text: outcome })]
+          }));
+        });
+        
+        children.push(new docx.Paragraph({ heading: docx.HeadingLevel.HEADING_1, children: [new docx.TextRun({ text: "3. Job Challenges" })] }));
+        
+        challenges.forEach(challenge => {
+          children.push(new docx.Paragraph({
+            numbering: { reference: "bullet-list", level: 0 },
+            spacing: { after: 80 },
+            children: [new docx.TextRun({ text: challenge })]
+          }));
+        });
+        
+        children.push(
+          new docx.Paragraph({ heading: docx.HeadingLevel.HEADING_1, children: [new docx.TextRun({ text: "4. VIATechnik Top Performer Traits" })] }),
+          new docx.Paragraph({ numbering: { reference: "bullet-list", level: 0 }, spacing: { after: 80 }, children: [new docx.TextRun({ text: "Technical Knowledge: ", bold: true }), new docx.TextRun({ text: '"Native speaker" level — not someone who "took it in high school"' })] }),
+          new docx.Paragraph({ numbering: { reference: "bullet-list", level: 0 }, spacing: { after: 80 }, children: [new docx.TextRun({ text: "Super Organized: ", bold: true }), new docx.TextRun({ text: "Can handle the firehose while keeping everything tracked" })] }),
+          new docx.Paragraph({ numbering: { reference: "bullet-list", level: 0 }, spacing: { after: 80 }, children: [new docx.TextRun({ text: "Attention to Detail: ", bold: true }), new docx.TextRun({ text: "The details kill everyone — catches issues others miss" })] }),
+          new docx.Paragraph({ numbering: { reference: "bullet-list", level: 0 }, spacing: { after: 80 }, children: [new docx.TextRun({ text: "Documentation Discipline: ", bold: true }), new docx.TextRun({ text: "Always has the receipts when things go sideways" })] }),
+          new docx.Paragraph({ heading: docx.HeadingLevel.HEADING_1, children: [new docx.TextRun({ text: "5. MSA Interview Questions" })] })
+        );
+        
+        questions.forEach(q => {
+          children.push(new docx.Paragraph({
+            numbering: { reference: "questions-list", level: 0 },
+            spacing: { after: 80 },
+            children: [
+              new docx.TextRun({ text: `[${q.category}] `, bold: true, color: "d97706" }),
+              new docx.TextRun({ text: q.question, italics: true })
+            ]
+          }));
+        });
+        
+        children.push(
+          new docx.Paragraph({ heading: docx.HeadingLevel.HEADING_1, children: [new docx.TextRun({ text: "6. Tools & Technology" })] }),
+          new docx.Paragraph({ spacing: { after: 100 }, children: [new docx.TextRun({ text: "Focus interviews on outcomes, not tool proficiency:", color: "6b7280" })] })
+        );
+        
+        allTools.forEach(tool => {
+          children.push(new docx.Paragraph({
+            numbering: { reference: "bullet-list", level: 0 },
+            spacing: { after: 60 },
+            children: [new docx.TextRun({ text: tool })]
+          }));
+        });
+        
+        if (codes?.codes) {
+          children.push(
+            new docx.Paragraph({ heading: docx.HeadingLevel.HEADING_1, children: [new docx.TextRun({ text: "7. Codes & Standards Context" })] }),
+            new docx.Paragraph({ spacing: { after: 100 }, children: [new docx.TextRun({ text: codes.codes })] })
+          );
+        }
+        
+        children.push(
+          new docx.Paragraph({ spacing: { before: 600 }, children: [] }),
+          new docx.Paragraph({ alignment: docx.AlignmentType.CENTER, children: [new docx.TextRun({ text: "Generated by PBJD Builder  |  Performance-based Hiring  |  VIATechnik", size: 18, color: "9ca3af" })] }),
+          new docx.Paragraph({ alignment: docx.AlignmentType.CENTER, spacing: { before: 100 }, children: [new docx.TextRun({ text: "Created: " + new Date().toLocaleDateString(), size: 18, color: "9ca3af" })] })
+        );
+
+        const doc = new docx.Document({
+          styles: {
+            default: { document: { run: { font: "Arial", size: 22 } } },
+            paragraphStyles: [
+              { id: "Title", name: "Title", basedOn: "Normal", run: { size: 48, bold: true, color: "1a1a2e", font: "Arial" }, paragraph: { spacing: { before: 0, after: 200 }, alignment: docx.AlignmentType.LEFT } },
+              { id: "Heading1", name: "Heading 1", basedOn: "Normal", next: "Normal", quickFormat: true, run: { size: 28, bold: true, color: "d97706", font: "Arial" }, paragraph: { spacing: { before: 400, after: 120 }, outlineLevel: 0 } }
+            ]
+          },
+          numbering: {
+            config: [
+              { reference: "outcomes-list", levels: [{ level: 0, format: docx.LevelFormat.DECIMAL, text: "%1.", alignment: docx.AlignmentType.LEFT, style: { paragraph: { indent: { left: 720, hanging: 360 } } } }] },
+              { reference: "bullet-list", levels: [{ level: 0, format: docx.LevelFormat.BULLET, text: "•", alignment: docx.AlignmentType.LEFT, style: { paragraph: { indent: { left: 720, hanging: 360 } } } }] },
+              { reference: "questions-list", levels: [{ level: 0, format: docx.LevelFormat.DECIMAL, text: "%1.", alignment: docx.AlignmentType.LEFT, style: { paragraph: { indent: { left: 720, hanging: 360 } } } }] }
+            ]
+          },
+          sections: [{ properties: { page: { margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 } } }, children: children }]
+        });
+
+        const blob = await docx.Packer.toBlob(doc);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = "PBJD-" + jobTitle.replace(/[^a-z0-9]/gi, '-').toLowerCase() + ".docx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error generating document: ' + error.message);
+      }
+      
+      isExporting = false;
+      renderNav();
+    }
+
+    // ============================================
+    // EVENT LISTENERS & INIT
+    // ============================================
+    
+    document.getElementById('btn-back').addEventListener('click', prevStep);
+    document.getElementById('btn-new').addEventListener('click', startNew);
+    render();
+  </script>
+</body>
+</html>
