@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6×6 Sales Matrix Builder Prototype</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
+    .matrix-container { min-height: 80vh; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // --- 1. DEFINING THE SALES DIMENSIONS (FACTORS) AND KPOs ---
+
+    const salesDimensions = [
+      {
+        id: 'productFluency', 
+        name: "Product & Technical Fluency", 
+        question: "How deep must their product and technical knowledge be?",
+        kpo: {
+          hunter: [
+            { title: "Feature Recall", icon: "📚", kpo: "Accurately describe standard features and use cases to a prospect. Relies on SE for all technical Q&A." },
+            { title: "Basic Architecture", icon: "🏗️", kpo: "Confidently articulate the basic system architecture and data flow. Can answer Level 1/2 technical questions without immediate SE help." },
+            { title: "Integration Mapping", icon: "🔗", kpo: "Map standard features to a client's specific API requirements and integration needs. Effectively counters common technical FUD (Fear, Uncertainty, Doubt)." },
+            { title: "Technical Differentiation", icon: "🛡️", kpo: "Acts as primary technical consultant in discovery; defines the technical differentiation strategy against competitors." },
+            { title: "Future Product Input", icon: "🔮", kpo: "Translates major industry technical shifts (e.g., AI/ML) into product strategy and informs Product/Engineering roadmaps." },
+            { title: "Technology Vision", icon: "💡", kpo: "Defines the long-term technological vision for the *sales organization* (e.g., selection/sunset of the entire Salestech stack)." }
+          ],
+          farmer: [
+            { title: "Feature Recall", icon: "📚", kpo: "Accurately describe standard features and use cases for existing customer. Focuses on application within the current environment." },
+            { title: "Configuration Management", icon: "⚙️", kpo: "Understands the customer's current product configuration and identifies basic gaps for cross-sell/upsell." },
+            { title: "Usage Optimization", icon: "📈", kpo: "Diagnoses sub-optimal product usage and proposes configuration changes to improve customer ROI, driving contract health." },
+            { title: "Roadmap Alignment", icon: "🧭", kpo: "Aligns the customer's future strategic goals (next 12-24 months) with the company's product roadmap to secure large renewal/expansion." },
+            { title: "Solution Design", icon: "🧩", kpo: "Designs complex, multi-product solutions that span several departments within the existing customer base." },
+            { title: "Architecture Advising", icon: "🏛️", kpo: "Acts as a trusted advisor to the client's CTO/CIO on how the product fits into their long-term enterprise architecture strategy." }
+          ]
+        },
+        questions: ["Tell me about the most complex technical objection you handled alone.", "Describe a situation where a product limitation became a commercial opportunity."],
+        icon: "🧠"
+      },
+      {
+        id: 'businessAcumen', 
+        name: "Industry & Business Acumen", 
+        question: "How well must they understand the customer's P&L and industry?",
+        kpo: {
+          hunter: [
+            { title: "Industry Terminology", icon: "💬", kpo: "Understands and uses standard industry acronyms and job titles. Knows common competitor names." },
+            { title: "Functional Pain Points", icon: "🎯", kpo: "Understands 2-3 specific pain points and KPI pressure points for key decision-makers (e.g., VP of Finance is focused on cost reduction)." },
+            { title: "Value Driver Mapping", icon: "💲", kpo: "Consistently maps the product to quantifiable economic value (e.g., X% reduction in labor) within the client's business model." },
+            { title: "Executive Context", icon: "📈", kpo: "Deeply understands the client's business P&L/balance sheet and can frame the product as a solution to a C-Level strategic initiative." },
+            { title: "Vertical Thought Leadership", icon: "📰", kpo: "Develops content (e.g., white papers) that positions the company as a thought leader in the specific vertical/domain." },
+            { title: "Macro-Economic Insight", icon: "🌍", kpo: "Predicts market disruptions (e.g., regulatory changes, recessions) and provides executive guidance on how the company should adjust its vertical sales strategy." }
+          ],
+          farmer: [
+            { title: "Org Mapping", icon: "👤", kpo: "Maintains an accurate organization chart and influence map for the client, noting all internal champions and detractors." },
+            { title: "Budget Cycle Mastery", icon: "🗓️", kpo: "Masters the client's internal budgeting, procurement, and renewal cycles to ensure proactive engagement." },
+            { title: "Cost-of-Inaction Modeling", icon: "💸", kpo: "Proactively creates and presents models showing the cost of *not* expanding the solution or renewing the contract." },
+            { title: "Strategic Account Planning", icon: "🗺️", kpo: "Develops a comprehensive 12-month account plan that maps potential solution areas to the client's publicly stated strategic goals." },
+            { title: "Long-Term Partnership", icon: "🤝", kpo: "Acts as the trusted advisor to the client's executive team, leading discussions about organizational strategy, not just product features." },
+            { title: "Cross-Industry Benchmarking", icon: "🏆", kpo: "Provides strategic benchmarking insights, showing the client how they perform against best-in-class organizations globally." }
+          ]
+        },
+        questions: ["Describe a time you successfully challenged a prospect's core business assumption.", "How do you build a financial justification model for a new technology purchase?"],
+        icon: "💼"
+      },
+      {
+        id: 'salesProcess', 
+        name: "Sales Process & Pipeline Mastery", 
+        question: "What is their level of execution and process optimization?",
+        kpo: {
+          hunter: [
+            { title: "Task Execution", icon: "✅", kpo: "Follows a pre-defined sequence of steps. Focuses on CRM data entry accuracy and following playbooks exactly as written." },
+            { title: "Process Ownership", icon: "🛠️", kpo: "Independently manages the entire pipeline for a small territory/segment. Can diagnose and fix basic pipeline leaks." },
+            { title: "Process Optimization", icon: "⚙️", kpo: "Consistently masters and *modifies* the standard sales process to improve personal efficiency. Accurately forecasts based on deal stage conversion ratios." },
+            { title: "System & Process Design", icon: "🧠", kpo: "Designs and rolls out new sales processes or qualification methodologies (e.g., implementing a new discovery framework) for the team or segment." },
+            { title: "Organizational Integration", icon: "🔗", kpo: "Defines the Sales Process interface with Marketing (Lead Handoff SLA) and Post-Sales. Solves cross-functional bottlenecks that impede the pipeline." },
+            { title: "Future State Strategy", icon: "🚀", kpo: "Defines the *future* global sales structure and technology roadmap necessary to scale the organization to the next order of magnitude." }
+          ],
+          farmer: [
+            { title: "Renewal Task Execution", icon: "🗓️", kpo: "Executes standard renewal tasks and paperwork with high accuracy 90 days before the renewal date." },
+            { title: "Expansion Identification", icon: "🔍", kpo: "Proactively identifies at least 3 viable expansion/upsell opportunities per quarter within their assigned accounts." },
+            { title: "Adoption & Health Metrics", icon: "❤️", kpo: "Uses product adoption data to create proactive health check-ins. Maintains a customer satisfaction score (CSAT/NPS) 10 points above the company average." },
+            { title: "Success Planning", icon: "🏆", kpo: "Develops a standardized Customer Success Plan used by the team to ensure client ROI is achieved, minimizing churn risk." },
+            { title: "Lifecycle Process Design", icon: "🔄", kpo: "Designs the seamless process handoff between Sales, Customer Success, and Billing to ensure high retention and expansion rates." },
+            { title: "Retention Strategy", icon: "🔒", kpo: "Defines the global client retention strategy, including executive engagement protocols and risk mitigation plans for high-value customers." }
+          ]
+        },
+        questions: ["Tell me about your personal forecasting methodology. How often are you wrong and why?", "Describe a time you modified a standard sales process to be more effective."],
+        icon: "📋"
+      },
+      {
+        id: 'internalOrchestration', 
+        name: "Internal Resource Orchestration", 
+        question: "How effectively do they leverage internal experts (SE, Legal, etc.)?",
+        kpo: {
+          hunter: [
+            { title: "SE Request Protocol", icon: "✉️", kpo: "Executes the required protocol for requesting SE time (e.g., uses the correct form, provides the necessary discovery notes)." },
+            { title: "SE Pre-Call Vetting", icon: "🛡️", kpo: "Vets the technical qualification (BANT/MEDDPIC) of the deal *before* involving the SE. Minimizes wasted SE time on unqualified opportunities." },
+            { title: "Shared Technical Plan", icon: "🤝", kpo: "Collaborates with the SE to co-create and own the technical evaluation plan (e.g., POC or security review). Handles non-deep-dive technical discussions independently." },
+            { title: "Global Resource Scheduling", icon: "⏱️", kpo: "Manages and adjudicates scheduling conflicts between the SE and multiple complex deals, proactively balancing technical needs against revenue targets." },
+            { title: "SE Enablement Process", icon: "📚", kpo: "Designs and implements a process (e.g., a shared resource library or standardized demo deck) that increases the SE's efficiency by 20% across the region." },
+            { title: "Organizational Structuring", icon: "🏛️", kpo: "Designs the optimal ratio and allocation model for SEs (e.g., pool vs. dedicated) across the global sales force to maximize technical coverage and margin." }
+          ],
+          farmer: [
+            { title: "Internal Handoff", icon: "🔄", kpo: "Manages the seamless handoff of post-sales tasks (e.g., support tickets, billing questions) to the correct internal department." },
+            { title: "CSM Partnership", icon: "👯", kpo: "Works in tandem with the Customer Success Manager (CSM) to ensure a unified client experience, escalating only critical issues to management." },
+            { title: "Renewal Risk Alignment", icon: "🚨", kpo: "Routinely aligns with Finance, Legal, and Support to proactively identify and flag contractual or usage-based renewal risks." },
+            { title: "Multi-functional Advocacy", icon: "📢", kpo: "Acts as the internal advocate for the customer, gathering resources from Product and Engineering to solve client-specific roadblocks that impact expansion." },
+            { title: "Account Team Process", icon: "📝", kpo: "Designs and implements the standardized process (e.g., weekly account team syncs) for all internal resources (CSM, Support, Billing) working on a single large account." },
+            { title: "Enterprise Relationship Mapping", icon: "🌐", kpo: "Develops an enterprise-wide relationship mapping strategy that ensures no critical client contact is missed by an internal support or sales function." }
+          ]
+        },
+        questions: ["Tell me about a time you had to get buy-in from a legal team on a deal term.", "How do you manage the time of a highly valuable and scarce internal resource like an SE?"],
+        icon: "🤝"
+      },
+      {
+        id: 'commercialComplexity', 
+        name: "Commercial & Stakeholder Complexity", 
+        question: "What is the level of negotiation and contract complexity required?",
+        kpo: {
+          hunter: [
+            { title: "Procurement Follow-Up", icon: "📑", kpo: "Executes all required steps (paperwork, forms) provided by the client's procurement department." },
+            { title: "Stakeholder Identification", icon: "🔍", kpo: "Accurately identifies all necessary stakeholders and creates a basic influence map (Champion, Economic Buyer, Technical Buyer)." },
+            { title: "Negotiation & Risk", icon: "⚖️", kpo: "Expertly negotiates standard pricing and contract terms (e.g., payment schedules). Proactively identifies and mitigates low-to-medium contractual risks." },
+            { title: "Executive Influence", icon: "👔", kpo: "Leads negotiations with C-level stakeholders, driving consensus among competing organizational agendas. Manages high-risk, multi-million dollar deals." },
+            { title: "Contractual Innovation", icon: "💡", kpo: "Creates new deal structures or commercial terms (e.g., custom SLAs, performance guarantees) to unlock blocked deals or create a new market advantage." },
+            { title: "Pricing and P&L Strategy", icon: "💰", kpo: "Defines the global pricing architecture and discounting policies. Ensures commercial terms align with long-term company P&L goals and shareholder value." }
+          ],
+          farmer: [
+            { title: "Contract History", icon: "📜", kpo: "Maintains a perfect record of the client's contract history, including all prior expansions, terms, and renewal dates." },
+            { title: "Budget Advocacy", icon: "🗣️", kpo: "Successfully advocates for the client to allocate internal budget for expansion projects without requiring major external discounts." },
+            { title: "Renewal Negotiation", icon: "🤝", kpo: "Expertly negotiates standard renewal rates and terms, minimizing churn and discount requests below company average." },
+            { title: "Multi-Year Planning", icon: "🗓️", kpo: "Secures multi-year contracts (3+ years) and manages complex multi-product expansion contracts with high profitability." },
+            { title: "Strategic Contract Restructure", icon: "🔄", kpo: "Designs and executes complex contract restructures (e.g., moving from seat-based to usage-based pricing) to align with client long-term strategy." },
+            { title: "Enterprise Pricing Model", icon: "🏦", kpo: "Works with Finance to define and implement the pricing model for the company's largest, most strategic enterprise accounts globally." }
+          ]
+        },
+        questions: ["Describe the most difficult negotiation you led. What was your final concession strategy?", "How do you manage a buying group with five different executive stakeholders who have conflicting goals?"],
+        icon: "💵"
+      },
+      {
+        id: 'strategyImpact', 
+        name: "Territory Strategy & Commercial Impact", 
+        question: "What is their responsibility for the business outcome and strategy?",
+        kpo: {
+          hunter: [
+            { title: "Basic Coverage", icon: "📍", kpo: "Documents all accounts/contacts in their assigned list. Executes campaigns defined by marketing/management." },
+            { title: "Targeted Prospecting", icon: "🎯", kpo: "Independently creates a short-list of high-potential targets within their territory. Proactively identifies and pursues leads outside of inbound channels." },
+            { title: "Territory Optimization", icon: "🗺️", kpo: "Develops and executes a data-driven territory plan to maximize coverage and minimize friction, consistently exceeding quota by 10-20%." },
+            { title: "Market Intelligence Loop", icon: "📡", kpo: "Systematically gathers and shares actionable market intelligence (e.g., competitor pricing) that directly informs management's strategy." },
+            { title: "GTM Strategy Definition", icon: "🧭", kpo: "Drives the strategy for entering a *new market segment or vertical*. Defines the optimal sales motions for that area." },
+            { title: "Global Sales Strategy", icon: "🌐", kpo: "Defines the long-term global GTM strategy, including organizational segmentation, compensation plans, and resource allocation to meet 3-5 year growth targets." }
+          ],
+          farmer: [
+            { title: "Basic Coverage", icon: "👤", kpo: "Maintains regular, scheduled contact with key decision-makers in assigned accounts." },
+            { title: "Expansion Identification", icon: "💰", kpo: "Consistently identifies and qualifies upsell and cross-sell opportunities within existing contracts." },
+            { title: "Account Health & Retention", icon: "❤️", kpo: "Maintains a territory-level renewal rate above 95% and minimizes the time deals spend in the renewal stage." },
+            { title: "Reference and Case Study Generation", icon: "⭐", kpo: "Proactively turns successful accounts into external references and case studies to fuel the company's marketing and sales pipeline." },
+            { title: "Account-Based Strategy", icon: "🏗️", kpo: "Leads the development of an Account-Based Management (ABM) strategy for the company's Top 10 named accounts." },
+            { title: "Client Advisory Board", icon: "👑", kpo: "Creates and manages a high-impact Client Advisory Board (CAB) composed of executive leaders from top accounts to drive product and company strategy." }
+          ]
+        },
+        questions: ["What is your current territory plan and why did you choose that structure?", "Describe a time your market intelligence directly changed a product decision or management strategy."],
+        icon: "🚀"
+      }
+    ];
+
+    // --- 2. REACT COMPONENTS ---
+
+    const RoleSelector = ({ roleType, setRoleType }) => (
+      <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+          1. Define the Role Archetype 🎯
+        </h2>
+        <p className="text-gray-600 mb-4 text-sm">Select the primary sales focus to load the most relevant Key Performance Objectives (KPOs).</p>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setRoleType('hunter')}
+            className={`flex-1 py-3 px-4 rounded-lg font-medium border-2 transition-all ${
+              roleType === 'hunter' 
+                ? 'border-red-600 bg-red-50 text-red-800' 
+                : 'border-gray-200 text-gray-700 hover:bg-gray-50'
+            }`}
+          >
+            <span className="text-xl mr-2">🏹</span> Hunter (New Logos)
+          </button>
+          <button
+            onClick={() => setRoleType('farmer')}
+            className={`flex-1 py-3 px-4 rounded-lg font-medium border-2 transition-all ${
+              roleType === 'farmer' 
+                ? 'border-green-600 bg-green-50 text-green-800' 
+                : 'border-gray-200 text-gray-700 hover:bg-gray-50'
+            }`}
+          >
+            <span className="text-xl mr-2">🚜</span> Farmer (Existing Accounts)
+          </button>
+        </div>
+      </div>
+    );
+
+    const DimensionSelector = ({ dimensions, selections, handleSelect, roleType }) => (
+      <div className="space-y-8">
+        {dimensions.map((dim, dimIndex) => {
+          const kpos = dim.kpo[roleType];
+          const currentSelection = selections[dim.id];
+
+          return (
+            <div key={dim.id} className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+              <div className="mb-4">
+                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">{dimIndex + 1}</span>
+                  {dim.name} <span className="text-xl">{dim.icon}</span>
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">{dim.question}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                {kpos.map((level, levelIndex) => (
+                  <button
+                    key={levelIndex}
+                    onClick={() => handleSelect(dim.id, levelIndex)}
+                    className={`w-full text-left p-3 rounded-lg border-2 transition-all h-full flex flex-col justify-start ${
+                      currentSelection === levelIndex
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-blue-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                        currentSelection === levelIndex ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
+                      }`}>L{levelIndex + 1}</span>
+                      <span className="font-semibold text-gray-900 text-sm">{level.title}</span>
+                    </div>
+                    <p className="text-xs text-gray-600 mt-1">{level.kpo}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+
+    const OutputGenerator = ({ dimensions, selections, roleType }) => {
+      const allSelected = dimensions.every(dim => selections[dim.id] !== undefined);
+      const [showInterview, setShowInterview] = useState(false);
+      
+      if (!allSelected) return null;
+
+      const profileName = (
+        selections.strategyImpact >= 4 
+          ? 'VP/Director of Sales Strategy'
+          : selections.strategyImpact >= 2 
+          ? 'Senior Account Executive'
+          : 'Account Executive'
+      );
+      
+      const roleArchetype = roleType === 'hunter' ? 'Hunter (New Business)' : 'Farmer (Account Management)';
+
+      const OutputTable = () => (
+        <div className="border border-t-0 rounded-b-lg overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-gray-100 text-left">
+                <th className="p-3 font-semibold">Dimension</th>
+                <th className="p-3 font-semibold">Level</th>
+                <th className="p-3 font-semibold">Key Performance Objective (KPO)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dimensions.map((dim, i) => {
+                const lvl = selections[dim.id];
+                const kpo = dim.kpo[roleType][lvl];
+                return (
+                  <tr key={i} className="border-t">
+                    <td className="p-3 font-medium text-gray-900 whitespace-nowrap">{dim.name}</td>
+                    <td className="p-3 whitespace-nowrap">
+                      <span className="inline-flex items-center gap-1">
+                        <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">L{lvl + 1}</span>
+                        <span className="text-gray-700">{kpo.title}</span>
+                      </span>
+                    </td>
+                    <td className="p-3 text-gray-600 text-xs">{kpo.kpo}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      );
+
+      const InterviewGuide = () => (
+        <div className="space-y-4">
+          <div className="text-sm font-semibold text-gray-700 mb-2">Instructions: Ask the questions below, then score the candidate based on whether their answer aligns with the **Target KPO** listed for the selected level.</div>
+          {dimensions.map((dim, i) => {
+            const lvl = selections[dim.id];
+            const kpo = dim.kpo[roleType][lvl];
+            return (
+              <div key={i} className="border rounded-lg overflow-hidden">
+                <div className="bg-blue-600 text-white px-4 py-2 flex justify-between">
+                  <span className="font-semibold">{dim.name}</span>
+                  <span className="text-xs bg-blue-800 px-2 py-1 rounded">Target L{lvl + 1} ({kpo.title})</span>
+                </div>
+                <div className="p-4">
+                  {dim.questions.map((q, j) => (
+                    <div key={j} className="flex gap-2 mb-2 text-sm">
+                      <span className="text-blue-600 font-bold">{j + 1}.</span>
+                      <span className="text-gray-700">{q}</span>
+                    </div>
+                  ))}
+                  <div className="mt-3 p-2 bg-amber-50 border border-amber-200 rounded text-xs">
+                    <span className="font-semibold text-amber-700">🎯 Target Performance (KPO):</span>
+                    <span className="text-amber-600 ml-1">{kpo.kpo}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+
+      return (
+        <div className="bg-white p-6 rounded-xl shadow-2xl mt-8">
+          <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-4 rounded-t-lg">
+            <div className="text-blue-100 text-sm">Performance-Based Job Description for {roleArchetype}</div>
+            <h2 className="text-2xl font-bold">{profileName}</h2>
+          </div>
+
+          <div className="flex justify-center my-4">
+            <button 
+              onClick={() => setShowInterview(false)}
+              className={`py-2 px-4 text-sm font-medium rounded-l-lg border ${!showInterview ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            >
+              Job Profile (KPOs)
+            </button>
+            <button 
+              onClick={() => setShowInterview(true)}
+              className={`py-2 px-4 text-sm font-medium rounded-r-lg border ${showInterview ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            >
+              Interview Guide
+            </button>
+          </div>
+
+          {showInterview ? <InterviewGuide /> : <OutputTable />}
+
+          <p className="text-center text-xs text-gray-500 mt-4">This profile is a unique combination of your 6 selections (L{Object.values(selections).map(s => s + 1).join('')})</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="w-full mt-4 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600"
+          >
+            Start Over / Build Another Role
+          </button>
+        </div>
+      );
+    };
+
+    const SalesApp = () => {
+      const [roleType, setRoleType] = useState('hunter');
+      const [selections, setSelections] = useState({});
+      const [showOutput, setShowOutput] = useState(false);
+
+      const handleSelect = (dimId, levelIndex) => {
+        setSelections(prev => ({ ...prev, [dimId]: levelIndex }));
+        const allSelected = salesDimensions.every(dim => ({ ...prev, [dimId]: levelIndex })[dim.id] !== undefined);
+        if (allSelected) {
+          setShowOutput(true);
+        }
+      };
+
+      return (
+        <div className="max-w-4xl mx-auto py-8 matrix-container">
+          <header className="text-center mb-10">
+            <h1 className="text-3xl font-extrabold text-gray-900">The Dynamic 6×6 Sales Matrix Builder</h1>
+            <p className="text-lg text-gray-600 mt-2">Personalize your sales roles based on Archetype and Performance Outcomes.</p>
+          </header>
+
+          <RoleSelector roleType={roleType} setRoleType={(type) => { setRoleType(type); setSelections({}); setShowOutput(false); }} />
+          
+          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            2. Define Proficiency Levels (L1-L6) for Each Dimension
+          </h2>
+
+          <DimensionSelector 
+            dimensions={salesDimensions} 
+            selections={selections} 
+            handleSelect={handleSelect} 
+            roleType={roleType}
+          />
+          
+          {showOutput && (
+            <OutputGenerator 
+              dimensions={salesDimensions} 
+              selections={selections} 
+              roleType={roleType}
+            />
+          )}
+
+          <footer className="text-center text-xs text-gray-400 mt-10">
+            Prototype built by Gemini. Performance-Based Hiring for Sales.
+          </footer>
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<SalesApp />);
+  </script>
+</body>
+</html>
