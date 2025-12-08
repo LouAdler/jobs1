@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6×6 Matrix Builder | Performance-Based Hiring</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a0f1a 0%, #111827 50%, #0f172a 100%);
+      color: #e2e8f0;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+    
+    /* Progress */
+    .progress-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+    
+    .progress-step {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .progress-step.completed {
+      background: #22c55e;
+      color: #0f172a;
+    }
+    
+    .progress-step.active {
+      background: #3b82f6;
+      color: white;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
+    
+    .progress-step.pending {
+      background: #1e293b;
+      color: #64748b;
+    }
+    
+    .progress-line {
+      width: 24px;
+      height: 2px;
+      background: #334155;
+    }
+    
+    .progress-line.completed {
+      background: #22c55e;
+    }
+    
+    /* Card */
+    .card {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(71, 85, 105, 0.3);
+      border-radius: 16px;
+      padding: 32px;
+    }
+    
+    .step-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #3b82f6;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    
+    .step-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+    }
+    
+    .step-subtitle {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      margin-bottom: 24px;
+    }
+    
+    /* Options */
+    .options-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .options-grid.two-col {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .option-btn {
+      background: rgba(30, 41, 59, 0.5);
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .option-btn:hover {
+      border-color: #475569;
+      background: rgba(51, 65, 85, 0.5);
+    }
+    
+    .option-btn.selected {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.1);
+    }
+    
+    .option-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+    
+    .option-desc {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+    
+    /* Text Input */
+    .text-input {
+      width: 100%;
+      background: rgba(30, 41, 59, 0.5);
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 16px;
+      color: #f1f5f9;
+      font-size: 1rem;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 120px;
+      margin-bottom: 24px;
+    }
+    
+    .text-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+    
+    .text-input::placeholder {
+      color: #64748b;
+    }
+    
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .input-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+    
+    .input-group input, .input-group select {
+      width: 100%;
+      background: rgba(30, 41, 59, 0.5);
+      border: 2px solid #334155;
+      border-radius: 8px;
+      padding: 12px;
+      color: #f1f5f9;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    
+    .input-group input:focus, .input-group select:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+    
+    /* Dimensions */
+    .dimensions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .dimension-item {
+      background: rgba(30, 41, 59, 0.5);
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .dimension-number {
+      width: 32px;
+      height: 32px;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #3b82f6;
+      flex-shrink: 0;
+    }
+    
+    .dimension-content {
+      flex: 1;
+    }
+    
+    .dimension-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    
+    .dimension-desc {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+    
+    .dimension-edit {
+      background: transparent;
+      border: 1px solid #475569;
+      border-radius: 6px;
+      padding: 6px 12px;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .dimension-edit:hover {
+      border-color: #3b82f6;
+      color: #3b82f6;
+    }
+    
+    /* Matrix Grid */
+    .matrix-container {
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
+    
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: 180px repeat(6, 1fr);
+      gap: 4px;
+      min-width: 800px;
+    }
+    
+    .matrix-header {
+      background: transparent;
+      padding: 12px 8px;
+      text-align: center;
+    }
+    
+    .matrix-header .level-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    .matrix-header .level-name {
+      font-size: 0.7rem;
+      color: #94a3b8;
+    }
+    
+    .matrix-dim-label {
+      background: rgba(30, 41, 59, 0.7);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .matrix-dim-label span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    
+    .matrix-cell {
+      background: rgba(30, 41, 59, 0.5);
+      border: 2px solid transparent;
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .matrix-cell:hover {
+      background: rgba(51, 65, 85, 0.7);
+      border-color: #475569;
+    }
+    
+    .matrix-cell.selected {
+      border-color: #22c55e;
+      background: rgba(34, 197, 94, 0.15);
+    }
+    
+    .matrix-cell .cell-icon {
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+    
+    .matrix-cell .cell-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      line-height: 1.3;
+    }
+    
+    /* Selection Summary */
+    .selection-summary {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .selection-summary h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #22c55e;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .selection-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(34, 197, 94, 0.1);
+    }
+    
+    .selection-item:last-child {
+      border-bottom: none;
+    }
+    
+    .selection-item .dim-name {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    
+    .selection-item .level-badge {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #22c55e;
+    }
+    
+    /* Job Title Input */
+    .job-title-input {
+      width: 100%;
+      background: rgba(30, 41, 59, 0.5);
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 16px;
+      color: #f1f5f9;
+      font-size: 1.2rem;
+      font-weight: 600;
+      font-family: inherit;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    
+    .job-title-input:focus {
+      outline: none;
+      border-color: #22c55e;
+    }
+    
+    .job-title-input::placeholder {
+      color: #64748b;
+      font-weight: 400;
+    }
+    
+    /* PBJD Output */
+    .pbjd-output {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(71, 85, 105, 0.3);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    
+    .pbjd-header {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      padding: 24px;
+    }
+    
+    .pbjd-header .label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+    
+    .pbjd-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .pbjd-body {
+      padding: 24px;
+    }
+    
+    .pbjd-section {
+      margin-bottom: 24px;
+    }
+    
+    .pbjd-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .pbjd-section h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #22c55e;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .pbjd-section p {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    
+    .pbjd-list {
+      list-style: none;
+    }
+    
+    .pbjd-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+    
+    .pbjd-list li::before {
+      content: "▸";
+      color: #22c55e;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    
+    .interview-question {
+      background: rgba(30, 41, 59, 0.5);
+      border-left: 3px solid #3b82f6;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .interview-question .category {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #3b82f6;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    
+    .interview-question .question {
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      font-style: italic;
+    }
+    
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    
+    .btn {
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-family: inherit;
+    }
+    
+    .btn-back {
+      background: transparent;
+      border: 2px solid #475569;
+      color: #94a3b8;
+    }
+    
+    .btn-back:hover {
+      border-color: #64748b;
+      color: #e2e8f0;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      flex: 1;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-primary:disabled {
+      background: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+    }
+    
+    /* Route Card */
+    .route-card {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+    
+    .route-card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f59e0b;
+      margin-bottom: 8px;
+    }
+    
+    .route-card p {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+    
+    .route-card a {
+      display: inline-block;
+      background: #f59e0b;
+      color: #0f172a;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    
+    .route-card a:hover {
+      transform: translateY(-2px);
+    }
+    
+    /* Hint Box */
+    .hint-box {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+    
+    .hint-box p {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    
+    .hint-box strong {
+      color: #3b82f6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="root"></div>
+  </div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    // Step definitions
+    const STEPS = [
+      { id: 'qualify', label: 'Volume' },
+      { id: 'family', label: 'Family' },
+      { id: 'focus', label: 'Focus' },
+      { id: 'context', label: 'Context' },
+      { id: 'process', label: 'Process' },
+      { id: 'dimensions', label: 'Dimensions' },
+      { id: 'levels', label: 'Levels' },
+      { id: 'select', label: 'Build Role' },
+      { id: 'output', label: 'PBJD' }
+    ];
+
+    // Job families
+    const JOB_FAMILIES = [
+      { id: 'sales', name: 'Sales', icon: '💼' },
+      { id: 'engineering', name: 'Engineering', icon: '⚙️' },
+      { id: 'customer_success', name: 'Customer Success', icon: '🤝' },
+      { id: 'marketing', name: 'Marketing', icon: '📣' },
+      { id: 'product', name: 'Product', icon: '🎯' },
+      { id: 'finance', name: 'Finance', icon: '📊' },
+      { id: 'operations', name: 'Operations', icon: '🔧' },
+      { id: 'other', name: 'Other', icon: '📋' }
+    ];
+
+    // Focus options by family
+    const FOCUS_OPTIONS = {
+      sales: [
+        { id: 'hunter', name: 'Hunter', desc: 'New logo acquisition - finding and closing new customers' },
+        { id: 'farmer', name: 'Farmer', desc: 'Account growth - expanding and retaining existing customers' },
+        { id: 'hybrid', name: 'Hybrid', desc: 'Mix of new business and account management' }
+      ],
+      engineering: [
+        { id: 'build', name: '0→1 Build', desc: 'Creating new products/features from scratch' },
+        { id: 'scale', name: 'Scale', desc: 'Growing and optimizing existing systems' },
+        { id: 'sustain', name: 'Sustain', desc: 'Maintaining and improving reliability' }
+      ],
+      customer_success: [
+        { id: 'onboarding', name: 'Onboarding', desc: 'Getting new customers to value quickly' },
+        { id: 'retention', name: 'Retention', desc: 'Keeping customers healthy and renewed' },
+        { id: 'expansion', name: 'Expansion', desc: 'Growing revenue within accounts' }
+      ]
+    };
+
+    // Default dimensions by family + focus
+    const DEFAULT_DIMENSIONS = {
+      'sales_hunter': [
+        { id: 'prospecting', name: 'Prospecting & Pipeline', desc: 'How they generate and qualify opportunities' },
+        { id: 'deal_complexity', name: 'Deal Complexity', desc: 'Size, length, and stakeholder complexity of deals' },
+        { id: 'product_fluency', name: 'Product & Solution Fluency', desc: 'Technical depth, demo ability, solution design' },
+        { id: 'territory_quota', name: 'Territory & Quota Management', desc: 'Planning, forecasting, pipeline management' },
+        { id: 'collaboration', name: 'Collaboration & Orchestration', desc: 'SE coordination, discovery process, internal resources' },
+        { id: 'process_discipline', name: 'Process & Discipline', desc: 'CRM hygiene, methodology, forecasting accuracy' }
+      ],
+      'sales_farmer': [
+        { id: 'relationship', name: 'Relationship Management', desc: 'Depth and breadth of customer relationships' },
+        { id: 'expansion', name: 'Expansion & Upsell', desc: 'Identifying and closing growth opportunities' },
+        { id: 'product_fluency', name: 'Product & Solution Fluency', desc: 'Technical depth across the product portfolio' },
+        { id: 'territory_quota', name: 'Territory & Quota Management', desc: 'Account planning, forecasting, renewal management' },
+        { id: 'collaboration', name: 'Collaboration & Orchestration', desc: 'CSM coordination, executive alignment, internal advocacy' },
+        { id: 'process_discipline', name: 'Process & Discipline', desc: 'Account health tracking, QBRs, documentation' }
+      ]
+    };
+
+    // Level definitions for Sales Hunter dimensions
+    const LEVEL_DEFINITIONS = {
+      'prospecting': [
+        { level: 1, icon: '📥', title: 'Inbound Handler', kpo: 'Responds to and qualifies inbound leads' },
+        { level: 2, icon: '📞', title: 'Cold Prospector', kpo: 'Books meetings through outbound activity' },
+        { level: 3, icon: '🎯', title: 'Multi-Channel', kpo: 'Orchestrates email, phone, social, events' },
+        { level: 4, icon: '🗺️', title: 'Account Strategist', kpo: 'Multi-threaded approach, executive access' },
+        { level: 5, icon: '🕸️', title: 'Network Builder', kpo: 'Generates pipeline through relationships and referrals' },
+        { level: 6, icon: '💡', title: 'Category Creator', kpo: 'Creates demand through thought leadership' }
+      ],
+      'deal_complexity': [
+        { level: 1, icon: '💳', title: 'Transactional', kpo: '<$10K, single call close, high volume' },
+        { level: 2, icon: '🤝', title: 'SMB', kpo: '$10-50K, 1-2 stakeholders, 30-60 day cycle' },
+        { level: 3, icon: '📋', title: 'Mid-Market', kpo: '$50-250K, multiple stakeholders, procurement' },
+        { level: 4, icon: '🏢', title: 'Enterprise', kpo: '$250K-1M+, C-suite, complex procurement' },
+        { level: 5, icon: '🏛️', title: 'Strategic', kpo: '$1M+ multi-year, board-level relationships' },
+        { level: 6, icon: '🌐', title: 'Transformational', kpo: 'Platform deals that change how customer operates' }
+      ],
+      'product_fluency': [
+        { level: 1, icon: '📖', title: 'Script-Based', kpo: 'Follows talk track, relies on SE for technical' },
+        { level: 2, icon: '🎤', title: 'Demo Ready', kpo: 'Delivers standard demos, handles basic objections' },
+        { level: 3, icon: '🔗', title: 'Solution Mapper', kpo: 'Maps product to customer needs, integration-aware' },
+        { level: 4, icon: '🛡️', title: 'Technical Seller', kpo: 'Handles technical discovery, counters competitive FUD' },
+        { level: 5, icon: '🔮', title: 'Product Influencer', kpo: 'Shapes roadmap based on market intelligence' },
+        { level: 6, icon: '🌟', title: 'Thought Leader', kpo: 'Industry expert, keynotes, shapes market perception' }
+      ],
+      'territory_quota': [
+        { level: 1, icon: '📝', title: 'Activity Managed', kpo: 'Hits activity metrics, basic pipeline tracking' },
+        { level: 2, icon: '📊', title: 'Pipeline Aware', kpo: 'Accurate forecasting, understands coverage ratios' },
+        { level: 3, icon: '🗓️', title: 'Quarter Planner', kpo: 'Builds quarterly plan, manages commit vs upside' },
+        { level: 4, icon: '📈', title: 'Territory Optimizer', kpo: 'Data-driven planning, exceeds quota 10-20%' },
+        { level: 5, icon: '🧭', title: 'Market Intelligence', kpo: 'Identifies new segments, informs GTM strategy' },
+        { level: 6, icon: '🌍', title: 'GTM Strategist', kpo: 'Defines territory strategy for region/segment' }
+      ],
+      'collaboration': [
+        { level: 1, icon: '📧', title: 'SE Requester', kpo: 'Follows protocol to engage SE resources' },
+        { level: 2, icon: '🔍', title: 'Discovery Partner', kpo: 'Runs discovery with SE, clear handoffs' },
+        { level: 3, icon: '🎪', title: 'Deal Orchestrator', kpo: 'Coordinates SE, legal, exec sponsors on deals' },
+        { level: 4, icon: '⚡', title: 'Resource Optimizer', kpo: 'Maximizes SE efficiency across deals' },
+        { level: 5, icon: '📚', title: 'Cross-Func Leader', kpo: 'Drives alignment with Marketing, Product, CS' },
+        { level: 6, icon: '🏗️', title: 'Org Designer', kpo: 'Shapes SE allocation and deal team structure' }
+      ],
+      'process_discipline': [
+        { level: 1, icon: '✅', title: 'Checklist Follower', kpo: 'Completes required CRM fields, follows playbook' },
+        { level: 2, icon: '📋', title: 'Process Compliant', kpo: 'Accurate pipeline data, methodology adherent' },
+        { level: 3, icon: '🔧', title: 'Process Optimizer', kpo: 'Identifies improvement opportunities, clean forecasts' },
+        { level: 4, icon: '📐', title: 'System Designer', kpo: 'Creates playbooks and processes for team' },
+        { level: 5, icon: '🔗', title: 'Org Integrator', kpo: 'Defines interfaces between Sales and other functions' },
+        { level: 6, icon: '🚀', title: 'Future Builder', kpo: 'Designs next-gen sales infrastructure and process' }
+      ]
+    };
+
+    function MatrixBuilder() {
+      const [step, setStep] = useState(0);
+      const [data, setData] = useState({
+        volume: null,
+        family: null,
+        focus: null,
+        industry: '',
+        companyStage: '',
+        dealSize: '',
+        processOfSuccess: '',
+        dimensions: [],
+        levels: {},
+        jobTitle: ''
+      });
+
+      const currentStep = STEPS[step];
+      
+      const updateData = (key, value) => {
+        setData(prev => ({ ...prev, [key]: value }));
+      };
+
+      const canProceed = () => {
+        switch (currentStep.id) {
+          case 'qualify': return data.volume !== null;
+          case 'family': return data.family !== null;
+          case 'focus': return data.focus !== null;
+          case 'context': return data.industry && data.companyStage;
+          case 'process': return data.processOfSuccess.length > 20;
+          case 'dimensions': return data.dimensions.length === 6;
+          case 'levels': return true;
+          case 'select': return Object.keys(data.levels).length === 6;
+          default: return true;
+        }
+      };
+
+      const handleNext = () => {
+        // Special handling for dimension initialization
+        if (currentStep.id === 'process' && data.dimensions.length === 0) {
+          const key = `${data.family}_${data.focus}`;
+          const dims = DEFAULT_DIMENSIONS[key] || DEFAULT_DIMENSIONS['sales_hunter'];
+          updateData('dimensions', dims);
+        }
+        setStep(s => Math.min(s + 1, STEPS.length - 1));
+      };
+
+      const handleBack = () => {
+        setStep(s => Math.max(s - 1, 0));
+      };
+
+      const handleLevelSelect = (dimId, level) => {
+        setData(prev => ({
+          ...prev,
+          levels: { ...prev.levels, [dimId]: level }
+        }));
+      };
+
+      // Progress bar
+      const renderProgress = () => (
+        <div className="progress-bar">
+          {STEPS.map((s, i) => (
+            <React.Fragment key={s.id}>
+              <div className={`progress-step ${i < step ? 'completed' : i === step ? 'active' : 'pending'}`}>
+                {i < step ? '✓' : i + 1}
+              </div>
+              {i < STEPS.length - 1 && (
+                <div className={`progress-line ${i < step ? 'completed' : ''}`} />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      );
+
+      // Step 1: Qualify
+      const renderQualify = () => (
+        <>
+          <div className="step-label">Step 1 of 9</div>
+          <h2 className="step-title">How many related roles are you hiring?</h2>
+          <p className="step-subtitle">The 6×6 Matrix is designed for scaling job families, not one-off hires.</p>
+          
+          <div className="options-grid">
+            <button 
+              className={`option-btn ${data.volume === '1-2' ? 'selected' : ''}`}
+              onClick={() => updateData('volume', '1-2')}
+            >
+              <div className="option-title">1-2 roles</div>
+              <div className="option-desc">Individual hires</div>
+            </button>
+            <button 
+              className={`option-btn ${data.volume === '3-10' ? 'selected' : ''}`}
+              onClick={() => updateData('volume', '3-10')}
+            >
+              <div className="option-title">3-10 roles</div>
+              <div className="option-desc">Building a team</div>
+            </button>
+            <button 
+              className={`option-btn ${data.volume === '10+' ? 'selected' : ''}`}
+              onClick={() => updateData('volume', '10+')}
+            >
+              <div className="option-title">10+ roles</div>
+              <div className="option-desc">Scaling a function</div>
+            </button>
+          </div>
+
+          {data.volume === '1-2' && (
+            <div className="route-card">
+              <h3>For 1-2 hires, use the PbH Talent Hub</h3>
+              <p>The Talent Hub is designed for individual role searches with targeted PBJD creation.</p>
+              <a href="https://hiring.tips/PbH_hub.com" target="_blank">Go to Talent Hub →</a>
+            </div>
+          )}
+        </>
+      );
+
+      // Step 2: Family
+      const renderFamily = () => (
+        <>
+          <div className="step-label">Step 2 of 9</div>
+          <h2 className="step-title">What function are you building?</h2>
+          <p className="step-subtitle">Select the job family you're scaling.</p>
+          
+          <div className="options-grid two-col">
+            {JOB_FAMILIES.map(fam => (
+              <button 
+                key={fam.id}
+                className={`option-btn ${data.family === fam.id ? 'selected' : ''}`}
+                onClick={() => updateData('family', fam.id)}
+              >
+                <div className="option-title">{fam.icon} {fam.name}</div>
+              </button>
+            ))}
+          </div>
+        </>
+      );
+
+      // Step 3: Focus
+      const renderFocus = () => {
+        const options = FOCUS_OPTIONS[data.family] || FOCUS_OPTIONS.sales;
+        return (
+          <>
+            <div className="step-label">Step 3 of 9</div>
+            <h2 className="step-title">What's the core focus?</h2>
+            <p className="step-subtitle">This fundamentally shapes the matrix dimensions and KPOs.</p>
+            
+            <div className="options-grid">
+              {options.map(opt => (
+                <button 
+                  key={opt.id}
+                  className={`option-btn ${data.focus === opt.id ? 'selected' : ''}`}
+                  onClick={() => updateData('focus', opt.id)}
+                >
+                  <div className="option-title">{opt.name}</div>
+                  <div className="option-desc">{opt.desc}</div>
+                </button>
+              ))}
+            </div>
+          </>
+        );
+      };
+
+      // Step 4: Context
+      const renderContext = () => (
+        <>
+          <div className="step-label">Step 4 of 9</div>
+          <h2 className="step-title">Tell us about your context</h2>
+          <p className="step-subtitle">This helps calibrate the matrix to your reality.</p>
+          
+          <div className="input-row">
+            <div className="input-group">
+              <label>Industry / What you sell</label>
+              <input 
+                type="text" 
+                placeholder="e.g., B2B SaaS, Healthcare tech"
+                value={data.industry}
+                onChange={e => updateData('industry', e.target.value)}
+              />
+            </div>
+            <div className="input-group">
+              <label>Company Stage</label>
+              <select 
+                value={data.companyStage}
+                onChange={e => updateData('companyStage', e.target.value)}
+              >
+                <option value="">Select...</option>
+                <option value="startup">Startup (1-50)</option>
+                <option value="scaleup">Scale-up (50-500)</option>
+                <option value="enterprise">Enterprise (500+)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="input-group">
+            <label>Typical Deal Size / Complexity</label>
+            <input 
+              type="text" 
+              placeholder="e.g., $50-200K ACV, 3-6 month sales cycle"
+              value={data.dealSize}
+              onChange={e => updateData('dealSize', e.target.value)}
+            />
+          </div>
+        </>
+      );
+
+      // Step 5: Process of Success
+      const renderProcess = () => (
+        <>
+          <div className="step-label">Step 5 of 9</div>
+          <h2 className="step-title">How do deals get done here?</h2>
+          <p className="step-subtitle">Walk us through the motion - from first touch to closed deal.</p>
+          
+          <div className="hint-box">
+            <p><strong>Think about:</strong> Who finds the leads? How do demos work? When do SEs get involved? What does discovery look like? How complex is procurement?</p>
+          </div>
+          
+          <textarea 
+            className="text-input"
+            placeholder="Example: Leads come mostly from inbound marketing. AEs qualify and run initial discovery. For anything over $50K, we bring in an SE early for technical deep-dive. Complex deals need multiple stakeholders aligned - usually a champion, technical buyer, and economic buyer..."
+            value={data.processOfSuccess}
+            onChange={e => updateData('processOfSuccess', e.target.value)}
+          />
+        </>
+      );
+
+      // Step 6: Validate Dimensions
+      const renderDimensions = () => (
+        <>
+          <div className="step-label">Step 6 of 9</div>
+          <h2 className="step-title">Validate your 6 dimensions</h2>
+          <p className="step-subtitle">These are the factors that differentiate performance in your roles. Edit if needed.</p>
+          
+          <div className="dimensions-list">
+            {data.dimensions.map((dim, i) => (
+              <div key={dim.id} className="dimension-item">
+                <div className="dimension-number">{i + 1}</div>
+                <div className="dimension-content">
+                  <div className="dimension-name">{dim.name}</div>
+                  <div className="dimension-desc">{dim.desc}</div>
+                </div>
+                <button className="dimension-edit">Edit</button>
+              </div>
+            ))}
+          </div>
+          
+          <div className="hint-box">
+            <p><strong>Missing something?</strong> Consider: Territory Management, Quota Management, Collaboration & Orchestration (SE involvement, discovery process)</p>
+          </div>
+        </>
+      );
+
+      // Step 7: Generate Levels (just confirmation)
+      const renderLevels = () => (
+        <>
+          <div className="step-label">Step 7 of 9</div>
+          <h2 className="step-title">Generating 6 levels per dimension</h2>
+          <p className="step-subtitle">Based on your context and process, here's the progression from entry to strategic.</p>
+          
+          <div className="hint-box">
+            <p><strong>How levels work:</strong> Level 1 is entry-level (think SDR handling inbound). Level 6 is strategic (VP-level impact). Most AEs operate at Level 2-4 depending on deal complexity.</p>
+          </div>
+          
+          {data.dimensions.map((dim, i) => {
+            const levels = LEVEL_DEFINITIONS[dim.id] || LEVEL_DEFINITIONS['prospecting'];
+            return (
+              <div key={dim.id} style={{ marginBottom: '16px' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#f1f5f9', marginBottom: '8px' }}>
+                  {i + 1}. {dim.name}
+                </div>
+                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px' }}>
+                  {levels.map(lvl => (
+                    <div key={lvl.level} style={{ 
+                      flex: '0 0 auto',
+                      background: 'rgba(30, 41, 59, 0.5)', 
+                      border: '1px solid #334155',
+                      borderRadius: '8px',
+                      padding: '8px 12px',
+                      minWidth: '120px'
+                    }}>
+                      <div style={{ fontSize: '1rem', marginBottom: '2px' }}>{lvl.icon}</div>
+                      <div style={{ fontSize: '0.7rem', fontWeight: '600', color: '#e2e8f0' }}>L{lvl.level}: {lvl.title}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </>
+      );
+
+      // Step 8: Select Levels (Build Role)
+      const renderSelect = () => (
+        <>
+          <div className="step-label">Step 8 of 9</div>
+          <h2 className="step-title">Build a role</h2>
+          <p className="step-subtitle">Select one level per dimension. The combination defines the role.</p>
+          
+          <div className="matrix-container">
+            <div className="matrix-grid">
+              {/* Header */}
+              <div className="matrix-header"></div>
+              {[1,2,3,4,5,6].map(l => (
+                <div key={l} className="matrix-header">
+                  <div className="level-num">L{l}</div>
+                  <div className="level-name">{['Entry', 'Developing', 'Proficient', 'Advanced', 'Expert', 'Strategic'][l-1]}</div>
+                </div>
+              ))}
+              
+              {/* Rows */}
+              {data.dimensions.map(dim => {
+                const levels = LEVEL_DEFINITIONS[dim.id] || LEVEL_DEFINITIONS['prospecting'];
+                return (
+                  <React.Fragment key={dim.id}>
+                    <div className="matrix-dim-label">
+                      <span>{dim.name}</span>
+                    </div>
+                    {levels.map(lvl => (
+                      <div 
+                        key={lvl.level}
+                        className={`matrix-cell ${data.levels[dim.id] === lvl.level ? 'selected' : ''}`}
+                        onClick={() => handleLevelSelect(dim.id, lvl.level)}
+                      >
+                        <div className="cell-icon">{lvl.icon}</div>
+                        <div className="cell-title">{lvl.title}</div>
+                      </div>
+                    ))}
+                  </React.Fragment>
+                );
+              })}
+            </div>
+          </div>
+          
+          {Object.keys(data.levels).length > 0 && (
+            <div className="selection-summary">
+              <h4>Current Selection</h4>
+              {data.dimensions.map(dim => {
+                const selectedLevel = data.levels[dim.id];
+                const levels = LEVEL_DEFINITIONS[dim.id] || LEVEL_DEFINITIONS['prospecting'];
+                const lvl = levels.find(l => l.level === selectedLevel);
+                return selectedLevel ? (
+                  <div key={dim.id} className="selection-item">
+                    <span className="dim-name">{dim.name}</span>
+                    <span className="level-badge">{lvl?.icon} L{selectedLevel}: {lvl?.title}</span>
+                  </div>
+                ) : null;
+              })}
+            </div>
+          )}
+        </>
+      );
+
+      // Step 9: Output
+      const renderOutput = () => {
+        const generateKPOs = () => {
+          return data.dimensions.map(dim => {
+            const levels = LEVEL_DEFINITIONS[dim.id] || LEVEL_DEFINITIONS['prospecting'];
+            const lvl = levels.find(l => l.level === data.levels[dim.id]);
+            return `${dim.name}: ${lvl?.kpo}`;
+          });
+        };
+
+        const generateQuestions = () => {
+          const questions = [];
+          
+          if (data.levels['prospecting'] >= 3) {
+            questions.push({
+              category: 'Prospecting & Pipeline',
+              question: 'Walk me through how you build pipeline in a new territory. What channels do you use? Give me a specific example of a deal you sourced yourself.'
+            });
+          }
+          
+          if (data.levels['deal_complexity'] >= 3) {
+            questions.push({
+              category: 'Deal Complexity',
+              question: 'Tell me about the most complex deal you\'ve closed. How many stakeholders were involved? What made it complex and how did you navigate it?'
+            });
+          }
+          
+          if (data.levels['collaboration'] >= 2) {
+            questions.push({
+              category: 'Collaboration & Orchestration',
+              question: 'How do you work with SEs? Walk me through a recent deal where you had to coordinate multiple internal resources. When do you bring in the SE?'
+            });
+          }
+          
+          if (data.levels['territory_quota'] >= 3) {
+            questions.push({
+              category: 'Territory & Quota Management',
+              question: 'How do you build your territory plan? Walk me through your forecasting process. What\'s your commit vs upside framework?'
+            });
+          }
+          
+          questions.push({
+            category: 'Process & Discipline',
+            question: 'Tell me about a deal that went sideways. What happened? Looking back, what would you have done differently?'
+          });
+          
+          return questions;
+        };
+
+        return (
+          <>
+            <div className="step-label">Step 9 of 9</div>
+            <h2 className="step-title">Name this role</h2>
+            
+            <input 
+              type="text"
+              className="job-title-input"
+              placeholder="e.g., Account Executive, Enterprise AE, Sales Development Rep"
+              value={data.jobTitle}
+              onChange={e => updateData('jobTitle', e.target.value)}
+            />
+            
+            <div className="pbjd-output">
+              <div className="pbjd-header">
+                <div className="label">Performance-Based Job Description</div>
+                <h2>{data.jobTitle || 'Untitled Role'}</h2>
+              </div>
+              
+              <div className="pbjd-body">
+                <div className="pbjd-section">
+                  <h3>Performance Objective</h3>
+                  <p>
+                    Within the first 6 months, become a productive member of the sales team, 
+                    consistently {data.levels['territory_quota'] >= 3 ? 'exceeding quota' : 'hitting activity targets'} while 
+                    {data.levels['deal_complexity'] >= 3 ? ' managing complex multi-stakeholder deals' : ' building pipeline'} 
+                    {data.levels['collaboration'] >= 3 ? ' and effectively orchestrating internal resources to advance opportunities' : ''}.
+                  </p>
+                </div>
+                
+                <div className="pbjd-section">
+                  <h3>Key Performance Outcomes</h3>
+                  <ul className="pbjd-list">
+                    {generateKPOs().map((kpo, i) => (
+                      <li key={i}>{kpo}</li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div className="pbjd-section">
+                  <h3>Interview Questions</h3>
+                  {generateQuestions().map((q, i) => (
+                    <div key={i} className="interview-question">
+                      <div className="category">{q.category}</div>
+                      <div className="question">"{q.question}"</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        );
+      };
+
+      // Render current step content
+      const renderStep = () => {
+        switch (currentStep.id) {
+          case 'qualify': return renderQualify();
+          case 'family': return renderFamily();
+          case 'focus': return renderFocus();
+          case 'context': return renderContext();
+          case 'process': return renderProcess();
+          case 'dimensions': return renderDimensions();
+          case 'levels': return renderLevels();
+          case 'select': return renderSelect();
+          case 'output': return renderOutput();
+          default: return null;
+        }
+      };
+
+      return (
+        <div>
+          {renderProgress()}
+          
+          <div className="card">
+            {renderStep()}
+            
+            <div className="btn-row" style={{ marginTop: '24px' }}>
+              {step > 0 && (
+                <button className="btn btn-back" onClick={handleBack}>
+                  ← Back
+                </button>
+              )}
+              
+              {currentStep.id === 'output' ? (
+                <button className="btn btn-success" style={{ flex: 1 }}>
+                  Export PBJD →
+                </button>
+              ) : data.volume === '1-2' ? (
+                <div style={{ flex: 1 }} />
+              ) : (
+                <button 
+                  className="btn btn-primary"
+                  disabled={!canProceed()}
+                  onClick={handleNext}
+                >
+                  Continue →
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<MatrixBuilder />);
+  </script>
+</body>
+</html>
