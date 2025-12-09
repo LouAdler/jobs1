@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LinkedIn Sales Organization | 6×6 Matrix Analysis</title>
+  <title>LinkedIn Sales | 6×6 Matrix → PBJD Generator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
@@ -27,22 +27,38 @@
     
     body {
       font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(180deg, #004182 0%, #0a66c2 15%, var(--linkedin-bg) 15%);
+      background: var(--linkedin-bg);
       color: var(--linkedin-text);
       min-height: 100vh;
       line-height: 1.5;
     }
     
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 24px 60px;
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Left Panel - Matrix Builder */
+    .matrix-panel {
+      width: 55%;
+      background: linear-gradient(180deg, var(--linkedin-dark) 0%, var(--linkedin-blue) 200px, var(--linkedin-bg) 200px);
+      padding: 24px;
+      overflow-y: auto;
+    }
+    
+    @media (max-width: 1200px) {
+      .app-container {
+        flex-direction: column;
+      }
+      .matrix-panel, .pbjd-panel {
+        width: 100%;
+      }
     }
     
     /* Header */
     .header {
       text-align: center;
-      padding: 40px 0 60px;
+      padding: 20px 0 40px;
       color: white;
     }
     
@@ -52,268 +68,126 @@
       gap: 8px;
       background: rgba(255,255,255,0.15);
       border: 1px solid rgba(255,255,255,0.25);
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
     
     .linkedin-icon {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       background: white;
-      border-radius: 4px;
+      border-radius: 3px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
       color: var(--linkedin-blue);
-      font-size: 14px;
+      font-size: 12px;
     }
     
     .main-title {
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(2rem, 5vw, 3rem);
+      font-size: 1.8rem;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     
     .subtitle {
-      font-size: 1.1rem;
+      font-size: 0.9rem;
       opacity: 0.9;
-      max-width: 700px;
-      margin: 0 auto;
       font-weight: 300;
     }
     
-    /* Stats Bar */
-    .stats-bar {
-      display: flex;
-      justify-content: center;
-      gap: 48px;
-      margin-top: 32px;
-      flex-wrap: wrap;
-    }
-    
-    .stat {
-      text-align: center;
-    }
-    
-    .stat-number {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.5rem;
-      font-weight: 700;
-    }
-    
-    .stat-label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      opacity: 0.8;
-    }
-    
-    /* Product Line Pills */
-    .product-pills {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin: -30px 0 30px;
-      flex-wrap: wrap;
-    }
-    
-    .pill {
-      background: var(--linkedin-card);
-      border: 2px solid #e0e0e0;
-      padding: 10px 20px;
-      border-radius: 24px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    
-    .pill:hover {
-      border-color: var(--linkedin-blue);
-      transform: translateY(-2px);
-    }
-    
-    .pill.active {
-      background: var(--linkedin-blue);
-      border-color: var(--linkedin-blue);
-      color: white;
-    }
-    
-    .pill-icon {
-      margin-right: 6px;
-    }
-    
-    /* Main Content */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 24px;
-      margin-top: 20px;
-    }
-    
-    @media (max-width: 1100px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    /* Sidebar */
-    .sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    
-    .sidebar-card {
+    /* Role Selector */
+    .role-selector {
       background: var(--linkedin-card);
       border-radius: 12px;
-      padding: 20px;
+      padding: 16px;
+      margin-bottom: 16px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
     
-    .sidebar-title {
+    .role-selector-title {
       font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       color: var(--linkedin-secondary);
+      margin-bottom: 12px;
+    }
+    
+    .role-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .role-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .role-pill:hover {
+      border-color: var(--linkedin-blue);
+    }
+    
+    .role-pill.active {
+      background: var(--linkedin-blue);
+      border-color: var(--linkedin-blue);
+      color: white;
+    }
+    
+    .role-pill-icon {
+      font-size: 1rem;
+    }
+    
+    /* Matrix Card */
+    .matrix-card {
+      background: var(--linkedin-card);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow-x: auto;
+    }
+    
+    .matrix-card-title {
+      font-size: 1rem;
+      font-weight: 700;
       margin-bottom: 16px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
     
-    .sidebar-title-icon {
-      font-size: 1rem;
-    }
-    
-    /* Role Cards */
-    .role-card {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: 2px solid transparent;
-    }
-    
-    .role-card:hover {
-      background: #f8f8f8;
-    }
-    
-    .role-card.active {
-      background: #e8f4fd;
-      border-color: var(--linkedin-blue);
-    }
-    
-    .role-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-    
-    .role-info {
-      flex: 1;
-      min-width: 0;
-    }
-    
-    .role-name {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--linkedin-text);
-    }
-    
-    .role-segment {
-      font-size: 0.75rem;
-      color: var(--linkedin-secondary);
-    }
-    
-    .role-comp {
-      font-size: 0.7rem;
-      color: var(--accent-green);
-      font-weight: 600;
-    }
-    
-    /* Source info */
-    .source-note {
-      font-size: 0.7rem;
-      color: var(--linkedin-secondary);
-      padding: 12px;
-      background: #f8f8f8;
-      border-radius: 6px;
-      line-height: 1.5;
-    }
-    
-    .source-note a {
-      color: var(--linkedin-blue);
-      text-decoration: none;
-    }
-    
-    .source-note a:hover {
-      text-decoration: underline;
-    }
-    
-    /* Matrix Panel */
-    .matrix-panel {
-      background: var(--linkedin-card);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      overflow-x: auto;
-    }
-    
-    .matrix-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    
-    .matrix-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--linkedin-text);
-    }
-    
-    .matrix-subtitle {
-      font-size: 0.8rem;
-      color: var(--linkedin-secondary);
-    }
-    
     /* Matrix Grid */
     .matrix-grid {
       display: grid;
-      grid-template-columns: 180px repeat(6, 1fr);
-      gap: 3px;
-      min-width: 900px;
+      grid-template-columns: 160px repeat(6, 1fr);
+      gap: 2px;
+      min-width: 700px;
     }
     
-    /* Level Headers */
     .level-header {
       text-align: center;
-      padding: 10px 8px;
+      padding: 8px 4px;
     }
     
     .level-number {
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       font-weight: 700;
       color: var(--linkedin-blue);
       text-transform: uppercase;
@@ -321,51 +195,39 @@
     }
     
     .level-title {
-      font-size: 0.7rem;
+      font-size: 0.6rem;
       color: var(--linkedin-secondary);
-      margin-top: 2px;
     }
     
-    /* Dimension Labels */
     .dim-label {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px;
+      gap: 8px;
+      padding: 8px;
       background: #f8f8f8;
-      border-radius: 6px;
+      border-radius: 4px;
     }
     
     .dim-icon {
-      font-size: 1.1rem;
-    }
-    
-    .dim-info {
-      flex: 1;
+      font-size: 0.9rem;
     }
     
     .dim-name {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-weight: 600;
       color: var(--linkedin-text);
+      line-height: 1.3;
     }
     
-    .dim-question {
-      font-size: 0.65rem;
-      color: var(--linkedin-secondary);
-    }
-    
-    /* Matrix Cells */
     .matrix-cell {
       background: #fafafa;
-      border-radius: 6px;
-      padding: 8px;
+      border-radius: 4px;
+      padding: 6px;
       text-align: center;
       transition: all 0.2s;
       border: 2px solid transparent;
       cursor: pointer;
-      position: relative;
-      min-height: 70px;
+      min-height: 50px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -373,16 +235,14 @@
     
     .matrix-cell:hover {
       background: #f0f0f0;
-      transform: translateY(-1px);
     }
     
-    /* Level color coding */
-    .matrix-cell[data-level="1"] { border-left: 3px solid #94a3b8; }
-    .matrix-cell[data-level="2"] { border-left: 3px solid #60a5fa; }
-    .matrix-cell[data-level="3"] { border-left: 3px solid #22d3ee; }
-    .matrix-cell[data-level="4"] { border-left: 3px solid #fbbf24; }
-    .matrix-cell[data-level="5"] { border-left: 3px solid #f472b6; }
-    .matrix-cell[data-level="6"] { border-left: 3px solid #a78bfa; }
+    .matrix-cell[data-level="1"] { border-left: 2px solid #94a3b8; }
+    .matrix-cell[data-level="2"] { border-left: 2px solid #60a5fa; }
+    .matrix-cell[data-level="3"] { border-left: 2px solid #22d3ee; }
+    .matrix-cell[data-level="4"] { border-left: 2px solid #fbbf24; }
+    .matrix-cell[data-level="5"] { border-left: 2px solid #f472b6; }
+    .matrix-cell[data-level="6"] { border-left: 2px solid #a78bfa; }
     
     .matrix-cell.selected {
       background: #e8f4fd;
@@ -392,13 +252,13 @@
     .matrix-cell.selected::after {
       content: "✓";
       position: absolute;
-      top: 4px;
-      right: 4px;
-      width: 16px;
-      height: 16px;
+      top: 2px;
+      right: 2px;
+      width: 12px;
+      height: 12px;
       background: var(--linkedin-blue);
       border-radius: 50%;
-      font-size: 0.55rem;
+      font-size: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -406,146 +266,323 @@
     }
     
     .cell-icon {
-      font-size: 1rem;
-      margin-bottom: 2px;
+      font-size: 0.85rem;
     }
     
     .cell-title {
-      font-size: 0.65rem;
+      font-size: 0.55rem;
       font-weight: 600;
       color: var(--linkedin-text);
-      line-height: 1.3;
+      line-height: 1.2;
     }
     
-    /* Role Profile Summary */
-    .profile-summary {
-      margin-top: 24px;
-      padding-top: 20px;
-      border-top: 1px solid #e0e0e0;
-    }
-    
-    .profile-header {
+    /* Right Panel - PBJD Output */
+    .pbjd-panel {
+      width: 45%;
+      background: white;
+      border-left: 1px solid #e0e0e0;
+      overflow-y: auto;
       display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 16px;
+      flex-direction: column;
     }
     
-    .profile-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .pbjd-header {
+      background: linear-gradient(135deg, var(--linkedin-dark), var(--linkedin-blue));
+      color: white;
+      padding: 24px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .pbjd-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.8;
+      margin-bottom: 8px;
+    }
+    
+    .pbjd-title {
+      font-family: 'Playfair Display', serif;
       font-size: 1.5rem;
-      background: linear-gradient(135deg, var(--linkedin-blue), var(--linkedin-dark));
-    }
-    
-    .profile-info h3 {
-      font-size: 1.1rem;
       font-weight: 700;
-      color: var(--linkedin-text);
-    }
-    
-    .profile-info p {
-      font-size: 0.85rem;
-      color: var(--linkedin-secondary);
-    }
-    
-    .profile-dims {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    
-    @media (max-width: 768px) {
-      .profile-dims {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    
-    .profile-dim {
-      background: #f8f8f8;
-      border-radius: 8px;
-      padding: 12px;
-      border-left: 3px solid var(--linkedin-blue);
-    }
-    
-    .profile-dim-name {
-      font-size: 0.7rem;
-      color: var(--linkedin-secondary);
       margin-bottom: 4px;
     }
     
-    .profile-dim-value {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--linkedin-text);
+    .pbjd-segment {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .pbjd-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .pbjd-meta-item {
       display: flex;
       align-items: center;
       gap: 6px;
-    }
-    
-    /* Footer */
-    .footer {
-      text-align: center;
-      margin-top: 40px;
-      padding: 20px;
-      color: var(--linkedin-secondary);
       font-size: 0.8rem;
+      background: rgba(255,255,255,0.15);
+      padding: 4px 10px;
+      border-radius: 4px;
     }
     
-    .footer-brand {
-      font-weight: 600;
-      color: var(--linkedin-blue);
+    /* PBJD Content */
+    .pbjd-content {
+      padding: 24px;
+      flex: 1;
     }
     
-    /* Methodology Card */
-    .methodology-card {
-      background: linear-gradient(135deg, #f8f8f8, #fff);
-      border: 1px solid #e0e0e0;
-      border-radius: 12px;
-      padding: 20px;
-      margin-top: 24px;
+    .pbjd-section {
+      margin-bottom: 28px;
     }
     
-    .methodology-title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--linkedin-text);
-      margin-bottom: 12px;
+    .pbjd-section-header {
       display: flex;
       align-items: center;
-      gap: 8px;
-    }
-    
-    .methodology-steps {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    
-    .methodology-step {
-      display: flex;
-      align-items: flex-start;
       gap: 10px;
-      font-size: 0.8rem;
-      color: var(--linkedin-secondary);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--linkedin-blue);
     }
     
-    .step-num {
-      width: 20px;
-      height: 20px;
+    .pbjd-section-num {
+      width: 24px;
+      height: 24px;
       background: var(--linkedin-blue);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       font-weight: 700;
       color: white;
+    }
+    
+    .pbjd-section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--linkedin-text);
+    }
+    
+    /* Performance Objective */
+    .perf-objective {
+      background: linear-gradient(135deg, #f8f9fa, #fff);
+      border: 1px solid #e0e0e0;
+      border-left: 4px solid var(--linkedin-blue);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--linkedin-text);
+      font-style: italic;
+    }
+    
+    /* KPO Cards */
+    .kpo-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .kpo-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border-left: 3px solid;
+    }
+    
+    .kpo-card[data-level="1"] { border-left-color: #94a3b8; }
+    .kpo-card[data-level="2"] { border-left-color: #60a5fa; }
+    .kpo-card[data-level="3"] { border-left-color: #22d3ee; }
+    .kpo-card[data-level="4"] { border-left-color: #fbbf24; }
+    .kpo-card[data-level="5"] { border-left-color: #f472b6; }
+    .kpo-card[data-level="6"] { border-left-color: #a78bfa; }
+    
+    .kpo-icon {
+      font-size: 1.2rem;
       flex-shrink: 0;
+    }
+    
+    .kpo-content {
+      flex: 1;
+    }
+    
+    .kpo-dim-name {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--linkedin-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .kpo-level {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--linkedin-text);
+      margin: 2px 0;
+    }
+    
+    .kpo-text {
+      font-size: 0.8rem;
+      color: var(--linkedin-secondary);
+    }
+    
+    /* MSA Questions */
+    .msa-card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    
+    .msa-header {
+      background: linear-gradient(135deg, #f8f9fa, #fff);
+      padding: 14px 16px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .msa-dim-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    
+    .msa-dim-icon[data-level="1"] { background: #f1f5f9; }
+    .msa-dim-icon[data-level="2"] { background: #dbeafe; }
+    .msa-dim-icon[data-level="3"] { background: #cffafe; }
+    .msa-dim-icon[data-level="4"] { background: #fef3c7; }
+    .msa-dim-icon[data-level="5"] { background: #fce7f3; }
+    .msa-dim-icon[data-level="6"] { background: #ede9fe; }
+    
+    .msa-header-info {
+      flex: 1;
+    }
+    
+    .msa-dim-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--linkedin-secondary);
+    }
+    
+    .msa-level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--linkedin-text);
+    }
+    
+    .msa-level-num {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    
+    .msa-level-num[data-level="1"] { background: #e2e8f0; color: #475569; }
+    .msa-level-num[data-level="2"] { background: #bfdbfe; color: #1d4ed8; }
+    .msa-level-num[data-level="3"] { background: #a5f3fc; color: #0e7490; }
+    .msa-level-num[data-level="4"] { background: #fde68a; color: #b45309; }
+    .msa-level-num[data-level="5"] { background: #fbcfe8; color: #be185d; }
+    .msa-level-num[data-level="6"] { background: #ddd6fe; color: #7c3aed; }
+    
+    .msa-body {
+      padding: 16px;
+    }
+    
+    .msa-question-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-coral);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .msa-question {
+      font-size: 0.95rem;
+      color: var(--linkedin-text);
+      line-height: 1.6;
+      font-weight: 500;
+    }
+    
+    .msa-listen-for {
+      margin-top: 14px;
+      padding: 12px;
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 6px;
+    }
+    
+    .msa-listen-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #b45309;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .msa-listen-points {
+      font-size: 0.8rem;
+      color: #92400e;
+      line-height: 1.5;
+    }
+    
+    .msa-listen-points li {
+      margin-bottom: 4px;
+      margin-left: 16px;
+    }
+    
+    /* Footer */
+    .pbjd-footer {
+      padding: 16px 24px;
+      background: #f8f9fa;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+    }
+    
+    .pbjd-footer-text {
+      font-size: 0.75rem;
+      color: var(--linkedin-secondary);
+    }
+    
+    .pbjd-footer-brand {
+      color: var(--linkedin-blue);
+      font-weight: 600;
+    }
+    
+    /* Print Styles */
+    @media print {
+      .matrix-panel { display: none; }
+      .pbjd-panel { width: 100%; border: none; }
     }
   </style>
 </head>
@@ -555,7 +592,7 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // LinkedIn's 6 Dimensions for AE Roles (derived from job posting analysis)
+    // LinkedIn's 6 Dimensions with MSA Questions for each level
     const dimensions = [
       {
         id: 'productFluency',
@@ -563,12 +600,48 @@
         question: "How well do they know LinkedIn's products?",
         icon: "🧠",
         levels: [
-          { title: "Single Product Basics", icon: "📚", kpo: "Knows one product at demo level. Can articulate core value prop." },
-          { title: "Core Platform", icon: "🔧", kpo: "Fluent in Talent OR Sales OR Marketing Solutions. Handles standard objections." },
-          { title: "Multi-Product", icon: "🔗", kpo: "Cross-sells across 2+ product lines. Understands integration points." },
-          { title: "Solution Architect", icon: "🏗️", kpo: "Designs integrated solutions. Maps customer tech stack to LinkedIn ecosystem." },
-          { title: "Platform Strategist", icon: "🎯", kpo: "Shapes product roadmap with customer feedback. Beta program leader." },
-          { title: "Industry Voice", icon: "🌟", kpo: "Thought leader on HR/Sales tech. Speaks at industry events." }
+          { 
+            title: "Single Product Basics", 
+            icon: "📚", 
+            kpo: "Knows one product at demo level. Can articulate core value prop.",
+            msaQuestion: "Tell me about a time you had to quickly learn a new software product and then explain its value to a prospect. What was the product, how did you learn it, and what was the outcome of your first pitch?",
+            listenFor: ["Speed of learning curve", "Ability to translate features to benefits", "Curiosity about the product"]
+          },
+          { 
+            title: "Core Platform", 
+            icon: "🔧", 
+            kpo: "Fluent in Talent OR Sales OR Marketing Solutions. Handles standard objections.",
+            msaQuestion: "Describe a situation where you faced a tough competitive objection about your product. What was the objection, how did you handle it, and what was the result?",
+            listenFor: ["Deep product knowledge", "Competitive awareness", "Confidence in positioning"]
+          },
+          { 
+            title: "Multi-Product", 
+            icon: "🔗", 
+            kpo: "Cross-sells across 2+ product lines. Understands integration points.",
+            msaQuestion: "Walk me through your most successful cross-sell or bundle deal. How did you identify the opportunity, what products did you combine, and what incremental value did you create for the customer?",
+            listenFor: ["Holistic view of customer needs", "Technical integration knowledge", "Commercial creativity"]
+          },
+          { 
+            title: "Solution Architect", 
+            icon: "🏗️", 
+            kpo: "Designs integrated solutions. Maps customer tech stack to LinkedIn ecosystem.",
+            msaQuestion: "Tell me about the most complex technical solution you designed for an enterprise customer. How did you map their existing tech stack, what integration challenges did you solve, and what was the business impact?",
+            listenFor: ["Technical depth", "Systems thinking", "Customer technology landscape awareness"]
+          },
+          { 
+            title: "Platform Strategist", 
+            icon: "🎯", 
+            kpo: "Shapes product roadmap with customer feedback. Beta program leader.",
+            msaQuestion: "Describe a time when your customer feedback directly influenced your company's product roadmap. What was the feedback, how did you escalate it, and what was built as a result?",
+            listenFor: ["Influence without authority", "Customer advocacy", "Product partnership mindset"]
+          },
+          { 
+            title: "Industry Voice", 
+            icon: "🌟", 
+            kpo: "Thought leader on HR/Sales tech. Speaks at industry events.",
+            msaQuestion: "Tell me about your most impactful speaking engagement or thought leadership contribution. What was the topic, what audience did you reach, and how did it generate business opportunities?",
+            listenFor: ["Industry expertise", "Public presence", "Content creation ability"]
+          }
         ]
       },
       {
@@ -577,12 +650,48 @@
         question: "What size/complexity of customer?",
         icon: "🏢",
         levels: [
-          { title: "SMB Transactional", icon: "🏪", kpo: "High velocity. <500 employees. Quick decision cycles." },
-          { title: "SMB Strategic", icon: "📈", kpo: "Land & expand. Multi-seat deals. Relationship-based growth." },
-          { title: "Mid-Market", icon: "🏬", kpo: "500-2K employees. Multiple stakeholders. Procurement involved." },
-          { title: "Commercial", icon: "🏛️", kpo: "2K-10K employees. Complex buying committees. Legal review." },
-          { title: "Enterprise", icon: "🏰", kpo: "10K+ employees. C-suite access required. Multi-quarter cycles." },
-          { title: "Strategic/Global", icon: "🌍", kpo: "Fortune 500. Multi-region. Board-level relationships." }
+          { 
+            title: "SMB Transactional", 
+            icon: "🏪", 
+            kpo: "High velocity. <500 employees. Quick decision cycles.",
+            msaQuestion: "Tell me about a month where you significantly exceeded your activity and close targets. How many deals did you close, what was your daily rhythm, and how did you maintain quality at high volume?",
+            listenFor: ["High activity tolerance", "Time management", "Process discipline"]
+          },
+          { 
+            title: "SMB Strategic", 
+            icon: "📈", 
+            kpo: "Land & expand. Multi-seat deals. Relationship-based growth.",
+            msaQuestion: "Describe your best 'land and expand' success story. What was the initial deal, how did you grow it over time, and what was the total contract value at its peak?",
+            listenFor: ["Relationship building", "Account planning", "Expansion mindset"]
+          },
+          { 
+            title: "Mid-Market", 
+            icon: "🏬", 
+            kpo: "500-2K employees. Multiple stakeholders. Procurement involved.",
+            msaQuestion: "Walk me through a mid-market deal where you had to navigate procurement and multiple stakeholders. Who were the key players, what obstacles did you face, and how did you get the deal done?",
+            listenFor: ["Stakeholder mapping", "Procurement navigation", "Deal complexity comfort"]
+          },
+          { 
+            title: "Commercial", 
+            icon: "🏛️", 
+            kpo: "2K-10K employees. Complex buying committees. Legal review.",
+            msaQuestion: "Tell me about your most challenging legal and security review in a commercial deal. What were the sticking points, how did you work with internal teams to address them, and how long did the process take?",
+            listenFor: ["Cross-functional coordination", "Legal/security literacy", "Patience and persistence"]
+          },
+          { 
+            title: "Enterprise", 
+            icon: "🏰", 
+            kpo: "10K+ employees. C-suite access required. Multi-quarter cycles.",
+            msaQuestion: "Describe the enterprise deal you're most proud of. What was the deal size, how long was the sales cycle, who were the executive sponsors, and what made you successful where others might have failed?",
+            listenFor: ["Executive presence", "Long-cycle stamina", "Political navigation"]
+          },
+          { 
+            title: "Strategic/Global", 
+            icon: "🌍", 
+            kpo: "Fortune 500. Multi-region. Board-level relationships.",
+            msaQuestion: "Tell me about managing a global, multi-region strategic account. How did you coordinate across geographies, what was your relationship structure at the executive level, and what was the annual contract value?",
+            listenFor: ["Global coordination", "Board-level relationships", "Strategic account planning"]
+          }
         ]
       },
       {
@@ -591,12 +700,48 @@
         question: "What deal structure can they manage?",
         icon: "📋",
         levels: [
-          { title: "Single SKU Velocity", icon: "⚡", kpo: "High volume, single product. Consistent daily activity." },
-          { title: "Multi-Seat Expansion", icon: "📊", kpo: "Land with one team, expand to others. Upsell motion." },
-          { title: "Multi-Product Bundle", icon: "🎁", kpo: "Combined Talent + Learning or Sales + Insights deals." },
-          { title: "Enterprise Agreement", icon: "📑", kpo: "Multi-year, custom terms. Managed procurement. Legal review." },
-          { title: "Strategic Partnership", icon: "🤝", kpo: "Joint business planning. Co-marketing. Executive sponsorship." },
-          { title: "Transformational Deal", icon: "🚀", kpo: "Platform-level commitment. Changes how customer operates." }
+          { 
+            title: "Single SKU Velocity", 
+            icon: "⚡", 
+            kpo: "High volume, single product. Consistent daily activity.",
+            msaQuestion: "Describe your approach to managing a high-velocity pipeline. How many deals were you managing simultaneously, what was your system for prioritization, and how did you maintain forecast accuracy?",
+            listenFor: ["Pipeline discipline", "CRM hygiene", "Activity consistency"]
+          },
+          { 
+            title: "Multi-Seat Expansion", 
+            icon: "📊", 
+            kpo: "Land with one team, expand to others. Upsell motion.",
+            msaQuestion: "Walk me through an account where you started with one team and expanded across the organization. What was your expansion playbook, how many departments did you reach, and what was the growth multiple?",
+            listenFor: ["Internal referral generation", "Multi-threading", "Expansion strategy"]
+          },
+          { 
+            title: "Multi-Product Bundle", 
+            icon: "🎁", 
+            kpo: "Combined Talent + Learning or Sales + Insights deals.",
+            msaQuestion: "Tell me about your most successful bundle sale. What products did you combine, how did you build the business case for the full solution, and what was the price premium you achieved vs. individual products?",
+            listenFor: ["Solution selling", "Value quantification", "Bundle architecture"]
+          },
+          { 
+            title: "Enterprise Agreement", 
+            icon: "📑", 
+            kpo: "Multi-year, custom terms. Managed procurement. Legal review.",
+            msaQuestion: "Describe negotiating a complex enterprise agreement with non-standard terms. What were the key negotiation points, how did you work with your legal team, and what creative solutions did you find?",
+            listenFor: ["Negotiation sophistication", "Internal resource orchestration", "Commercial creativity"]
+          },
+          { 
+            title: "Strategic Partnership", 
+            icon: "🤝", 
+            kpo: "Joint business planning. Co-marketing. Executive sponsorship.",
+            msaQuestion: "Tell me about building a strategic partnership beyond a typical vendor relationship. What joint initiatives did you create, how did you get executive sponsorship on both sides, and what was the mutual value created?",
+            listenFor: ["Partnership mindset", "Executive alignment", "Long-term value creation"]
+          },
+          { 
+            title: "Transformational Deal", 
+            icon: "🚀", 
+            kpo: "Platform-level commitment. Changes how customer operates.",
+            msaQuestion: "Describe a deal that fundamentally changed how your customer operates their business. What was the transformation, how did you manage the change management aspects, and what was the business outcome for the customer?",
+            listenFor: ["Transformation vision", "Change management awareness", "Customer business impact focus"]
+          }
         ]
       },
       {
@@ -605,12 +750,48 @@
         question: "What level of buyer can they engage?",
         icon: "👥",
         levels: [
-          { title: "Practitioner", icon: "👤", kpo: "Individual recruiters, sales reps. Feature-focused conversations." },
-          { title: "Manager", icon: "👔", kpo: "HR/Sales managers. Team productivity & efficiency focus." },
-          { title: "Director", icon: "📊", kpo: "TA Director, Sales Ops. Budget ownership. ROI conversations." },
-          { title: "VP", icon: "💼", kpo: "VP HR, VP Sales. Strategic initiatives. Board reporting." },
-          { title: "C-Suite", icon: "🎯", kpo: "CHRO, CRO. Transformation initiatives. Company strategy." },
-          { title: "Board/CEO", icon: "👑", kpo: "Business transformation sponsor. M&A, IPO preparation." }
+          { 
+            title: "Practitioner", 
+            icon: "👤", 
+            kpo: "Individual recruiters, sales reps. Feature-focused conversations.",
+            msaQuestion: "Tell me about winning over a skeptical end user who would be using your product daily. What was their concern, how did you address it, and how did they become a champion?",
+            listenFor: ["User empathy", "Feature-to-workflow connection", "Champion development"]
+          },
+          { 
+            title: "Manager", 
+            icon: "👔", 
+            kpo: "HR/Sales managers. Team productivity & efficiency focus.",
+            msaQuestion: "Describe selling to a manager who was focused on team productivity metrics. How did you quantify the productivity gains, what proof points did you use, and how did you make them look good to their leadership?",
+            listenFor: ["ROI articulation", "Manager-level value props", "Political awareness"]
+          },
+          { 
+            title: "Director", 
+            icon: "📊", 
+            kpo: "TA Director, Sales Ops. Budget ownership. ROI conversations.",
+            msaQuestion: "Walk me through a deal where you had to build a detailed business case for a Director with budget authority. What metrics did you include, how did you calculate ROI, and what was the budget approval process?",
+            listenFor: ["Financial acumen", "Business case construction", "Budget cycle awareness"]
+          },
+          { 
+            title: "VP", 
+            icon: "💼", 
+            kpo: "VP HR, VP Sales. Strategic initiatives. Board reporting.",
+            msaQuestion: "Tell me about a VP-level relationship you built and how you helped them achieve a strategic initiative. What was the initiative, how did your solution contribute, and how did they present results to their board?",
+            listenFor: ["Strategic thinking", "Executive communication", "Board-level impact awareness"]
+          },
+          { 
+            title: "C-Suite", 
+            icon: "🎯", 
+            kpo: "CHRO, CRO. Transformation initiatives. Company strategy.",
+            msaQuestion: "Describe your most meaningful C-suite relationship. How did you earn their trust, what strategic conversations did you have, and how did you become a trusted advisor beyond just selling your product?",
+            listenFor: ["Executive presence", "Strategic advisory capability", "Long-term relationship investment"]
+          },
+          { 
+            title: "Board/CEO", 
+            icon: "👑", 
+            kpo: "Business transformation sponsor. M&A, IPO preparation.",
+            msaQuestion: "Tell me about engaging with a CEO or Board on a major business initiative where your solution played a role. What was the initiative (M&A, transformation, IPO prep), and how did you contribute at that level?",
+            listenFor: ["Board-level fluency", "Business transformation experience", "Gravitas and credibility"]
+          }
         ]
       },
       {
@@ -619,12 +800,48 @@
         question: "How do they leverage LinkedIn resources?",
         icon: "🎪",
         levels: [
-          { title: "Self-Sufficient", icon: "🎯", kpo: "Solo hunter. Manages full cycle independently." },
-          { title: "SDR Partnership", icon: "🤝", kpo: "Works with BDRs. Qualifies inbound, coaches on messaging." },
-          { title: "Solution Consulting", icon: "🔬", kpo: "Brings in SCs for demos. Coordinates technical validation." },
-          { title: "Cross-Functional", icon: "🔗", kpo: "Engages CS, Marketing, Product. Shapes customer experience." },
-          { title: "Executive Engagement", icon: "⭐", kpo: "Brings LinkedIn leaders to customer meetings. Executive alignment." },
-          { title: "Program Leadership", icon: "🏆", kpo: "Orchestrates account teams. Multi-thread enterprise programs." }
+          { 
+            title: "Self-Sufficient", 
+            icon: "🎯", 
+            kpo: "Solo hunter. Manages full cycle independently.",
+            msaQuestion: "Describe a deal where you handled everything yourself from prospecting to close. What was the deal, what parts of the cycle were you strongest at, and where did you have to stretch?",
+            listenFor: ["Self-reliance", "Full-cycle capability", "Resourcefulness"]
+          },
+          { 
+            title: "SDR Partnership", 
+            icon: "🤝", 
+            kpo: "Works with BDRs. Qualifies inbound, coaches on messaging.",
+            msaQuestion: "Tell me about your best SDR partnership. How did you align on qualification criteria, how did you coach them on messaging, and what was the quality of opportunities they generated?",
+            listenFor: ["Collaboration skills", "Coaching ability", "Clear qualification criteria"]
+          },
+          { 
+            title: "Solution Consulting", 
+            icon: "🔬", 
+            kpo: "Brings in SCs for demos. Coordinates technical validation.",
+            msaQuestion: "Walk me through running a complex deal team with Solution Consultants. How did you brief them, how did you divide responsibilities in customer meetings, and how did you handle technical questions outside their scope?",
+            listenFor: ["Team coordination", "Role clarity", "Technical translation ability"]
+          },
+          { 
+            title: "Cross-Functional", 
+            icon: "🔗", 
+            kpo: "Engages CS, Marketing, Product. Shapes customer experience.",
+            msaQuestion: "Describe a situation where you pulled together multiple internal teams to deliver an exceptional customer experience. Who was involved, how did you coordinate them, and what was the customer outcome?",
+            listenFor: ["Cross-functional influence", "Customer experience focus", "Internal relationship building"]
+          },
+          { 
+            title: "Executive Engagement", 
+            icon: "⭐", 
+            kpo: "Brings LinkedIn leaders to customer meetings. Executive alignment.",
+            msaQuestion: "Tell me about orchestrating executive engagement between your company's leadership and a customer's C-suite. How did you prepare your executives, what was the meeting structure, and what was the outcome?",
+            listenFor: ["Executive briefing skills", "Strategic meeting management", "Upward influence"]
+          },
+          { 
+            title: "Program Leadership", 
+            icon: "🏆", 
+            kpo: "Orchestrates account teams. Multi-thread enterprise programs.",
+            msaQuestion: "Describe leading a complex account program with multiple workstreams. How many people were on the team, how did you structure governance, and how did you ensure alignment across all activities?",
+            listenFor: ["Program management", "Large team coordination", "Strategic orchestration"]
+          }
         ]
       },
       {
@@ -633,17 +850,53 @@
         question: "What level of strategic thinking?",
         icon: "🗺️",
         levels: [
-          { title: "Playbook Execution", icon: "📖", kpo: "Follows prescribed process. Consistent activity metrics." },
-          { title: "Territory Optimization", icon: "📍", kpo: "Prioritizes high-value accounts. Data-driven targeting." },
-          { title: "Market Intelligence", icon: "🔍", kpo: "Shares competitive insights. Identifies market trends." },
-          { title: "GTM Input", icon: "💡", kpo: "Influences segment strategy. Tests new approaches." },
-          { title: "Strategic Initiative Lead", icon: "🎪", kpo: "Pilots new programs. Shapes best practices." },
-          { title: "Function Shaper", icon: "🌟", kpo: "Defines how LinkedIn sells. Builds scalable playbooks." }
+          { 
+            title: "Playbook Execution", 
+            icon: "📖", 
+            kpo: "Follows prescribed process. Consistent activity metrics.",
+            msaQuestion: "Tell me about a time you followed a new sales playbook rigorously. What was the playbook, how did you ensure consistent execution, and what results did you achieve?",
+            listenFor: ["Process discipline", "Coachability", "Consistent execution"]
+          },
+          { 
+            title: "Territory Optimization", 
+            icon: "📍", 
+            kpo: "Prioritizes high-value accounts. Data-driven targeting.",
+            msaQuestion: "Walk me through how you analyze and prioritize your territory. What data do you use, how do you segment accounts, and how has your prioritization impacted your results?",
+            listenFor: ["Analytical thinking", "Prioritization framework", "Data-driven decision making"]
+          },
+          { 
+            title: "Market Intelligence", 
+            icon: "🔍", 
+            kpo: "Shares competitive insights. Identifies market trends.",
+            msaQuestion: "Describe a time when you identified a market trend or competitive shift that others missed. How did you spot it, how did you share the insight, and what action resulted from it?",
+            listenFor: ["Market awareness", "Pattern recognition", "Insight sharing"]
+          },
+          { 
+            title: "GTM Input", 
+            icon: "💡", 
+            kpo: "Influences segment strategy. Tests new approaches.",
+            msaQuestion: "Tell me about a go-to-market approach or sales play that you piloted. What was your hypothesis, how did you test it, and did it get scaled to the broader team?",
+            listenFor: ["Innovation mindset", "Experimental approach", "Influence without authority"]
+          },
+          { 
+            title: "Strategic Initiative Lead", 
+            icon: "🎪", 
+            kpo: "Pilots new programs. Shapes best practices.",
+            msaQuestion: "Describe leading a strategic sales initiative that became a best practice for your organization. What was the initiative, how did you prove it worked, and how was it rolled out?",
+            listenFor: ["Initiative leadership", "Change management", "Scalable thinking"]
+          },
+          { 
+            title: "Function Shaper", 
+            icon: "🌟", 
+            kpo: "Defines how LinkedIn sells. Builds scalable playbooks.",
+            msaQuestion: "Tell me about a time you fundamentally shaped how your sales organization operates. What did you change, how did you get buy-in, and what was the impact on the broader team's performance?",
+            listenFor: ["Organizational influence", "Playbook creation", "Scalable impact"]
+          }
         ]
       }
     ];
 
-    // LinkedIn role profiles (based on actual job postings)
+    // LinkedIn role profiles
     const roleProfiles = [
       {
         id: 'smb_ae',
@@ -651,7 +904,6 @@
         segment: "Sales Solutions",
         comp: "$106K - $152K OTE",
         levels: [1, 0, 0, 1, 0, 0],
-        color: "#60a5fa",
         experience: "2+ years",
         icon: "🚀"
       },
@@ -661,66 +913,42 @@
         segment: "Talent & Learning",
         comp: "$110K - $160K OTE",
         levels: [1, 0, 1, 1, 1, 1],
-        color: "#22d3ee",
         experience: "2+ years",
         icon: "💼"
       },
       {
         id: 'mm_ae',
-        name: "Mid-Market Account Executive",
+        name: "Mid-Market AE",
         segment: "Talent Solutions",
         comp: "$122K - $175K OTE",
         levels: [2, 2, 2, 2, 2, 2],
-        color: "#fbbf24",
         experience: "3-5 years",
         icon: "📊"
       },
       {
-        id: 'mm_sales',
-        name: "Mid-Market Account Executive",
-        segment: "Sales Solutions",
-        comp: "$130K - $180K OTE",
-        levels: [2, 2, 1, 2, 2, 2],
-        color: "#fb923c",
-        experience: "3-5 years",
-        icon: "🎯"
-      },
-      {
         id: 'enterprise_ae',
-        name: "Enterprise Account Executive",
+        name: "Enterprise AE",
         segment: "Sales Solutions",
         comp: "$191K - $325K OTE",
         levels: [3, 4, 3, 3, 3, 3],
-        color: "#f472b6",
         experience: "5+ years",
         icon: "🏰"
       },
       {
         id: 'account_director',
-        name: "Enterprise Account Director",
-        segment: "Talent Solutions",
+        name: "Account Director",
+        segment: "Enterprise",
         comp: "$260K - $330K OTE",
         levels: [4, 5, 4, 4, 4, 4],
-        color: "#a78bfa",
         experience: "7+ years",
         icon: "👑"
       }
     ];
 
-    const productLines = [
-      { id: 'all', name: "All Products", icon: "📦" },
-      { id: 'talent', name: "Talent Solutions", icon: "👥" },
-      { id: 'sales', name: "Sales Navigator", icon: "🎯" },
-      { id: 'marketing', name: "Marketing Solutions", icon: "📢" },
-      { id: 'learning', name: "LinkedIn Learning", icon: "📚" }
-    ];
-
-    const LinkedInMatrix = () => {
-      const [selectedProduct, setSelectedProduct] = useState('all');
+    const LinkedInPBJD = () => {
       const [selectedRole, setSelectedRole] = useState('mm_ae');
       const [selections, setSelections] = useState({});
       
-      // Initialize with role profile
       useEffect(() => {
         const role = roleProfiles.find(r => r.id === selectedRole);
         if (role) {
@@ -741,229 +969,207 @@
       };
 
       const currentRole = roleProfiles.find(r => r.id === selectedRole);
+      
+      const generatePerfObjective = () => {
+        const segment = currentRole?.segment || "Sales";
+        const experience = currentRole?.experience || "the required";
+        return `Within the first 6 months, become a top-quartile performer in the ${segment} organization by consistently exceeding quota, building a qualified pipeline of 3x coverage, and earning recognition as a trusted advisor to customers in your territory.`;
+      };
 
       return (
-        <>
-          {/* Header */}
-          <header className="header">
-            <div className="header-badge">
-              <span className="linkedin-icon">in</span>
-              <span>Performance-Based Role Analysis</span>
-            </div>
-            <h1 className="main-title">LinkedIn Sales Organization</h1>
-            <p className="subtitle">
-              6×6 Matrix derived from analyzing LinkedIn's actual job postings — 
-              a framework for understanding how LinkedIn defines sales excellence
-            </p>
-            <div className="stats-bar">
-              <div className="stat">
-                <div className="stat-number">6</div>
-                <div className="stat-label">Dimensions</div>
+        <div className="app-container">
+          {/* Left Panel - Matrix */}
+          <div className="matrix-panel">
+            <header className="header">
+              <div className="header-badge">
+                <span className="linkedin-icon">in</span>
+                <span>6×6 Matrix → PBJD Demo</span>
               </div>
-              <div className="stat">
-                <div className="stat-number">6</div>
-                <div className="stat-label">Levels Each</div>
-              </div>
-              <div className="stat">
-                <div className="stat-number">46,656</div>
-                <div className="stat-label">Role Profiles</div>
-              </div>
-            </div>
-          </header>
+              <h1 className="main-title">LinkedIn Sales Roles</h1>
+              <p className="subtitle">Select a role to generate the PBJD with MSA questions</p>
+            </header>
 
-          <div className="container">
-            {/* Product Line Pills */}
-            <div className="product-pills">
-              {productLines.map(p => (
-                <button
-                  key={p.id}
-                  className={`pill ${selectedProduct === p.id ? 'active' : ''}`}
-                  onClick={() => setSelectedProduct(p.id)}
-                >
-                  <span className="pill-icon">{p.icon}</span>
-                  {p.name}
-                </button>
-              ))}
+            {/* Role Selector */}
+            <div className="role-selector">
+              <div className="role-selector-title">Select a Role Profile</div>
+              <div className="role-pills">
+                {roleProfiles.map(role => (
+                  <button
+                    key={role.id}
+                    className={`role-pill ${selectedRole === role.id ? 'active' : ''}`}
+                    onClick={() => setSelectedRole(role.id)}
+                  >
+                    <span className="role-pill-icon">{role.icon}</span>
+                    {role.name}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Main Grid */}
-            <div className="main-grid">
-              {/* Sidebar */}
-              <aside className="sidebar">
-                <div className="sidebar-card">
-                  <div className="sidebar-title">
-                    <span className="sidebar-title-icon">👔</span>
-                    LinkedIn Sales Roles
-                  </div>
-                  {roleProfiles.map(role => (
-                    <div
-                      key={role.id}
-                      className={`role-card ${selectedRole === role.id ? 'active' : ''}`}
-                      onClick={() => setSelectedRole(role.id)}
-                    >
-                      <div 
-                        className="role-avatar"
-                        style={{ background: `linear-gradient(135deg, ${role.color}40, ${role.color}20)` }}
-                      >
-                        {role.icon}
-                      </div>
-                      <div className="role-info">
-                        <div className="role-name">{role.name}</div>
-                        <div className="role-segment">{role.segment}</div>
-                        <div className="role-comp">{role.comp}</div>
-                      </div>
+            {/* Matrix */}
+            <div className="matrix-card">
+              <div className="matrix-card-title">
+                <span>📊</span>
+                The 6×6 Matrix
+              </div>
+              
+              <div className="matrix-grid">
+                <div></div>
+                {['L1', 'L2', 'L3', 'L4', 'L5', 'L6'].map((level, i) => (
+                  <div key={i} className="level-header">
+                    <div className="level-number">{level}</div>
+                    <div className="level-title">
+                      {['Entry', 'Develop', 'Proficient', 'Advanced', 'Expert', 'Strategic'][i]}
                     </div>
-                  ))}
-                </div>
-                
-                <div className="sidebar-card">
-                  <div className="sidebar-title">
-                    <span className="sidebar-title-icon">📋</span>
-                    Data Sources
                   </div>
-                  <div className="source-note">
-                    This matrix was built by analyzing LinkedIn's actual job postings from{' '}
-                    <a href="https://careers.linkedin.com/Teams/Sales" target="_blank" rel="noopener">
-                      careers.linkedin.com
-                    </a>
-                    {' '}including SMB, Mid-Market, and Enterprise AE roles across Talent Solutions, 
-                    Sales Solutions, and Marketing Solutions. Compensation data from Glassdoor and 
-                    actual job listings.
-                  </div>
-                </div>
+                ))}
 
-                <div className="methodology-card">
-                  <div className="methodology-title">
-                    <span>⚡</span>
-                    How This Works
-                  </div>
-                  <div className="methodology-steps">
-                    <div className="methodology-step">
-                      <span className="step-num">1</span>
-                      <span>Analyzed real LinkedIn job postings to identify key competency dimensions</span>
+                {dimensions.map((dim, dimIndex) => (
+                  <React.Fragment key={dim.id}>
+                    <div className="dim-label">
+                      <span className="dim-icon">{dim.icon}</span>
+                      <span className="dim-name">{dim.name}</span>
                     </div>
-                    <div className="methodology-step">
-                      <span className="step-num">2</span>
-                      <span>Mapped requirements to 6 levels from entry to strategic</span>
-                    </div>
-                    <div className="methodology-step">
-                      <span className="step-num">3</span>
-                      <span>Created role profiles matching actual job descriptions</span>
-                    </div>
-                    <div className="methodology-step">
-                      <span className="step-num">4</span>
-                      <span>Any company can replicate this process for their roles</span>
-                    </div>
-                  </div>
-                </div>
-              </aside>
-
-              {/* Matrix Panel */}
-              <main className="matrix-panel">
-                <div className="matrix-header">
-                  <div>
-                    <h2 className="matrix-title">The 6×6 Sales Matrix</h2>
-                    <p className="matrix-subtitle">Click any cell to customize • Click a role to see its profile</p>
-                  </div>
-                </div>
-
-                {/* Matrix Grid */}
-                <div className="matrix-grid">
-                  {/* Header Row */}
-                  <div></div>
-                  {['L1', 'L2', 'L3', 'L4', 'L5', 'L6'].map((level, i) => (
-                    <div key={i} className="level-header">
-                      <div className="level-number">{level}</div>
-                      <div className="level-title">
-                        {['Entry', 'Developing', 'Proficient', 'Advanced', 'Expert', 'Strategic'][i]}
-                      </div>
-                    </div>
-                  ))}
-
-                  {/* Dimension Rows */}
-                  {dimensions.map((dim, dimIndex) => (
-                    <React.Fragment key={dim.id}>
-                      <div className="dim-label">
-                        <span className="dim-icon">{dim.icon}</span>
-                        <div className="dim-info">
-                          <div className="dim-name">{dim.name}</div>
-                          <div className="dim-question">{dim.question}</div>
-                        </div>
-                      </div>
-                      
-                      {dim.levels.map((level, levelIndex) => {
-                        const isSelected = selections[dim.id] === levelIndex;
-                        return (
-                          <div
-                            key={levelIndex}
-                            className={`matrix-cell ${isSelected ? 'selected' : ''}`}
-                            data-level={levelIndex + 1}
-                            onClick={() => handleCellClick(dim.id, levelIndex)}
-                          >
-                            <div className="cell-icon">{level.icon}</div>
-                            <div className="cell-title">{level.title}</div>
-                          </div>
-                        );
-                      })}
-                    </React.Fragment>
-                  ))}
-                </div>
-
-                {/* Role Profile Summary */}
-                <div className="profile-summary">
-                  <div className="profile-header">
-                    <div 
-                      className="profile-avatar"
-                      style={currentRole ? { 
-                        background: `linear-gradient(135deg, ${currentRole.color}, ${currentRole.color}dd)` 
-                      } : {}}
-                    >
-                      {currentRole?.icon || '📋'}
-                    </div>
-                    <div className="profile-info">
-                      <h3>{currentRole?.name || 'Custom Role Profile'}</h3>
-                      <p>
-                        {currentRole 
-                          ? `${currentRole.segment} • ${currentRole.experience} experience • ${currentRole.comp}`
-                          : 'Build your own role by selecting levels in each dimension'
-                        }
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="profile-dims">
-                    {dimensions.map((dim, i) => {
-                      const levelIndex = selections[dim.id] ?? 0;
-                      const level = dim.levels[levelIndex];
+                    
+                    {dim.levels.map((level, levelIndex) => {
+                      const isSelected = selections[dim.id] === levelIndex;
                       return (
-                        <div key={dim.id} className="profile-dim">
-                          <div className="profile-dim-name">{dim.name}</div>
-                          <div className="profile-dim-value">
-                            <span>{level.icon}</span>
-                            <span>{level.title}</span>
-                          </div>
+                        <div
+                          key={levelIndex}
+                          className={`matrix-cell ${isSelected ? 'selected' : ''}`}
+                          data-level={levelIndex + 1}
+                          onClick={() => handleCellClick(dim.id, levelIndex)}
+                          style={{ position: 'relative' }}
+                        >
+                          <div className="cell-icon">{level.icon}</div>
+                          <div className="cell-title">{level.title}</div>
                         </div>
                       );
                     })}
-                  </div>
-                </div>
-              </main>
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Panel - PBJD Output */}
+          <div className="pbjd-panel">
+            <div className="pbjd-header">
+              <div className="pbjd-badge">Performance-Based Job Description</div>
+              <h1 className="pbjd-title">
+                {currentRole?.name || 'Custom Role'}
+              </h1>
+              <p className="pbjd-segment">
+                {currentRole?.segment || 'LinkedIn Sales Organization'}
+              </p>
+              <div className="pbjd-meta">
+                <span className="pbjd-meta-item">
+                  💰 {currentRole?.comp || 'Competitive'}
+                </span>
+                <span className="pbjd-meta-item">
+                  📅 {currentRole?.experience || 'Experience varies'}
+                </span>
+              </div>
             </div>
 
-            {/* Footer */}
-            <footer className="footer">
-              <span className="footer-brand">Performance-Based Hiring Learning Systems</span>
-              <span> • </span>
-              <span>Built from analyzing LinkedIn's actual job postings</span>
-              <span> • </span>
-              <span>6×6 Matrix Framework</span>
-            </footer>
+            <div className="pbjd-content">
+              {/* Section 1: Performance Objective */}
+              <div className="pbjd-section">
+                <div className="pbjd-section-header">
+                  <span className="pbjd-section-num">1</span>
+                  <span className="pbjd-section-title">Performance Objective</span>
+                </div>
+                <div className="perf-objective">
+                  {generatePerfObjective()}
+                </div>
+              </div>
+
+              {/* Section 2: Key Performance Outcomes */}
+              <div className="pbjd-section">
+                <div className="pbjd-section-header">
+                  <span className="pbjd-section-num">2</span>
+                  <span className="pbjd-section-title">Key Performance Outcomes by Dimension</span>
+                </div>
+                <div className="kpo-grid">
+                  {dimensions.map((dim, i) => {
+                    const levelIndex = selections[dim.id] ?? 0;
+                    const level = dim.levels[levelIndex];
+                    return (
+                      <div key={dim.id} className="kpo-card" data-level={levelIndex + 1}>
+                        <span className="kpo-icon">{level.icon}</span>
+                        <div className="kpo-content">
+                          <div className="kpo-dim-name">{dim.name}</div>
+                          <div className="kpo-level">{level.title}</div>
+                          <div className="kpo-text">{level.kpo}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Section 3: MSA Interview Questions */}
+              <div className="pbjd-section">
+                <div className="pbjd-section-header">
+                  <span className="pbjd-section-num">3</span>
+                  <span className="pbjd-section-title">MSA Interview Questions</span>
+                </div>
+                
+                {dimensions.map((dim, i) => {
+                  const levelIndex = selections[dim.id] ?? 0;
+                  const level = dim.levels[levelIndex];
+                  return (
+                    <div key={dim.id} className="msa-card">
+                      <div className="msa-header">
+                        <div className="msa-dim-icon" data-level={levelIndex + 1}>
+                          {dim.icon}
+                        </div>
+                        <div className="msa-header-info">
+                          <div className="msa-dim-name">{dim.name}</div>
+                          <div className="msa-level-badge">
+                            <span className="msa-level-num" data-level={levelIndex + 1}>
+                              L{levelIndex + 1}
+                            </span>
+                            {level.title}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="msa-body">
+                        <div className="msa-question-label">
+                          🎤 MSA Question
+                        </div>
+                        <p className="msa-question">
+                          "{level.msaQuestion}"
+                        </p>
+                        <div className="msa-listen-for">
+                          <div className="msa-listen-label">
+                            🎯 Listen For
+                          </div>
+                          <ul className="msa-listen-points">
+                            {level.listenFor.map((point, idx) => (
+                              <li key={idx}>{point}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="pbjd-footer">
+              <p className="pbjd-footer-text">
+                <span className="pbjd-footer-brand">Performance-Based Hiring</span>
+                {' '}• MSA questions generated for each dimension × level combination
+              </p>
+            </div>
           </div>
-        </>
+        </div>
       );
     };
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<LinkedInMatrix />);
+    ReactDOM.createRoot(document.getElementById('root')).render(<LinkedInPBJD />);
   </script>
 </body>
 </html>
