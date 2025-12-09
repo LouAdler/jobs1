@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Sales Organization | 6×6 Matrix Analysis</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --linkedin-blue: #0a66c2;
+      --linkedin-dark: #004182;
+      --linkedin-light: #70b5f9;
+      --linkedin-bg: #f3f2ef;
+      --linkedin-card: #ffffff;
+      --linkedin-text: #191919;
+      --linkedin-secondary: #666666;
+      --accent-gold: #c37d16;
+      --accent-green: #057642;
+      --accent-purple: #7c3aed;
+      --accent-coral: #e16745;
+    }
+    
+    body {
+      font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #004182 0%, #0a66c2 15%, var(--linkedin-bg) 15%);
+      color: var(--linkedin-text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+    
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 40px 0 60px;
+      color: white;
+    }
+    
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 20px;
+    }
+    
+    .linkedin-icon {
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--linkedin-blue);
+      font-size: 14px;
+    }
+    
+    .main-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 700px;
+      margin: 0 auto;
+      font-weight: 300;
+    }
+    
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.8;
+    }
+    
+    /* Product Line Pills */
+    .product-pills {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: -30px 0 30px;
+      flex-wrap: wrap;
+    }
+    
+    .pill {
+      background: var(--linkedin-card);
+      border: 2px solid #e0e0e0;
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .pill:hover {
+      border-color: var(--linkedin-blue);
+      transform: translateY(-2px);
+    }
+    
+    .pill.active {
+      background: var(--linkedin-blue);
+      border-color: var(--linkedin-blue);
+      color: white;
+    }
+    
+    .pill-icon {
+      margin-right: 6px;
+    }
+    
+    /* Main Content */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 24px;
+      margin-top: 20px;
+    }
+    
+    @media (max-width: 1100px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .sidebar-card {
+      background: var(--linkedin-card);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    
+    .sidebar-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--linkedin-secondary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .sidebar-title-icon {
+      font-size: 1rem;
+    }
+    
+    /* Role Cards */
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    
+    .role-card:hover {
+      background: #f8f8f8;
+    }
+    
+    .role-card.active {
+      background: #e8f4fd;
+      border-color: var(--linkedin-blue);
+    }
+    
+    .role-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    
+    .role-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .role-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--linkedin-text);
+    }
+    
+    .role-segment {
+      font-size: 0.75rem;
+      color: var(--linkedin-secondary);
+    }
+    
+    .role-comp {
+      font-size: 0.7rem;
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+    
+    /* Source info */
+    .source-note {
+      font-size: 0.7rem;
+      color: var(--linkedin-secondary);
+      padding: 12px;
+      background: #f8f8f8;
+      border-radius: 6px;
+      line-height: 1.5;
+    }
+    
+    .source-note a {
+      color: var(--linkedin-blue);
+      text-decoration: none;
+    }
+    
+    .source-note a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Matrix Panel */
+    .matrix-panel {
+      background: var(--linkedin-card);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow-x: auto;
+    }
+    
+    .matrix-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    
+    .matrix-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--linkedin-text);
+    }
+    
+    .matrix-subtitle {
+      font-size: 0.8rem;
+      color: var(--linkedin-secondary);
+    }
+    
+    /* Matrix Grid */
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: 180px repeat(6, 1fr);
+      gap: 3px;
+      min-width: 900px;
+    }
+    
+    /* Level Headers */
+    .level-header {
+      text-align: center;
+      padding: 10px 8px;
+    }
+    
+    .level-number {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--linkedin-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    .level-title {
+      font-size: 0.7rem;
+      color: var(--linkedin-secondary);
+      margin-top: 2px;
+    }
+    
+    /* Dimension Labels */
+    .dim-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: #f8f8f8;
+      border-radius: 6px;
+    }
+    
+    .dim-icon {
+      font-size: 1.1rem;
+    }
+    
+    .dim-info {
+      flex: 1;
+    }
+    
+    .dim-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--linkedin-text);
+    }
+    
+    .dim-question {
+      font-size: 0.65rem;
+      color: var(--linkedin-secondary);
+    }
+    
+    /* Matrix Cells */
+    .matrix-cell {
+      background: #fafafa;
+      border-radius: 6px;
+      padding: 8px;
+      text-align: center;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      cursor: pointer;
+      position: relative;
+      min-height: 70px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .matrix-cell:hover {
+      background: #f0f0f0;
+      transform: translateY(-1px);
+    }
+    
+    /* Level color coding */
+    .matrix-cell[data-level="1"] { border-left: 3px solid #94a3b8; }
+    .matrix-cell[data-level="2"] { border-left: 3px solid #60a5fa; }
+    .matrix-cell[data-level="3"] { border-left: 3px solid #22d3ee; }
+    .matrix-cell[data-level="4"] { border-left: 3px solid #fbbf24; }
+    .matrix-cell[data-level="5"] { border-left: 3px solid #f472b6; }
+    .matrix-cell[data-level="6"] { border-left: 3px solid #a78bfa; }
+    
+    .matrix-cell.selected {
+      background: #e8f4fd;
+      border: 2px solid var(--linkedin-blue);
+    }
+    
+    .matrix-cell.selected::after {
+      content: "✓";
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 16px;
+      height: 16px;
+      background: var(--linkedin-blue);
+      border-radius: 50%;
+      font-size: 0.55rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    
+    .cell-icon {
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
+    
+    .cell-title {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--linkedin-text);
+      line-height: 1.3;
+    }
+    
+    /* Role Profile Summary */
+    .profile-summary {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .profile-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--linkedin-blue), var(--linkedin-dark));
+    }
+    
+    .profile-info h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--linkedin-text);
+    }
+    
+    .profile-info p {
+      font-size: 0.85rem;
+      color: var(--linkedin-secondary);
+    }
+    
+    .profile-dims {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    
+    @media (max-width: 768px) {
+      .profile-dims {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    .profile-dim {
+      background: #f8f8f8;
+      border-radius: 8px;
+      padding: 12px;
+      border-left: 3px solid var(--linkedin-blue);
+    }
+    
+    .profile-dim-name {
+      font-size: 0.7rem;
+      color: var(--linkedin-secondary);
+      margin-bottom: 4px;
+    }
+    
+    .profile-dim-value {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--linkedin-text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      color: var(--linkedin-secondary);
+      font-size: 0.8rem;
+    }
+    
+    .footer-brand {
+      font-weight: 600;
+      color: var(--linkedin-blue);
+    }
+    
+    /* Methodology Card */
+    .methodology-card {
+      background: linear-gradient(135deg, #f8f8f8, #fff);
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
+    
+    .methodology-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--linkedin-text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .methodology-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .methodology-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--linkedin-secondary);
+    }
+    
+    .step-num {
+      width: 20px;
+      height: 20px;
+      background: var(--linkedin-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // LinkedIn's 6 Dimensions for AE Roles (derived from job posting analysis)
+    const dimensions = [
+      {
+        id: 'productFluency',
+        name: "Product & Platform Fluency",
+        question: "How well do they know LinkedIn's products?",
+        icon: "🧠",
+        levels: [
+          { title: "Single Product Basics", icon: "📚", kpo: "Knows one product at demo level. Can articulate core value prop." },
+          { title: "Core Platform", icon: "🔧", kpo: "Fluent in Talent OR Sales OR Marketing Solutions. Handles standard objections." },
+          { title: "Multi-Product", icon: "🔗", kpo: "Cross-sells across 2+ product lines. Understands integration points." },
+          { title: "Solution Architect", icon: "🏗️", kpo: "Designs integrated solutions. Maps customer tech stack to LinkedIn ecosystem." },
+          { title: "Platform Strategist", icon: "🎯", kpo: "Shapes product roadmap with customer feedback. Beta program leader." },
+          { title: "Industry Voice", icon: "🌟", kpo: "Thought leader on HR/Sales tech. Speaks at industry events." }
+        ]
+      },
+      {
+        id: 'marketSegment',
+        name: "Market Segment Mastery",
+        question: "What size/complexity of customer?",
+        icon: "🏢",
+        levels: [
+          { title: "SMB Transactional", icon: "🏪", kpo: "High velocity. <500 employees. Quick decision cycles." },
+          { title: "SMB Strategic", icon: "📈", kpo: "Land & expand. Multi-seat deals. Relationship-based growth." },
+          { title: "Mid-Market", icon: "🏬", kpo: "500-2K employees. Multiple stakeholders. Procurement involved." },
+          { title: "Commercial", icon: "🏛️", kpo: "2K-10K employees. Complex buying committees. Legal review." },
+          { title: "Enterprise", icon: "🏰", kpo: "10K+ employees. C-suite access required. Multi-quarter cycles." },
+          { title: "Strategic/Global", icon: "🌍", kpo: "Fortune 500. Multi-region. Board-level relationships." }
+        ]
+      },
+      {
+        id: 'salesCycle',
+        name: "Sales Cycle Complexity",
+        question: "What deal structure can they manage?",
+        icon: "📋",
+        levels: [
+          { title: "Single SKU Velocity", icon: "⚡", kpo: "High volume, single product. Consistent daily activity." },
+          { title: "Multi-Seat Expansion", icon: "📊", kpo: "Land with one team, expand to others. Upsell motion." },
+          { title: "Multi-Product Bundle", icon: "🎁", kpo: "Combined Talent + Learning or Sales + Insights deals." },
+          { title: "Enterprise Agreement", icon: "📑", kpo: "Multi-year, custom terms. Managed procurement. Legal review." },
+          { title: "Strategic Partnership", icon: "🤝", kpo: "Joint business planning. Co-marketing. Executive sponsorship." },
+          { title: "Transformational Deal", icon: "🚀", kpo: "Platform-level commitment. Changes how customer operates." }
+        ]
+      },
+      {
+        id: 'stakeholderNav',
+        name: "Stakeholder Navigation",
+        question: "What level of buyer can they engage?",
+        icon: "👥",
+        levels: [
+          { title: "Practitioner", icon: "👤", kpo: "Individual recruiters, sales reps. Feature-focused conversations." },
+          { title: "Manager", icon: "👔", kpo: "HR/Sales managers. Team productivity & efficiency focus." },
+          { title: "Director", icon: "📊", kpo: "TA Director, Sales Ops. Budget ownership. ROI conversations." },
+          { title: "VP", icon: "💼", kpo: "VP HR, VP Sales. Strategic initiatives. Board reporting." },
+          { title: "C-Suite", icon: "🎯", kpo: "CHRO, CRO. Transformation initiatives. Company strategy." },
+          { title: "Board/CEO", icon: "👑", kpo: "Business transformation sponsor. M&A, IPO preparation." }
+        ]
+      },
+      {
+        id: 'orchestration',
+        name: "Internal Orchestration",
+        question: "How do they leverage LinkedIn resources?",
+        icon: "🎪",
+        levels: [
+          { title: "Self-Sufficient", icon: "🎯", kpo: "Solo hunter. Manages full cycle independently." },
+          { title: "SDR Partnership", icon: "🤝", kpo: "Works with BDRs. Qualifies inbound, coaches on messaging." },
+          { title: "Solution Consulting", icon: "🔬", kpo: "Brings in SCs for demos. Coordinates technical validation." },
+          { title: "Cross-Functional", icon: "🔗", kpo: "Engages CS, Marketing, Product. Shapes customer experience." },
+          { title: "Executive Engagement", icon: "⭐", kpo: "Brings LinkedIn leaders to customer meetings. Executive alignment." },
+          { title: "Program Leadership", icon: "🏆", kpo: "Orchestrates account teams. Multi-thread enterprise programs." }
+        ]
+      },
+      {
+        id: 'territoryStrategy',
+        name: "Territory Strategy & Impact",
+        question: "What level of strategic thinking?",
+        icon: "🗺️",
+        levels: [
+          { title: "Playbook Execution", icon: "📖", kpo: "Follows prescribed process. Consistent activity metrics." },
+          { title: "Territory Optimization", icon: "📍", kpo: "Prioritizes high-value accounts. Data-driven targeting." },
+          { title: "Market Intelligence", icon: "🔍", kpo: "Shares competitive insights. Identifies market trends." },
+          { title: "GTM Input", icon: "💡", kpo: "Influences segment strategy. Tests new approaches." },
+          { title: "Strategic Initiative Lead", icon: "🎪", kpo: "Pilots new programs. Shapes best practices." },
+          { title: "Function Shaper", icon: "🌟", kpo: "Defines how LinkedIn sells. Builds scalable playbooks." }
+        ]
+      }
+    ];
+
+    // LinkedIn role profiles (based on actual job postings)
+    const roleProfiles = [
+      {
+        id: 'smb_ae',
+        name: "SMB Account Executive",
+        segment: "Sales Solutions",
+        comp: "$106K - $152K OTE",
+        levels: [1, 0, 0, 1, 0, 0],
+        color: "#60a5fa",
+        experience: "2+ years",
+        icon: "🚀"
+      },
+      {
+        id: 'smb_talent',
+        name: "SMB Account Executive",
+        segment: "Talent & Learning",
+        comp: "$110K - $160K OTE",
+        levels: [1, 0, 1, 1, 1, 1],
+        color: "#22d3ee",
+        experience: "2+ years",
+        icon: "💼"
+      },
+      {
+        id: 'mm_ae',
+        name: "Mid-Market Account Executive",
+        segment: "Talent Solutions",
+        comp: "$122K - $175K OTE",
+        levels: [2, 2, 2, 2, 2, 2],
+        color: "#fbbf24",
+        experience: "3-5 years",
+        icon: "📊"
+      },
+      {
+        id: 'mm_sales',
+        name: "Mid-Market Account Executive",
+        segment: "Sales Solutions",
+        comp: "$130K - $180K OTE",
+        levels: [2, 2, 1, 2, 2, 2],
+        color: "#fb923c",
+        experience: "3-5 years",
+        icon: "🎯"
+      },
+      {
+        id: 'enterprise_ae',
+        name: "Enterprise Account Executive",
+        segment: "Sales Solutions",
+        comp: "$191K - $325K OTE",
+        levels: [3, 4, 3, 3, 3, 3],
+        color: "#f472b6",
+        experience: "5+ years",
+        icon: "🏰"
+      },
+      {
+        id: 'account_director',
+        name: "Enterprise Account Director",
+        segment: "Talent Solutions",
+        comp: "$260K - $330K OTE",
+        levels: [4, 5, 4, 4, 4, 4],
+        color: "#a78bfa",
+        experience: "7+ years",
+        icon: "👑"
+      }
+    ];
+
+    const productLines = [
+      { id: 'all', name: "All Products", icon: "📦" },
+      { id: 'talent', name: "Talent Solutions", icon: "👥" },
+      { id: 'sales', name: "Sales Navigator", icon: "🎯" },
+      { id: 'marketing', name: "Marketing Solutions", icon: "📢" },
+      { id: 'learning', name: "LinkedIn Learning", icon: "📚" }
+    ];
+
+    const LinkedInMatrix = () => {
+      const [selectedProduct, setSelectedProduct] = useState('all');
+      const [selectedRole, setSelectedRole] = useState('mm_ae');
+      const [selections, setSelections] = useState({});
+      
+      // Initialize with role profile
+      useEffect(() => {
+        const role = roleProfiles.find(r => r.id === selectedRole);
+        if (role) {
+          const newSelections = {};
+          dimensions.forEach((dim, i) => {
+            newSelections[dim.id] = role.levels[i];
+          });
+          setSelections(newSelections);
+        }
+      }, [selectedRole]);
+
+      const handleCellClick = (dimId, levelIndex) => {
+        setSelections(prev => ({
+          ...prev,
+          [dimId]: levelIndex
+        }));
+        setSelectedRole(null);
+      };
+
+      const currentRole = roleProfiles.find(r => r.id === selectedRole);
+
+      return (
+        <>
+          {/* Header */}
+          <header className="header">
+            <div className="header-badge">
+              <span className="linkedin-icon">in</span>
+              <span>Performance-Based Role Analysis</span>
+            </div>
+            <h1 className="main-title">LinkedIn Sales Organization</h1>
+            <p className="subtitle">
+              6×6 Matrix derived from analyzing LinkedIn's actual job postings — 
+              a framework for understanding how LinkedIn defines sales excellence
+            </p>
+            <div className="stats-bar">
+              <div className="stat">
+                <div className="stat-number">6</div>
+                <div className="stat-label">Dimensions</div>
+              </div>
+              <div className="stat">
+                <div className="stat-number">6</div>
+                <div className="stat-label">Levels Each</div>
+              </div>
+              <div className="stat">
+                <div className="stat-number">46,656</div>
+                <div className="stat-label">Role Profiles</div>
+              </div>
+            </div>
+          </header>
+
+          <div className="container">
+            {/* Product Line Pills */}
+            <div className="product-pills">
+              {productLines.map(p => (
+                <button
+                  key={p.id}
+                  className={`pill ${selectedProduct === p.id ? 'active' : ''}`}
+                  onClick={() => setSelectedProduct(p.id)}
+                >
+                  <span className="pill-icon">{p.icon}</span>
+                  {p.name}
+                </button>
+              ))}
+            </div>
+
+            {/* Main Grid */}
+            <div className="main-grid">
+              {/* Sidebar */}
+              <aside className="sidebar">
+                <div className="sidebar-card">
+                  <div className="sidebar-title">
+                    <span className="sidebar-title-icon">👔</span>
+                    LinkedIn Sales Roles
+                  </div>
+                  {roleProfiles.map(role => (
+                    <div
+                      key={role.id}
+                      className={`role-card ${selectedRole === role.id ? 'active' : ''}`}
+                      onClick={() => setSelectedRole(role.id)}
+                    >
+                      <div 
+                        className="role-avatar"
+                        style={{ background: `linear-gradient(135deg, ${role.color}40, ${role.color}20)` }}
+                      >
+                        {role.icon}
+                      </div>
+                      <div className="role-info">
+                        <div className="role-name">{role.name}</div>
+                        <div className="role-segment">{role.segment}</div>
+                        <div className="role-comp">{role.comp}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="sidebar-card">
+                  <div className="sidebar-title">
+                    <span className="sidebar-title-icon">📋</span>
+                    Data Sources
+                  </div>
+                  <div className="source-note">
+                    This matrix was built by analyzing LinkedIn's actual job postings from{' '}
+                    <a href="https://careers.linkedin.com/Teams/Sales" target="_blank" rel="noopener">
+                      careers.linkedin.com
+                    </a>
+                    {' '}including SMB, Mid-Market, and Enterprise AE roles across Talent Solutions, 
+                    Sales Solutions, and Marketing Solutions. Compensation data from Glassdoor and 
+                    actual job listings.
+                  </div>
+                </div>
+
+                <div className="methodology-card">
+                  <div className="methodology-title">
+                    <span>⚡</span>
+                    How This Works
+                  </div>
+                  <div className="methodology-steps">
+                    <div className="methodology-step">
+                      <span className="step-num">1</span>
+                      <span>Analyzed real LinkedIn job postings to identify key competency dimensions</span>
+                    </div>
+                    <div className="methodology-step">
+                      <span className="step-num">2</span>
+                      <span>Mapped requirements to 6 levels from entry to strategic</span>
+                    </div>
+                    <div className="methodology-step">
+                      <span className="step-num">3</span>
+                      <span>Created role profiles matching actual job descriptions</span>
+                    </div>
+                    <div className="methodology-step">
+                      <span className="step-num">4</span>
+                      <span>Any company can replicate this process for their roles</span>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+
+              {/* Matrix Panel */}
+              <main className="matrix-panel">
+                <div className="matrix-header">
+                  <div>
+                    <h2 className="matrix-title">The 6×6 Sales Matrix</h2>
+                    <p className="matrix-subtitle">Click any cell to customize • Click a role to see its profile</p>
+                  </div>
+                </div>
+
+                {/* Matrix Grid */}
+                <div className="matrix-grid">
+                  {/* Header Row */}
+                  <div></div>
+                  {['L1', 'L2', 'L3', 'L4', 'L5', 'L6'].map((level, i) => (
+                    <div key={i} className="level-header">
+                      <div className="level-number">{level}</div>
+                      <div className="level-title">
+                        {['Entry', 'Developing', 'Proficient', 'Advanced', 'Expert', 'Strategic'][i]}
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Dimension Rows */}
+                  {dimensions.map((dim, dimIndex) => (
+                    <React.Fragment key={dim.id}>
+                      <div className="dim-label">
+                        <span className="dim-icon">{dim.icon}</span>
+                        <div className="dim-info">
+                          <div className="dim-name">{dim.name}</div>
+                          <div className="dim-question">{dim.question}</div>
+                        </div>
+                      </div>
+                      
+                      {dim.levels.map((level, levelIndex) => {
+                        const isSelected = selections[dim.id] === levelIndex;
+                        return (
+                          <div
+                            key={levelIndex}
+                            className={`matrix-cell ${isSelected ? 'selected' : ''}`}
+                            data-level={levelIndex + 1}
+                            onClick={() => handleCellClick(dim.id, levelIndex)}
+                          >
+                            <div className="cell-icon">{level.icon}</div>
+                            <div className="cell-title">{level.title}</div>
+                          </div>
+                        );
+                      })}
+                    </React.Fragment>
+                  ))}
+                </div>
+
+                {/* Role Profile Summary */}
+                <div className="profile-summary">
+                  <div className="profile-header">
+                    <div 
+                      className="profile-avatar"
+                      style={currentRole ? { 
+                        background: `linear-gradient(135deg, ${currentRole.color}, ${currentRole.color}dd)` 
+                      } : {}}
+                    >
+                      {currentRole?.icon || '📋'}
+                    </div>
+                    <div className="profile-info">
+                      <h3>{currentRole?.name || 'Custom Role Profile'}</h3>
+                      <p>
+                        {currentRole 
+                          ? `${currentRole.segment} • ${currentRole.experience} experience • ${currentRole.comp}`
+                          : 'Build your own role by selecting levels in each dimension'
+                        }
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="profile-dims">
+                    {dimensions.map((dim, i) => {
+                      const levelIndex = selections[dim.id] ?? 0;
+                      const level = dim.levels[levelIndex];
+                      return (
+                        <div key={dim.id} className="profile-dim">
+                          <div className="profile-dim-name">{dim.name}</div>
+                          <div className="profile-dim-value">
+                            <span>{level.icon}</span>
+                            <span>{level.title}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </main>
+            </div>
+
+            {/* Footer */}
+            <footer className="footer">
+              <span className="footer-brand">Performance-Based Hiring Learning Systems</span>
+              <span> • </span>
+              <span>Built from analyzing LinkedIn's actual job postings</span>
+              <span> • </span>
+              <span>6×6 Matrix Framework</span>
+            </footer>
+          </div>
+        </>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<LinkedInMatrix />);
+  </script>
+</body>
+</html>
