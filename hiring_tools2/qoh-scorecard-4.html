@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality of Hire Predictor Scorecard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --purple-dark: #5C2D5C;
+            --purple-light: #8B4789;
+            --green-dark: #4A7C59;
+            --green-light: #6B9E76;
+            --orange: #E8913A;
+            --yellow: #F5C842;
+            --red: #C94444;
+            --red-dark: #8B2323;
+            --teal: #2D8B8B;
+            --bg-dark: #1a1a2e;
+            --bg-card: #16213e;
+            --text-light: #e8e8e8;
+            --gold: #D4AF37;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0f0f23 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px 20px;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            background: linear-gradient(135deg, var(--gold), #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.6);
+            font-weight: 400;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+            padding: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .wheel-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .wheel-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+        }
+
+        #scorecard-wheel {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 10px 40px rgba(0,0,0,0.5));
+            cursor: pointer;
+        }
+
+        .wedge {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .wedge:hover {
+            filter: brightness(1.2) saturate(1.1);
+            transform-origin: center;
+        }
+
+        .wedge.active {
+            filter: brightness(1.3) saturate(1.2);
+        }
+
+        .level-ring {
+            fill: none;
+            stroke: rgba(255,255,255,0.15);
+            stroke-width: 1;
+        }
+
+        /* Center circle styles */
+        .center-clickable {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .center-clickable:hover {
+            filter: brightness(1.1);
+        }
+
+        .center-clickable.active .center-glow {
+            opacity: 1;
+        }
+
+        .center-glow {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .info-panel {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            position: sticky;
+            top: 20px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .panel-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .panel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: #fff;
+        }
+
+        .panel-category {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.6;
+        }
+
+        .panel-description {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 20px;
+        }
+
+        .evidence-box {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .evidence-box h4 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .evidence-box p {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+        }
+
+        .levels-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .level-item {
+            display: grid;
+            grid-template-columns: 70px 1fr;
+            gap: 10px;
+            align-items: start;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.03);
+            transition: background 0.2s;
+        }
+
+        .level-item:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .level-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .level-1 { background: var(--red-dark); }
+        .level-2 { background: var(--red); }
+        .level-3 { background: var(--orange); color: #000; }
+        .level-4 { background: var(--green-dark); }
+        .level-5 { background: var(--teal); }
+
+        .level-text {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.4;
+        }
+
+        .predictor-strength {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+
+        .strength-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .strength-indicator {
+            display: flex;
+            gap: 4px;
+        }
+
+        .strength-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .strength-dot.active {
+            background: var(--gold);
+        }
+
+        /* Formula Display Styles */
+        .formula-display {
+            margin-bottom: 20px;
+        }
+
+        .formula-main {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
+            border: 2px solid rgba(212,175,55,0.4);
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .formula-equation {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .formula-equation .result {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .formula-equation .operator {
+            color: rgba(255,255,255,0.5);
+            margin: 0 5px;
+        }
+
+        .formula-equation sup {
+            color: #FF6B6B;
+            font-size: 0.8em;
+        }
+
+        .formula-tagline {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+            font-style: italic;
+        }
+
+        .formula-components {
+            display: grid;
+            gap: 12px;
+        }
+
+        .component-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .component-card:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateX(5px);
+        }
+
+        .component-card.ability {
+            border-color: #4A90D9;
+        }
+
+        .component-card.fit {
+            border-color: #E8913A;
+        }
+
+        .component-card.motivation {
+            border-color: #FF6B6B;
+        }
+
+        .component-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .component-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        .component-badge {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .component-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .component-item {
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .n-explanation {
+            background: linear-gradient(135deg, rgba(255,107,107,0.15), rgba(255,107,107,0.05));
+            border: 1px solid rgba(255,107,107,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .n-explanation h4 {
+            color: #FF6B6B;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .n-explanation p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+        }
+
+        .crucial-rule {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(201,68,68,0.2), rgba(201,68,68,0.1));
+            border-left: 3px solid var(--red);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .crucial-rule h4 {
+            color: var(--red);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .crucial-rule p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.5;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        .instructions {
+            text-align: center;
+            padding: 15px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+
+        .instructions span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .pulse-indicator {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 5px rgba(212,175,55,0.3));
+            }
+            50% { 
+                filter: drop-shadow(0 0 20px rgba(212,175,55,0.6));
+            }
+        }
+
+        .center-highlight {
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        /* Center text that should not be clickable */
+        .center-text {
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Quality of Hire Predictor Scorecard</h1>
+            <p class="subtitle">Performance-based Hiring™ — Hire for the Anniversary Date, Not the Start Date</p>
+        </header>
+
+        <div class="instructions">
+            <span class="pulse-indicator">👆 Click the CENTER to learn the formula, or any WEDGE to explore assessment factors</span>
+        </div>
+
+        <div class="main-content">
+            <div class="wheel-container">
+                <div class="wheel-wrapper">
+                    <svg id="scorecard-wheel" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <!-- Gradients for each wedge -->
+                            <linearGradient id="grad-workhistory" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#8B4789"/>
+                                <stop offset="100%" style="stop-color:#5C2D5C"/>
+                            </linearGradient>
+                            <linearGradient id="grad-experience" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6B9E76"/>
+                                <stop offset="100%" style="stop-color:#4A7C59"/>
+                            </linearGradient>
+                            <linearGradient id="grad-team" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#5AAF6A"/>
+                                <stop offset="100%" style="stop-color:#3D8B4F"/>
+                            </linearGradient>
+                            <linearGradient id="grad-track" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#9B5DE5"/>
+                                <stop offset="100%" style="stop-color:#6B3FA0"/>
+                            </linearGradient>
+                            <linearGradient id="grad-cultural" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#F5C842"/>
+                                <stop offset="100%" style="stop-color:#E8913A"/>
+                            </linearGradient>
+                            <linearGradient id="grad-talent" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FF9F43"/>
+                                <stop offset="100%" style="stop-color:#E8733A"/>
+                            </linearGradient>
+                            <linearGradient id="grad-problem" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FF6B6B"/>
+                                <stop offset="100%" style="stop-color:#C94444"/>
+                            </linearGradient>
+                            <linearGradient id="grad-jobfit" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#B83232"/>
+                                <stop offset="100%" style="stop-color:#8B2323"/>
+                            </linearGradient>
+                            
+                            <!-- Center gradient -->
+                            <radialGradient id="grad-center" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#2a2a4e"/>
+                                <stop offset="100%" style="stop-color:#1a1a2e"/>
+                            </radialGradient>
+                            
+                            <!-- Gold glow for center -->
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- Outer decorative ring -->
+                        <circle cx="250" cy="250" r="240" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+                        
+                        <!-- Level rings (background) -->
+                        <circle cx="250" cy="250" r="200" class="level-ring"/>
+                        <circle cx="250" cy="250" r="160" class="level-ring"/>
+                        <circle cx="250" cy="250" r="120" class="level-ring"/>
+                        <circle cx="250" cy="250" r="80" class="level-ring"/>
+
+                        <!-- Wedges - 8 segments, 45 degrees each -->
+                        <!-- Starting from top (270°), going clockwise -->
+                        
+                        <!-- 1. Track Record of Results (Top) -->
+                        <path class="wedge" id="wedge-track" data-factor="track"
+                              d="M250,250 L250,50 A200,200 0 0,1 391.42,108.58 Z"
+                              fill="url(#grad-track)"/>
+                        
+                        <!-- 2. Cultural & Managerial Fit -->
+                        <path class="wedge" id="wedge-cultural" data-factor="cultural"
+                              d="M250,250 L391.42,108.58 A200,200 0 0,1 450,250 Z"
+                              fill="url(#grad-cultural)"/>
+                        
+                        <!-- 3. Talent & Technical Skills -->
+                        <path class="wedge" id="wedge-talent" data-factor="talent"
+                              d="M250,250 L450,250 A200,200 0 0,1 391.42,391.42 Z"
+                              fill="url(#grad-talent)"/>
+                        
+                        <!-- 4. Problem-solving & Motivation -->
+                        <path class="wedge" id="wedge-problem" data-factor="problem"
+                              d="M250,250 L391.42,391.42 A200,200 0 0,1 250,450 Z"
+                              fill="url(#grad-problem)"/>
+                        
+                        <!-- 5. Job Fit (Bottom) -->
+                        <path class="wedge" id="wedge-jobfit" data-factor="jobfit"
+                              d="M250,250 L250,450 A200,200 0 0,1 108.58,391.42 Z"
+                              fill="url(#grad-jobfit)"/>
+                        
+                        <!-- 6. Experience / Scope & Scale -->
+                        <path class="wedge" id="wedge-experience" data-factor="experience"
+                              d="M250,250 L108.58,391.42 A200,200 0 0,1 50,250 Z"
+                              fill="url(#grad-experience)"/>
+                        
+                        <!-- 7. Team, Organize, Manage -->
+                        <path class="wedge" id="wedge-team" data-factor="team"
+                              d="M250,250 L50,250 A200,200 0 0,1 108.58,108.58 Z"
+                              fill="url(#grad-team)"/>
+                        
+                        <!-- 8. Work History -->
+                        <path class="wedge" id="wedge-workhistory" data-factor="workhistory"
+                              d="M250,250 L108.58,108.58 A200,200 0 0,1 250,50 Z"
+                              fill="url(#grad-workhistory)"/>
+
+                        <!-- Level labels arc -->
+                        <g class="level-labels" fill="rgba(255,255,255,0.4)" font-size="9" font-weight="600">
+                            <text x="250" y="58" text-anchor="middle">Level 5: SUPERB</text>
+                            <text x="250" y="98" text-anchor="middle">Level 4: OUTSTANDING</text>
+                            <text x="250" y="138" text-anchor="middle">Level 3: STRONG</text>
+                            <text x="250" y="178" text-anchor="middle">Level 2: ADEQUATE</text>
+                        </g>
+
+                        <!-- Wedge labels -->
+                        <g class="wedge-labels" fill="#fff" font-size="10" font-weight="600" text-anchor="middle">
+                            <!-- Track Record (top to top-right wedge) -->
+                            <text transform="rotate(22.5 250 250)" x="250" y="85">Track Record</text>
+                            <text transform="rotate(22.5 250 250)" x="250" y="97" font-size="8" opacity="0.7">of Results</text>
+                            
+                            <!-- Cultural Fit (top-right to right wedge) -->
+                            <text transform="rotate(67.5 250 250)" x="250" y="85">Cultural &amp;</text>
+                            <text transform="rotate(67.5 250 250)" x="250" y="97" font-size="8" opacity="0.7">Managerial Fit</text>
+                            
+                            <!-- Talent (right to bottom-right wedge) -->
+                            <text transform="rotate(112.5 250 250)" x="250" y="85">Talent &amp;</text>
+                            <text transform="rotate(112.5 250 250)" x="250" y="97" font-size="8" opacity="0.7">Technical Skills</text>
+                            
+                            <!-- Problem-solving (bottom-right to bottom wedge) -->
+                            <text transform="rotate(157.5 250 250)" x="250" y="85">Motivation &amp;</text>
+                            <text transform="rotate(157.5 250 250)" x="250" y="97" font-size="8" opacity="0.7">Problem-solving</text>
+                            
+                            <!-- Job Fit (bottom to bottom-left wedge) -->
+                            <text transform="rotate(202.5 250 250)" x="250" y="85">Job Fit</text>
+                            <text transform="rotate(202.5 250 250)" x="250" y="97" font-size="8" opacity="0.7">NO 2s!</text>
+                            
+                            <!-- Experience (bottom-left to left wedge) -->
+                            <text transform="rotate(247.5 250 250)" x="250" y="85">Experience</text>
+                            <text transform="rotate(247.5 250 250)" x="250" y="97" font-size="8" opacity="0.7">Scope &amp; Scale</text>
+                            
+                            <!-- Team (left to top-left wedge) -->
+                            <text transform="rotate(292.5 250 250)" x="250" y="85">Team, Organize</text>
+                            <text transform="rotate(292.5 250 250)" x="250" y="97" font-size="8" opacity="0.7">&amp; Manage</text>
+                            
+                            <!-- Work History (top-left to top wedge) -->
+                            <text transform="rotate(337.5 250 250)" x="250" y="85">Work History</text>
+                            <text transform="rotate(337.5 250 250)" x="250" y="97" font-size="8" opacity="0.7">Achiever Pattern</text>
+                        </g>
+
+                        <!-- Strength indicators -->
+                        <g class="strength-icons" font-size="16">
+                            <!-- Track Record - Strong predictor -->
+                            <text transform="rotate(22.5 250 250)" x="250" y="130" text-anchor="middle" fill="#4CAF50">✓</text>
+                            <!-- Cultural Fit - Strong predictor -->
+                            <text transform="rotate(67.5 250 250)" x="250" y="130" text-anchor="middle" fill="#4CAF50">✓✓</text>
+                            <!-- Talent - Strong predictor -->
+                            <text transform="rotate(112.5 250 250)" x="250" y="130" text-anchor="middle" fill="#4CAF50">✓✓</text>
+                            <!-- Problem-solving -->
+                            <text transform="rotate(157.5 250 250)" x="250" y="130" text-anchor="middle" fill="#FFD700">⬡</text>
+                            <!-- Job Fit -->
+                            <text transform="rotate(202.5 250 250)" x="250" y="130" text-anchor="middle" fill="#FFD700">⬡</text>
+                            <!-- Experience -->
+                            <text transform="rotate(247.5 250 250)" x="250" y="130" text-anchor="middle" fill="#4CAF50">+</text>
+                            <!-- Team -->
+                            <text transform="rotate(292.5 250 250)" x="250" y="130" text-anchor="middle" fill="#4CAF50">+</text>
+                            <!-- Work History - Weak predictor (X) -->
+                            <text transform="rotate(337.5 250 250)" x="250" y="130" text-anchor="middle" fill="#FF5252">✗</text>
+                        </g>
+
+                        <!-- CENTER CIRCLE - CLICKABLE FORMULA -->
+                        <g class="center-clickable center-highlight" id="center-formula" data-factor="formula">
+                            <!-- Glow effect -->
+                            <circle class="center-glow" cx="250" cy="250" r="72" fill="none" stroke="rgba(212,175,55,0.5)" stroke-width="4" filter="url(#glow)"/>
+                            
+                            <!-- Main circle -->
+                            <circle cx="250" cy="250" r="68" fill="url(#grad-center)" stroke="rgba(212,175,55,0.6)" stroke-width="3"/>
+                            
+                            <!-- Inner ring decoration -->
+                            <circle cx="250" cy="250" r="60" fill="none" stroke="rgba(212,175,55,0.2)" stroke-width="1"/>
+                        </g>
+                        
+                        <!-- Center text (separate so it's always on top) -->
+                        <g class="center-text" text-anchor="middle" fill="#fff">
+                            <text x="250" y="225" font-size="8" font-weight="600" fill="rgba(255,255,255,0.5)">THE HIRING FORMULA</text>
+                            <text x="250" y="242" font-family="'Playfair Display', serif" font-size="11" fill="#D4AF37">Ability × Fit × Motivation<tspan baseline-shift="super" font-size="7" fill="#FF6B6B">n</tspan></text>
+                            <text x="250" y="258" font-size="12" font-weight="700" fill="#fff">= Results</text>
+                            <text x="250" y="275" font-size="7" fill="rgba(255,255,255,0.5)">Click to learn why "n" matters</text>
+                        </g>
+
+                        <!-- Outer labels for categories -->
+                        <g class="category-labels" font-size="8" fill="rgba(255,255,255,0.5)" text-anchor="middle">
+                            <text x="420" y="180" transform="rotate(45 420 180)">SITUATIONAL FIT</text>
+                            <text x="80" y="180" transform="rotate(-45 80 180)">CORE COMPETENCIES</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="info-panel" id="info-panel">
+                <div class="panel-header">
+                    <div class="panel-icon" id="panel-icon" style="background: linear-gradient(135deg, var(--gold), #C49B30);">
+                        📊
+                    </div>
+                    <div>
+                        <div class="panel-category" id="panel-category">The Hiring Formula for Success</div>
+                        <div class="panel-title" id="panel-title">Ability × Fit × Motivation<sup>n</sup></div>
+                    </div>
+                </div>
+                
+                <div id="formula-content">
+                    <div class="formula-display">
+                        <div class="formula-main">
+                            <div class="formula-equation">
+                                <span class="result">Results</span>
+                                <span class="operator">=</span>
+                                Ability <span class="operator">×</span> Fit <span class="operator">×</span> Motivation<sup>n</sup>
+                            </div>
+                            <div class="formula-tagline">Ability to do the work × Fit drives Motivation — and Motivation is the exponential multiplier</div>
+                        </div>
+
+                        <div class="formula-components">
+                            <div class="component-card ability">
+                                <div class="component-header">
+                                    <span class="component-name">💪 Ability</span>
+                                    <span class="component-badge">Hard & Soft Skills</span>
+                                </div>
+                                <div class="component-items">
+                                    <span class="component-item">Technical Skills</span>
+                                    <span class="component-item">Team Skills</span>
+                                    <span class="component-item">Organizational Ability</span>
+                                    <span class="component-item">Problem-solving</span>
+                                    <span class="component-item">Reliability</span>
+                                </div>
+                            </div>
+
+                            <div class="component-card fit">
+                                <div class="component-header">
+                                    <span class="component-name">🎯 Fit</span>
+                                    <span class="component-badge">Situational Factors</span>
+                                </div>
+                                <div class="component-items">
+                                    <span class="component-item">Job Fit</span>
+                                    <span class="component-item">Company Culture</span>
+                                    <span class="component-item">Pace & Environment</span>
+                                    <span class="component-item">Manager's Style</span>
+                                </div>
+                            </div>
+
+                            <div class="component-card motivation">
+                                <div class="component-header">
+                                    <span class="component-name">🔥 Motivation<sup>n</sup></span>
+                                    <span class="component-badge">The Exponential Multiplier</span>
+                                </div>
+                                <div class="component-items">
+                                    <span class="component-item">Intrinsic Drive</span>
+                                    <span class="component-item">Do the Job, Not Get the Job</span>
+                                    <span class="component-item">Self-Initiative</span>
+                                    <span class="component-item">No Excuses</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="n-explanation">
+                            <h4>⚡ Why Motivation is Raised to the Power of "n"</h4>
+                            <p>Motivation is raised to the power of "n" because <strong>it's the difference between success and disappointment</strong>. A highly motivated person with moderate ability will consistently outperform a highly skilled person with low motivation. When motivation is high, it acts as an <em>exponential multiplier</em> on results. When motivation is low, it drags everything down — no amount of ability or fit can compensate.</p>
+                            <p style="margin-top: 10px;">The key insight: <strong>Fit factors drive motivation</strong>. When the job fit, culture, pace, and manager alignment are right, intrinsic motivation to do the work naturally follows. This is why assessing "motivation to do the job, not just get the job" is critical.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="factor-content" style="display: none;">
+                    <div class="panel-description" id="panel-description"></div>
+
+                    <div class="evidence-box" id="evidence-box">
+                        <h4>Evidence Needed</h4>
+                        <p id="evidence-text"></p>
+                    </div>
+
+                    <div class="levels-grid" id="levels-grid"></div>
+
+                    <div class="predictor-strength" id="predictor-strength">
+                        <span class="strength-label">Predictor Strength:</span>
+                        <div class="strength-indicator" id="strength-dots">
+                            <span class="strength-dot"></span>
+                            <span class="strength-dot"></span>
+                            <span class="strength-dot"></span>
+                            <span class="strength-dot"></span>
+                            <span class="strength-dot"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="crucial-rule">
+                    <h4>⚠️ Crucial Rule</h4>
+                    <p>Rank only using Real Evidence. If unclear, rank <strong>★ NME</strong> (Need More Evidence). Focus on hiring for the Anniversary Date, not the Start Date.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-dot" style="background: var(--purple-light);"></span>
+                Work History & Track Record
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background: var(--green-light);"></span>
+                Core Competencies
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background: var(--orange);"></span>
+                Situational Fit Factors (Weight Higher)
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background: var(--red);"></span>
+                Job Fit & Motivation
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const factorData = {
+            formula: {
+                title: "Ability × Fit × Motivation",
+                category: "The Hiring Formula for Success",
+                icon: "⚡",
+                color: "#D4AF37",
+                isFormula: true
+            },
+            track: {
+                title: "Track Record of Results",
+                category: "Core Competency",
+                icon: "📈",
+                color: "#9B5DE5",
+                strength: 4,
+                description: "Assesses comparable accomplishments achieved under similar conditions. Look for specific, recent evidence of achieving results that directly map to the performance objectives of the role.",
+                evidence: "Get specific examples of the biggest achievements the person has accomplished. Use the MSA Question: 'Tell me about your most significant accomplishment.' Dig deep into HOW results were achieved, not just WHAT was achieved.",
+                levels: {
+                    5: "Full job match with exceptional results — scope, pace, team, resources all align perfectly",
+                    4: "Achieved outstanding results under similar conditions with clear evidence",
+                    3: "Major accomplishments are recent, strong, and comparable to job needs",
+                    2: "Some comparable accomplishments, but inconsistent or not recent",
+                    1: "Accomplishments are not directly comparable or not recent"
+                }
+            },
+            cultural: {
+                title: "Cultural & Managerial Fit",
+                category: "Situational Fit Factor — Weight Higher",
+                icon: "🤝",
+                color: "#E8913A",
+                strength: 5,
+                description: "Evaluates alignment with company culture, pace, and the hiring manager's leadership style. This is a critical fit factor that drives motivation — most of 'n' in the formula depends on fit factors.",
+                evidence: "Ask about the hiring manager's role in each accomplishment. Compare management styles for compatibility. Good proxies: how decisions are made, handling bureaucracy, dealing with politics.",
+                levels: {
+                    5: "Super fit. Thrives in this environment. Person easily adapts and coaches upwards",
+                    4: "Excellent cultural match. Has successfully made similar transfers before",
+                    3: "Successfully worked with similar managers and culture. Close match",
+                    2: "Reasonable match on culture. Limited but has worked with similar styles",
+                    1: "Complete mismatch on culture, environment, or manager style"
+                }
+            },
+            talent: {
+                title: "Talent & Technical Skills",
+                category: "Situational Fit Factor — Weight Higher",
+                icon: "💡",
+                color: "#FF9F43",
+                strength: 5,
+                description: "Technical knowledge and hands-on expertise required for the job. Look for evidence of working on comparable projects handling similar technical challenges.",
+                evidence: "Need actual evidence of working on comparable projects handling similar problems and technical challenges. Assess through the problem-solving question and deep-dive into accomplishments.",
+                levels: {
+                    5: "Brilliant. Sets standards. Leader in field. Sought out and recognized",
+                    4: "Top-notch. Trains others. Constantly improving. Brings more to the table",
+                    3: "Technically tops. An asset. Can learn quickly. Covers all job needs",
+                    2: "Can do the work, but needs added training, support, or coaching",
+                    1: "Nothing remarkable. Needs too much extra training and support"
+                }
+            },
+            problem: {
+                title: "Motivation & Problem-solving",
+                category: "Situational Fit Factor",
+                icon: "🧩",
+                color: "#FF6B6B",
+                strength: 4,
+                description: "Combines intrinsic motivation to do the actual work (not just get the job) with analytical thinking and problem-solving ability. Look for patterns of taking initiative and going the extra mile.",
+                evidence: "Get multiple examples of initiative for each accomplishment. Use the problem-solving question: 'How would you solve this problem we're facing?' Then anchor with: 'What have you done that's most similar?'",
+                levels: {
+                    5: "Totally committed. Consistently provides deeper insight with innovative solutions",
+                    4: "Takes initiative. Understands all key issues. Reaches out for best solutions",
+                    3: "Self-motivated with normal supervision. Clearly understands key issues",
+                    2: "Will do core work but needs extra pushing. Understands most issues",
+                    1: "Little evidence of motivation or problem-solving ability"
+                }
+            },
+            jobfit: {
+                title: "Job Fit — NO 2s!",
+                category: "Critical Assessment",
+                icon: "🎯",
+                color: "#B83232",
+                strength: 5,
+                description: "Person's intrinsic motivation must be in alignment with the core responsibilities of the role. This is the 'Basically Qualified' minimum — NO 2s means don't hire anyone who scores a 2 on any critical factor.",
+                evidence: "Clear evidence the person is intrinsically motivated to do the work described in the performance-based job description. The role should represent a 30%+ non-monetary increase (stretch + growth + impact).",
+                levels: {
+                    5: "Exceptional recent evidence the person has excelled at and is highly motivated for this exact type of work",
+                    4: "Specific recent evidence person is self-motivated to do this work at high levels without direction",
+                    3: "Has done comparable work at reasonable quality levels with evidence of motivation",
+                    2: "Has done some similar work but evidence doesn't support strong motivation — DON'T HIRE",
+                    1: "Person hasn't done anything similar or scope/scale is a complete mismatch"
+                }
+            },
+            experience: {
+                title: "Experience — Scope & Scale",
+                category: "Core Competency",
+                icon: "📊",
+                color: "#6B9E76",
+                strength: 3,
+                description: "Evaluates fit on scope, scale, complexity, and team size. Compare the candidate's prior responsibilities to the actual job requirements, not a generic skills checklist.",
+                evidence: "Review projects on a scope and scale basis. Look for stretch gaps: project size, span of control, influence and exposure, impact and growth over time.",
+                levels: {
+                    5: "Excellent background for role. Handles big stretch roles with broader experience",
+                    4: "Broader and related experience. Has managed larger scope than required",
+                    3: "Meets all experience needs. Good fit on scope, scale, complexity, and team",
+                    2: "Meets most, but not all needs. Some gaps in scope or scale",
+                    1: "Minimum threshold. Significant gaps between experience and job needs"
+                }
+            },
+            team: {
+                title: "Team, Organize & Manage",
+                category: "Core Competency",
+                icon: "👥",
+                color: "#5AAF6A",
+                strength: 4,
+                description: "Assesses cross-functional collaboration, teamwork abilities, organizational skills, and management capability. Look for evidence of building and developing teams.",
+                evidence: "Have person describe teams they've worked on. Ask how and why they got assigned to teams. Get examples of planning comparable projects and evaluate reliability, timeliness, and success.",
+                levels: {
+                    5: "Outstanding organizational results. Impressive cross-functional team growth. Asked to lead",
+                    4: "Excellent. Plans, anticipates, communicates. Clear positive team track. Coaches others",
+                    3: "Good fit on comparable teams. Has planned, organized, and executed comparable projects",
+                    2: "Has worked on comparable teams with some growth. More reactive than forward-looking",
+                    1: "Hasn't worked on comparable teams. Seems reactive. Little team growth"
+                }
+            },
+            workhistory: {
+                title: "Work History & Achiever Pattern",
+                category: "Basic Competency — Weak Predictor",
+                icon: "📋",
+                color: "#8B4789",
+                strength: 2,
+                description: "Reviews career trajectory and the 'Achiever Pattern' — evidence that the person consistently performs in the top third of their peer group. Note: This alone is a WEAK predictor of success.",
+                evidence: "Look for major accomplishments in each job, upward progression, significant recognition. Assess job changes to determine career vs. job focus. Watch for Job Hopping Syndrome.",
+                levels: {
+                    5: "Outstanding career trajectory. Highly strategic moves. Deep insights into decision-making",
+                    4: "Deliberate strategic career path. Clear evidence of increasing responsibility",
+                    3: "Clear career progression. Evidence of growth, skill development, logical transitions",
+                    2: "Provides some detail but narrative unclear. Lacks depth in progression",
+                    1: "Trouble explaining work history or job transitions. Evidence of lack of depth or pattern"
+                }
+            }
+        };
+
+        // DOM Elements
+        const wedges = document.querySelectorAll('.wedge');
+        const centerFormula = document.getElementById('center-formula');
+        const panelTitle = document.getElementById('panel-title');
+        const panelCategory = document.getElementById('panel-category');
+        const panelDescription = document.getElementById('panel-description');
+        const panelIcon = document.getElementById('panel-icon');
+        const evidenceText = document.getElementById('evidence-text');
+        const levelsGrid = document.getElementById('levels-grid');
+        const predictorStrength = document.getElementById('predictor-strength');
+        const strengthDots = document.getElementById('strength-dots');
+        const formulaContent = document.getElementById('formula-content');
+        const factorContent = document.getElementById('factor-content');
+
+        function showFormulaPanel() {
+            // Update header
+            panelTitle.innerHTML = 'Ability × Fit × Motivation<sup>n</sup>';
+            panelCategory.textContent = 'The Hiring Formula for Success';
+            panelIcon.textContent = '⚡';
+            panelIcon.style.background = 'linear-gradient(135deg, #D4AF37, #C49B30)';
+
+            // Show formula content, hide factor content
+            formulaContent.style.display = 'block';
+            factorContent.style.display = 'none';
+
+            // Update active states
+            wedges.forEach(w => w.classList.remove('active'));
+            centerFormula.classList.add('active');
+        }
+
+        function updatePanel(factor) {
+            const data = factorData[factor];
+            if (!data) return;
+
+            if (data.isFormula) {
+                showFormulaPanel();
+                return;
+            }
+
+            // Update header
+            panelTitle.textContent = data.title;
+            panelCategory.textContent = data.category;
+            panelIcon.textContent = data.icon;
+            panelIcon.style.background = `linear-gradient(135deg, ${data.color}, ${adjustColor(data.color, -30)})`;
+
+            // Show factor content, hide formula content
+            formulaContent.style.display = 'none';
+            factorContent.style.display = 'block';
+
+            // Update description
+            panelDescription.textContent = data.description;
+
+            // Update evidence
+            evidenceText.textContent = data.evidence;
+
+            // Update levels grid
+            levelsGrid.innerHTML = '';
+            for (let level = 5; level >= 1; level--) {
+                const levelItem = document.createElement('div');
+                levelItem.className = 'level-item';
+                levelItem.innerHTML = `
+                    <span class="level-badge level-${level}">Level ${level}</span>
+                    <span class="level-text">${data.levels[level]}</span>
+                `;
+                levelsGrid.appendChild(levelItem);
+            }
+
+            // Update strength indicator
+            predictorStrength.style.display = 'flex';
+            const dots = strengthDots.querySelectorAll('.strength-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index < data.strength);
+            });
+
+            // Highlight active wedge
+            wedges.forEach(w => w.classList.remove('active'));
+            centerFormula.classList.remove('active');
+            document.querySelector(`[data-factor="${factor}"]`).classList.add('active');
+        }
+
+        function adjustColor(hex, amount) {
+            const num = parseInt(hex.replace('#', ''), 16);
+            const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+            const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amount));
+            const b = Math.min(255, Math.max(0, (num & 0x0000FF) + amount));
+            return `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+        }
+
+        // Event listeners for wedges
+        wedges.forEach(wedge => {
+            wedge.addEventListener('click', () => {
+                const factor = wedge.dataset.factor;
+                updatePanel(factor);
+            });
+
+            wedge.addEventListener('mouseenter', () => {
+                const factor = wedge.dataset.factor;
+                updatePanel(factor);
+            });
+        });
+
+        // Event listener for center formula
+        centerFormula.addEventListener('click', showFormulaPanel);
+        centerFormula.addEventListener('mouseenter', showFormulaPanel);
+
+        // Initialize with formula panel
+        showFormulaPanel();
+    </script>
+</body>
+</html>
