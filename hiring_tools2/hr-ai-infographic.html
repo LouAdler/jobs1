@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Is HR Falling Behind on Using AI Strategically?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .infographic {
+      width: 1200px;
+      height: 630px;
+      background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0284c7 100%);
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      padding: 40px 50px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Decorative elements */
+    .infographic::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    
+    .infographic::after {
+      content: '';
+      position: absolute;
+      bottom: -150px;
+      left: -150px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(251,191,36,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .title {
+      font-size: 42px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    
+    .title span {
+      color: #fbbf24;
+    }
+    
+    .subtitle {
+      font-size: 20px;
+      color: #bae6fd;
+      font-weight: 500;
+    }
+    
+    .chart-container {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 24px;
+      padding: 0 20px 20px 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .bar-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .bar-wrapper {
+      height: 280px;
+      width: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+    }
+    
+    .bar {
+      width: 100%;
+      border-radius: 8px 8px 4px 4px;
+      position: relative;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .bar-value {
+      position: absolute;
+      top: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    
+    .bar-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Individual bar colors */
+    .bar.finance { background: linear-gradient(to top, #10b981, #34d399); }
+    .bar.tech { background: linear-gradient(to top, #8b5cf6, #a78bfa); }
+    .bar.ops { background: linear-gradient(to top, #3b82f6, #60a5fa); }
+    .bar.logistics { background: linear-gradient(to top, #06b6d4, #22d3ee); }
+    .bar.marketing { background: linear-gradient(to top, #f97316, #fb923c); }
+    .bar.sales { background: linear-gradient(to top, #ec4899, #f472b6); }
+    .bar.hr { 
+      background: linear-gradient(to top, #dc2626, #ef4444); 
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); }
+      50% { box-shadow: 0 4px 25px rgba(220, 38, 38, 0.7); }
+    }
+    
+    .hr-callout {
+      position: absolute;
+      top: 50px;
+      right: -20px;
+      background: #fbbf24;
+      color: #78350f;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      transform: rotate(12deg);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    .scale {
+      position: absolute;
+      left: 30px;
+      top: 0;
+      height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 5px 0;
+    }
+    
+    .scale-mark {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 500;
+    }
+    
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .cta-section {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+    
+    .survey-link {
+      background: #fbbf24;
+      color: #78350f;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .survey-link svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .survey-url {
+      color: #bae6fd;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .survey-url strong {
+      color: white;
+      font-size: 20px;
+    }
+    
+    .branding {
+      text-align: right;
+    }
+    
+    .brand-name {
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .brand-tagline {
+      color: #fbbf24;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    
+    .contact {
+      color: #bae6fd;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="infographic">
+    <div class="header">
+      <h1 class="title">Is <span>HR</span> Falling Behind on Using AI Strategically?</h1>
+      <p class="subtitle">Find out now. Take this important survey.</p>
+    </div>
+    
+    <div class="chart-container">
+      <div class="scale">
+        <span class="scale-mark">5.0</span>
+        <span class="scale-mark">4.0</span>
+        <span class="scale-mark">3.0</span>
+        <span class="scale-mark">2.0</span>
+        <span class="scale-mark">1.0</span>
+      </div>
+      
+      <div class="bar-group">
+        <div class="bar-wrapper">
+          <div class="bar finance" style="height: 82%;">
+            <span class="bar-value">4.1</span>
+          </div>
+        </div>
+        <span class="bar-label">Finance</span>
+      </div>
+      
+      <div class="bar-group">
+        <div class="bar-wrapper">
+          <div class="bar tech" style="height: 90%;">
+            <span class="bar-value">4.5</span>
+          </div>
+        </div>
+        <span class="bar-label">Tech</span>
+      </div>
+      
+      <div class="bar-group">
+        <div class="bar-wrapper">
+          <div class="bar ops" style="height: 74%;">
+            <span class="bar-value">3.7</span>
+          </div>
+        </div>
+        <span class="bar-label">Ops</span>
+      </div>
+      
+      <div class="bar-group">
+        <div class="bar-wrapper">
+          <div class="bar logistics" style="height: 60%;">
+            <span class="bar-value">3.0</span>
+          </div>
+        </div>
+        <span class="bar-label">Logistics</span>
+      </div>
+      
+      <div class="bar-group">
+        <div class="bar-wrapper">
+          <div class="bar marketing" style="height: 78%;">
+            <span class="bar-value">3.9</span>
+          </div>
+        </div>
+        <span class="bar-label">Marketing</span>
+      </div>
+      
+      <div class="bar-group">
+        <div class="bar-wrapper">
+          <div class="bar sales" style="height: 68%;">
+            <span class="bar-value">3.4</span>
+          </div>
+        </div>
+        <span class="bar-label">Sales</span>
+      </div>
+      
+      <div class="bar-group">
+        <div class="bar-wrapper" style="position: relative;">
+          <div class="bar hr" style="height: 42%;">
+            <span class="bar-value">2.1</span>
+          </div>
+          <div class="hr-callout">Gap!</div>
+        </div>
+        <span class="bar-label">HR</span>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="cta-section">
+        <a href="https://hiring.tips/HR_AI_Survey" class="survey-link">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+          </svg>
+          Take the Survey
+        </a>
+        <div class="survey-url">
+          <strong>hiring.tips/HR_AI_Survey</strong>
+        </div>
+      </div>
+      
+      <div class="branding">
+        <div class="brand-name">Performance-based Hiring</div>
+        <div class="brand-tagline">The Moneyball for HR Approach</div>
+        <div class="contact">info@performancebasedhiring.com</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
