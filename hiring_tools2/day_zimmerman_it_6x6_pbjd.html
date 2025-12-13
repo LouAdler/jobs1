@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day & Zimmermann IT Engineering | 6×6 Matrix → PBJD Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --dz-navy: #1a365d;
+      --dz-blue: #2b6cb0;
+      --dz-light-blue: #4299e1;
+      --dz-red: #c53030;
+      --dz-bg: #f7fafc;
+      --dz-card: #ffffff;
+      --dz-text: #1a202c;
+      --dz-secondary: #4a5568;
+      --accent-gold: #d69e2e;
+      --accent-green: #2f855a;
+      --accent-purple: #805ad5;
+      --accent-coral: #e16745;
+    }
+    
+    body {
+      font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--dz-bg);
+      color: var(--dz-text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Left Panel - Matrix Builder */
+    .matrix-panel {
+      width: 55%;
+      background: linear-gradient(180deg, var(--dz-navy) 0%, var(--dz-blue) 200px, var(--dz-bg) 200px);
+      padding: 24px;
+      overflow-y: auto;
+    }
+    
+    @media (max-width: 1200px) {
+      .app-container {
+        flex-direction: column;
+      }
+      .matrix-panel, .pbjd-panel {
+        width: 100%;
+      }
+    }
+    
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 20px 0 40px;
+      color: white;
+    }
+    
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+    
+    .dz-icon {
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--dz-navy);
+      font-size: 10px;
+    }
+    
+    .main-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .subtitle {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+    
+    /* Role Selector */
+    .role-selector {
+      background: var(--dz-card);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    
+    .role-selector-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--dz-secondary);
+      margin-bottom: 12px;
+    }
+    
+    .role-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .role-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .role-pill:hover {
+      border-color: var(--dz-blue);
+    }
+    
+    .role-pill.active {
+      background: var(--dz-blue);
+      border-color: var(--dz-blue);
+      color: white;
+    }
+    
+    .role-pill-icon {
+      font-size: 1rem;
+    }
+    
+    /* Matrix Card */
+    .matrix-card {
+      background: var(--dz-card);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow-x: auto;
+    }
+    
+    .matrix-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* Matrix Grid */
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: 140px repeat(6, 1fr);
+      gap: 2px;
+      min-width: 680px;
+    }
+    
+    .level-header {
+      text-align: center;
+      padding: 8px 4px;
+    }
+    
+    .level-number {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--dz-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    .level-title {
+      font-size: 0.55rem;
+      color: var(--dz-secondary);
+    }
+    
+    .dim-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      background: #f8f8f8;
+      border-radius: 4px;
+    }
+    
+    .dim-icon {
+      font-size: 0.9rem;
+    }
+    
+    .dim-name {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--dz-text);
+      line-height: 1.3;
+    }
+    
+    .matrix-cell {
+      background: #fafafa;
+      border-radius: 4px;
+      padding: 6px;
+      text-align: center;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      cursor: pointer;
+      min-height: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .matrix-cell:hover {
+      background: #f0f0f0;
+    }
+    
+    .matrix-cell[data-level="1"] { border-left: 2px solid #94a3b8; }
+    .matrix-cell[data-level="2"] { border-left: 2px solid #60a5fa; }
+    .matrix-cell[data-level="3"] { border-left: 2px solid #22d3ee; }
+    .matrix-cell[data-level="4"] { border-left: 2px solid #fbbf24; }
+    .matrix-cell[data-level="5"] { border-left: 2px solid #f472b6; }
+    .matrix-cell[data-level="6"] { border-left: 2px solid #a78bfa; }
+    
+    .matrix-cell.selected {
+      background: #ebf4ff;
+      border: 2px solid var(--dz-blue);
+    }
+    
+    .matrix-cell.selected::after {
+      content: "✓";
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 12px;
+      height: 12px;
+      background: var(--dz-blue);
+      border-radius: 50%;
+      font-size: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    
+    .cell-icon {
+      font-size: 0.85rem;
+    }
+    
+    .cell-title {
+      font-size: 0.5rem;
+      font-weight: 600;
+      color: var(--dz-text);
+      line-height: 1.2;
+    }
+    
+    /* Right Panel - PBJD Output */
+    .pbjd-panel {
+      width: 45%;
+      background: white;
+      border-left: 1px solid #e0e0e0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .pbjd-header {
+      background: linear-gradient(135deg, var(--dz-navy), var(--dz-blue));
+      color: white;
+      padding: 24px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .pbjd-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.8;
+      margin-bottom: 8px;
+    }
+    
+    .pbjd-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .pbjd-segment {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .pbjd-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .pbjd-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      background: rgba(255,255,255,0.15);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    
+    /* PBJD Content */
+    .pbjd-content {
+      padding: 24px;
+      flex: 1;
+    }
+    
+    .pbjd-section {
+      margin-bottom: 28px;
+    }
+    
+    .pbjd-section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--dz-blue);
+    }
+    
+    .pbjd-section-num {
+      width: 24px;
+      height: 24px;
+      background: var(--dz-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .pbjd-section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--dz-text);
+    }
+    
+    /* Performance Objective */
+    .perf-objective {
+      background: linear-gradient(135deg, #f8f9fa, #fff);
+      border: 1px solid #e0e0e0;
+      border-left: 4px solid var(--dz-blue);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--dz-text);
+      font-style: italic;
+    }
+    
+    /* KPO Cards */
+    .kpo-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .kpo-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border-left: 3px solid;
+    }
+    
+    .kpo-card[data-level="1"] { border-left-color: #94a3b8; }
+    .kpo-card[data-level="2"] { border-left-color: #60a5fa; }
+    .kpo-card[data-level="3"] { border-left-color: #22d3ee; }
+    .kpo-card[data-level="4"] { border-left-color: #fbbf24; }
+    .kpo-card[data-level="5"] { border-left-color: #f472b6; }
+    .kpo-card[data-level="6"] { border-left-color: #a78bfa; }
+    
+    .kpo-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    
+    .kpo-content {
+      flex: 1;
+    }
+    
+    .kpo-dim-name {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--dz-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .kpo-level {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--dz-text);
+      margin: 2px 0;
+    }
+    
+    .kpo-text {
+      font-size: 0.8rem;
+      color: var(--dz-secondary);
+    }
+    
+    /* MSA Questions */
+    .msa-card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    
+    .msa-header {
+      background: linear-gradient(135deg, #f8f9fa, #fff);
+      padding: 14px 16px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .msa-dim-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    
+    .msa-dim-icon[data-level="1"] { background: #f1f5f9; }
+    .msa-dim-icon[data-level="2"] { background: #dbeafe; }
+    .msa-dim-icon[data-level="3"] { background: #cffafe; }
+    .msa-dim-icon[data-level="4"] { background: #fef3c7; }
+    .msa-dim-icon[data-level="5"] { background: #fce7f3; }
+    .msa-dim-icon[data-level="6"] { background: #ede9fe; }
+    
+    .msa-header-info {
+      flex: 1;
+    }
+    
+    .msa-dim-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--dz-secondary);
+    }
+    
+    .msa-level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--dz-text);
+    }
+    
+    .msa-level-num {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    
+    .msa-level-num[data-level="1"] { background: #e2e8f0; color: #475569; }
+    .msa-level-num[data-level="2"] { background: #bfdbfe; color: #1d4ed8; }
+    .msa-level-num[data-level="3"] { background: #a5f3fc; color: #0e7490; }
+    .msa-level-num[data-level="4"] { background: #fde68a; color: #b45309; }
+    .msa-level-num[data-level="5"] { background: #fbcfe8; color: #be185d; }
+    .msa-level-num[data-level="6"] { background: #ddd6fe; color: #7c3aed; }
+    
+    .msa-body {
+      padding: 16px;
+    }
+    
+    .msa-question-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-coral);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .msa-question {
+      font-size: 0.95rem;
+      color: var(--dz-text);
+      line-height: 1.6;
+      font-weight: 500;
+    }
+    
+    .msa-listen-for {
+      margin-top: 14px;
+      padding: 12px;
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 6px;
+    }
+    
+    .msa-listen-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #b45309;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .msa-listen-points {
+      font-size: 0.8rem;
+      color: #92400e;
+      line-height: 1.5;
+    }
+    
+    .msa-listen-points li {
+      margin-bottom: 4px;
+      margin-left: 16px;
+    }
+    
+    /* Footer */
+    .pbjd-footer {
+      padding: 16px 24px;
+      background: #f8f9fa;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+    }
+    
+    .pbjd-footer-text {
+      font-size: 0.75rem;
+      color: var(--dz-secondary);
+    }
+    
+    .pbjd-footer-brand {
+      color: var(--dz-blue);
+      font-weight: 600;
+    }
+    
+    /* Print Styles */
+    @media print {
+      .matrix-panel { display: none; }
+      .pbjd-panel { width: 100%; border: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Day & Zimmermann IT Engineering - 6 Dimensions with MSA Questions for each level
+    const dimensions = [
+      {
+        id: 'technicalExpertise',
+        name: "Technical & Domain Expertise",
+        question: "How deep is their technical knowledge?",
+        icon: "🧠",
+        levels: [
+          { 
+            title: "Technical Learner", 
+            icon: "📚", 
+            kpo: "Complete assigned tickets and support tasks while building foundational knowledge of D&Z systems and IT service management processes within first 90 days.",
+            msaQuestion: "Tell me about a time you had to learn a new technology or system quickly to complete an assignment. How did you approach the learning process?",
+            listenFor: ["Structured approach to learning (documentation, training, asking questions)", "Initiative in seeking resources beyond what was provided", "Validated understanding before applying it"]
+          },
+          { 
+            title: "Technical Practitioner", 
+            icon: "🔧", 
+            kpo: "Independently resolve 85%+ of standard support tickets and routine system administration tasks within SLA timeframes.",
+            msaQuestion: "Tell me about a time you diagnosed and resolved a technical issue that initially had multiple possible causes. Walk me through your troubleshooting process.",
+            listenFor: ["Systematic elimination approach rather than random guessing", "Documents findings and resolution steps for future reference", "Knows when to escalate appropriately"]
+          },
+          { 
+            title: "Technical Specialist", 
+            icon: "⚙️", 
+            kpo: "Serve as the go-to expert for one or more technical domains (e.g., Azure infrastructure, SQL optimization, network security) and reduce escalations in that area by 30%.",
+            msaQuestion: "Tell me about a time you became the recognized expert in a specific technology area. What did you do to build that expertise, and how did others come to rely on you?",
+            listenFor: ["Proactively deepened knowledge beyond job requirements", "Created documentation or training materials for others", "Examples of being consulted by peers and leadership"]
+          },
+          { 
+            title: "Technical Architect", 
+            icon: "🏗️", 
+            kpo: "Design technical solutions that span multiple systems and domains, ensuring alignment with enterprise architecture standards and reducing technical debt.",
+            msaQuestion: "Tell me about a time you had to design a solution that required integrating multiple complex systems or technologies. How did you balance competing technical constraints?",
+            listenFor: ["Considered scalability, security, maintainability from the start", "Evaluated multiple architectural approaches with clear trade-off analysis", "Engaged stakeholders across teams to validate design decisions"]
+          },
+          { 
+            title: "Enterprise Technologist", 
+            icon: "🎯", 
+            kpo: "Define technical standards and roadmaps that govern IT practices across business units, resulting in measurable improvements in system reliability and efficiency.",
+            msaQuestion: "Tell me about a time you established or significantly revised technical standards or practices that were adopted across an organization. What resistance did you face and how did you drive adoption?",
+            listenFor: ["Built coalition of support through demonstrated value and pilot programs", "Balanced ideal standards with practical implementation realities", "Measured and communicated outcomes to justify continued investment"]
+          },
+          { 
+            title: "Technology Strategist", 
+            icon: "🌐", 
+            kpo: "Set multi-year technology direction that positions D&Z for competitive advantage, aligning emerging technologies with business strategy and regulatory requirements.",
+            msaQuestion: "Tell me about a time you identified an emerging technology or trend early and drove your organization to capitalize on it before competitors. What was the outcome?",
+            listenFor: ["Systematic approach to scanning technology landscape", "Built business case connecting technology investment to strategic outcomes", "Navigated executive stakeholders through uncertainty to secure commitment"]
+          }
+        ]
+      },
+      {
+        id: 'scopeScale',
+        name: "Scope & Scale of Impact",
+        question: "What size systems/users do they support?",
+        icon: "🏢",
+        levels: [
+          { 
+            title: "Individual Contributor", 
+            icon: "👤", 
+            kpo: "Successfully support assigned users or systems (typically <50 users or 1-2 non-critical systems) with minimal supervision.",
+            msaQuestion: "Tell me about a time you were responsible for supporting a specific group of users or system. How did you ensure their needs were consistently met?",
+            listenFor: ["Established proactive communication patterns with stakeholders", "Tracked and followed up on open issues systematically", "Identified recurring issues and suggested improvements"]
+          },
+          { 
+            title: "Team Supporter", 
+            icon: "👥", 
+            kpo: "Maintain reliable operations for department-level systems or 50-200 users, achieving 99% uptime on assigned systems.",
+            msaQuestion: "Tell me about a time you managed competing priorities from multiple user groups or system owners. How did you decide what to address first?",
+            listenFor: ["Clear criteria (business impact, urgency, dependencies) for prioritization", "Communicated expectations to stakeholders about timing", "Escalated appropriately when capacity was insufficient"]
+          },
+          { 
+            title: "Division Partner", 
+            icon: "🏬", 
+            kpo: "Own IT operations for a business division (200-500 users) or critical business application, maintaining SLAs and driving continuous improvement.",
+            msaQuestion: "Tell me about a time you improved the reliability or performance of a system that many people depended on. What was your approach and what results did you achieve?",
+            listenFor: ["Quantified the baseline state before improvements", "Identified root causes rather than treating symptoms", "Measured outcomes and sustained improvements over time"]
+          },
+          { 
+            title: "Enterprise Integrator", 
+            icon: "🏭", 
+            kpo: "Manage IT operations spanning multiple divisions or sites (500-2000 users), ensuring consistent service delivery and system integration across D&Z's distributed operations.",
+            msaQuestion: "Tell me about a time you had to ensure consistent IT service delivery across multiple locations or business units with different needs. What challenges did you face?",
+            listenFor: ["Standardized where possible while allowing justified exceptions", "Built relationships with local stakeholders to understand their contexts", "Created governance mechanisms to maintain consistency over time"]
+          },
+          { 
+            title: "Global Systems Leader", 
+            icon: "🌍", 
+            kpo: "Oversee enterprise-wide systems serving 2000+ users across all D&Z divisions, including mission-critical applications that impact plant operations and government contracts.",
+            msaQuestion: "Tell me about a time you led a major system change or migration that affected thousands of users across multiple business units. How did you manage the risk and ensure adoption?",
+            listenFor: ["Phased rollout approach with clear success criteria for progression", "Comprehensive communication and change management strategy", "Contingency planning for critical failure scenarios"]
+          },
+          { 
+            title: "Industry Transformer", 
+            icon: "🚀", 
+            kpo: "Drive technology initiatives that transform how D&Z operates across the enterprise, with measurable impact on revenue, safety, or competitive positioning in the market.",
+            msaQuestion: "Tell me about a time you led a technology initiative that fundamentally changed how your organization or industry operates. What was your vision and how did you execute it?",
+            listenFor: ["Articulated compelling vision connecting technology to business transformation", "Built and sustained momentum through multi-year execution", "Navigated organizational politics and resource competition successfully"]
+          }
+        ]
+      },
+      {
+        id: 'complexity',
+        name: "Problem Complexity & Ambiguity",
+        question: "What level of problems can they solve?",
+        icon: "🧩",
+        levels: [
+          { 
+            title: "Procedure Follower", 
+            icon: "📋", 
+            kpo: "Execute well-documented procedures and resolve common issues using established runbooks with 95%+ first-time accuracy.",
+            msaQuestion: "Tell me about a time you had to follow a detailed procedure to complete a task. How did you ensure you didn't miss any steps?",
+            listenFor: ["Demonstrates attention to detail and systematic execution", "Asks clarifying questions when procedures are unclear", "Documents exceptions or issues for procedure improvement"]
+          },
+          { 
+            title: "Problem Solver", 
+            icon: "🔍", 
+            kpo: "Diagnose and resolve issues that fall outside standard procedures by applying foundational knowledge, reducing escalations by 25%.",
+            msaQuestion: "Tell me about a time you encountered a technical problem that wasn't covered by existing documentation. How did you figure out what to do?",
+            listenFor: ["Applied systematic debugging or root cause analysis", "Leveraged multiple information sources (logs, documentation, colleagues)", "Documented the solution for future reference"]
+          },
+          { 
+            title: "Complexity Navigator", 
+            icon: "🗺️", 
+            kpo: "Resolve multi-system issues involving integration points, performance optimization, or security concerns that require coordinating with multiple teams.",
+            msaQuestion: "Tell me about a time you resolved an issue that spanned multiple systems or teams. How did you coordinate the troubleshooting and who did you need to involve?",
+            listenFor: ["Mapped out the full scope of the problem across system boundaries", "Coordinated effectively with other teams without formal authority", "Identified and addressed root causes rather than just symptoms"]
+          },
+          { 
+            title: "Critical Situation Mgr", 
+            icon: "⚡", 
+            kpo: "Lead resolution of high-stakes incidents affecting plant operations, government contract compliance, or executive functions while maintaining composure and clear communication.",
+            msaQuestion: "Tell me about a time you led the response to a critical system outage or security incident. How did you manage the situation and what was the outcome?",
+            listenFor: ["Maintained clear command structure and communication during crisis", "Balanced urgency of restoration with thoroughness of diagnosis", "Conducted effective post-incident review and implemented improvements"]
+          },
+          { 
+            title: "Strategic Problem Architect", 
+            icon: "🎓", 
+            kpo: "Define solutions to ambiguous, organization-wide challenges like regulatory compliance (NRC, DFARS), digital transformation, or major vendor transitions.",
+            msaQuestion: "Tell me about a time you had to solve a problem where the requirements were unclear and stakeholders had conflicting views on the right approach. How did you navigate the ambiguity?",
+            listenFor: ["Invested time in understanding different stakeholder perspectives", "Created structure and clarity from ambiguous situations", "Made decisions with incomplete information and managed the risks"]
+          },
+          { 
+            title: "Industry Pioneer", 
+            icon: "🌟", 
+            kpo: "Address novel challenges at the intersection of technology, regulation, and business strategy that have no established playbook, establishing approaches others follow.",
+            msaQuestion: "Tell me about a time you tackled a problem that had never been solved in your organization or industry. How did you approach creating a solution from scratch?",
+            listenFor: ["Drew insights from analogous situations in other contexts", "Prototyped and iterated rather than trying to design the perfect solution upfront", "Built organizational capability to address similar challenges in the future"]
+          }
+        ]
+      },
+      {
+        id: 'influenceCollaboration',
+        name: "Stakeholder Influence",
+        question: "Who can they collaborate with and influence?",
+        icon: "👥",
+        levels: [
+          { 
+            title: "Team Collaborator", 
+            icon: "🤝", 
+            kpo: "Work effectively with immediate IT team members and direct user contacts, building reputation as responsive and reliable.",
+            msaQuestion: "Tell me about a time you had to work closely with a colleague to complete a technical task. How did you coordinate your efforts?",
+            listenFor: ["Communicated proactively about progress and blockers", "Showed willingness to help others and share knowledge", "Handled disagreements professionally and constructively"]
+          },
+          { 
+            title: "User Advocate", 
+            icon: "💬", 
+            kpo: "Translate user needs into technical requirements and communicate technical constraints in business terms, improving customer satisfaction scores.",
+            msaQuestion: "Tell me about a time you had to explain a technical limitation or decision to a non-technical user. How did you ensure they understood and felt heard?",
+            listenFor: ["Used analogies and plain language appropriate to the audience", "Listened to understand the underlying need, not just the stated request", "Offered alternatives when the original request wasn't feasible"]
+          },
+          { 
+            title: "Cross-Functional Partner", 
+            icon: "🔗", 
+            kpo: "Build productive relationships with business department leads and external vendors, serving as the IT liaison for business initiatives.",
+            msaQuestion: "Tell me about a time you partnered with a business stakeholder to implement a technology solution. How did you build the relationship and ensure the project succeeded?",
+            listenFor: ["Invested time in understanding the business context and goals", "Established regular communication rhythm and clear accountability", "Managed expectations proactively when challenges arose"]
+          },
+          { 
+            title: "Executive Advisor", 
+            icon: "🏛️", 
+            kpo: "Advise senior business leaders on technology decisions, translating complex technical trade-offs into strategic business terms.",
+            msaQuestion: "Tell me about a time you had to present a technology recommendation to senior executives. How did you frame the information and handle their questions?",
+            listenFor: ["Tailored the message to executive priorities (cost, risk, speed, competitive advantage)", "Anticipated questions and prepared supporting data", "Handled pushback without being defensive while standing firm on key points"]
+          },
+          { 
+            title: "Coalition Builder", 
+            icon: "🌐", 
+            kpo: "Align diverse stakeholders (business units, government contract officers, union representatives, vendor partners) around major technology initiatives.",
+            msaQuestion: "Tell me about a time you had to build consensus among stakeholders with very different priorities or concerns for a major technology decision. How did you bring them together?",
+            listenFor: ["Identified common ground and shared interests", "Addressed individual concerns through targeted engagement", "Created governance structures that gave stakeholders appropriate voice"]
+          },
+          { 
+            title: "Industry Voice", 
+            icon: "🎤", 
+            kpo: "Shape technology standards and practices beyond D&Z through industry associations, regulatory input, and thought leadership that enhances company reputation.",
+            msaQuestion: "Tell me about a time you influenced technology standards or practices beyond your organization. What approach did you take and what impact did you have?",
+            listenFor: ["Built credibility through demonstrated expertise and results", "Engaged with industry forums, standards bodies, or regulatory processes", "Balanced company interests with broader industry benefit"]
+          }
+        ]
+      },
+      {
+        id: 'peopleLeadership',
+        name: "People Leadership",
+        question: "What team/org responsibility?",
+        icon: "👔",
+        levels: [
+          { 
+            title: "Self-Developer", 
+            icon: "📖", 
+            kpo: "Take ownership of personal skill development, completing required training and pursuing relevant certifications within the first year.",
+            msaQuestion: "Tell me about a time you identified a gap in your skills and took initiative to address it. What did you do and what was the result?",
+            listenFor: ["Self-assessed honestly and identified specific areas for improvement", "Sought learning opportunities beyond what was assigned", "Applied new skills to improve job performance"]
+          },
+          { 
+            title: "Knowledge Sharer", 
+            icon: "🙋", 
+            kpo: "Document solutions, contribute to team knowledge base, and help onboard new team members, reducing team knowledge silos.",
+            msaQuestion: "Tell me about a time you helped a colleague learn something you knew well. How did you approach teaching them?",
+            listenFor: ["Adjusted teaching approach based on the learner's needs and style", "Showed patience and provided encouragement", "Documented the information to help future team members"]
+          },
+          { 
+            title: "Team Influencer", 
+            icon: "🎯", 
+            kpo: "Serve as informal technical lead or SME, guiding team decisions and elevating team capability through mentorship and example.",
+            msaQuestion: "Tell me about a time you influenced how your team approached technical work without having formal authority. What did you do and what was the impact?",
+            listenFor: ["Led by example rather than just telling others what to do", "Built credibility through consistent delivery and expertise", "Handled resistance or skepticism constructively"]
+          },
+          { 
+            title: "Team Leader", 
+            icon: "👥", 
+            kpo: "Directly manage a team of 3-8 IT professionals, achieving team performance goals while developing individual team members' careers.",
+            msaQuestion: "Tell me about a time you helped a team member significantly improve their performance or develop new capabilities. What approach did you take?",
+            listenFor: ["Diagnosed the specific development need accurately", "Created appropriate stretch assignments and support structures", "Provided feedback that was specific, timely, and actionable"]
+          },
+          { 
+            title: "Org Developer", 
+            icon: "🏆", 
+            kpo: "Lead multiple teams or a department (15-40 people), building organizational capability through hiring, development programs, and succession planning.",
+            msaQuestion: "Tell me about a time you had to build or significantly reshape a team or department. What was your approach to establishing the right structure and culture?",
+            listenFor: ["Assessed current capabilities against future needs", "Made difficult decisions about roles, responsibilities, or personnel", "Created systems and processes that sustained performance beyond individual efforts"]
+          },
+          { 
+            title: "Talent Strategist", 
+            icon: "🌟", 
+            kpo: "Shape IT talent strategy for the enterprise, ensuring D&Z attracts, develops, and retains the technical talent needed for current and future business needs.",
+            msaQuestion: "Tell me about a time you identified and addressed a significant talent gap that threatened your organization's ability to execute on strategic priorities. What did you do?",
+            listenFor: ["Took a systemic view connecting talent to business strategy", "Implemented multiple talent levers (hiring, development, retention, partnerships)", "Built leadership pipeline to ensure continuity"]
+          }
+        ]
+      },
+      {
+        id: 'deliveryLifecycle',
+        name: "Delivery Lifecycle Stage",
+        question: "Build new vs. maintain vs. transform?",
+        icon: "🔄",
+        levels: [
+          { 
+            title: "Operational Maintainer", 
+            icon: "🔧", 
+            kpo: "Keep assigned systems running reliably through routine maintenance, monitoring, and incident response per established procedures.",
+            msaQuestion: "Tell me about a time you maintained a system or process over an extended period. How did you ensure consistent quality in routine work?",
+            listenFor: ["Developed checklists or habits to ensure nothing was missed", "Maintained attention to detail despite routine nature of the work", "Identified opportunities to improve the maintenance process"]
+          },
+          { 
+            title: "Continuous Improver", 
+            icon: "📈", 
+            kpo: "Identify and implement incremental improvements to existing systems and processes, achieving measurable efficiency or reliability gains.",
+            msaQuestion: "Tell me about a time you improved an existing system or process without being asked. What prompted you to make the change and what was the result?",
+            listenFor: ["Noticed inefficiency or risk that others had accepted", "Built case for improvement with data or clear logic", "Implemented change with minimal disruption to operations"]
+          },
+          { 
+            title: "Solution Implementer", 
+            icon: "🚀", 
+            kpo: "Lead implementation of new systems or major upgrades, delivering on time and within budget while ensuring user adoption.",
+            msaQuestion: "Tell me about a time you led the implementation of a new system or major upgrade. How did you plan the project and what challenges did you overcome?",
+            listenFor: ["Created realistic project plan accounting for dependencies and risks", "Managed stakeholder expectations throughout the project", "Ensured user adoption through training and change management"]
+          },
+          { 
+            title: "Capability Builder", 
+            icon: "🏗️", 
+            kpo: "Design and deliver new technical capabilities that enable business growth or efficiency, building solutions that scale and integrate with the enterprise architecture.",
+            msaQuestion: "Tell me about a time you built a new capability from scratch that others in the organization then used. What was your approach to designing for scale and adoption?",
+            listenFor: ["Considered future needs and growth when designing the solution", "Created documentation and support structures for handoff", "Measured adoption and iterated based on user feedback"]
+          },
+          { 
+            title: "Transformation Leader", 
+            icon: "🎯", 
+            kpo: "Drive multi-year transformation initiatives (e.g., cloud migration, digital workplace, data platform) that fundamentally change how IT delivers value to the business.",
+            msaQuestion: "Tell me about a time you led a major transformation initiative that took more than a year and required significant organizational change. How did you maintain momentum and deliver results?",
+            listenFor: ["Broke the transformation into phases with intermediate value delivery", "Managed change fatigue and maintained stakeholder commitment", "Adapted approach based on learnings while staying true to the vision"]
+          },
+          { 
+            title: "Strategic Disruptor", 
+            icon: "🌟", 
+            kpo: "Envision and execute paradigm shifts in how D&Z leverages technology, creating competitive advantage through innovative application of technology to business challenges.",
+            msaQuestion: "Tell me about a time you envisioned and executed a fundamentally new way of using technology that transformed how your organization competed or operated. What was your process?",
+            listenFor: ["Drew connections between emerging technology and business opportunities", "Built coalition of support for ambitious, uncertain initiatives", "Persevered through setbacks while knowing when to pivot or stop"]
+          }
+        ]
+      }
+    ];
+
+    // Day & Zimmermann IT role profiles
+    const roleProfiles = [
+      {
+        id: 'it_support_analyst',
+        name: "IT Support Analyst",
+        segment: "Corporate IT - Help Desk",
+        comp: "$45K - $65K",
+        levels: [0, 0, 0, 0, 0, 0],
+        experience: "0-2 years",
+        icon: "🎧"
+      },
+      {
+        id: 'systems_admin',
+        name: "Systems Administrator",
+        segment: "Infrastructure & Operations",
+        comp: "$65K - $90K",
+        levels: [1, 1, 1, 1, 1, 1],
+        experience: "2-4 years",
+        icon: "🖥️"
+      },
+      {
+        id: 'sr_developer',
+        name: "Sr. Software Developer",
+        segment: "Applications Development",
+        comp: "$95K - $130K",
+        levels: [2, 2, 2, 2, 2, 2],
+        experience: "4-7 years",
+        icon: "💻"
+      },
+      {
+        id: 'devops_engineer',
+        name: "DevOps Engineer",
+        segment: "Cloud & Infrastructure",
+        comp: "$100K - $140K",
+        levels: [2, 2, 2, 2, 1, 2],
+        experience: "4-6 years",
+        icon: "⚙️"
+      },
+      {
+        id: 'data_engineer',
+        name: "Data Engineer",
+        segment: "Data & Analytics",
+        comp: "$90K - $125K",
+        levels: [2, 2, 2, 2, 1, 2],
+        experience: "3-6 years",
+        icon: "📊"
+      },
+      {
+        id: 'security_engineer',
+        name: "Sr. Identity Access Engineer",
+        segment: "Cybersecurity",
+        comp: "$110K - $145K",
+        levels: [2, 3, 3, 2, 1, 2],
+        experience: "5-8 years",
+        icon: "🔐"
+      },
+      {
+        id: 'technical_architect',
+        name: "Technical Architect",
+        segment: "Enterprise Architecture",
+        comp: "$130K - $170K",
+        levels: [3, 3, 3, 3, 2, 3],
+        experience: "8-12 years",
+        icon: "🏛️"
+      },
+      {
+        id: 'it_manager',
+        name: "IT Manager",
+        segment: "IT Leadership",
+        comp: "$120K - $160K",
+        levels: [3, 3, 3, 3, 3, 3],
+        experience: "8-12 years",
+        icon: "👔"
+      },
+      {
+        id: 'director_infrastructure',
+        name: "Director, IT Infrastructure",
+        segment: "IT Leadership",
+        comp: "$160K - $200K",
+        levels: [3, 4, 4, 3, 4, 4],
+        experience: "12-15 years",
+        icon: "🎯"
+      },
+      {
+        id: 'vp_technology',
+        name: "VP, Technology & Operations",
+        segment: "Executive Leadership",
+        comp: "$200K - $280K",
+        levels: [4, 4, 4, 4, 4, 4],
+        experience: "15+ years",
+        icon: "⭐"
+      },
+      {
+        id: 'cio',
+        name: "CIO / SVP Business Services",
+        segment: "Executive Leadership",
+        comp: "$300K+",
+        levels: [5, 5, 5, 5, 5, 5],
+        experience: "20+ years",
+        icon: "👑"
+      }
+    ];
+
+    const DayZimmermannPBJD = () => {
+      const [selectedRole, setSelectedRole] = useState('sr_developer');
+      const [selections, setSelections] = useState({});
+      
+      useEffect(() => {
+        const role = roleProfiles.find(r => r.id === selectedRole);
+        if (role) {
+          const newSelections = {};
+          dimensions.forEach((dim, i) => {
+            newSelections[dim.id] = role.levels[i];
+          });
+          setSelections(newSelections);
+        }
+      }, [selectedRole]);
+
+      const handleCellClick = (dimId, levelIndex) => {
+        setSelections(prev => ({
+          ...prev,
+          [dimId]: levelIndex
+        }));
+        setSelectedRole(null);
+      };
+
+      const currentRole = roleProfiles.find(r => r.id === selectedRole);
+      
+      const generatePerfObjective = () => {
+        const segment = currentRole?.segment || "IT";
+        const experience = currentRole?.experience || "the required";
+        return `Within the first 6 months, establish yourself as a reliable contributor in the ${segment} team by consistently meeting SLAs, building strong relationships with stakeholders across D&Z's business units, and demonstrating the technical expertise and problem-solving ability that supports our mission-critical operations in construction, defense, and government services.`;
+      };
+
+      return (
+        <div className="app-container">
+          {/* Left Panel - Matrix */}
+          <div className="matrix-panel">
+            <header className="header">
+              <div className="header-badge">
+                <span className="dz-icon">D&Z</span>
+                <span>6×6 Matrix → PBJD Generator</span>
+              </div>
+              <h1 className="main-title">IT Engineering Roles</h1>
+              <p className="subtitle">Select a role to generate the PBJD with MSA questions</p>
+            </header>
+
+            {/* Role Selector */}
+            <div className="role-selector">
+              <div className="role-selector-title">Select a Role Profile</div>
+              <div className="role-pills">
+                {roleProfiles.map(role => (
+                  <button
+                    key={role.id}
+                    className={`role-pill ${selectedRole === role.id ? 'active' : ''}`}
+                    onClick={() => setSelectedRole(role.id)}
+                  >
+                    <span className="role-pill-icon">{role.icon}</span>
+                    {role.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Matrix */}
+            <div className="matrix-card">
+              <div className="matrix-card-title">
+                <span>📊</span>
+                The 6×6 Matrix
+              </div>
+              
+              <div className="matrix-grid">
+                <div></div>
+                {['L1', 'L2', 'L3', 'L4', 'L5', 'L6'].map((level, i) => (
+                  <div key={i} className="level-header">
+                    <div className="level-number">{level}</div>
+                    <div className="level-title">
+                      {['Entry', 'Develop', 'Proficient', 'Advanced', 'Expert', 'Strategic'][i]}
+                    </div>
+                  </div>
+                ))}
+
+                {dimensions.map((dim, dimIndex) => (
+                  <React.Fragment key={dim.id}>
+                    <div className="dim-label">
+                      <span className="dim-icon">{dim.icon}</span>
+                      <span className="dim-name">{dim.name}</span>
+                    </div>
+                    
+                    {dim.levels.map((level, levelIndex) => {
+                      const isSelected = selections[dim.id] === levelIndex;
+                      return (
+                        <div
+                          key={levelIndex}
+                          className={`matrix-cell ${isSelected ? 'selected' : ''}`}
+                          data-level={levelIndex + 1}
+                          onClick={() => handleCellClick(dim.id, levelIndex)}
+                        >
+                          <div className="cell-icon">{level.icon}</div>
+                          <div className="cell-title">{level.title}</div>
+                        </div>
+                      );
+                    })}
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Panel - PBJD Output */}
+          <div className="pbjd-panel">
+            <div className="pbjd-header">
+              <div className="pbjd-badge">Performance-Based Job Description</div>
+              <h1 className="pbjd-title">
+                {currentRole?.name || 'Custom Role'}
+              </h1>
+              <p className="pbjd-segment">
+                {currentRole?.segment || 'Day & Zimmermann IT Organization'}
+              </p>
+              <div className="pbjd-meta">
+                <span className="pbjd-meta-item">
+                  💰 {currentRole?.comp || 'Competitive'}
+                </span>
+                <span className="pbjd-meta-item">
+                  📅 {currentRole?.experience || 'Experience varies'}
+                </span>
+              </div>
+            </div>
+
+            <div className="pbjd-content">
+              {/* Section 1: Performance Objective */}
+              <div className="pbjd-section">
+                <div className="pbjd-section-header">
+                  <span className="pbjd-section-num">1</span>
+                  <span className="pbjd-section-title">Performance Objective</span>
+                </div>
+                <div className="perf-objective">
+                  {generatePerfObjective()}
+                </div>
+              </div>
+
+              {/* Section 2: Key Performance Outcomes */}
+              <div className="pbjd-section">
+                <div className="pbjd-section-header">
+                  <span className="pbjd-section-num">2</span>
+                  <span className="pbjd-section-title">Key Performance Outcomes by Dimension</span>
+                </div>
+                <div className="kpo-grid">
+                  {dimensions.map((dim, i) => {
+                    const levelIndex = selections[dim.id] ?? 0;
+                    const level = dim.levels[levelIndex];
+                    return (
+                      <div key={dim.id} className="kpo-card" data-level={levelIndex + 1}>
+                        <span className="kpo-icon">{level.icon}</span>
+                        <div className="kpo-content">
+                          <div className="kpo-dim-name">{dim.name}</div>
+                          <div className="kpo-level">{level.title}</div>
+                          <div className="kpo-text">{level.kpo}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Section 3: MSA Interview Questions */}
+              <div className="pbjd-section">
+                <div className="pbjd-section-header">
+                  <span className="pbjd-section-num">3</span>
+                  <span className="pbjd-section-title">MSA Interview Questions</span>
+                </div>
+                
+                {dimensions.map((dim, i) => {
+                  const levelIndex = selections[dim.id] ?? 0;
+                  const level = dim.levels[levelIndex];
+                  return (
+                    <div key={dim.id} className="msa-card">
+                      <div className="msa-header">
+                        <div className="msa-dim-icon" data-level={levelIndex + 1}>
+                          {dim.icon}
+                        </div>
+                        <div className="msa-header-info">
+                          <div className="msa-dim-name">{dim.name}</div>
+                          <div className="msa-level-badge">
+                            <span className="msa-level-num" data-level={levelIndex + 1}>
+                              L{levelIndex + 1}
+                            </span>
+                            {level.title}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="msa-body">
+                        <div className="msa-question-label">
+                          🎤 MSA Question
+                        </div>
+                        <p className="msa-question">
+                          "{level.msaQuestion}"
+                        </p>
+                        <div className="msa-listen-for">
+                          <div className="msa-listen-label">
+                            🎯 Listen For
+                          </div>
+                          <ul className="msa-listen-points">
+                            {level.listenFor.map((point, idx) => (
+                              <li key={idx}>{point}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="pbjd-footer">
+              <p className="pbjd-footer-text">
+                <span className="pbjd-footer-brand">Performance-Based Hiring</span>
+                {' '}• Day & Zimmermann IT Engineering • MSA questions for each dimension × level
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<DayZimmermannPBJD />);
+  </script>
+</body>
+</html>
