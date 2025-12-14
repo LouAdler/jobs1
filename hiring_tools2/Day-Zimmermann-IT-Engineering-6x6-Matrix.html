@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day & Zimmermann IT Engineering | 6×6 Performance Matrix</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dz-red: #C41230;
+            --dz-red-dark: #9E0F28;
+            --dz-navy: #1A2B4A;
+            --dz-navy-light: #2A3B5A;
+            --dz-gold: #B8860B;
+            --dz-gray: #4A5568;
+            --dz-light: #F7F8FA;
+            --level-1: #64748B;
+            --level-2: #3B82F6;
+            --level-3: #06B6D4;
+            --level-4: #F59E0B;
+            --level-5: #EC4899;
+            --level-6: #8B5CF6;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dz-light);
+            color: #1a202c;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 58% 42%;
+            min-height: 100vh;
+        }
+        
+        @media (max-width: 1200px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .left-panel {
+            background: white;
+            padding: 24px;
+            overflow-y: auto;
+            border-right: 1px solid #e2e8f0;
+        }
+        
+        .right-panel {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 24px;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--dz-navy) 0%, var(--dz-navy-light) 50%, var(--dz-red) 100%);
+            color: white;
+            padding: 20px 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1));
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .company-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header-subtitle {
+            opacity: 0.9;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dz-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        
+        .role-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .role-pill {
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .role-pill:hover {
+            border-color: var(--dz-red);
+            background: #fef2f2;
+        }
+        
+        .role-pill.active {
+            background: var(--dz-red);
+            border-color: var(--dz-red);
+            color: white;
+        }
+        
+        .role-pill .exp {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+        
+        .matrix-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        
+        .matrix-header {
+            display: grid;
+            grid-template-columns: 200px repeat(6, 1fr);
+            background: var(--dz-navy);
+            color: white;
+        }
+        
+        .matrix-header-cell {
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .matrix-header-cell:first-child {
+            text-align: left;
+            padding-left: 16px;
+        }
+        
+        .matrix-header-cell:last-child {
+            border-right: none;
+        }
+        
+        .level-badge {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            line-height: 24px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        
+        .level-1 { background: var(--level-1); }
+        .level-2 { background: var(--level-2); }
+        .level-3 { background: var(--level-3); }
+        .level-4 { background: var(--level-4); }
+        .level-5 { background: var(--level-5); }
+        .level-6 { background: var(--level-6); }
+        
+        .matrix-row {
+            display: grid;
+            grid-template-columns: 200px repeat(6, 1fr);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .matrix-row:last-child {
+            border-bottom: none;
+        }
+        
+        .factor-cell {
+            padding: 14px 16px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .factor-icon {
+            font-size: 20px;
+        }
+        
+        .factor-name {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--dz-navy);
+            line-height: 1.3;
+        }
+        
+        .matrix-cell {
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            border-right: 1px solid #e2e8f0;
+            transition: all 0.15s ease;
+            position: relative;
+            min-height: 72px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .matrix-cell:last-child {
+            border-right: none;
+        }
+        
+        .matrix-cell:hover {
+            background: #f0f9ff;
+        }
+        
+        .matrix-cell.selected {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        }
+        
+        .matrix-cell.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 16px;
+            height: 16px;
+            background: var(--dz-red);
+            color: white;
+            border-radius: 50%;
+            font-size: 10px;
+            line-height: 16px;
+            font-weight: bold;
+        }
+        
+        .cell-icon {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        
+        .cell-title {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--dz-gray);
+            line-height: 1.2;
+        }
+        
+        /* Right Panel Styles */
+        .output-header {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .output-role-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--dz-navy);
+            margin-bottom: 8px;
+        }
+        
+        .output-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: #f1f5f9;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .meta-badge.segment { background: #dbeafe; color: #1e40af; }
+        .meta-badge.comp { background: #d1fae5; color: #065f46; }
+        .meta-badge.exp { background: #fef3c7; color: #92400e; }
+        
+        .performance-objective {
+            background: linear-gradient(135deg, var(--dz-navy) 0%, var(--dz-red-dark) 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .kpo-grid {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .kpo-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 3px solid var(--dz-red);
+        }
+        
+        .kpo-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .kpo-content h4 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dz-gray);
+            margin-bottom: 4px;
+        }
+        
+        .kpo-text {
+            font-size: 13px;
+            color: #1a202c;
+            line-height: 1.5;
+        }
+        
+        .msa-card {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .msa-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .msa-factor-icon {
+            font-size: 24px;
+        }
+        
+        .msa-factor-name {
+            font-weight: 600;
+            color: var(--dz-navy);
+            font-size: 14px;
+            flex: 1;
+        }
+        
+        .msa-level-badge {
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .msa-question {
+            background: #f8fafc;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #1a202c;
+            font-style: italic;
+            margin-bottom: 12px;
+            border-left: 3px solid var(--dz-red);
+        }
+        
+        .listen-for {
+            background: #fffbeb;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #fcd34d;
+        }
+        
+        .listen-for-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .listen-for-list {
+            list-style: none;
+        }
+        
+        .listen-for-list li {
+            font-size: 12px;
+            color: #78350f;
+            padding: 4px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .listen-for-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #d97706;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--dz-gray);
+        }
+        
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .empty-state p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        @media print {
+            .left-panel { display: none; }
+            .right-panel {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        // ========== DATA: 6 SUCCESS FACTORS ==========
+        const factors = [
+            {
+                id: 'technical_mastery',
+                name: 'Technical Mastery',
+                icon: '💻',
+                levels: [
+                    {
+                        title: 'Technical Learner',
+                        icon: '📚',
+                        kpo: 'Complete assigned development tasks with guidance, achieving <5% code review revisions within 90 days',
+                        msaQuestion: 'Tell me about a time you had to learn a new programming language or technology framework to complete an assignment. How did you approach learning it?',
+                        listenFor: ['Structured learning approach', 'Sought help appropriately', 'Applied new knowledge successfully']
+                    },
+                    {
+                        title: 'Capable Developer',
+                        icon: '⚙️',
+                        kpo: 'Independently deliver 3-5 standard feature implementations per sprint with production-ready quality',
+                        msaQuestion: 'Tell me about a time you independently designed and implemented a solution that required integrating multiple technologies or systems.',
+                        listenFor: ['Chose appropriate technologies', 'Handled integration complexity', 'Delivered working solution']
+                    },
+                    {
+                        title: 'Technical Expert',
+                        icon: '🔧',
+                        kpo: 'Own complex system components end-to-end, reducing technical debt by 20% annually in assigned areas',
+                        msaQuestion: 'Tell me about a time you became the go-to expert that others came to for help on a specific technology or system component.',
+                        listenFor: ['Deep expertise demonstrated', 'Helped others solve problems', 'Documented knowledge for team']
+                    },
+                    {
+                        title: 'Systems Architect',
+                        icon: '🏗️',
+                        kpo: 'Design solutions that reduce system complexity by 30% while improving performance metrics by 25%',
+                        msaQuestion: 'Tell me about a time you architected a solution that significantly improved system performance, scalability, or maintainability.',
+                        listenFor: ['Evaluated trade-offs thoughtfully', 'Designed for future needs', 'Measurable improvement achieved']
+                    },
+                    {
+                        title: 'Technical Strategist',
+                        icon: '🎨',
+                        kpo: 'Establish technical standards adopted across 3+ teams, reducing integration issues by 40%',
+                        msaQuestion: 'Tell me about a time you established technical standards or patterns that were adopted across multiple teams or the organization.',
+                        listenFor: ['Built consensus across teams', 'Standards drove consistency', 'Measured adoption and impact']
+                    },
+                    {
+                        title: 'Technology Visionary',
+                        icon: '🚀',
+                        kpo: 'Drive enterprise-wide technology transformation achieving $1M+ in efficiency gains or capability expansion',
+                        msaQuestion: 'Tell me about a time you identified and championed a major technology shift that transformed how your organization operates.',
+                        listenFor: ['Anticipated industry trends', 'Built executive support', 'Delivered transformational impact']
+                    }
+                ]
+            },
+            {
+                id: 'enterprise_systems',
+                name: 'Enterprise Systems & Integration',
+                icon: '🔗',
+                levels: [
+                    {
+                        title: 'System User',
+                        icon: '👤',
+                        kpo: 'Accurately configure and use 2+ enterprise platforms (SAP, ServiceNow, Salesforce) within 60 days',
+                        msaQuestion: 'Tell me about a time you had to learn and configure a new enterprise system like SAP, ServiceNow, or Salesforce for your work.',
+                        listenFor: ['Learned system fundamentals', 'Followed configuration best practices', 'Used system effectively']
+                    },
+                    {
+                        title: 'Platform Specialist',
+                        icon: '🔌',
+                        kpo: 'Configure and customize enterprise modules independently, completing 10+ change requests per quarter',
+                        msaQuestion: 'Tell me about a time you customized or extended an enterprise platform to meet specific business requirements.',
+                        listenFor: ['Understood business needs', 'Applied platform capabilities', 'Tested thoroughly before deployment']
+                    },
+                    {
+                        title: 'Integration Developer',
+                        icon: '🔄',
+                        kpo: 'Build and maintain 5+ system integrations with 99.5% uptime and <2 hour incident resolution',
+                        msaQuestion: 'Tell me about a time you designed and implemented an integration between two or more enterprise systems.',
+                        listenFor: ['Mapped data flows correctly', 'Built error handling', 'Ensured reliability and monitoring']
+                    },
+                    {
+                        title: 'Platform Architect',
+                        icon: '🌐',
+                        kpo: 'Design platform solutions that reduce manual processes by 50% and enable 2+ new business capabilities',
+                        msaQuestion: 'Tell me about a time you architected an enterprise platform solution that transformed a major business process.',
+                        listenFor: ['Aligned with enterprise architecture', 'Considered scalability and security', 'Delivered business transformation']
+                    },
+                    {
+                        title: 'Enterprise Architect',
+                        icon: '🏛️',
+                        kpo: 'Lead enterprise platform strategy serving 5,000+ users with 99.9% availability and annual cost optimization of 15%',
+                        msaQuestion: 'Tell me about a time you shaped the enterprise technology landscape across multiple business units or platforms.',
+                        listenFor: ['Balanced competing priorities', 'Drove platform consolidation', 'Achieved enterprise-wide impact']
+                    },
+                    {
+                        title: 'Digital Ecosystem Leader',
+                        icon: '🌍',
+                        kpo: 'Transform company-wide digital capabilities, enabling $5M+ in new revenue or cost savings through platform innovation',
+                        msaQuestion: 'Tell me about a time you led a major digital transformation initiative that changed how your company does business.',
+                        listenFor: ['Created platform strategy', 'Built ecosystem partnerships', 'Delivered measurable business outcomes']
+                    }
+                ]
+            },
+            {
+                id: 'security_compliance',
+                name: 'Security & Compliance',
+                icon: '🔒',
+                levels: [
+                    {
+                        title: 'Security Aware',
+                        icon: '🛡️',
+                        kpo: 'Complete security training with 100% score, zero security violations in assigned work within first year',
+                        msaQuestion: 'Tell me about a time you identified and reported a potential security risk or vulnerability in your work.',
+                        listenFor: ['Recognized security importance', 'Followed reporting procedures', 'Applied secure practices']
+                    },
+                    {
+                        title: 'Secure Developer',
+                        icon: '🔐',
+                        kpo: 'Pass code security reviews with <3% security findings per release, no critical vulnerabilities',
+                        msaQuestion: 'Tell me about a time you implemented secure coding practices that prevented potential vulnerabilities in an application.',
+                        listenFor: ['Applied OWASP principles', 'Validated inputs/outputs', 'Handled sensitive data properly']
+                    },
+                    {
+                        title: 'Security Practitioner',
+                        icon: '🔍',
+                        kpo: 'Lead security reviews for 3+ projects, identifying and remediating 95% of vulnerabilities pre-production',
+                        msaQuestion: 'Tell me about a time you led a security review or assessment that identified significant risks before production deployment.',
+                        listenFor: ['Structured assessment approach', 'Prioritized findings by risk', 'Drove remediation to completion']
+                    },
+                    {
+                        title: 'Security Engineer',
+                        icon: '🛠️',
+                        kpo: 'Design and implement security controls achieving SOC 2 or equivalent compliance with zero audit findings',
+                        msaQuestion: 'Tell me about a time you designed security controls or architecture that helped achieve a compliance certification or pass an audit.',
+                        listenFor: ['Understood compliance frameworks', 'Built sustainable controls', 'Achieved compliance goals']
+                    },
+                    {
+                        title: 'Security Architect',
+                        icon: '🏰',
+                        kpo: 'Establish security architecture supporting defense contracts and government compliance (NIST, CMMC) across 5+ systems',
+                        msaQuestion: 'Tell me about a time you established security architecture standards that were adopted across multiple systems or the organization.',
+                        listenFor: ['Aligned with federal requirements', 'Built defense-in-depth', 'Enabled secure operations']
+                    },
+                    {
+                        title: 'Chief Security Strategist',
+                        icon: '🎖️',
+                        kpo: 'Lead enterprise security program protecting $3B revenue company with zero material breaches, maintaining federal clearances',
+                        msaQuestion: 'Tell me about a time you led an organization through a major security transformation or responded to a significant security event.',
+                        listenFor: ['Board-level communication', 'Risk-based prioritization', 'Built security culture organization-wide']
+                    }
+                ]
+            },
+            {
+                id: 'business_partnership',
+                name: 'Business Partnership',
+                icon: '🤝',
+                levels: [
+                    {
+                        title: 'Requirements Receiver',
+                        icon: '📋',
+                        kpo: 'Accurately document and clarify requirements, achieving 90% first-pass acceptance from business stakeholders',
+                        msaQuestion: 'Tell me about a time you worked with a business user to understand and document their requirements for a technical solution.',
+                        listenFor: ['Asked clarifying questions', 'Documented accurately', 'Confirmed understanding']
+                    },
+                    {
+                        title: 'Solution Translator',
+                        icon: '💬',
+                        kpo: 'Translate business needs into technical specifications for 5+ features per quarter with <10% scope change',
+                        msaQuestion: 'Tell me about a time you had to translate complex technical concepts to non-technical stakeholders to gain buy-in.',
+                        listenFor: ['Used appropriate language', 'Created visual aids', 'Achieved stakeholder understanding']
+                    },
+                    {
+                        title: 'Trusted Advisor',
+                        icon: '💡',
+                        kpo: 'Proactively identify 3+ improvement opportunities per quarter that deliver measurable business value',
+                        msaQuestion: 'Tell me about a time you proactively identified a technology opportunity that solved a business problem the stakeholders hadnt explicitly requested.',
+                        listenFor: ['Understood business context', 'Proposed valuable solutions', 'Built trust through delivery']
+                    },
+                    {
+                        title: 'Strategic Partner',
+                        icon: '🎯',
+                        kpo: 'Lead cross-functional initiatives delivering $500K+ annual value, with 90%+ stakeholder satisfaction',
+                        msaQuestion: 'Tell me about a time you led a cross-functional initiative that required aligning multiple business and technical teams.',
+                        listenFor: ['Built coalition of support', 'Managed competing priorities', 'Delivered agreed outcomes']
+                    },
+                    {
+                        title: 'Business Strategist',
+                        icon: '📊',
+                        kpo: 'Shape technology investments for 2+ business units, contributing to $2M+ in business outcomes annually',
+                        msaQuestion: 'Tell me about a time you influenced business strategy through technology recommendations that changed how a department operates.',
+                        listenFor: ['Understood business model', 'Made compelling business case', 'Drove strategic change']
+                    },
+                    {
+                        title: 'Executive Partner',
+                        icon: '👔',
+                        kpo: 'Serve as technology voice in executive decisions, directly contributing to company strategic initiatives worth $10M+',
+                        msaQuestion: 'Tell me about a time you partnered with C-level executives to make technology decisions that significantly impacted the business.',
+                        listenFor: ['Executive presence', 'Strategic thinking', 'Influenced major decisions']
+                    }
+                ]
+            },
+            {
+                id: 'operational_excellence',
+                name: 'Operational Excellence',
+                icon: '⚡',
+                levels: [
+                    {
+                        title: 'Process Follower',
+                        icon: '📝',
+                        kpo: 'Follow ITIL practices with 100% compliance, resolve assigned incidents within SLA 95% of the time',
+                        msaQuestion: 'Tell me about a time you followed established processes to resolve a production incident or operational issue.',
+                        listenFor: ['Followed procedures', 'Escalated appropriately', 'Documented resolution']
+                    },
+                    {
+                        title: 'Reliable Operator',
+                        icon: '🔧',
+                        kpo: 'Maintain 99.5% uptime for assigned systems, resolve P2 incidents within 4 hours average',
+                        msaQuestion: 'Tell me about a time you identified and resolved a system issue before it impacted users or caused downtime.',
+                        listenFor: ['Proactive monitoring', 'Quick diagnosis', 'Prevented business impact']
+                    },
+                    {
+                        title: 'Operations Expert',
+                        icon: '📈',
+                        kpo: 'Reduce incident volume by 30% through automation and process improvement, maintain 99.9% SLA compliance',
+                        msaQuestion: 'Tell me about a time you implemented automation or process improvements that significantly reduced operational burden.',
+                        listenFor: ['Identified patterns', 'Built sustainable automation', 'Measured improvement']
+                    },
+                    {
+                        title: 'Operations Leader',
+                        icon: '🎛️',
+                        kpo: 'Lead operations for business-critical systems with 99.99% availability, zero data loss events',
+                        msaQuestion: 'Tell me about a time you led operations for a critical system through a high-stakes situation like a major upgrade or incident.',
+                        listenFor: ['Managed team under pressure', 'Made sound decisions', 'Maintained service levels']
+                    },
+                    {
+                        title: 'Operations Strategist',
+                        icon: '🏆',
+                        kpo: 'Design and implement operational frameworks achieving top-quartile industry metrics while reducing costs 20%',
+                        msaQuestion: 'Tell me about a time you established operational standards or frameworks that transformed how your organization runs technology.',
+                        listenFor: ['Benchmarked against industry', 'Built sustainable practices', 'Achieved operational excellence']
+                    },
+                    {
+                        title: 'Enterprise Operations Executive',
+                        icon: '🌟',
+                        kpo: 'Lead 24/7 operations supporting 37,000+ employees and 900+ locations with industry-leading reliability and efficiency',
+                        msaQuestion: 'Tell me about a time you transformed enterprise operations at scale, significantly improving reliability, cost, or capability.',
+                        listenFor: ['Enterprise-wide impact', 'Built organizational capability', 'Achieved step-change improvement']
+                    }
+                ]
+            },
+            {
+                id: 'technology_leadership',
+                name: 'Technology Leadership',
+                icon: '🎯',
+                levels: [
+                    {
+                        title: 'Team Contributor',
+                        icon: '👋',
+                        kpo: 'Actively participate in team practices, complete peer reviews, contribute to 2+ knowledge sharing sessions per quarter',
+                        msaQuestion: 'Tell me about a time you helped a teammate solve a problem or learn something new.',
+                        listenFor: ['Shared knowledge willingly', 'Supported team success', 'Participated actively']
+                    },
+                    {
+                        title: 'Technical Mentor',
+                        icon: '🌱',
+                        kpo: 'Mentor 1-2 junior team members, contributing to their completion of 3+ stretch assignments within 6 months',
+                        msaQuestion: 'Tell me about a time you mentored someone and helped them grow their technical skills.',
+                        listenFor: ['Invested in others', 'Provided constructive feedback', 'Celebrated their growth']
+                    },
+                    {
+                        title: 'Team Lead',
+                        icon: '👥',
+                        kpo: 'Lead technical direction for team of 3-5, achieving 90% sprint commitment accuracy and improving team velocity 15%',
+                        msaQuestion: 'Tell me about a time you led a technical team through a challenging project or delivery.',
+                        listenFor: ['Set clear direction', 'Removed blockers', 'Delivered as a team']
+                    },
+                    {
+                        title: 'Development Manager',
+                        icon: '📊',
+                        kpo: 'Manage team of 8-12, achieving 85%+ employee engagement, 90% retention, and consistent delivery excellence',
+                        msaQuestion: 'Tell me about a time you built or transformed a technology team to improve performance and engagement.',
+                        listenFor: ['Built strong culture', 'Developed people', 'Delivered results through others']
+                    },
+                    {
+                        title: 'Technology Director',
+                        icon: '🎬',
+                        kpo: 'Lead multiple teams (25+ people), set technology direction, deliver $3M+ in annual project value',
+                        msaQuestion: 'Tell me about a time you set technology direction for an organization and built the team to execute it.',
+                        listenFor: ['Strategic vision', 'Built leadership team', 'Scaled organization effectively']
+                    },
+                    {
+                        title: 'VP/CTO',
+                        icon: '🏛️',
+                        kpo: 'Lead IT organization, align technology with business strategy, enable "We do what we say®" through reliable, innovative technology',
+                        msaQuestion: 'Tell me about a time you shaped technology strategy at the executive level to transform business capabilities.',
+                        listenFor: ['Board-level influence', 'Business transformation', 'Built enduring capability']
+                    }
+                ]
+            }
+        ];
+        
+        // ========== DATA: ROLE PROFILES ==========
+        const roles = [
+            {
+                id: 'it_support_analyst',
+                name: 'IT Support Analyst',
+                segment: 'IT Operations',
+                comp: '$50K - $65K',
+                experience: '0-2 years',
+                icon: '🎧',
+                levels: [1, 1, 1, 1, 1, 1]
+            },
+            {
+                id: 'software_engineer_1',
+                name: 'Software Engineer 1',
+                segment: 'Application Development',
+                comp: '$70K - $90K',
+                experience: '1-3 years',
+                icon: '👩‍💻',
+                levels: [2, 1, 1, 2, 1, 1]
+            },
+            {
+                id: 'software_engineer_2',
+                name: 'Software Engineer 2',
+                segment: 'Application Development',
+                comp: '$90K - $120K',
+                experience: '3-5 years',
+                icon: '💻',
+                levels: [3, 2, 2, 2, 2, 2]
+            },
+            {
+                id: 'erp_analyst',
+                name: 'ERP Analyst / SAP FICO Analyst',
+                segment: 'Enterprise Systems',
+                comp: '$85K - $110K',
+                experience: '3-5 years',
+                icon: '📊',
+                levels: [2, 3, 2, 3, 2, 2]
+            },
+            {
+                id: 'senior_developer',
+                name: 'Senior Software Engineer',
+                segment: 'Application Development',
+                comp: '$120K - $150K',
+                experience: '5-8 years',
+                icon: '🔧',
+                levels: [4, 3, 3, 3, 3, 3]
+            },
+            {
+                id: 'devops_engineer',
+                name: 'DevOps Engineer',
+                segment: 'Platform Engineering',
+                comp: '$110K - $140K',
+                experience: '5-8 years',
+                icon: '🔄',
+                levels: [3, 3, 3, 2, 4, 2]
+            },
+            {
+                id: 'abap_developer_iii',
+                name: 'ABAP Developer III',
+                segment: 'Enterprise Systems',
+                comp: '$100K - $130K',
+                experience: '5-8 years',
+                icon: '🔗',
+                levels: [4, 4, 3, 3, 3, 2]
+            },
+            {
+                id: 'security_analyst',
+                name: 'Information Security Analyst',
+                segment: 'Security & Compliance',
+                comp: '$95K - $125K',
+                experience: '4-7 years',
+                icon: '🔐',
+                levels: [2, 2, 4, 3, 3, 2]
+            },
+            {
+                id: 'tech_lead',
+                name: 'Technical Lead / Staff Engineer',
+                segment: 'Application Development',
+                comp: '$140K - $175K',
+                experience: '8-12 years',
+                icon: '🏗️',
+                levels: [5, 4, 4, 4, 4, 4]
+            },
+            {
+                id: 'it_manager',
+                name: 'IT Manager',
+                segment: 'IT Operations',
+                comp: '$130K - $160K',
+                experience: '8-12 years',
+                icon: '👔',
+                levels: [3, 4, 4, 4, 4, 4]
+            },
+            {
+                id: 'hr_tech_manager',
+                name: 'Manager, HR Technology & Projects',
+                segment: 'Enterprise Systems',
+                comp: '$125K - $155K',
+                experience: '8-12 years',
+                icon: '📋',
+                levels: [3, 5, 4, 5, 4, 4]
+            },
+            {
+                id: 'it_director',
+                name: 'IT Director',
+                segment: 'IT Leadership',
+                comp: '$175K - $220K',
+                experience: '12-18 years',
+                icon: '🎯',
+                levels: [4, 5, 5, 5, 5, 5]
+            },
+            {
+                id: 'vp_technology',
+                name: 'VP, Technology / CTO',
+                segment: 'Executive Leadership',
+                comp: '$250K - $350K+',
+                experience: '18+ years',
+                icon: '🏛️',
+                levels: [5, 6, 6, 6, 6, 6]
+            }
+        ];
+        
+        // ========== MAIN APP COMPONENT ==========
+        function App() {
+            const [selectedRole, setSelectedRole] = useState(null);
+            const [matrixState, setMatrixState] = useState([0, 0, 0, 0, 0, 0]);
+            
+            const handleRoleSelect = (role) => {
+                setSelectedRole(role);
+                setMatrixState([...role.levels]);
+            };
+            
+            const handleCellClick = (factorIndex, levelIndex) => {
+                const newState = [...matrixState];
+                newState[factorIndex] = levelIndex + 1;
+                setMatrixState(newState);
+                setSelectedRole(null);
+            };
+            
+            const generatePerformanceObjective = () => {
+                if (!selectedRole && matrixState.every(l => l === 0)) return null;
+                
+                const roleName = selectedRole ? selectedRole.name : 'Selected Role';
+                const avgLevel = matrixState.reduce((a, b) => a + b, 0) / 6;
+                
+                let levelDesc = 'entry-level';
+                if (avgLevel > 4.5) levelDesc = 'executive-level strategic';
+                else if (avgLevel > 3.5) levelDesc = 'senior leadership';
+                else if (avgLevel > 2.5) levelDesc = 'experienced professional';
+                else if (avgLevel > 1.5) levelDesc = 'developing professional';
+                
+                return `As a ${roleName} at Day & Zimmermann, deliver ${levelDesc} performance across IT Engineering functions, supporting "We do what we say.®" through technical excellence, enterprise system reliability, security compliance, business partnership, and operational excellence in service of our 37,000+ employees and critical infrastructure clients.`;
+            };
+            
+            const levelColors = [
+                'var(--level-1)',
+                'var(--level-2)',
+                'var(--level-3)',
+                'var(--level-4)',
+                'var(--level-5)',
+                'var(--level-6)'
+            ];
+            
+            return (
+                <div className="app-container">
+                    {/* LEFT PANEL */}
+                    <div className="left-panel">
+                        <div className="header">
+                            <div className="header-content">
+                                <div className="company-badge">
+                                    🏗️ DAY & ZIMMERMANN
+                                </div>
+                                <h1>IT Engineering Performance Matrix</h1>
+                                <div className="header-subtitle">6×6 Matrix Builder — Select a role or customize levels</div>
+                            </div>
+                        </div>
+                        
+                        <div className="section-title">Select Role Profile</div>
+                        <div className="role-selector">
+                            {roles.map(role => (
+                                <button
+                                    key={role.id}
+                                    className={`role-pill ${selectedRole?.id === role.id ? 'active' : ''}`}
+                                    onClick={() => handleRoleSelect(role)}
+                                >
+                                    <span>{role.icon}</span>
+                                    <span>{role.name}</span>
+                                    <span className="exp">{role.experience}</span>
+                                </button>
+                            ))}
+                        </div>
+                        
+                        <div className="section-title">Performance Matrix</div>
+                        <div className="matrix-container">
+                            <div className="matrix-header">
+                                <div className="matrix-header-cell">Success Factor</div>
+                                {[1, 2, 3, 4, 5, 6].map(level => (
+                                    <div key={level} className="matrix-header-cell">
+                                        <div className={`level-badge level-${level}`}>{level}</div>
+                                        <div style={{fontSize: '10px', marginTop: '2px'}}>
+                                            {level === 1 && 'Entry'}
+                                            {level === 2 && 'Developing'}
+                                            {level === 3 && 'Proficient'}
+                                            {level === 4 && 'Advanced'}
+                                            {level === 5 && 'Expert'}
+                                            {level === 6 && 'Strategic'}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            {factors.map((factor, factorIndex) => (
+                                <div key={factor.id} className="matrix-row">
+                                    <div className="factor-cell">
+                                        <span className="factor-icon">{factor.icon}</span>
+                                        <span className="factor-name">{factor.name}</span>
+                                    </div>
+                                    {factor.levels.map((level, levelIndex) => (
+                                        <div
+                                            key={levelIndex}
+                                            className={`matrix-cell ${matrixState[factorIndex] === levelIndex + 1 ? 'selected' : ''}`}
+                                            onClick={() => handleCellClick(factorIndex, levelIndex)}
+                                        >
+                                            <div className="cell-icon">{level.icon}</div>
+                                            <div className="cell-title">{level.title}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    {/* RIGHT PANEL */}
+                    <div className="right-panel">
+                        {matrixState.some(l => l > 0) ? (
+                            <>
+                                <div className="output-header">
+                                    <div className="output-role-name">
+                                        {selectedRole ? `${selectedRole.icon} ${selectedRole.name}` : '📋 Custom Profile'}
+                                    </div>
+                                    {selectedRole && (
+                                        <div className="output-meta">
+                                            <span className="meta-badge segment">{selectedRole.segment}</span>
+                                            <span className="meta-badge comp">{selectedRole.comp}</span>
+                                            <span className="meta-badge exp">{selectedRole.experience}</span>
+                                        </div>
+                                    )}
+                                    <div className="performance-objective">
+                                        <strong>Performance Objective:</strong> {generatePerformanceObjective()}
+                                    </div>
+                                </div>
+                                
+                                <div className="section-card">
+                                    <div className="section-title">Key Performance Outcomes</div>
+                                    <div className="kpo-grid">
+                                        {factors.map((factor, index) => {
+                                            const level = matrixState[index];
+                                            if (level === 0) return null;
+                                            const levelData = factor.levels[level - 1];
+                                            return (
+                                                <div key={factor.id} className="kpo-item">
+                                                    <div className="kpo-icon">{factor.icon}</div>
+                                                    <div className="kpo-content">
+                                                        <h4>{factor.name} — L{level}: {levelData.title}</h4>
+                                                        <div className="kpo-text">{levelData.kpo}</div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                                
+                                <div className="section-title" style={{marginTop: '20px'}}>MSA Interview Questions</div>
+                                {factors.map((factor, index) => {
+                                    const level = matrixState[index];
+                                    if (level === 0) return null;
+                                    const levelData = factor.levels[level - 1];
+                                    return (
+                                        <div key={factor.id} className="msa-card">
+                                            <div className="msa-header">
+                                                <span className="msa-factor-icon">{factor.icon}</span>
+                                                <span className="msa-factor-name">{factor.name}</span>
+                                                <span 
+                                                    className="msa-level-badge"
+                                                    style={{background: levelColors[level - 1]}}
+                                                >
+                                                    L{level} · {levelData.title}
+                                                </span>
+                                            </div>
+                                            <div className="msa-question">
+                                                "{levelData.msaQuestion}"
+                                            </div>
+                                            <div className="listen-for">
+                                                <div className="listen-for-title">Listen For</div>
+                                                <ul className="listen-for-list">
+                                                    {levelData.listenFor.map((item, i) => (
+                                                        <li key={i}>{item}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </>
+                        ) : (
+                            <div className="empty-state">
+                                <div className="empty-state-icon">📊</div>
+                                <h3>Select a Role to Begin</h3>
+                                <p>Choose a role profile from the left panel or click matrix cells to customize performance levels.</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+        
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
