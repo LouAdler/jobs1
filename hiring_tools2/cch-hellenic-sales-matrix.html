@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coca-Cola HBC Sales | 6×6 Performance Matrix</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --coke-red: #F40009;
+            --coke-dark-red: #C8102E;
+            --coke-black: #1a1a1a;
+            --coke-white: #ffffff;
+            --l1-gray: #94a3b8;
+            --l2-blue: #60a5fa;
+            --l3-cyan: #22d3ee;
+            --l4-yellow: #fbbf24;
+            --l5-pink: #f472b6;
+            --l6-purple: #a78bfa;
+            --glass-bg: rgba(255,255,255,0.95);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans 3', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #fefefe 0%, #f8f9fa 100%);
+            min-height: 100vh;
+            color: var(--coke-black);
+            line-height: 1.5;
+        }
+        
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* LEFT PANEL */
+        .left-panel {
+            width: 55%;
+            padding: 24px;
+            overflow-y: auto;
+            max-height: 100vh;
+            background: var(--coke-white);
+            border-right: 1px solid #e5e7eb;
+        }
+        
+        .company-header {
+            background: linear-gradient(135deg, var(--coke-red) 0%, var(--coke-dark-red) 100%);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .company-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .company-header::after {
+            content: '🥤';
+            position: absolute;
+            right: 24px;
+            bottom: 20px;
+            font-size: 48px;
+            opacity: 0.25;
+        }
+        
+        .company-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 42px;
+            color: var(--coke-white);
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+            position: relative;
+        }
+        
+        .company-tagline {
+            color: rgba(255,255,255,0.9);
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .function-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 24px;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 12px;
+            backdrop-filter: blur(8px);
+        }
+        
+        /* ROLE SELECTOR */
+        .role-section {
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+        
+        .role-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .role-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1.5px solid #e5e7eb;
+            background: white;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .role-pill:hover {
+            border-color: var(--coke-red);
+            background: #fef2f2;
+        }
+        
+        .role-pill.active {
+            background: var(--coke-red);
+            border-color: var(--coke-red);
+            color: white;
+        }
+        
+        .role-pill .icon {
+            font-size: 14px;
+        }
+        
+        /* MATRIX GRID */
+        .matrix-container {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .matrix-header {
+            display: grid;
+            grid-template-columns: 180px repeat(6, 1fr);
+            background: #f8fafc;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .header-cell {
+            padding: 14px 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+        }
+        
+        .header-cell.factor-label {
+            text-align: left;
+            padding-left: 20px;
+            color: #374151;
+        }
+        
+        .level-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .level-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 11px;
+            color: white;
+        }
+        
+        .level-badge.l1 { background: var(--l1-gray); }
+        .level-badge.l2 { background: var(--l2-blue); }
+        .level-badge.l3 { background: var(--l3-cyan); color: #0e7490; }
+        .level-badge.l4 { background: var(--l4-yellow); color: #92400e; }
+        .level-badge.l5 { background: var(--l5-pink); }
+        .level-badge.l6 { background: var(--l6-purple); }
+        
+        .matrix-row {
+            display: grid;
+            grid-template-columns: 180px repeat(6, 1fr);
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .matrix-row:last-child {
+            border-bottom: none;
+        }
+        
+        .factor-cell {
+            padding: 14px 16px;
+            background: #fafbfc;
+            border-right: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .factor-icon {
+            font-size: 20px;
+        }
+        
+        .factor-name {
+            font-weight: 600;
+            font-size: 13px;
+            color: #1f2937;
+            line-height: 1.3;
+        }
+        
+        .matrix-cell {
+            padding: 10px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border-right: 1px solid #f1f5f9;
+            min-height: 72px;
+            position: relative;
+        }
+        
+        .matrix-cell:last-child {
+            border-right: none;
+        }
+        
+        .matrix-cell:hover {
+            background: #f8fafc;
+        }
+        
+        .matrix-cell.selected {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        }
+        
+        .matrix-cell.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 16px;
+            height: 16px;
+            background: var(--coke-red);
+            color: white;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        
+        .cell-icon {
+            font-size: 18px;
+        }
+        
+        .cell-title {
+            font-size: 10px;
+            font-weight: 600;
+            color: #4b5563;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        /* RIGHT PANEL */
+        .right-panel {
+            width: 45%;
+            background: #f8fafc;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        
+        .right-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 24px;
+            border-bottom: 1px solid #e5e7eb;
+            z-index: 10;
+        }
+        
+        .role-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        
+        .role-icon-lg {
+            font-size: 40px;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .role-info {
+            flex: 1;
+        }
+        
+        .role-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 1px;
+            color: var(--coke-black);
+            margin-bottom: 4px;
+        }
+        
+        .role-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .right-content {
+            padding: 24px;
+        }
+        
+        /* PERFORMANCE OBJECTIVE */
+        .perf-objective {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .perf-objective h3 {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--coke-red);
+            margin-bottom: 10px;
+        }
+        
+        .perf-objective p {
+            font-size: 14px;
+            color: #374151;
+            line-height: 1.6;
+        }
+        
+        /* KPO CARDS */
+        .kpo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .kpo-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .kpo-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .kpo-icon {
+            font-size: 16px;
+        }
+        
+        .kpo-factor {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6b7280;
+        }
+        
+        .kpo-level {
+            margin-left: auto;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .kpo-level.l1 { background: var(--l1-gray); }
+        .kpo-level.l2 { background: var(--l2-blue); }
+        .kpo-level.l3 { background: var(--l3-cyan); color: #0e7490; }
+        .kpo-level.l4 { background: var(--l4-yellow); color: #92400e; }
+        .kpo-level.l5 { background: var(--l5-pink); }
+        .kpo-level.l6 { background: var(--l6-purple); }
+        
+        .kpo-text {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.5;
+        }
+        
+        /* MSA QUESTIONS */
+        .msa-section h3 {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+        
+        .msa-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .msa-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .msa-icon {
+            font-size: 20px;
+        }
+        
+        .msa-factor-name {
+            font-weight: 600;
+            font-size: 13px;
+            color: #1f2937;
+        }
+        
+        .msa-level-badge {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .msa-level-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .msa-level-dot.l1 { background: var(--l1-gray); }
+        .msa-level-dot.l2 { background: var(--l2-blue); }
+        .msa-level-dot.l3 { background: var(--l3-cyan); }
+        .msa-level-dot.l4 { background: var(--l4-yellow); }
+        .msa-level-dot.l5 { background: var(--l5-pink); }
+        .msa-level-dot.l6 { background: var(--l6-purple); }
+        
+        .msa-level-text {
+            font-size: 11px;
+            font-weight: 600;
+            color: #6b7280;
+        }
+        
+        .msa-question {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #374151;
+            font-style: italic;
+            line-height: 1.5;
+            border-left: 3px solid var(--coke-red);
+        }
+        
+        .listen-for {
+            background: #fefce8;
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+        
+        .listen-for-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ca8a04;
+            margin-bottom: 6px;
+        }
+        
+        .listen-for-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .listen-for-item {
+            font-size: 12px;
+            color: #713f12;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        
+        .listen-for-item::before {
+            content: '•';
+            color: #eab308;
+            font-weight: bold;
+        }
+        
+        /* PRINT STYLES */
+        @media print {
+            .left-panel { display: none; }
+            .right-panel { width: 100%; }
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .left-panel, .right-panel {
+                width: 100%;
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useMemo } = React;
+        
+        // ============================================
+        // 6×6 MATRIX DATA - Coca-Cola HBC Sales
+        // ============================================
+        
+        const FACTORS = [
+            {
+                id: 'customer_partnership',
+                name: 'Customer Partnership Excellence',
+                icon: '🤝',
+                levels: [
+                    {
+                        title: 'Relationship Learner',
+                        icon: '📚',
+                        kpo: 'Build rapport with 50+ assigned customers within first 90 days; achieve 85% customer satisfaction on initial interactions',
+                        msaQuestion: 'Tell me about a time you had to build trust with someone who was initially skeptical of you.',
+                        listenFor: ['Persistence in relationship building', 'Listening and adapting to needs', 'Following through on commitments']
+                    },
+                    {
+                        title: 'Trusted Advisor',
+                        icon: '💬',
+                        kpo: 'Maintain 90%+ customer retention rate; achieve top-quartile NPS scores in assigned territory',
+                        msaQuestion: 'Tell me about a time you became a go-to resource that a customer relied on beyond basic transactions.',
+                        listenFor: ['Proactive value delivery', 'Deep understanding of customer business', 'Consultative approach']
+                    },
+                    {
+                        title: 'Business Partner',
+                        icon: '🎯',
+                        kpo: 'Grow portfolio revenue 15%+ year-over-year; co-develop joint business plans with top 10 accounts',
+                        msaQuestion: 'Tell me about a time you identified a strategic opportunity that significantly grew business with an existing customer.',
+                        listenFor: ['Strategic account planning', 'Cross-selling success', 'Long-term relationship vision']
+                    },
+                    {
+                        title: 'Strategic Consultant',
+                        icon: '💎',
+                        kpo: 'Secure 3+ multi-year agreements with key accounts; achieve 20%+ share of customer beverage spend',
+                        msaQuestion: 'Tell me about a time you restructured a complex customer relationship to create mutual strategic value.',
+                        listenFor: ['C-suite engagement', 'Value-based negotiation', 'Partnership frameworks']
+                    },
+                    {
+                        title: 'Enterprise Architect',
+                        icon: '🏛️',
+                        kpo: 'Lead joint business planning for €10M+ accounts; establish CCHBC as preferred strategic partner',
+                        msaQuestion: 'Tell me about a time you transformed how your organization partnered with its most important customers.',
+                        listenFor: ['Industry-level relationship models', 'Cross-functional orchestration', 'Partnership innovation']
+                    },
+                    {
+                        title: 'Market Shaper',
+                        icon: '🌍',
+                        kpo: 'Establish industry-leading partnership models adopted across CCHBC markets; drive €50M+ strategic deals',
+                        msaQuestion: 'Tell me about a time you pioneered a customer partnership approach that changed industry standards.',
+                        listenFor: ['Industry thought leadership', 'Partnership ecosystem creation', 'Market-defining relationships']
+                    }
+                ]
+            },
+            {
+                id: 'commercial_execution',
+                name: 'Commercial Execution & Merchandising',
+                icon: '🎪',
+                levels: [
+                    {
+                        title: 'Execution Fundamentalist',
+                        icon: '📋',
+                        kpo: 'Achieve 95% planogram compliance; complete 100% of scheduled store visits with proper execution checklist',
+                        msaQuestion: 'Tell me about a time you had to consistently execute detailed tasks across multiple locations.',
+                        listenFor: ['Attention to detail', 'Consistency and reliability', 'Following standard procedures']
+                    },
+                    {
+                        title: 'Display Champion',
+                        icon: '🏆',
+                        kpo: 'Achieve 110% of display targets; win territory "Perfect Store" recognition within first year',
+                        msaQuestion: 'Tell me about a time you significantly improved the visual presentation or execution quality in your area of responsibility.',
+                        listenFor: ['Pride in execution excellence', 'Creative problem-solving', 'Competitive drive']
+                    },
+                    {
+                        title: 'Merchandising Expert',
+                        icon: '⭐',
+                        kpo: 'Achieve 98% "Perfect Store" score across territory; deliver 20% lift on promotional displays vs. baseline',
+                        msaQuestion: 'Tell me about a time you became the expert others consulted for execution best practices.',
+                        listenFor: ['Mastery of merchandising standards', 'Teaching others', 'Continuous improvement mindset']
+                    },
+                    {
+                        title: 'Execution Optimizer',
+                        icon: '📈',
+                        kpo: 'Develop and implement execution playbooks driving 15% efficiency gains; achieve top-decile execution KPIs nationally',
+                        msaQuestion: 'Tell me about a time you redesigned execution processes to achieve breakthrough performance.',
+                        listenFor: ['Process innovation', 'ROI-driven decisions', 'Scalable solutions']
+                    },
+                    {
+                        title: 'Standards Architect',
+                        icon: '📐',
+                        kpo: 'Define regional execution standards adopted by 500+ sales reps; deliver measurable share gains through execution excellence',
+                        msaQuestion: 'Tell me about a time you established execution standards that became the benchmark for others.',
+                        listenFor: ['Standard-setting capability', 'Cross-team influence', 'Measurement frameworks']
+                    },
+                    {
+                        title: 'Execution Visionary',
+                        icon: '🔮',
+                        kpo: 'Pioneer next-generation execution capabilities (digital, IoT, AI-driven); establish CCHBC as execution benchmark globally',
+                        msaQuestion: 'Tell me about a time you fundamentally transformed how commercial execution was approached in your industry.',
+                        listenFor: ['Technology-enabled execution', 'Industry leadership', 'Future of retail vision']
+                    }
+                ]
+            },
+            {
+                id: 'route_territory',
+                name: 'Route & Territory Management',
+                icon: '🗺️',
+                levels: [
+                    {
+                        title: 'Route Navigator',
+                        icon: '🚗',
+                        kpo: 'Complete 100% of planned visits; achieve route efficiency targets within first 60 days',
+                        msaQuestion: 'Tell me about a time you had to learn and optimize a new territory or route quickly.',
+                        listenFor: ['Geographic learning', 'Time management', 'Adaptability']
+                    },
+                    {
+                        title: 'Territory Owner',
+                        icon: '📍',
+                        kpo: 'Achieve 95% outlet coverage; reduce unproductive time by 20% through route optimization',
+                        msaQuestion: 'Tell me about a time you improved how you covered your territory to maximize results.',
+                        listenFor: ['Territory knowledge', 'Efficiency improvements', 'Prioritization skills']
+                    },
+                    {
+                        title: 'Distribution Master',
+                        icon: '🎯',
+                        kpo: 'Achieve 98% distribution targets across all SKUs; identify and convert 50+ new distribution points annually',
+                        msaQuestion: 'Tell me about a time you significantly expanded distribution or coverage in a challenging market.',
+                        listenFor: ['Market development', 'Obstacle navigation', 'Persistent prospecting']
+                    },
+                    {
+                        title: 'Route Strategist',
+                        icon: '🧭',
+                        kpo: 'Design route structures serving 1000+ outlets; deliver 25% productivity improvement through territory redesign',
+                        msaQuestion: 'Tell me about a time you redesigned territory or route structures to dramatically improve results.',
+                        listenFor: ['Strategic planning', 'Data-driven redesign', 'Change management']
+                    },
+                    {
+                        title: 'Network Architect',
+                        icon: '🕸️',
+                        kpo: 'Optimize route-to-market strategy across multiple regions; reduce cost-to-serve by 15% while improving service levels',
+                        msaQuestion: 'Tell me about a time you transformed the route-to-market approach for a significant portion of the business.',
+                        listenFor: ['Network optimization', 'Cost-service balance', 'Multi-channel strategy']
+                    },
+                    {
+                        title: 'RTM Transformer',
+                        icon: '🚀',
+                        kpo: 'Pioneer innovative RTM models (hybrid, direct store delivery, digital); establish best-in-class distribution capability',
+                        msaQuestion: 'Tell me about a time you fundamentally reinvented how products reached customers in your industry.',
+                        listenFor: ['Industry innovation', 'Disruptive thinking', 'Future distribution models']
+                    }
+                ]
+            },
+            {
+                id: 'data_analytics',
+                name: 'Data-Driven Decision Making',
+                icon: '📊',
+                levels: [
+                    {
+                        title: 'Data Consumer',
+                        icon: '👀',
+                        kpo: 'Use sales tools daily; accurately report all required metrics with 99% compliance',
+                        msaQuestion: 'Tell me about a time you used data or reports to improve your daily work performance.',
+                        listenFor: ['Basic data literacy', 'Tool adoption', 'Reporting accuracy']
+                    },
+                    {
+                        title: 'Insight Seeker',
+                        icon: '🔍',
+                        kpo: 'Identify 10+ actionable insights monthly from sales data; improve personal performance 15% through data-informed decisions',
+                        msaQuestion: 'Tell me about a time you discovered something in data that changed how you approached your work.',
+                        listenFor: ['Curiosity about data', 'Pattern recognition', 'Self-directed analysis']
+                    },
+                    {
+                        title: 'Analytics Practitioner',
+                        icon: '📉',
+                        kpo: 'Build territory dashboards tracking 20+ KPIs; deliver monthly insight presentations to regional leadership',
+                        msaQuestion: 'Tell me about a time you built an analysis or dashboard that others relied on for decision-making.',
+                        listenFor: ['Analytical skills', 'Visualization ability', 'Stakeholder communication']
+                    },
+                    {
+                        title: 'Intelligence Leader',
+                        icon: '🧠',
+                        kpo: 'Develop predictive models improving forecast accuracy by 20%; establish analytics-driven planning processes',
+                        msaQuestion: 'Tell me about a time you introduced analytics capabilities that transformed how decisions were made.',
+                        listenFor: ['Advanced analytics', 'Process transformation', 'Data culture building']
+                    },
+                    {
+                        title: 'Insights Architect',
+                        icon: '🔬',
+                        kpo: 'Design sales intelligence platforms serving 500+ users; deliver €10M+ in value through data-driven optimization',
+                        msaQuestion: 'Tell me about a time you built analytics infrastructure that created enterprise-wide value.',
+                        listenFor: ['Platform thinking', 'Scalable solutions', 'Business impact quantification']
+                    },
+                    {
+                        title: 'Analytics Visionary',
+                        icon: '🎯',
+                        kpo: 'Pioneer AI/ML applications in sales; establish CCHBC as analytics-first commercial organization',
+                        msaQuestion: 'Tell me about a time you pioneered next-generation analytics that others in the industry adopted.',
+                        listenFor: ['AI/ML applications', 'Industry thought leadership', 'Future of sales analytics']
+                    }
+                ]
+            },
+            {
+                id: 'team_leadership',
+                name: 'Team Leadership & Development',
+                icon: '👥',
+                levels: [
+                    {
+                        title: 'Team Contributor',
+                        icon: '🤲',
+                        kpo: 'Achieve top-quartile peer collaboration ratings; complete all assigned team projects successfully',
+                        msaQuestion: 'Tell me about a time you contributed significantly to a team effort beyond your individual responsibilities.',
+                        listenFor: ['Collaboration mindset', 'Reliability', 'Supportive behavior']
+                    },
+                    {
+                        title: 'Peer Leader',
+                        icon: '🌟',
+                        kpo: 'Informally mentor 2+ new team members; recognized by peers as go-to resource for guidance',
+                        msaQuestion: 'Tell me about a time you helped develop or guide colleagues without formal authority.',
+                        listenFor: ['Natural leadership', 'Knowledge sharing', 'Peer influence']
+                    },
+                    {
+                        title: 'Team Coach',
+                        icon: '🏅',
+                        kpo: 'Develop 3+ direct reports to exceed targets; achieve 90%+ team engagement scores',
+                        msaQuestion: 'Tell me about a time you developed someone who went on to significantly exceed expectations.',
+                        listenFor: ['Coaching capability', 'Individual development', 'Performance improvement']
+                    },
+                    {
+                        title: 'Talent Builder',
+                        icon: '🎓',
+                        kpo: 'Promote 5+ team members to next level; establish talent pipeline producing 30% of regional promotions',
+                        msaQuestion: 'Tell me about a time you built a team or function that became known for developing talent.',
+                        listenFor: ['Talent pipeline creation', 'Succession planning', 'Culture building']
+                    },
+                    {
+                        title: 'Leadership Multiplier',
+                        icon: '🚀',
+                        kpo: 'Develop 10+ future leaders; establish leadership academy producing country-level successors',
+                        msaQuestion: 'Tell me about a time you created leadership development programs that transformed organizational capability.',
+                        listenFor: ['Leadership program design', 'Organizational impact', 'Legacy building']
+                    },
+                    {
+                        title: 'Organizational Catalyst',
+                        icon: '⚡',
+                        kpo: 'Shape commercial leadership model across CCHBC; develop executives leading multiple markets',
+                        msaQuestion: 'Tell me about a time you fundamentally shaped how leadership was developed across an organization.',
+                        listenFor: ['Enterprise leadership philosophy', 'Executive development', 'Organizational transformation']
+                    }
+                ]
+            },
+            {
+                id: 'strategic_growth',
+                name: 'Strategic Business Development',
+                icon: '🚀',
+                levels: [
+                    {
+                        title: 'Opportunity Spotter',
+                        icon: '👁️',
+                        kpo: 'Identify 20+ growth opportunities quarterly; convert 50% of identified opportunities into active pursuits',
+                        msaQuestion: 'Tell me about a time you identified a business opportunity that others had missed.',
+                        listenFor: ['Observation skills', 'Opportunity recognition', 'Proactive behavior']
+                    },
+                    {
+                        title: 'Growth Driver',
+                        icon: '📈',
+                        kpo: 'Deliver €100K+ in new business annually; achieve 120% of new business targets',
+                        msaQuestion: 'Tell me about a time you drove significant growth in a mature or competitive situation.',
+                        listenFor: ['Growth orientation', 'Competitive wins', 'Hunter mentality']
+                    },
+                    {
+                        title: 'Market Developer',
+                        icon: '🌱',
+                        kpo: 'Launch 2+ new category initiatives driving €500K+ revenue; establish presence in emerging channels',
+                        msaQuestion: 'Tell me about a time you developed a new market, channel, or category from scratch.',
+                        listenFor: ['Market development', 'Category expansion', 'Innovation implementation']
+                    },
+                    {
+                        title: 'Business Strategist',
+                        icon: '♟️',
+                        kpo: 'Develop 3-year growth strategy for €10M+ territory; deliver 25% above-market growth rates',
+                        msaQuestion: 'Tell me about a time you developed and executed a strategy that transformed business performance.',
+                        listenFor: ['Strategic thinking', 'Long-term planning', 'Execution excellence']
+                    },
+                    {
+                        title: 'Growth Architect',
+                        icon: '🏗️',
+                        kpo: 'Lead €50M+ market growth initiatives; establish new business models generating sustainable advantage',
+                        msaQuestion: 'Tell me about a time you architected growth strategies that fundamentally changed market dynamics.',
+                        listenFor: ['Business model innovation', 'Market-level impact', 'Sustainable advantage creation']
+                    },
+                    {
+                        title: 'Market Transformer',
+                        icon: '🌐',
+                        kpo: 'Define CCHBC commercial strategy across multiple markets; pioneer industry-changing growth approaches',
+                        msaQuestion: 'Tell me about a time you transformed market approach in ways that redefined industry competition.',
+                        listenFor: ['Industry transformation', 'Strategic vision', 'Multi-market orchestration']
+                    }
+                ]
+            }
+        ];
+        
+        const ROLES = [
+            {
+                id: 'business_developer',
+                name: 'Business Developer',
+                segment: 'Field Sales',
+                comp: '€25K-35K',
+                experience: '0-2 years',
+                icon: '🎯',
+                levels: [1, 1, 1, 1, 0, 1]
+            },
+            {
+                id: 'leadership_trainee',
+                name: 'Leadership Trainee',
+                segment: 'Commercial Development',
+                comp: '€35K-45K',
+                experience: '0-3 years',
+                icon: '🌟',
+                levels: [2, 2, 1, 2, 1, 2]
+            },
+            {
+                id: 'sales_supervisor',
+                name: 'Sales Supervisor',
+                segment: 'Field Sales',
+                comp: '€40K-50K',
+                experience: '2-4 years',
+                icon: '📋',
+                levels: [2, 2, 2, 2, 2, 2]
+            },
+            {
+                id: 'key_account_exec',
+                name: 'Key Account Executive',
+                segment: 'Key Accounts',
+                comp: '€45K-60K',
+                experience: '3-5 years',
+                icon: '💼',
+                levels: [3, 2, 2, 2, 2, 2]
+            },
+            {
+                id: 'area_sales_manager',
+                name: 'Area Sales Manager',
+                segment: 'Field Sales',
+                comp: '€55K-70K',
+                experience: '4-6 years',
+                icon: '🗺️',
+                levels: [3, 3, 3, 3, 3, 3]
+            },
+            {
+                id: 'key_account_manager',
+                name: 'Key Account Manager',
+                segment: 'Key Accounts',
+                comp: '€60K-80K',
+                experience: '5-8 years',
+                icon: '🤝',
+                levels: [4, 3, 3, 3, 3, 3]
+            },
+            {
+                id: 'regional_sales_manager',
+                name: 'Regional Sales Manager',
+                segment: 'Field Sales',
+                comp: '€75K-100K',
+                experience: '6-10 years',
+                icon: '📍',
+                levels: [4, 4, 4, 4, 4, 4]
+            },
+            {
+                id: 'channel_manager',
+                name: 'Channel Manager',
+                segment: 'Trade Marketing',
+                comp: '€70K-90K',
+                experience: '6-10 years',
+                icon: '📺',
+                levels: [4, 4, 3, 4, 3, 4]
+            },
+            {
+                id: 'trade_marketing_mgr',
+                name: 'Trade Marketing Manager',
+                segment: 'Trade Marketing',
+                comp: '€80K-105K',
+                experience: '8-12 years',
+                icon: '🎪',
+                levels: [4, 5, 4, 4, 4, 4]
+            },
+            {
+                id: 'country_sales_director',
+                name: 'Country Sales Director',
+                segment: 'Commercial Leadership',
+                comp: '€120K-160K',
+                experience: '10-15 years',
+                icon: '🏆',
+                levels: [5, 5, 5, 5, 5, 5]
+            },
+            {
+                id: 'commercial_director',
+                name: 'Commercial Director',
+                segment: 'Executive Leadership',
+                comp: '€180K-250K',
+                experience: '15+ years',
+                icon: '👔',
+                levels: [5, 5, 5, 5, 5, 5]
+            },
+            {
+                id: 'general_manager',
+                name: 'General Manager',
+                segment: 'Executive Leadership',
+                comp: '€250K+',
+                experience: '18+ years',
+                icon: '🌍',
+                levels: [5, 5, 5, 5, 5, 5]
+            }
+        ];
+        
+        const LEVEL_COLORS = {
+            0: { bg: '#f1f5f9', border: '#e2e8f0', text: '#64748b' },
+            1: { bg: '#f1f5f9', border: 'var(--l1-gray)', text: '#64748b' },
+            2: { bg: '#eff6ff', border: 'var(--l2-blue)', text: '#1e40af' },
+            3: { bg: '#ecfeff', border: 'var(--l3-cyan)', text: '#0e7490' },
+            4: { bg: '#fefce8', border: 'var(--l4-yellow)', text: '#92400e' },
+            5: { bg: '#fdf2f8', border: 'var(--l5-pink)', text: '#9d174d' },
+            6: { bg: '#f5f3ff', border: 'var(--l6-purple)', text: '#6b21a8' }
+        };
+        
+        function App() {
+            const [selectedRole, setSelectedRole] = useState(ROLES[0]);
+            const [selectedLevels, setSelectedLevels] = useState([...ROLES[0].levels]);
+            
+            const handleRoleSelect = (role) => {
+                setSelectedRole(role);
+                setSelectedLevels([...role.levels]);
+            };
+            
+            const handleCellClick = (factorIndex, levelIndex) => {
+                const newLevels = [...selectedLevels];
+                newLevels[factorIndex] = levelIndex;
+                setSelectedLevels(newLevels);
+            };
+            
+            const generateObjective = useMemo(() => {
+                const avgLevel = selectedLevels.reduce((a, b) => a + b, 0) / selectedLevels.length;
+                
+                if (avgLevel <= 1) {
+                    return `As a ${selectedRole.name}, you will master foundational commercial skills while building strong customer relationships in your assigned territory. Your success will be measured by consistent execution excellence, rapid learning of the CCHBC portfolio, and demonstrating the "winning DNA" that defines our frontline sales team.`;
+                } else if (avgLevel <= 2) {
+                    return `As a ${selectedRole.name}, you will own commercial outcomes for your territory while developing expertise in customer partnership and market execution. You'll drive above-market growth through consultative selling, data-informed decisions, and excellence in merchandising standards that make CCHBC the preferred 24/7 beverage partner.`;
+                } else if (avgLevel <= 3) {
+                    return `As a ${selectedRole.name}, you will lead commercial strategy for key accounts or territories, delivering breakthrough growth through strategic customer partnerships and execution excellence. Your leadership will develop talent, establish best practices, and drive innovation in how CCHBC wins in the marketplace.`;
+                } else if (avgLevel <= 4) {
+                    return `As a ${selectedRole.name}, you will architect commercial success across multiple territories or the nation, establishing standards that drive market leadership. Your strategic vision will shape customer partnerships, talent development, and operational excellence that positions CCHBC as the undisputed leader in beverage distribution.`;
+                } else {
+                    return `As a ${selectedRole.name}, you will transform CCHBC's commercial capability across markets, pioneering approaches that redefine industry standards. Your executive leadership will shape how we partner with customers, develop commercial talent, and leverage data and innovation to win with our 24/7 portfolio in an evolving marketplace.`;
+                }
+            }, [selectedRole, selectedLevels]);
+            
+            return (
+                <div className="app-container">
+                    <div className="left-panel">
+                        <header className="company-header">
+                            <h1 className="company-name">COCA-COLA HBC</h1>
+                            <p className="company-tagline">24/7 Beverage Partner • 29 Markets • 100+ Brands</p>
+                            <div className="function-badge">
+                                <span>📈</span>
+                                <span>Sales Function</span>
+                            </div>
+                        </header>
+                        
+                        <div className="role-section">
+                            <h2 className="section-title">Select Role Profile</h2>
+                            <div className="role-pills">
+                                {ROLES.map(role => (
+                                    <button
+                                        key={role.id}
+                                        className={`role-pill ${selectedRole.id === role.id ? 'active' : ''}`}
+                                        onClick={() => handleRoleSelect(role)}
+                                    >
+                                        <span className="icon">{role.icon}</span>
+                                        {role.name}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        
+                        <div className="matrix-container">
+                            <div className="matrix-header">
+                                <div className="header-cell factor-label">Success Factor</div>
+                                {[1, 2, 3, 4, 5, 6].map(level => (
+                                    <div key={level} className="header-cell">
+                                        <div className="level-label">
+                                            <div className={`level-badge l${level}`}>L{level}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            {FACTORS.map((factor, factorIndex) => (
+                                <div key={factor.id} className="matrix-row">
+                                    <div className="factor-cell">
+                                        <span className="factor-icon">{factor.icon}</span>
+                                        <span className="factor-name">{factor.name}</span>
+                                    </div>
+                                    {factor.levels.map((level, levelIndex) => (
+                                        <div
+                                            key={levelIndex}
+                                            className={`matrix-cell ${selectedLevels[factorIndex] === levelIndex ? 'selected' : ''}`}
+                                            onClick={() => handleCellClick(factorIndex, levelIndex)}
+                                        >
+                                            <span className="cell-icon">{level.icon}</span>
+                                            <span className="cell-title">{level.title}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="right-panel">
+                        <div className="right-header">
+                            <div className="role-header">
+                                <div className="role-icon-lg">{selectedRole.icon}</div>
+                                <div className="role-info">
+                                    <h2 className="role-name">{selectedRole.name}</h2>
+                                    <div className="role-meta">
+                                        <span className="meta-item">🏢 {selectedRole.segment}</span>
+                                        <span className="meta-item">💰 {selectedRole.comp}</span>
+                                        <span className="meta-item">⏱️ {selectedRole.experience}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="right-content">
+                            <div className="perf-objective">
+                                <h3>Performance Objective</h3>
+                                <p>{generateObjective}</p>
+                            </div>
+                            
+                            <h3 className="section-title" style={{marginBottom: '16px'}}>Key Performance Outcomes</h3>
+                            <div className="kpo-grid">
+                                {FACTORS.map((factor, idx) => {
+                                    const levelIdx = selectedLevels[idx];
+                                    const level = factor.levels[levelIdx];
+                                    return (
+                                        <div key={factor.id} className="kpo-card">
+                                            <div className="kpo-header">
+                                                <span className="kpo-icon">{factor.icon}</span>
+                                                <span className="kpo-factor">{factor.name.split(' ')[0]}</span>
+                                                <span className={`kpo-level l${levelIdx + 1}`}>L{levelIdx + 1}</span>
+                                            </div>
+                                            <p className="kpo-text">{level.kpo}</p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            
+                            <div className="msa-section">
+                                <h3>MSA Interview Questions</h3>
+                                {FACTORS.map((factor, idx) => {
+                                    const levelIdx = selectedLevels[idx];
+                                    const level = factor.levels[levelIdx];
+                                    return (
+                                        <div key={factor.id} className="msa-card">
+                                            <div className="msa-header">
+                                                <span className="msa-icon">{factor.icon}</span>
+                                                <span className="msa-factor-name">{factor.name}</span>
+                                                <div className="msa-level-badge">
+                                                    <span className={`msa-level-dot l${levelIdx + 1}`}></span>
+                                                    <span className="msa-level-text">L{levelIdx + 1}: {level.title}</span>
+                                                </div>
+                                            </div>
+                                            <div className="msa-question">"{level.msaQuestion}"</div>
+                                            <div className="listen-for">
+                                                <div className="listen-for-title">Listen For</div>
+                                                <div className="listen-for-list">
+                                                    {level.listenFor.map((item, i) => (
+                                                        <span key={i} className="listen-for-item">{item}</span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
