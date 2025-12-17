@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6×6 Matrix Builder | Success Factor Discovery</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --primary: #7c3aed;
+      --primary-dark: #6d28d9;
+      --primary-light: #a78bfa;
+      --secondary: #64748b;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #faf5ff;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --border: #e2e8f0;
+    }
+    
+    body {
+      font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Left Panel */
+    .builder-panel {
+      width: 50%;
+      background: var(--bg);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    @media (max-width: 1400px) {
+      .app-container { flex-direction: column; }
+      .builder-panel, .output-panel { width: 100%; }
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: white;
+      padding: 24px;
+      text-align: center;
+    }
+    
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    
+    .main-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    
+    .subtitle {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+    
+    /* Step Navigation */
+    .step-nav {
+      display: flex;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      overflow-x: auto;
+    }
+    
+    .step-tab {
+      flex: 1;
+      min-width: 100px;
+      padding: 14px 8px;
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-light);
+      background: white;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .step-tab:hover { background: #faf5ff; }
+    
+    .step-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: #faf5ff;
+    }
+    
+    .step-tab.completed { color: var(--success); }
+    
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+    
+    .step-tab.active .step-num {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .step-tab.completed .step-num {
+      background: var(--success);
+      color: white;
+    }
+    
+    /* Form Content */
+    .form-content {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+    }
+    
+    /* Cards */
+    .form-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+      border: 1px solid var(--border);
+    }
+    
+    .form-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .form-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    
+    .form-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    
+    .form-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
+    
+    /* Form Elements */
+    .form-group { margin-bottom: 16px; }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    
+    .form-label-hint {
+      font-weight: 400;
+      color: var(--text-light);
+    }
+    
+    .required { color: var(--danger); }
+    
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    }
+    
+    .form-input::placeholder { color: #94a3b8; }
+    
+    textarea.form-input {
+      min-height: 100px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+    
+    textarea.form-input.large { min-height: 200px; }
+    
+    .form-hint {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+    
+    /* URL List */
+    .url-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .url-item {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .url-item input { flex: 1; }
+    
+    /* Info/Warning Boxes */
+    .info-box {
+      background: linear-gradient(135deg, #ede9fe, #faf5ff);
+      border: 1px solid #c4b5fd;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .info-box-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .info-box-text {
+      font-size: 0.8rem;
+      color: #5b21b6;
+      line-height: 1.5;
+    }
+    
+    .warning-box {
+      background: #fefce8;
+      border: 1px solid #fde047;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .warning-box-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #a16207;
+      margin-bottom: 4px;
+    }
+    
+    .warning-box-text {
+      font-size: 0.8rem;
+      color: #854d0e;
+      line-height: 1.5;
+    }
+    
+    .success-box {
+      background: #ecfdf5;
+      border: 1px solid #6ee7b7;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .success-box-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #047857;
+      margin-bottom: 4px;
+    }
+    
+    .success-box-text {
+      font-size: 0.8rem;
+      color: #065f46;
+      line-height: 1.5;
+    }
+    
+    /* Hint Cards */
+    .hint-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+    
+    .hint-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    
+    .hint-card-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .hint-card-text {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
+    
+    /* Factor Hints */
+    .factor-hints {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    
+    .factor-hint {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border-left: 3px solid var(--primary);
+    }
+    
+    .factor-hint-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    
+    .factor-hint-content { flex: 1; }
+    
+    .factor-hint-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .factor-hint-desc {
+      font-size: 0.7rem;
+      color: var(--text-light);
+    }
+    
+    /* Document Content */
+    .doc-section {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    
+    .doc-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .doc-section-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .doc-section-badge {
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      background: var(--primary);
+      color: white;
+      border-radius: 10px;
+    }
+    
+    /* Buttons */
+    .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
+    
+    .btn-secondary {
+      background: white;
+      border: 2px solid var(--border);
+      color: var(--text);
+    }
+    
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-light);
+      padding: 8px 12px;
+    }
+    
+    .btn-ghost:hover {
+      background: #f1f5f9;
+      color: var(--text);
+    }
+    
+    .btn-danger {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    
+    .btn-danger:hover { background: #fecaca; }
+    
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.75rem;
+    }
+    
+    .add-btn {
+      width: 100%;
+      padding: 12px;
+      background: white;
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .add-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    /* Role Builder */
+    .role-item {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    
+    .role-item-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .role-item-num {
+      width: 24px;
+      height: 24px;
+      background: var(--primary);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .role-item-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .role-input {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-family: inherit;
+    }
+    
+    .role-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    /* Navigation Footer */
+    .nav-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: white;
+      border-top: 1px solid var(--border);
+    }
+    
+    .nav-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: var(--text-light);
+    }
+    
+    .progress-bar {
+      width: 120px;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+    
+    /* Right Panel */
+    .output-panel {
+      width: 50%;
+      background: #1e1b4b;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .output-header {
+      background: #0f0a3c;
+      color: white;
+      padding: 20px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .output-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--primary-light);
+      margin-bottom: 6px;
+    }
+    
+    .output-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    
+    .output-stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    
+    .output-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+    
+    .output-stat-value {
+      color: white;
+      font-weight: 600;
+    }
+    
+    .output-stat-icon {
+      width: 20px;
+      height: 20px;
+      background: rgba(167, 139, 250, 0.2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+    }
+    
+    .output-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .output-btn {
+      padding: 10px 18px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .output-btn:hover { background: rgba(255,255,255,0.15); }
+    
+    .output-btn.primary {
+      background: var(--success);
+      border-color: var(--success);
+    }
+    
+    .output-btn.primary:hover { background: #059669; }
+    
+    /* Output Content */
+    .output-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    
+    .prompt-output {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      line-height: 1.8;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 14px 24px;
+      background: var(--success);
+      color: white;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    /* Mode Toggle */
+    .mode-toggle {
+      display: flex;
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 16px;
+    }
+    
+    .mode-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .mode-btn.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .mode-btn:hover:not(.active) {
+      color: var(--text);
+    }
+    
+    /* Industry Presets */
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+    
+    .preset-btn {
+      padding: 10px 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    
+    .preset-btn:hover {
+      border-color: var(--primary);
+      background: #faf5ff;
+    }
+    
+    .preset-btn.active {
+      border-color: var(--primary);
+      background: #faf5ff;
+      color: var(--primary);
+    }
+    
+    .preset-icon {
+      font-size: 1rem;
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Industry presets with suggested factors
+    const industryPresets = {
+      technology: {
+        name: "Technology / SaaS",
+        icon: "💻",
+        suggestedFactors: ["Technical depth", "Product knowledge", "Innovation/experimentation", "Cross-functional collaboration", "Customer empathy"],
+        considerations: "Fast iteration, product-market fit, scaling challenges, technical debt management"
+      },
+      construction: {
+        name: "Construction / Engineering",
+        icon: "🏗️",
+        suggestedFactors: ["Technical/trade expertise", "Safety & compliance", "Project complexity", "Stakeholder management", "Field leadership"],
+        considerations: "Union environments, safety regulations, multi-site coordination, weather/schedule dependencies"
+      },
+      healthcare: {
+        name: "Healthcare",
+        icon: "🏥",
+        suggestedFactors: ["Clinical expertise", "Patient outcomes", "Regulatory compliance", "Care coordination", "Quality & safety"],
+        considerations: "HIPAA, patient safety, credentialing, interdisciplinary teams, EMR systems"
+      },
+      finance: {
+        name: "Financial Services",
+        icon: "🏦",
+        suggestedFactors: ["Technical analysis", "Risk management", "Regulatory knowledge", "Client relationship", "Market insight"],
+        considerations: "SEC/FINRA compliance, fiduciary duty, market volatility, client confidentiality"
+      },
+      manufacturing: {
+        name: "Manufacturing",
+        icon: "🏭",
+        suggestedFactors: ["Process expertise", "Quality control", "Safety leadership", "Continuous improvement", "Supply chain coordination"],
+        considerations: "Lean/Six Sigma, OSHA, equipment maintenance, production scheduling, inventory management"
+      },
+      government: {
+        name: "Government / Defense",
+        icon: "🏛️",
+        suggestedFactors: ["Mission expertise", "Security clearance level", "Compliance & governance", "Stakeholder navigation", "Program management"],
+        considerations: "Security clearances, DFARS/FAR, congressional oversight, budget cycles, inter-agency coordination"
+      },
+      retail: {
+        name: "Retail / E-commerce",
+        icon: "🛒",
+        suggestedFactors: ["Customer experience", "Merchandising", "Operations efficiency", "Data-driven decisions", "Omnichannel integration"],
+        considerations: "Seasonality, inventory turns, customer acquisition cost, in-store vs online balance"
+      },
+      professional_services: {
+        name: "Professional Services",
+        icon: "💼",
+        suggestedFactors: ["Domain expertise", "Client management", "Business development", "Delivery excellence", "Team leverage"],
+        considerations: "Utilization rates, client relationships, knowledge management, partner track"
+      }
+    };
+
+    // Common success factor templates
+    const commonFactors = [
+      { id: 'technical', name: "Technical/Domain Expertise", icon: "🧠", desc: "Depth and breadth of specialized knowledge" },
+      { id: 'scope', name: "Scope & Scale of Impact", icon: "📊", desc: "Size of projects, teams, budgets managed" },
+      { id: 'complexity', name: "Problem Complexity", icon: "🧩", desc: "Navigating ambiguity and novel challenges" },
+      { id: 'influence', name: "Stakeholder Influence", icon: "👥", desc: "Range of people engaged and ability to align" },
+      { id: 'leadership', name: "People Leadership", icon: "👔", desc: "Team management and talent development" },
+      { id: 'delivery', name: "Delivery Lifecycle", icon: "🔄", desc: "Build new vs optimize vs scale at maturity" },
+      { id: 'customer', name: "Customer Impact", icon: "❤️", desc: "Customer outcomes, retention, satisfaction" },
+      { id: 'innovation', name: "Innovation", icon: "💡", desc: "Identifying opportunities, experimentation" },
+      { id: 'commercial', name: "Commercial Acumen", icon: "💰", desc: "Revenue, quota, deal size, financial impact" },
+      { id: 'compliance', name: "Compliance & Risk", icon: "⚖️", desc: "Regulatory, legal, safety requirements" }
+    ];
+
+    const PromptBuilder = () => {
+      const [currentStep, setCurrentStep] = useState(1);
+      const [showToast, setShowToast] = useState(false);
+      const [toastMessage, setToastMessage] = useState('');
+
+      // Step 1: Company
+      const [company, setCompany] = useState('');
+      const [companyUrl, setCompanyUrl] = useState('');
+      const [selectedIndustry, setSelectedIndustry] = useState('');
+      const [industryNotes, setIndustryNotes] = useState('');
+      const [productsServices, setProductsServices] = useState('');
+
+      // Step 2: Job Family
+      const [careersUrl, setCareersUrl] = useState('');
+      const [additionalJobUrls, setAdditionalJobUrls] = useState(['']);
+      const [jobFamily, setJobFamily] = useState('');
+      const [jobFamilyFocus, setJobFamilyFocus] = useState('');
+      const [sampleTitles, setSampleTitles] = useState('');
+
+      // Step 3: Documents & Context
+      const [jobDescriptions, setJobDescriptions] = useState('');
+      const [companyDocs, setCompanyDocs] = useState('');
+      const [competencyFramework, setCompetencyFramework] = useState('');
+      const [additionalContext, setAdditionalContext] = useState('');
+
+      // Step 4: Factor Discovery Guidance
+      const [factorMode, setFactorMode] = useState('discover'); // 'discover' or 'guided'
+      const [factorHints, setFactorHints] = useState([]);
+      const [factorNotes, setFactorNotes] = useState('');
+      const [mustIncludeFactors, setMustIncludeFactors] = useState('');
+      const [avoidFactors, setAvoidFactors] = useState('');
+
+      // Step 4: Roles
+      const [roles, setRoles] = useState([{ title: '', segment: '', experience: '' }]);
+      const [levelingNotes, setLevelingNotes] = useState('');
+
+      const showToastMsg = (msg) => {
+        setToastMessage(msg);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 2500);
+      };
+
+      const toggleFactorHint = (factorId) => {
+        if (factorHints.includes(factorId)) {
+          setFactorHints(factorHints.filter(f => f !== factorId));
+        } else {
+          setFactorHints([...factorHints, factorId]);
+        }
+      };
+
+      const addJobUrl = () => setAdditionalJobUrls([...additionalJobUrls, '']);
+      const updateJobUrl = (i, val) => {
+        const updated = [...additionalJobUrls];
+        updated[i] = val;
+        setAdditionalJobUrls(updated);
+      };
+      const removeJobUrl = (i) => setAdditionalJobUrls(additionalJobUrls.filter((_, idx) => idx !== i));
+
+      const addRole = () => setRoles([...roles, { title: '', segment: '', experience: '' }]);
+      const updateRole = (i, field, val) => {
+        const updated = [...roles];
+        updated[i] = { ...updated[i], [field]: val };
+        setRoles(updated);
+      };
+      const removeRole = (i) => {
+        if (roles.length > 1) setRoles(roles.filter((_, idx) => idx !== i));
+      };
+
+      const getProgress = () => {
+        let filled = 0;
+        if (company) filled++;
+        if (selectedIndustry) filled++;
+        if (careersUrl) filled++;
+        if (jobFamily) filled++;
+        if (jobDescriptions || companyDocs) filled++;
+        return Math.round((filled / 5) * 100);
+      };
+
+      const generatePrompt = () => {
+        const industryInfo = industryPresets[selectedIndustry] || {};
+        const companyName = company || '[COMPANY]';
+        const funcName = jobFamily || '[FUNCTION]';
+
+        return `# 6×6 Performance Matrix Builder
+## ${companyName} — ${funcName}
+
+---
+
+# ⚠️ IMPORTANT: WEB SCRAPING REQUIRED
+
+**You MUST use \`web_fetch\` to scrape TWO separate sources:**
+
+| Purpose | URL | What to Extract |
+|---------|-----|-----------------|
+| **Company Research** | ${companyUrl || '[COMPANY WEBSITE NEEDED]'} | Products, services, culture, industry context |
+| **Job Postings** | ${careersUrl || '[CAREERS SITE NEEDED]'} | Actual job listings for ${funcName} roles |
+
+${additionalJobUrls.filter(u => u).length > 0 ? `**Additional job sources to scrape:**
+${additionalJobUrls.filter(u => u).map(u => `- ${u}`).join('\n')}` : ''}
+
+**Do not generate the matrix based on assumptions.** The 6 success factors must be discovered from REAL job posting data scraped from the careers site.
+
+---
+
+# PHASE 1: RESEARCH & DISCOVERY
+
+## 1.1 Company Research — SCRAPE COMPANY WEBSITE
+
+**Company:** ${company || '[COMPANY]'}
+**Industry:** ${industryInfo.name || selectedIndustry || '[Research needed]'}
+
+**URL to scrape:** \`${companyUrl || '[COMPANY WEBSITE NEEDED]'}\`
+
+**Action:** \`web_fetch("${companyUrl || '[COMPANY WEBSITE]'}")\`
+
+This is the main corporate website (NOT the careers site). Scrape and extract:
+
+1. **Products & Services** — What does the company sell or provide?
+2. **Target Customers** — B2B, B2C, enterprise, SMB, government?
+3. **Company Scale** — Employees, locations, revenue indicators
+4. **Mission & Values** — What do they prioritize culturally?
+5. **Competitive Position** — How do they differentiate?
+
+${productsServices ? `### Products/Services (Provided)
+${productsServices}` : ''}
+
+${industryNotes ? `### Industry Context (Provided)
+${industryNotes}` : ''}
+
+${industryInfo.considerations ? `### Industry Considerations
+${industryInfo.considerations}` : ''}
+
+---
+
+## 1.2 Job Postings — SCRAPE CAREERS SITE (Different URL)
+
+**URL to scrape:** \`${careersUrl || '[CAREERS SITE NEEDED]'}\`
+
+⚠️ **This is a DIFFERENT URL from the company website above.** Careers sites are often on subdomains like \`jobs.company.com\` or external ATS platforms.
+
+### Step 1: Scrape the Careers Site
+
+**Action:** \`web_fetch("${careersUrl || '[CAREERS URL]'}")\`
+
+After fetching the careers page:
+1. Look for links to individual job postings in the ${funcName} function
+2. Identify the URL pattern for job detail pages
+3. Fetch 8-15 individual job postings across different seniority levels
+
+### If the Careers Site Uses JavaScript Rendering
+
+Try these fallback sources:
+- LinkedIn jobs: \`https://www.linkedin.com/company/${company ? company.toLowerCase().replace(/[^a-z0-9]/g, '') : '[company]'}/jobs/\`
+- Indeed: \`https://www.indeed.com/cmp/${company ? company.toLowerCase().replace(/[^a-z0-9]/g, '-') : '[company]'}/jobs\`
+- Search for specific job titles on job boards
+
+${additionalJobUrls.filter(u => u).length > 0 ? `### Additional URLs to Scrape
+${additionalJobUrls.filter(u => u).map(u => `- \`web_fetch\`: ${u}`).join('\n')}` : ''}
+
+### Step 2: Filter for Target Job Family
+
+**Function:** ${jobFamily || '[FUNCTION]'}
+${jobFamilyFocus ? `**Focus:** ${jobFamilyFocus}` : ''}
+${sampleTitles ? `**Sample Titles to Find:** ${sampleTitles}` : ''}
+
+From the jobs found, select postings that match the ${funcName} function. Include:
+- Entry-level roles (Analyst, Associate, Junior)
+- Mid-level roles (Senior, Specialist)
+- Lead/Principal individual contributors
+- Management roles (Manager, Senior Manager)
+- Director-level roles
+- VP/Executive roles (if available)
+
+### Step 3: Extract Data from Each Posting
+
+For EACH job posting in the ${funcName} family, extract:
+
+| Field | What to Capture |
+|-------|-----------------|
+| Title & Level | Exact title, seniority indicators (Jr, Sr, Lead, Manager, Director, VP) |
+| Key Responsibilities | What they'll DO day-to-day (verbs, actions) |
+| Success Metrics | Any KPIs, quotas, measurable outcomes mentioned |
+| Required Skills | Technical skills, tools, certifications |
+| Experience | Years required, background expected |
+| Team Context | Reports to whom, manages whom |
+| Unique Requirements | Clearances, licenses, certifications, travel |
+
+### Step 4: Create Job Posting Summary Table
+
+After scraping, create a summary table of ALL postings analyzed:
+
+| # | Job Title | Level | Key Differentiators | URL |
+|---|-----------|-------|---------------------|-----|
+| 1 | [Title] | Entry/Mid/Senior/Lead/Manager/Director/VP | [What stands out] | [link] |
+| 2 | ... | ... | ... | ... |
+
+**Minimum requirement:** 8 job postings across at least 3 different seniority levels.
+
+If you cannot find enough postings from the careers site, explain what you found and use alternative sources (LinkedIn, Indeed, Glassdoor).
+
+---
+
+## 1.3 Additional Context Documents
+
+${jobDescriptions ? `### Job Descriptions (Provided)
+\`\`\`
+${jobDescriptions}
+\`\`\`` : ''}
+
+${companyDocs ? `### Company Documentation (Provided)
+\`\`\`
+${companyDocs}
+\`\`\`` : ''}
+
+${competencyFramework ? `### Competency Framework (Provided)
+\`\`\`
+${competencyFramework}
+\`\`\`` : ''}
+
+${additionalContext ? `### Additional Context (Provided)
+${additionalContext}` : ''}
+
+---
+
+# PHASE 2: SUCCESS FACTOR DISCOVERY
+
+## 2.1 Discovery Methodology
+
+${factorMode === 'discover' ? `
+### Full Discovery Mode
+
+Analyze ALL inputs from Phase 1 to identify the 6 Success Factors that most differentiate performance levels in ${funcName} at ${companyName}.
+
+**Discovery Process:**
+
+1. **Pattern Analysis**
+   - What skills/competencies appear repeatedly across job postings?
+   - What differentiates entry-level from senior-level requirements?
+   - What does the company emphasize in their values/culture?
+
+2. **Gap Analysis**
+   - What capabilities are implied but not explicitly stated?
+   - What industry-specific factors might be missing from generic postings?
+   - What would a hiring manager REALLY care about beyond the JD?
+
+3. **Validation Questions for Each Factor**
+   - Does it appear (explicitly or implicitly) in multiple job postings?
+   - Does it differentiate entry-level from executive-level performance?
+   - Is it observable/measurable in an interview?
+   - Is it independent from the other 5 factors?
+` : `
+### Guided Discovery Mode
+
+Use the hints provided below as starting points, but validate and refine based on the research.
+`}
+
+${factorHints.length > 0 ? `
+### Factor Hints to Consider
+${factorHints.map(id => {
+  const factor = commonFactors.find(f => f.id === id);
+  return factor ? `- **${factor.name}** (${factor.icon}): ${factor.desc}` : '';
+}).filter(Boolean).join('\n')}
+` : ''}
+
+${industryInfo.suggestedFactors ? `
+### Industry-Typical Factors (${industryInfo.name})
+${industryInfo.suggestedFactors.map(f => `- ${f}`).join('\n')}
+` : ''}
+
+${mustIncludeFactors ? `
+### Must Include (per user guidance)
+${mustIncludeFactors}
+` : ''}
+
+${avoidFactors ? `
+### Avoid/Deprioritize (per user guidance)
+${avoidFactors}
+` : ''}
+
+${factorNotes ? `
+### Additional Factor Guidance
+${factorNotes}
+` : ''}
+
+## 2.2 Success Factor Requirements
+
+Each of the 6 Success Factors MUST:
+
+1. **Be Distinct** — High on Factor A ≠ High on Factor B
+   - Example: Someone can be a technical expert (Factor 1) but poor at people leadership (Factor 5)
+
+2. **Span 6 Levels** — Clear progression from L1 (Entry) to L6 (Strategic)
+   - L1: Learning fundamentals, needs guidance
+   - L2: Works independently on standard tasks
+   - L3: Handles complexity, reliable performer
+   - L4: Expert level, handles ambiguity, mentors others
+   - L5: Shapes strategy, influences organization
+   - L6: Transforms function, industry-level impact
+
+3. **Be Observable** — Can be assessed through behavioral interview questions
+   - "Tell me about a time..." questions should reveal the level
+
+4. **Reflect ${companyName}** — Include company/industry-specific factors
+   - Generic factors alone won't differentiate candidates for THIS company
+
+## 2.3 Output: Proposed 6 Factors
+
+After completing research, propose the 6 factors in this format:
+
+| # | Factor Name | Icon | Evidence from Job Postings |
+|---|-------------|------|----------------------------|
+| 1 | [Name] | [emoji] | "Found in X of Y postings. Examples: [quote from JD]" |
+| 2 | [Name] | [emoji] | "Found in X of Y postings. Examples: [quote from JD]" |
+| 3 | [Name] | [emoji] | "Found in X of Y postings. Examples: [quote from JD]" |
+| 4 | [Name] | [emoji] | "Found in X of Y postings. Examples: [quote from JD]" |
+| 5 | [Name] | [emoji] | "Found in X of Y postings. Examples: [quote from JD]" |
+| 6 | [Name] | [emoji] | "Found in X of Y postings. Examples: [quote from JD]" |
+
+**Each factor MUST cite specific evidence from the scraped job postings.**
+
+---
+
+# PHASE 3: BUILD THE 6×6 MATRIX
+
+## 3.1 Level Definitions
+
+For EACH of the 6 factors, define 6 levels with:
+
+| Element | Description |
+|---------|-------------|
+| **title** | 2-4 word label (e.g., "Technical Learner", "Enterprise Architect") |
+| **icon** | Single emoji representing this level |
+| **kpo** | Key Performance Outcome — specific, measurable success criteria |
+| **msaQuestion** | "Tell me about a time..." question targeting THIS level |
+| **listenFor** | Array of 3 evaluation criteria |
+
+### MSA Question Calibration Rules
+
+The MSA question for each level must be:
+- **Answerable** by someone AT that level
+- **Too basic** for someone 2+ levels above
+- **Too advanced** for someone 2+ levels below
+
+**Example Progression (Technical Expertise):**
+- L1: "Tell me about a time you had to learn a new technology to complete an assignment"
+- L3: "Tell me about a time you became the recognized expert that others came to for help"
+- L5: "Tell me about a time you established technical standards adopted across an organization"
+
+---
+
+## 3.2 Role Profiles
+
+### Roles to Include
+${roles.filter(r => r.title).map((r, i) => `
+**${i + 1}. ${r.title}**
+- Segment: ${r.segment || '[Determine from research]'}
+- Experience: ${r.experience || '[Determine from research]'}
+- Levels: [Map to L1-L6 for each factor based on job posting analysis]`).join('\n')}
+
+${roles.filter(r => r.title).length === 0 ? `
+Identify 8-12 roles from job postings spanning:
+- Entry (0-2 years)
+- Individual Contributor (2-5 years)  
+- Senior IC / Lead (5-8 years)
+- Manager (6-10 years)
+- Director (10-15 years)
+- VP/Executive (15+ years)
+` : ''}
+
+${levelingNotes ? `
+### Leveling Guidance
+${levelingNotes}
+` : ''}
+
+Each role profile needs:
+- **id**: lowercase_underscore format
+- **name**: Display name
+- **segment**: Department/team
+- **comp**: Compensation range (if known)
+- **levels**: Array of 6 integers [0-5] mapping to each factor
+- **experience**: Years required
+- **icon**: Single emoji
+
+---
+
+# PHASE 4: OUTPUT AS INTERACTIVE HTML
+
+Generate a complete standalone HTML file with:
+
+## Left Panel (55%)
+- Company-branded header with gradient
+- Role selector pills (clicking auto-fills matrix)
+- Interactive 6×6 grid:
+  - Rows = 6 Success Factors
+  - Columns = L1-L6
+  - Cells show icon + title
+  - Click to select/change level
+  - Selected cells highlighted with checkmark
+
+## Right Panel (45%)
+- Sticky header: Role name, segment, comp, experience
+- **Performance Objective** — Generated summary
+- **Key Performance Outcomes** — 6 KPO cards (one per factor)
+- **MSA Interview Questions** — 6 cards with:
+  - Factor icon & name
+  - Level badge (L1-L6) and title
+  - MSA question in quotes
+  - "Listen For" box with 3 criteria
+
+## Technical Requirements
+- Single HTML file, React 18 via CDN
+- Babel standalone for JSX
+- Responsive (stacks on mobile)
+- Print-friendly (hides matrix)
+- Color-coded levels:
+  - L1: Gray (#94a3b8)
+  - L2: Blue (#60a5fa)
+  - L3: Cyan (#22d3ee)
+  - L4: Yellow (#fbbf24)
+  - L5: Pink (#f472b6)
+  - L6: Purple (#a78bfa)
+
+---
+
+# VALIDATION CHECKLIST
+
+Before generating final output, verify:
+
+**Phase 1 Scraping Verification:**
+- [ ] Company website was fetched and analyzed
+- [ ] Careers page(s) were scraped
+- [ ] At least 8 job postings were extracted and summarized in a table
+- [ ] Job postings span at least 3 seniority levels
+
+**Phase 2 Factor Discovery:**
+- [ ] All 6 success factors cite specific evidence from scraped job postings
+- [ ] Each factor is independent (high on one ≠ high on another)
+
+**Phase 3 Matrix Quality:**
+- [ ] All 36 MSA questions are level-appropriate
+- [ ] KPOs include specific metrics or timeframes
+- [ ] Role profiles match actual ${companyName} job titles from scraping
+- [ ] Company-specific terminology reflected throughout
+- [ ] Industry requirements (${selectedIndustry || 'industry'}) incorporated
+
+---
+
+**Execute Phases 1-4 and generate the complete interactive 6×6 Matrix → PBJD Generator HTML file.**`;
+      };
+
+      const copyToClipboard = () => {
+        navigator.clipboard.writeText(generatePrompt()).then(() => {
+          showToastMsg('✓ Prompt copied to clipboard!');
+        });
+      };
+
+      const downloadPrompt = () => {
+        const blob = new Blob([generatePrompt()], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `6x6_prompt_${(company || 'company').toLowerCase().replace(/\s+/g, '_')}_${(jobFamily || 'roles').toLowerCase().replace(/\s+/g, '_')}.md`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      // Step Renderers
+      const renderStep1 = () => (
+        <>
+          <div className="info-box">
+            <div className="info-box-title">🎯 Step 1: Define the Matrix Scope</div>
+            <div className="info-box-text">
+              Specify the <strong>company</strong> and the <strong>job class</strong> you want to build the 6×6 matrix for. 
+              Claude will scrape 10-15 similar jobs in this class to discover the success factors.
+            </div>
+          </div>
+
+          <div className="form-card" style={{borderLeft: '4px solid var(--accent)', background: 'linear-gradient(135deg, #fffbeb, #fef3c7)'}}>
+            <div className="form-card-header">
+              <div className="form-card-icon" style={{background: 'linear-gradient(135deg, #f59e0b, #d97706)'}}>🎯</div>
+              <div>
+                <div className="form-card-title">What Matrix Are You Building?</div>
+                <div className="form-card-desc">This is the PRIMARY input — everything else supports this</div>
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Company Name <span className="required">*</span></label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g., Day and Zimmermann"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  style={{fontSize: '1rem', padding: '12px 14px'}}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Job Class / Family <span className="required">*</span></label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g., IT Engineering, Sales, Marketing"
+                  value={jobFamily}
+                  onChange={(e) => setJobFamily(e.target.value)}
+                  style={{fontSize: '1rem', padding: '12px 14px'}}
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Sample Job Titles in This Class <span className="form-label-hint">(helps Claude identify relevant postings)</span></label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="e.g., IT Analyst, Sr. Developer, IT Manager, Director of Infrastructure, VP of IT, CIO"
+                value={sampleTitles}
+                onChange={(e) => setSampleTitles(e.target.value)}
+              />
+              <div className="form-hint">List 5-8 job titles spanning entry-level to executive that Claude should look for</div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Focus / Filter <span className="form-label-hint">(optional — narrow the scope)</span></label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="e.g., Customer-facing only, Cloud/infrastructure focus, Exclude intern positions"
+                value={jobFamilyFocus}
+                onChange={(e) => setJobFamilyFocus(e.target.value)}
+              />
+            </div>
+
+            <div className="warning-box" style={{marginTop: '12px', marginBottom: '0'}}>
+              <div className="warning-box-text" style={{fontSize: '0.75rem'}}>
+                <strong>Claude will scrape 10-15 job postings</strong> in the "{jobFamily || '[Job Class]'}" class from the careers site below, 
+                then analyze them to discover the 6 success factors that differentiate performance levels.
+              </div>
+            </div>
+          </div>
+
+          <div className="form-card">
+            <div className="form-card-header">
+              <div className="form-card-icon">📦</div>
+              <div>
+                <div className="form-card-title">Company Context</div>
+                <div className="form-card-desc">Optional background to help Claude understand the company</div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Products & Services <span className="form-label-hint">(or let Claude research)</span></label>
+              <textarea
+                className="form-input"
+                placeholder="What does this company do? Key offerings, target customers, competitive positioning..."
+                value={productsServices}
+                onChange={(e) => setProductsServices(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="form-card" style={{borderLeft: '4px solid var(--primary)'}}>
+            <div className="form-card-header">
+              <div className="form-card-icon">🌐</div>
+              <div>
+                <div className="form-card-title">URL #1: Company Website</div>
+                <div className="form-card-desc">Main corporate site for company/industry research</div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Company Website URL</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="e.g., https://www.dayzim.com"
+                value={companyUrl}
+                onChange={(e) => setCompanyUrl(e.target.value)}
+              />
+              <div className="form-hint">Claude will scrape this for products, services, culture, mission, and industry context.</div>
+            </div>
+          </div>
+
+          <div className="form-card" style={{borderLeft: '4px solid var(--success)'}}>
+            <div className="form-card-header">
+              <div className="form-card-icon">💼</div>
+              <div>
+                <div className="form-card-title">URL #2: Careers Site</div>
+                <div className="form-card-desc">Where job postings are listed — Claude will scrape {jobFamily || '[Job Class]'} jobs from here</div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Careers / Jobs Page URL <span className="required">*</span></label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="e.g., https://jobs.dayzim.com or https://company.wd5.myworkdayjobs.com"
+                value={careersUrl}
+                onChange={(e) => setCareersUrl(e.target.value)}
+              />
+              <div className="form-hint">
+                Common patterns: jobs.company.com, careers.company.com, company.greenhouse.io, company.wd5.myworkdayjobs.com
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Additional Job Sources <span className="form-label-hint">(LinkedIn, Indeed, specific postings)</span></label>
+              <div className="url-list">
+                {additionalJobUrls.map((url, i) => (
+                  <div key={i} className="url-item">
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="https://linkedin.com/jobs/... or individual posting URL"
+                      value={url}
+                      onChange={(e) => updateJobUrl(i, e.target.value)}
+                    />
+                    {additionalJobUrls.length > 1 && (
+                      <button className="btn btn-danger btn-sm" onClick={() => removeJobUrl(i)}>×</button>
+                    )}
+                  </div>
+                ))}
+                <button className="add-btn" onClick={addJobUrl}>+ Add Job Source URL</button>
+              </div>
+              <div className="form-hint">
+                Backup sources if the careers site uses JavaScript rendering
+              </div>
+            </div>
+          </div>
+
+          <div className="form-card">
+            <div className="form-card-header">
+              <div className="form-card-icon">🏭</div>
+              <div>
+                <div className="form-card-title">Industry Selection</div>
+                <div className="form-card-desc">Helps identify industry-specific success factors</div>
+              </div>
+            </div>
+
+            <div className="preset-grid">
+              {Object.entries(industryPresets).map(([key, preset]) => (
+                <button
+                  key={key}
+                  className={`preset-btn ${selectedIndustry === key ? 'active' : ''}`}
+                  onClick={() => setSelectedIndustry(key)}
+                >
+                  <span className="preset-icon">{preset.icon}</span>
+                  {preset.name}
+                </button>
+              ))}
+            </div>
+
+            {selectedIndustry && industryPresets[selectedIndustry] && (
+              <div className="hint-grid" style={{marginTop: '16px'}}>
+                <div className="hint-card" style={{gridColumn: 'span 2'}}>
+                  <div className="hint-card-title">
+                    {industryPresets[selectedIndustry].icon} Industry Considerations
+                  </div>
+                  <div className="hint-card-text">
+                    {industryPresets[selectedIndustry].considerations}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="form-group" style={{marginTop: '16px'}}>
+              <label className="form-label">Additional Industry Notes</label>
+              <textarea
+                className="form-input"
+                placeholder="Specific regulatory requirements, union considerations, security clearances, certifications..."
+                value={industryNotes}
+                onChange={(e) => setIndustryNotes(e.target.value)}
+                style={{minHeight: '80px'}}
+              />
+            </div>
+          </div>
+        </>
+      );
+
+      const renderStep2 = () => (
+        <>
+          <div className="info-box">
+            <div className="info-box-title">📄 Step 2: Additional Context</div>
+            <div className="info-box-text">
+              Paste any supporting documents: job descriptions, competency frameworks, org charts.
+              This gives Claude additional signals beyond what's on the careers site.
+            </div>
+          </div>
+
+          <div className="form-card">
+            <div className="form-card-header">
+              <div className="form-card-icon">📋</div>
+              <div>
+                <div className="form-card-title">Job Descriptions</div>
+                <div className="form-card-desc">Paste full JDs for key roles in the {jobFamily || '[Job Class]'}</div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Job Description Content <span className="form-label-hint">(paste one or more)</span></label>
+              <textarea
+                className="form-input large"
+                placeholder={`Paste complete job descriptions for ${jobFamily || '[Job Class]'} roles here. Include multiple JDs separated by --- or clear headers.
+
+Example:
+=== Senior Software Engineer ===
+[Full JD text...]
+
+=== Engineering Manager ===
+[Full JD text...]`}
+                value={jobDescriptions}
+                onChange={(e) => setJobDescriptions(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="form-card">
+            <div className="form-card-header">
+              <div className="form-card-icon">📚</div>
+              <div>
+                <div className="form-card-title">Company Documentation</div>
+                <div className="form-card-desc">Internal docs that reveal success criteria</div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Company Context <span className="form-label-hint">(org structure, culture, values)</span></label>
+              <textarea
+                className="form-input"
+                placeholder="Paste content from: About Us pages, mission statements, org charts, team descriptions, company values..."
+                value={companyDocs}
+                onChange={(e) => setCompanyDocs(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Competency Framework <span className="form-label-hint">(if exists)</span></label>
+              <textarea
+                className="form-input"
+                placeholder="Paste any existing competency model, career ladder, leveling guide, or performance criteria..."
+                value={competencyFramework}
+                onChange={(e) => setCompetencyFramework(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="form-card">
+            <div className="form-card-header">
+              <div className="form-card-icon">💡</div>
+              <div>
+                <div className="form-card-title">Additional Context</div>
+                <div className="form-card-desc">Anything else Claude should know about these roles</div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Free-form Notes</label>
+              <textarea
+                className="form-input"
+                placeholder="Hiring priorities, recent challenges, team dynamics, growth plans, what 'good' looks like in this job class..."
+                value={additionalContext}
+                onChange={(e) => setAdditionalContext(e.target.value)}
+              />
+            </div>
+          </div>
+        </>
+      );
+
+      const renderStep3 = () => (
+        <>
+          <div className="info-box">
+            <div className="info-box-title">🔍 Step 3: Success Factor Discovery</div>
+            <div className="info-box-text">
+              Tell Claude how to discover the 6 success factors. You can let Claude discover them entirely from research,
+              or provide hints based on what you know matters.
+            </div>
+          </div>
+
+          <div className="form-card">
+            <div className="form-card-header">
+              <div className="form-card-icon">⚙️</div>
+              <div>
+                <div className="form-card-title">Discovery Mode</div>
+                <div className="form-card-desc">How should Claude identify the 6 factors?</div>
+              </div>
+            </div>
+
+            <div className="mode-toggle">
+              <button
+                className={`mode-btn ${factorMode === 'discover' ? 'active' : ''}`}
+                onClick={() => setFactorMode('discover')}
+              >
+                🔬 Full Discovery
+              </button>
+              <button
+                className={`mode-btn ${factorMode === 'guided' ? 'active' : ''}`}
+                onClick={() => setFactorMode('guided')}
+              >
+                🧭 Guided Discovery
+              </button>
+            </div>
+
+            {factorMode === 'discover' ? (
+              <div className="success-box">
+                <div className="success-box-title">Full Discovery Mode</div>
+                <div className="success-box-text">
+                  Claude will analyze job postings, company docs, and industry context to propose all 6 factors.
+                  Best when you don't have preconceptions about what should matter.
+                </div>
+              </div>
+            ) : (
+              <div className="warning-box">
+                <div className="warning-box-title">Guided Discovery Mode</div>
+                <div className="warning-box-text">
+                  Provide hints below. Claude will use these as starting points but validate against research.
+                  Best when you know some factors that definitely matter.
+                </div>
+              </div>
+            )}
+          </div>
+
+          {factorMode === 'guided' && (
+            <div className="form-card">
+              <div className="form-card-header">
+                <div className="form-card-icon">💡</div>
+                <div>
+                  <div className="form-card-title">Factor Hints</div>
+                  <div className="form-card-desc">Select factors you suspect are important (Claude will validate)</div>
+                </div>
+              </div>
+
+              <div className="factor-hints">
+                {commonFactors.map(factor => (
+                  <div
+                    key={factor.id}
+                    className="factor-hint"
+                    style={{
+                      cursor: 'pointer',
+                      borderLeftColor: factorHints.includes(factor.id) ? 'var(--success)' : 'var(--border)',
+                      background: factorHints.includes(factor.id) ? '#f0fdf4' : '#f8fafc'
+                    }}
+                    onClick={() => toggleFactorHint(factor.id)}
+                  >
+                    <span className="factor-hint-icon">{factor.icon}</span>
+                    <div className="factor-hint-content">
+                      <div className="factor-hint-name">{factor.name}</div>
+                      <div className="factor-hint-desc">{factor.desc}</div>
+                    </div>
+                    <span style={{color: factorHints.includes(factor.id) ? 'var(--success)' : 'var(--border)', fontSize: '1.2rem'}}>
+                      {factorHints.includes(factor.id) ? '✓' : '○'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {factorHints.length > 0 && (
+                <div className="form-hint" style={{marginTop: '12px'}}>
+                  {factorHints.length} hint(s) selected — Claude will validate these against job posting evidence
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="form-card">
+            <div className="form-card-header">
+              <div className="form-card-icon">🎯</div>
+              <div>
+                <div className="form-card-title">Factor Guidance</div>
+                <div className="form-card-desc">Steer Claude's factor discovery</div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Must Include <span className="form-label-hint">(factors that definitely matter)</span></label>
+              <textarea
+                className="form-input"
+                placeholder="e.g., Security clearance level is critical for government roles. Safety leadership is non-negotiable in plant operations."
+                value={mustIncludeFactors}
+                onChange={(e) => setMustIncludeFactors(e.target.value)}
+                style={{minHeight: '70px'}}
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Avoid / Deprioritize <span className="form-label-hint">(factors less relevant here)</span></label>
+              <textarea
+                className="form-input"
+                placeholder="e.g., Don't emphasize revenue/quota since these are internal IT roles, not sales."
+                value={avoidFactors}
+                onChange={(e) => setAvoidFactors(e.target.value)}
+                style={{minHeight: '70px'}}
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Additional Factor Notes</label>
+              <textarea
+                className="form-input"
+                placeholder="Any other guidance on what differentiates good from great performers in these roles..."
+                value={factorNotes}
+                onChange={(e) => setFactorNotes(e.target.value)}
+              />
+            </div>
+          </div>
+        </>
+      );
+
+      const renderStep4 = () => (
+        <>
+          <div className="info-box">
+            <div className="info-box-title">👥 Step 4: Role Profiles</div>
+            <div className="info-box-text">
+              Define the specific roles to include in the matrix. Claude will refine these based on actual job postings found.
+            </div>
+          </div>
+
+          <div className="form-card">
+            <div className="form-card-header">
+              <div className="form-card-icon">📋</div>
+              <div>
+                <div className="form-card-title">Initial Role List</div>
+                <div className="form-card-desc">Roles to include in the matrix selector</div>
+              </div>
+            </div>
+
+            {roles.map((role, i) => (
+              <div key={i} className="role-item">
+                <div className="role-item-header">
+                  <span className="role-item-num">{i + 1}</span>
+                  <span style={{fontSize: '0.85rem', fontWeight: 600}}>{role.title || 'New Role'}</span>
+                </div>
+                <div className="role-item-grid">
+                  <input
+                    type="text"
+                    className="role-input"
+                    placeholder="Job Title (e.g., Sr. Software Engineer)"
+                    value={role.title}
+                    onChange={(e) => updateRole(i, 'title', e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    className="role-input"
+                    placeholder="Segment (e.g., Engineering)"
+                    value={role.segment}
+                    onChange={(e) => updateRole(i, 'segment', e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    className="role-input"
+                    placeholder="Experience"
+                    value={role.experience}
+                    onChange={(e) => updateRole(i, 'experience', e.target.value)}
+                  />
+                  {roles.length > 1 && (
+                    <button className="btn btn-danger btn-sm" onClick={() => removeRole(i)}>×</button>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            <button className="add-btn" onClick={addRole}>+ Add Role</button>
+
+            <div className="form-hint" style={{marginTop: '12px'}}>
+              Leave mostly blank to let Claude discover roles from job postings, or pre-populate if you know specific titles
+            </div>
+          </div>
+
+          <div className="form-card">
+            <div className="form-card-header">
+              <div className="form-card-icon">📊</div>
+              <div>
+                <div className="form-card-title">Leveling Guidance</div>
+                <div className="form-card-desc">How should roles map to levels?</div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Leveling Notes</label>
+              <textarea
+                className="form-input"
+                placeholder="e.g., Entry-level should be L1-L2 across most factors. Directors should be L4+ on leadership but can vary on technical depth. CIO should be L5-L6 everywhere."
+                value={levelingNotes}
+                onChange={(e) => setLevelingNotes(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="success-box">
+            <div className="success-box-title">✓ Ready to Generate</div>
+            <div className="success-box-text">
+              Your prompt is configured. Click "Copy Prompt" and paste into Claude to generate the interactive 6×6 Matrix.
+            </div>
+          </div>
+
+          <div style={{display: 'flex', gap: '12px', marginTop: '16px'}}>
+            <button className="btn btn-primary" onClick={copyToClipboard} style={{flex: 1}}>
+              📋 Copy Prompt to Clipboard
+            </button>
+            <button className="btn btn-secondary" onClick={downloadPrompt}>
+              ⬇️ Download
+            </button>
+          </div>
+        </>
+      );
+
+      return (
+        <div className="app-container">
+          <div className="builder-panel">
+            <header className="header">
+              <div className="header-badge">
+                <span>⚡</span>
+                <span>Performance-Based Hiring</span>
+              </div>
+              <h1 className="main-title">6×6 Matrix Prompt Builder</h1>
+              <p className="subtitle">Discover success factors & generate custom hiring matrices</p>
+            </header>
+
+            <nav className="step-nav">
+              {[
+                { num: 1, label: 'Scope & URLs', icon: '🎯' },
+                { num: 2, label: 'Documents', icon: '📄' },
+                { num: 3, label: 'Factors', icon: '🔍' },
+                { num: 4, label: 'Roles', icon: '👥' }
+              ].map(step => (
+                <button
+                  key={step.num}
+                  className={`step-tab ${currentStep === step.num ? 'active' : ''}`}
+                  onClick={() => setCurrentStep(step.num)}
+                >
+                  <span className="step-num">{step.num}</span>
+                  <span>{step.label}</span>
+                </button>
+              ))}
+            </nav>
+
+            <div className="form-content">
+              {currentStep === 1 && renderStep1()}
+              {currentStep === 2 && renderStep2()}
+              {currentStep === 3 && renderStep3()}
+              {currentStep === 4 && renderStep4()}
+            </div>
+
+            <div className="nav-footer">
+              <button
+                className="btn btn-secondary"
+                onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
+                disabled={currentStep === 1}
+              >
+                ← Previous
+              </button>
+              <div className="nav-progress">
+                <div className="progress-bar">
+                  <div className="progress-fill" style={{width: `${getProgress()}%`}} />
+                </div>
+                <span>{getProgress()}% complete</span>
+              </div>
+              <button
+                className="btn btn-primary"
+                onClick={() => setCurrentStep(Math.min(4, currentStep + 1))}
+                disabled={currentStep === 4}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+
+          <div className="output-panel">
+            <div className="output-header">
+              <div className="output-badge">Generated Prompt</div>
+              <div className="output-title">
+                {company || '[Company]'} — {jobFamily || '[Function]'}
+              </div>
+              <div className="output-stats">
+                <div className="output-stat">
+                  <span className="output-stat-icon">🏢</span>
+                  Company: <span className="output-stat-value">{company || '—'}</span>
+                </div>
+                <div className="output-stat">
+                  <span className="output-stat-icon">🌐</span>
+                  Website: <span className="output-stat-value">{companyUrl ? '✓' : '—'}</span>
+                </div>
+                <div className="output-stat">
+                  <span className="output-stat-icon">💼</span>
+                  Careers: <span className="output-stat-value">{careersUrl ? '✓' : '—'}</span>
+                </div>
+                <div className="output-stat">
+                  <span className="output-stat-icon">🔍</span>
+                  Mode: <span className="output-stat-value">{factorMode === 'discover' ? 'Discovery' : 'Guided'}</span>
+                </div>
+              </div>
+              <div className="output-actions">
+                <button className="output-btn primary" onClick={copyToClipboard}>
+                  📋 Copy Prompt
+                </button>
+                <button className="output-btn" onClick={downloadPrompt}>
+                  ⬇️ Download .md
+                </button>
+              </div>
+            </div>
+
+            <div className="output-content">
+              <pre className="prompt-output">{generatePrompt()}</pre>
+            </div>
+          </div>
+
+          <div className={`toast ${showToast ? 'show' : ''}`}>
+            {toastMessage}
+          </div>
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<PromptBuilder />);
+  </script>
+</body>
+</html>
