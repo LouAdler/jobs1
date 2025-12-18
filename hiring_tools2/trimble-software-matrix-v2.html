@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trimble Software — 6×6 Performance Matrix</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --trimble-navy: #003057;
+      --trimble-blue: #0066B2;
+      --trimble-cyan: #00A3E0;
+      --trimble-green: #78BE20;
+      --trimble-lime: #CEDC00;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --l1-color: #94a3b8;
+      --l2-color: #60a5fa;
+      --l3-color: #22d3ee;
+      --l4-color: #fbbf24;
+      --l5-color: #f472b6;
+      --l6-color: #a78bfa;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: linear-gradient(135deg, #f0f4f8 0%, #e8eef4 100%);
+      min-height: 100vh;
+      color: var(--gray-800);
+      line-height: 1.5;
+    }
+    
+    .app-container {
+      display: grid;
+      grid-template-columns: 58% 42%;
+      min-height: 100vh;
+    }
+    
+    @media (max-width: 1200px) {
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .left-panel {
+      padding: 24px 28px;
+      overflow-y: auto;
+      max-height: 100vh;
+    }
+    
+    .right-panel {
+      background: white;
+      border-left: 1px solid var(--gray-200);
+      overflow-y: auto;
+      max-height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+    
+    @media (max-width: 1200px) {
+      .right-panel {
+        position: relative;
+        max-height: none;
+        border-left: none;
+        border-top: 1px solid var(--gray-200);
+      }
+    }
+    
+    .header {
+      background: linear-gradient(135deg, var(--trimble-navy) 0%, var(--trimble-blue) 50%, var(--trimble-cyan) 100%);
+      padding: 20px 24px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 60%;
+      height: 200%;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .header-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .company-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    
+    .header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+    
+    .header p {
+      color: rgba(255,255,255,0.85);
+      font-size: 14px;
+      font-weight: 400;
+    }
+    
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    
+    .role-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    
+    .role-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: white;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .role-pill:hover {
+      border-color: var(--trimble-blue);
+      background: rgba(0, 102, 178, 0.04);
+      transform: translateY(-1px);
+    }
+    
+    .role-pill.active {
+      background: var(--trimble-blue);
+      border-color: var(--trimble-blue);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 102, 178, 0.3);
+    }
+    
+    .role-pill .icon {
+      font-size: 14px;
+    }
+    
+    .matrix-container {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.04);
+    }
+    
+    .matrix-header {
+      display: grid;
+      grid-template-columns: 180px repeat(6, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+    
+    .matrix-header-cell {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 4px;
+    }
+    
+    .matrix-row {
+      display: grid;
+      grid-template-columns: 180px repeat(6, 1fr);
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    
+    .factor-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--gray-50);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+    
+    .factor-icon {
+      font-size: 18px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    
+    .matrix-cell {
+      position: relative;
+      padding: 8px 6px;
+      border-radius: 10px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 3px;
+    }
+    
+    .matrix-cell:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    
+    .matrix-cell.selected {
+      border-color: var(--gray-800);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    
+    .matrix-cell.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 16px;
+      height: 16px;
+      background: var(--gray-800);
+      color: white;
+      border-radius: 50%;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    
+    .cell-icon {
+      font-size: 16px;
+    }
+    
+    .cell-title {
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--gray-700);
+    }
+    
+    .l1 { background: linear-gradient(135deg, rgba(148,163,184,0.15) 0%, rgba(148,163,184,0.25) 100%); }
+    .l2 { background: linear-gradient(135deg, rgba(96,165,250,0.15) 0%, rgba(96,165,250,0.25) 100%); }
+    .l3 { background: linear-gradient(135deg, rgba(34,211,238,0.15) 0%, rgba(34,211,238,0.25) 100%); }
+    .l4 { background: linear-gradient(135deg, rgba(251,191,36,0.15) 0%, rgba(251,191,36,0.25) 100%); }
+    .l5 { background: linear-gradient(135deg, rgba(244,114,182,0.15) 0%, rgba(244,114,182,0.25) 100%); }
+    .l6 { background: linear-gradient(135deg, rgba(167,139,250,0.15) 0%, rgba(167,139,250,0.25) 100%); }
+    
+    .right-header {
+      background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-900) 100%);
+      padding: 24px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .role-display {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    
+    .role-icon-large {
+      width: 56px;
+      height: 56px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    
+    .role-info h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 6px;
+    }
+    
+    .role-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    
+    .role-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+    }
+    
+    .role-meta-item .label {
+      color: rgba(255,255,255,0.5);
+    }
+    
+    .right-content {
+      padding: 24px;
+    }
+    
+    .objective-card {
+      background: linear-gradient(135deg, var(--trimble-navy) 0%, var(--trimble-blue) 100%);
+      padding: 20px;
+      border-radius: 14px;
+      margin-bottom: 24px;
+    }
+    
+    .objective-card h3 {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    
+    .objective-card p {
+      font-size: 15px;
+      color: white;
+      line-height: 1.6;
+    }
+    
+    .kpo-section h3,
+    .msa-section h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    
+    .kpo-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    
+    .kpo-card {
+      background: var(--gray-50);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    
+    .kpo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    
+    .kpo-content h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 4px;
+    }
+    
+    .kpo-content p {
+      font-size: 13px;
+      color: var(--gray-600);
+      line-height: 1.5;
+    }
+    
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+    
+    .level-badge.l1 { background: var(--l1-color); color: white; }
+    .level-badge.l2 { background: var(--l2-color); color: white; }
+    .level-badge.l3 { background: var(--l3-color); color: var(--gray-800); }
+    .level-badge.l4 { background: var(--l4-color); color: var(--gray-800); }
+    .level-badge.l5 { background: var(--l5-color); color: white; }
+    .level-badge.l6 { background: var(--l6-color); color: white; }
+    
+    .msa-section {
+      margin-top: 8px;
+    }
+    
+    .msa-grid {
+      display: grid;
+      gap: 16px;
+    }
+    
+    .msa-card {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    
+    .msa-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    
+    .msa-factor-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    
+    .msa-factor-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      flex: 1;
+    }
+    
+    .msa-body {
+      padding: 16px;
+    }
+    
+    .msa-question {
+      font-size: 14px;
+      font-style: italic;
+      color: var(--gray-700);
+      line-height: 1.6;
+      margin-bottom: 14px;
+      padding-left: 12px;
+      border-left: 3px solid var(--trimble-cyan);
+    }
+    
+    .listen-for {
+      background: var(--gray-50);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    
+    .listen-for h5 {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    
+    .listen-for ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .listen-for li {
+      font-size: 12px;
+      color: var(--gray-600);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .listen-for li::before {
+      content: '•';
+      color: var(--trimble-green);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    
+    @media print {
+      .left-panel { display: none; }
+      .right-panel { 
+        border: none;
+        max-height: none;
+      }
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    
+    // ============================================
+    // TRIMBLE SOFTWARE 6×6 MATRIX DATA
+    // Based on job posting analysis from:
+    // - Built In, LinkedIn, SpaceTalent, Glassdoor
+    // ============================================
+    
+    const FACTORS = [
+      {
+        id: 'technical_mastery',
+        name: 'Technical Mastery',
+        icon: '💻',
+        levels: [
+          {
+            title: 'Foundation Builder',
+            icon: '📚',
+            kpo: 'Complete assigned development tasks with guidance, achieving 90%+ code review approval within 6 months',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to learn a new technology or framework to successfully deliver an assignment.',
+            listenFor: ['Structured learning approach', 'Seeking help appropriately', 'Applying new knowledge to deliver results']
+          },
+          {
+            title: 'Independent Developer',
+            icon: '⚡',
+            kpo: 'Independently deliver features end-to-end using C#/.NET and cloud services with <5% defect rate',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to independently deliver a feature from design through deployment.',
+            listenFor: ['Full ownership of delivery', 'Quality-conscious development', 'Effective use of tools and frameworks']
+          },
+          {
+            title: 'Full-Stack Expert',
+            icon: '🔧',
+            kpo: 'Design and implement scalable microservices handling 10K+ requests/sec with 99.9% uptime',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to architect a complex system with specific performance and scalability requirements.',
+            listenFor: ['Deep technical reasoning', 'System design thinking', 'Performance optimization expertise']
+          },
+          {
+            title: 'Cloud Architect',
+            icon: '☁️',
+            kpo: 'Lead cloud migration or platform modernization reducing infrastructure costs by 30%+',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to design a cloud-native solution that significantly improved scalability or reliability.',
+            listenFor: ['Azure/AWS expertise', 'Cost optimization', 'Resilience patterns implementation']
+          },
+          {
+            title: 'Platform Strategist',
+            icon: '🏗️',
+            kpo: 'Define technical standards adopted across 3+ product teams improving development velocity by 25%',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to establish technical standards that were adopted across multiple teams.',
+            listenFor: ['Cross-team influence', 'Standardization leadership', 'Measurable organizational impact']
+          },
+          {
+            title: 'Technology Visionary',
+            icon: '🌟',
+            kpo: 'Drive technology roadmap enabling new product capabilities generating $10M+ revenue',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to champion a technology direction that transformed your organization\'s competitive position.',
+            listenFor: ['Industry-level technical vision', 'Business transformation through technology', 'Multi-year strategic thinking']
+          }
+        ]
+      },
+      {
+        id: 'problem_solving',
+        name: 'Problem-Solving & Innovation',
+        icon: '🧩',
+        levels: [
+          {
+            title: 'Solution Seeker',
+            icon: '🔍',
+            kpo: 'Resolve assigned bugs within SLA, documenting root cause and solution for 100% of issues',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to systematically debug and resolve a challenging technical issue.',
+            listenFor: ['Systematic debugging approach', 'Root cause analysis', 'Learning from resolution']
+          },
+          {
+            title: 'Pattern Recognizer',
+            icon: '🎯',
+            kpo: 'Identify and resolve recurring issues, reducing repeat defects in owned components by 40%',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to identify a pattern of recurring issues and implement a systematic fix.',
+            listenFor: ['Pattern recognition', 'Proactive problem prevention', 'Documentation of solutions']
+          },
+          {
+            title: 'Complex Problem Solver',
+            icon: '🧬',
+            kpo: 'Resolve P1/P2 production incidents within 4 hours, achieving 95%+ first-time resolution',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to solve a complex technical problem that others could not resolve.',
+            listenFor: ['Multi-dimensional problem analysis', 'Creative solution approaches', 'Pressure handling']
+          },
+          {
+            title: 'Innovation Driver',
+            icon: '💡',
+            kpo: 'Propose and implement 2+ innovations per year that reduce costs or improve performance by 20%+',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to propose and implement an innovative solution that wasn\'t in the original requirements.',
+            listenFor: ['Proactive innovation', 'Business impact quantification', 'Stakeholder buy-in']
+          },
+          {
+            title: 'Strategic Innovator',
+            icon: '🚀',
+            kpo: 'Lead R&D initiatives resulting in 2+ patents or breakthrough capabilities annually',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to lead an innovation that created a new capability or market opportunity.',
+            listenFor: ['Breakthrough thinking', 'R&D leadership', 'Industry-level innovation']
+          },
+          {
+            title: 'Industry Pioneer',
+            icon: '🌐',
+            kpo: 'Shape industry direction through thought leadership, speaking at 3+ major conferences annually',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to influence technology direction beyond your immediate organization.',
+            listenFor: ['External thought leadership', 'Industry influence', 'Technology evangelism']
+          }
+        ]
+      },
+      {
+        id: 'delivery_excellence',
+        name: 'Delivery Excellence',
+        icon: '🚀',
+        levels: [
+          {
+            title: 'Sprint Contributor',
+            icon: '📋',
+            kpo: 'Complete 100% of sprint commitments, meeting acceptance criteria with quality code',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to balance multiple priorities and deliver all your commitments on time.',
+            listenFor: ['Time management', 'Commitment reliability', 'Quality focus']
+          },
+          {
+            title: 'Release Driver',
+            icon: '📦',
+            kpo: 'Independently deliver 3+ features per quarter through complete CI/CD pipeline',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to own a release from development through successful production deployment.',
+            listenFor: ['End-to-end delivery ownership', 'CI/CD proficiency', 'Release management']
+          },
+          {
+            title: 'Quality Champion',
+            icon: '✨',
+            kpo: 'Achieve <2% production defect rate while maintaining 90%+ test coverage on owned code',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to significantly improve quality metrics on a project.',
+            listenFor: ['Quality engineering practices', 'Testing strategy', 'Continuous improvement']
+          },
+          {
+            title: 'Delivery Leader',
+            icon: '🎖️',
+            kpo: 'Lead delivery of major features on schedule, coordinating 5+ engineers across time zones',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to lead delivery of a complex feature across multiple teams or locations.',
+            listenFor: ['Cross-team coordination', 'Risk management', 'Global collaboration']
+          },
+          {
+            title: 'Program Architect',
+            icon: '🏛️',
+            kpo: 'Design and execute delivery frameworks improving team velocity by 30%+ across the org',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to implement delivery improvements at the organizational level.',
+            listenFor: ['Process optimization', 'Scalable practices', 'Organizational impact']
+          },
+          {
+            title: 'Enterprise Orchestrator',
+            icon: '👑',
+            kpo: 'Orchestrate multi-year platform initiatives with $50M+ investment, hitting 95% of milestones',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to lead a large-scale transformation program to successful completion.',
+            listenFor: ['Executive program leadership', 'Strategic execution', 'Enterprise transformation']
+          }
+        ]
+      },
+      {
+        id: 'technical_leadership',
+        name: 'Technical Leadership',
+        icon: '🎯',
+        levels: [
+          {
+            title: 'Code Learner',
+            icon: '🌱',
+            kpo: 'Actively participate in code reviews, incorporating 90%+ of feedback into improved code',
+            msaQuestion: 'Describe an accomplishment that demonstrates how you incorporated feedback to significantly improve your code quality.',
+            listenFor: ['Receptiveness to feedback', 'Growth mindset', 'Learning application']
+          },
+          {
+            title: 'Peer Reviewer',
+            icon: '👀',
+            kpo: 'Conduct thorough code reviews catching 80%+ of issues before production',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to catch a significant issue through code review before it reached production.',
+            listenFor: ['Review thoroughness', 'Constructive feedback', 'Quality gatekeeping']
+          },
+          {
+            title: 'Technical Mentor',
+            icon: '🎓',
+            kpo: 'Mentor 2+ junior engineers, accelerating their path to independent contribution by 3 months',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to mentor someone and accelerate their professional growth.',
+            listenFor: ['Teaching ability', 'Patience and investment', 'Measurable mentee growth']
+          },
+          {
+            title: 'Architecture Guide',
+            icon: '🗺️',
+            kpo: 'Lead architectural decisions for 2+ major features, creating reusable patterns adopted by team',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to lead an architectural decision and get buy-in from the team.',
+            listenFor: ['Technical decision leadership', 'Influence without authority', 'Pattern creation']
+          },
+          {
+            title: 'Tech Lead',
+            icon: '⭐',
+            kpo: 'Guide technical direction for 3+ teams, establishing standards that reduce onboarding time by 50%',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to shape technical direction across multiple teams.',
+            listenFor: ['Multi-team influence', 'Standard setting', 'Developer experience focus']
+          },
+          {
+            title: 'Engineering Executive',
+            icon: '🏆',
+            kpo: 'Build engineering organization of 50+ engineers with <15% attrition and top-tier technical reputation',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to build and scale an engineering organization.',
+            listenFor: ['Organization building', 'Culture creation', 'Talent strategy']
+          }
+        ]
+      },
+      {
+        id: 'collaboration',
+        name: 'Cross-Functional Collaboration',
+        icon: '🤝',
+        levels: [
+          {
+            title: 'Team Player',
+            icon: '👥',
+            kpo: 'Actively participate in all Agile ceremonies, contributing to 100% of team retrospectives',
+            msaQuestion: 'Describe an accomplishment that demonstrates how you contributed to your team\'s effectiveness beyond your individual coding work.',
+            listenFor: ['Team participation', 'Communication skills', 'Collaborative mindset']
+          },
+          {
+            title: 'Cross-Team Connector',
+            icon: '🔗',
+            kpo: 'Successfully coordinate with 3+ adjacent teams to resolve dependencies on schedule',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to coordinate with other teams to resolve dependencies and complete a project.',
+            listenFor: ['Dependency management', 'Proactive communication', 'Relationship building']
+          },
+          {
+            title: 'Stakeholder Partner',
+            icon: '🤲',
+            kpo: 'Translate technical concepts for non-technical stakeholders, achieving 95% requirement alignment',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to explain a complex technical decision to non-technical stakeholders.',
+            listenFor: ['Translation ability', 'Stakeholder management', 'Clarity of communication']
+          },
+          {
+            title: 'Global Collaborator',
+            icon: '🌍',
+            kpo: 'Lead projects spanning 3+ time zones, maintaining team cohesion and delivery excellence',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to lead a globally distributed team successfully.',
+            listenFor: ['Global team leadership', 'Cultural awareness', 'Async collaboration']
+          },
+          {
+            title: 'Executive Partner',
+            icon: '💼',
+            kpo: 'Partner with C-suite on technology strategy, influencing 3+ major business decisions annually',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to influence executive-level business decisions through technical insights.',
+            listenFor: ['Executive presence', 'Strategic influence', 'Business-technology bridge']
+          },
+          {
+            title: 'Ecosystem Builder',
+            icon: '🌐',
+            kpo: 'Build strategic partnerships with 5+ external organizations advancing Trimble\'s technology ecosystem',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to build external partnerships that created strategic value.',
+            listenFor: ['External relationship building', 'Ecosystem thinking', 'Partnership strategy']
+          }
+        ]
+      },
+      {
+        id: 'strategic_impact',
+        name: 'Strategic Impact',
+        icon: '📈',
+        levels: [
+          {
+            title: 'Task Executor',
+            icon: '✅',
+            kpo: 'Understand how assigned work connects to team goals, articulating purpose for 100% of tasks',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to understand the business purpose behind a technical task.',
+            listenFor: ['Purpose awareness', 'Context seeking', 'Goal connection']
+          },
+          {
+            title: 'Feature Owner',
+            icon: '📊',
+            kpo: 'Own features that directly impact product metrics, tracking usage and iterating based on data',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to build a feature that drove measurable business results.',
+            listenFor: ['Outcome ownership', 'Data-driven decisions', 'Feature impact tracking']
+          },
+          {
+            title: 'Product Thinker',
+            icon: '💭',
+            kpo: 'Proactively propose 3+ improvements per quarter that increase customer satisfaction or efficiency',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to propose an improvement that wasn\'t in your original scope.',
+            listenFor: ['Product sense', 'Customer empathy', 'Proactive improvement']
+          },
+          {
+            title: 'Business Translator',
+            icon: '🔄',
+            kpo: 'Align technical decisions with business goals, demonstrating ROI for 100% of major initiatives',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to make a technical decision based on business impact analysis.',
+            listenFor: ['Business acumen', 'ROI thinking', 'Strategic alignment']
+          },
+          {
+            title: 'Division Strategist',
+            icon: '🎯',
+            kpo: 'Shape division technology strategy, identifying opportunities worth $5M+ in new revenue or savings',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to identify and champion a strategic technology opportunity.',
+            listenFor: ['Strategic vision', 'Opportunity identification', 'Division-level thinking']
+          },
+          {
+            title: 'Enterprise Transformer',
+            icon: '🌟',
+            kpo: 'Drive enterprise transformation enabling Trimble to enter new markets or create new product categories',
+            msaQuestion: 'Describe an accomplishment that demonstrates your ability to lead a transformation that fundamentally changed your organization\'s trajectory.',
+            listenFor: ['Enterprise transformation', 'Market creation', 'Category leadership']
+          }
+        ]
+      }
+    ];
+    
+    const ROLES = [
+      {
+        id: 'software_engineer_rdp',
+        name: 'Software Engineer (RDP)',
+        segment: 'Rotational Development Program',
+        comp: '$75K - $95K',
+        experience: '0-2 years',
+        icon: '🎓',
+        levels: [1, 1, 1, 0, 1, 0]
+      },
+      {
+        id: 'software_engineer',
+        name: 'Software Engineer',
+        segment: 'Engineering',
+        comp: '$85K - $110K',
+        experience: '1-3 years',
+        icon: '💻',
+        levels: [1, 1, 1, 1, 1, 1]
+      },
+      {
+        id: 'software_engineer_ii',
+        name: 'Software Engineer II',
+        segment: 'Engineering',
+        comp: '$100K - $130K',
+        experience: '3-5 years',
+        icon: '⚡',
+        levels: [2, 2, 2, 2, 2, 2]
+      },
+      {
+        id: 'senior_software_engineer',
+        name: 'Senior Software Engineer',
+        segment: 'Engineering',
+        comp: '$120K - $160K',
+        experience: '5-8 years',
+        icon: '🔧',
+        levels: [3, 3, 3, 3, 3, 3]
+      },
+      {
+        id: 'lead_software_engineer',
+        name: 'Lead Software Engineer',
+        segment: 'Engineering',
+        comp: '$140K - $180K',
+        experience: '6-10 years',
+        icon: '🎯',
+        levels: [3, 3, 3, 4, 3, 3]
+      },
+      {
+        id: 'staff_software_engineer',
+        name: 'Staff Software Engineer',
+        segment: 'Engineering',
+        comp: '$160K - $200K',
+        experience: '8-12 years',
+        icon: '⭐',
+        levels: [4, 4, 4, 4, 4, 4]
+      },
+      {
+        id: 'software_engineering_manager',
+        name: 'Software Engineering Manager',
+        segment: 'Engineering Leadership',
+        comp: '$170K - $230K',
+        experience: '8-12 years',
+        icon: '👔',
+        levels: [3, 3, 4, 5, 4, 4]
+      },
+      {
+        id: 'sr_manager_engineering',
+        name: 'Sr. Manager, Software Engineering',
+        segment: 'Engineering Leadership',
+        comp: '$190K - $250K',
+        experience: '10-15 years',
+        icon: '🏅',
+        levels: [4, 4, 4, 5, 5, 4]
+      },
+      {
+        id: 'principal_engineer',
+        name: 'Principal Engineer',
+        segment: 'Engineering',
+        comp: '$200K - $270K',
+        experience: '12+ years',
+        icon: '🌟',
+        levels: [5, 5, 4, 5, 4, 5]
+      },
+      {
+        id: 'director_engineering',
+        name: 'Director, Product Engineering',
+        segment: 'Engineering Leadership',
+        comp: '$220K - $280K',
+        experience: '12-18 years',
+        icon: '📊',
+        levels: [4, 4, 5, 5, 5, 5]
+      },
+      {
+        id: 'vp_engineering',
+        name: 'VP of Engineering',
+        segment: 'Executive Leadership',
+        comp: '$280K - $400K',
+        experience: '15+ years',
+        icon: '👑',
+        levels: [5, 5, 5, 5, 5, 5]
+      }
+    ];
+    
+    function App() {
+      const [selectedRole, setSelectedRole] = useState(ROLES[3]); // Default to Senior SE
+      const [selectedLevels, setSelectedLevels] = useState([...ROLES[3].levels]);
+      
+      const handleRoleSelect = (role) => {
+        setSelectedRole(role);
+        setSelectedLevels([...role.levels]);
+      };
+      
+      const handleCellClick = (factorIndex, levelIndex) => {
+        const newLevels = [...selectedLevels];
+        newLevels[factorIndex] = levelIndex;
+        setSelectedLevels(newLevels);
+      };
+      
+      const generateObjective = () => {
+        const avgLevel = selectedLevels.reduce((a, b) => a + b, 0) / 6;
+        const levelDesc = avgLevel < 1.5 ? 'entry-level contributor focused on building foundational skills' :
+                         avgLevel < 2.5 ? 'independent developer delivering quality features' :
+                         avgLevel < 3.5 ? 'senior engineer solving complex problems and mentoring others' :
+                         avgLevel < 4.5 ? 'technical leader shaping strategy and building teams' :
+                         'executive driving organizational transformation';
+        
+        return `Drive Trimble's software excellence as an ${levelDesc}. Connect physical and digital worlds through innovative cloud solutions in construction, geospatial, and transportation domains. Deliver scalable, reliable systems that transform how customers measure, build, and move goods worldwide.`;
+      };
+      
+      return (
+        <div className="app-container">
+          <div className="left-panel">
+            <div className="header">
+              <div className="header-content">
+                <div className="company-badge">
+                  <span>🌐</span>
+                  <span>Trimble Inc.</span>
+                </div>
+                <h1>Software Engineering</h1>
+                <p>6×6 Performance Matrix & Job Profile Builder</p>
+              </div>
+            </div>
+            
+            <div className="section-title">Select Role Profile</div>
+            <div className="role-selector">
+              {ROLES.map(role => (
+                <button
+                  key={role.id}
+                  className={`role-pill ${selectedRole.id === role.id ? 'active' : ''}`}
+                  onClick={() => handleRoleSelect(role)}
+                >
+                  <span className="icon">{role.icon}</span>
+                  <span>{role.name}</span>
+                </button>
+              ))}
+            </div>
+            
+            <div className="matrix-container">
+              <div className="matrix-header">
+                <div></div>
+                {['L1', 'L2', 'L3', 'L4', 'L5', 'L6'].map(level => (
+                  <div key={level} className="matrix-header-cell">{level}</div>
+                ))}
+              </div>
+              
+              {FACTORS.map((factor, factorIndex) => (
+                <div key={factor.id} className="matrix-row">
+                  <div className="factor-label">
+                    <span className="factor-icon">{factor.icon}</span>
+                    <span>{factor.name}</span>
+                  </div>
+                  {factor.levels.map((level, levelIndex) => (
+                    <div
+                      key={levelIndex}
+                      className={`matrix-cell l${levelIndex + 1} ${selectedLevels[factorIndex] === levelIndex ? 'selected' : ''}`}
+                      onClick={() => handleCellClick(factorIndex, levelIndex)}
+                    >
+                      <span className="cell-icon">{level.icon}</span>
+                      <span className="cell-title">{level.title}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="right-panel">
+            <div className="right-header">
+              <div className="role-display">
+                <div className="role-icon-large">{selectedRole.icon}</div>
+                <div className="role-info">
+                  <h2>{selectedRole.name}</h2>
+                  <div className="role-meta">
+                    <span className="role-meta-item">
+                      <span className="label">Segment:</span> {selectedRole.segment}
+                    </span>
+                    <span className="role-meta-item">
+                      <span className="label">Comp:</span> {selectedRole.comp}
+                    </span>
+                    <span className="role-meta-item">
+                      <span className="label">Exp:</span> {selectedRole.experience}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="right-content">
+              <div className="objective-card">
+                <h3>Performance Objective</h3>
+                <p>{generateObjective()}</p>
+              </div>
+              
+              <div className="kpo-section">
+                <h3>Key Performance Outcomes</h3>
+                <div className="kpo-grid">
+                  {FACTORS.map((factor, index) => {
+                    const level = factor.levels[selectedLevels[index]];
+                    return (
+                      <div key={factor.id} className="kpo-card">
+                        <div className={`kpo-icon l${selectedLevels[index] + 1}`}>{level.icon}</div>
+                        <div className="kpo-content">
+                          <h4>
+                            {factor.name}
+                            <span className={`level-badge l${selectedLevels[index] + 1}`}>
+                              L{selectedLevels[index] + 1}
+                            </span>
+                          </h4>
+                          <p>{level.kpo}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              <div className="msa-section">
+                <h3>MSA Interview Questions</h3>
+                <div className="msa-grid">
+                  {FACTORS.map((factor, index) => {
+                    const level = factor.levels[selectedLevels[index]];
+                    return (
+                      <div key={factor.id} className="msa-card">
+                        <div className="msa-header">
+                          <div className="msa-factor-icon">{factor.icon}</div>
+                          <span className="msa-factor-name">{factor.name}</span>
+                          <span className={`level-badge l${selectedLevels[index] + 1}`}>
+                            L{selectedLevels[index] + 1} • {level.title}
+                          </span>
+                        </div>
+                        <div className="msa-body">
+                          <p className="msa-question">"{level.msaQuestion}"</p>
+                          <div className="listen-for">
+                            <h5>Listen For</h5>
+                            <ul>
+                              {level.listenFor.map((item, i) => (
+                                <li key={i}>{item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
