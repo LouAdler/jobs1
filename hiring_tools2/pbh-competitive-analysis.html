@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competitive Analysis — Performance-based Hiring vs. The Field</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --ink-muted: #94a3b8;
+    --surface: #ffffff;
+    --warm: #faf8f5;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --green: #059669;
+    --green-light: #d1fae5;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --purple: #7c3aed;
+    --purple-light: #ede9fe;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    background: var(--warm);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 48px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 28px 0 10px;
+  }
+  p { margin-bottom: 14px; color: var(--ink-soft); }
+  .subtitle {
+    font-size: 1.1rem;
+    color: var(--ink-muted);
+    margin-bottom: 32px;
+  }
+
+  /* Cards */
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 28px 28px;
+    margin: 20px 0;
+    border: 1px solid #e8ecf2;
+  }
+  .card h3 { margin-top: 0; }
+
+  /* Competitor sections */
+  .competitor {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid #e8ecf2;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+  .competitor-header {
+    padding: 20px 28px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e8ecf2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .competitor-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  .competitor-body { padding: 24px 28px; }
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .tag-method { background: var(--purple-light); color: var(--purple); }
+  .tag-tool { background: var(--blue-light); color: var(--blue); }
+  .tag-trend { background: var(--amber-light); color: var(--amber); }
+
+  /* Strengths / Weaknesses inline */
+  .sw-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .sw-col h4 {
+    font-size: .78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .sw-col.strengths h4 { color: var(--green); }
+  .sw-col.weaknesses h4 { color: var(--red); }
+  .sw-item {
+    font-size: .88rem;
+    color: var(--ink-soft);
+    padding: 6px 0;
+    border-bottom: 1px solid #f1f5f9;
+    line-height: 1.5;
+  }
+
+  /* Comparison matrix */
+  .matrix {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: .85rem;
+    background: white;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid #e8ecf2;
+  }
+  .matrix th, .matrix td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .matrix th {
+    background: #f8fafc;
+    font-weight: 700;
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    color: var(--ink-muted);
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .matrix th.pbh {
+    background: var(--blue-light);
+    color: var(--blue);
+  }
+  .matrix td { color: var(--ink-soft); }
+  .matrix td:first-child {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .check { color: var(--green); font-weight: 700; }
+  .partial { color: var(--amber); font-weight: 700; }
+  .miss { color: #cbd5e1; }
+  .strong { color: var(--green); font-weight: 600; }
+  .moderate { color: var(--amber); font-weight: 600; }
+  .weak { color: var(--red); font-weight: 600; }
+
+  /* Verdict boxes */
+  .verdict {
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 16px 0;
+  }
+  .verdict-ahead { background: var(--green-light); border-left: 4px solid var(--green); }
+  .verdict-behind { background: var(--red-light); border-left: 4px solid var(--red); }
+  .verdict-even { background: var(--amber-light); border-left: 4px solid var(--amber); }
+  .verdict h4 {
+    font-size: .85rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .verdict p { font-size: .9rem; margin-bottom: 0; }
+
+  /* Bottom line */
+  .bottom-line {
+    background: var(--ink);
+    color: white;
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    margin: 32px 0;
+  }
+  .bottom-line h2 {
+    color: white;
+    border-bottom-color: rgba(255,255,255,.2);
+    margin-top: 0;
+  }
+  .bottom-line p { color: rgba(255,255,255,.75); }
+  .bottom-line strong { color: white; }
+
+  @media (max-width: 640px) {
+    .sw-grid { grid-template-columns: 1fr; }
+    .matrix { font-size: .78rem; }
+    .matrix th, .matrix td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>Performance-based Hiring vs. The Competition</h1>
+<p class="subtitle">An honest assessment of where PBH leads, where it's even, and where it needs to catch up — February 2026</p>
+
+<!-- ═══════ LANDSCAPE ═══════ -->
+<h2>The Competitive Landscape</h2>
+<p>Performance-based Hiring doesn't compete against a single rival. It competes against five overlapping categories: skills-based hiring (the current market darling), structured behavioral interviewing (the academic standard), Topgrading (the closest methodology competitor), AI-powered screening tools (the technology wave), and inertia — the "we've always done it this way" approach that remains the biggest competitor of all.</p>
+<p>Each of these approaches addresses a different piece of the hiring puzzle. PBH's claim is that it addresses the <em>whole</em> puzzle. That's both its greatest strength and the source of its biggest go-to-market challenge.</p>
+
+<!-- ═══════ COMPETITOR 1: SKILLS-BASED ═══════ -->
+<div class="competitor">
+  <div class="competitor-header">
+    <h3>1. Skills-Based Hiring</h3>
+    <span class="tag tag-trend">Dominant Trend</span>
+  </div>
+  <div class="competitor-body">
+    <p><strong>What it is:</strong> Remove degree requirements, define jobs by skills/competencies, assess candidates through skills tests rather than credentials. Championed by LinkedIn, TestGorilla, Deloitte, and the World Economic Forum. As of 2026, 70% of employers report using some form of skills-based hiring.</p>
+    <p><strong>Market position:</strong> This is the movement that gets all the press. It has massive institutional backing, a simple narrative ("skills over degrees"), and a DEI angle that resonates with corporate leadership. It's the approach most likely to be mentioned in a boardroom conversation about "modernizing hiring."</p>
+    
+    <div class="sw-grid">
+      <div class="sw-col strengths">
+        <h4>✦ Its strengths vs. PBH</h4>
+        <div class="sw-item"><strong>Simpler narrative</strong> — "hire for skills, not degrees" is instantly understandable; PBH requires more explanation</div>
+        <div class="sw-item"><strong>Massive market momentum</strong> — LinkedIn, WEF, Deloitte, McKinsey all evangelizing it; PBH is largely one-firm advocacy</div>
+        <div class="sw-item"><strong>Rich tool ecosystem</strong> — TestGorilla, Codility, HackerRank, Pymetrics all built to serve skills-based workflows</div>
+        <div class="sw-item"><strong>Easy entry point</strong> — companies can start by removing degree requirements from job posts tomorrow; PBH requires methodology training</div>
+      </div>
+      <div class="sw-col weaknesses">
+        <h4>✦ Where PBH is better</h4>
+        <div class="sw-item"><strong>Skills ≠ outcomes</strong> — knowing Python doesn't mean someone can build and ship the system you need; PBH defines the actual work to be done</div>
+        <div class="sw-item"><strong>No job analysis</strong> — skills-based hiring rarely starts with defining what success looks like in Year 1; PBH makes this the foundation</div>
+        <div class="sw-item"><strong>No recruiting integration</strong> — skills-based hiring is a screening method, not a recruiting strategy; PBH includes how to attract and close passive candidates</div>
+        <div class="sw-item"><strong>No quality-of-hire measurement</strong> — skills-based approaches track pass/fail on assessments, not post-hire performance; PBH's Talent Scorecard tracks outcomes</div>
+        <div class="sw-item"><strong>Assessment fatigue</strong> — stacking skills tests alienates top candidates who won't jump through hoops; PBH's interview approach is conversational and respectful of candidate time</div>
+      </div>
+    </div>
+
+    <div class="verdict verdict-ahead">
+      <h4>PBH ADVANTAGE: Depth of methodology</h4>
+      <p>Skills-based hiring is half the answer — it correctly moves away from credentials but stops at "can they do X?" without asking "will they achieve Y in this specific context?" PBH is the upstream methodology that determines <em>which</em> skills actually matter, and then verifies them through evidence of past performance rather than tests. The positioning opportunity is clear: <strong>"Skills-based hiring tells you what someone can do. Performance-based Hiring tells you what they will accomplish."</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ COMPETITOR 2: STRUCTURED BEHAVIORAL ═══════ -->
+<div class="competitor">
+  <div class="competitor-header">
+    <h3>2. Structured Behavioral Interviewing</h3>
+    <span class="tag tag-method">Academic Standard</span>
+  </div>
+  <div class="competitor-body">
+    <p><strong>What it is:</strong> Standardized interview questions (behavioral + hypothetical), scored on rubrics, used consistently across candidates. Championed by Google (re:Work), backed by I/O psychology research (Schmidt & Hunter meta-analysis). Google's implementation is the gold standard.</p>
+    <p><strong>Market position:</strong> This is the approach with the strongest academic validation. Meta-analyses show structured interviews nearly double predictive validity vs. unstructured. Google's public documentation has made it accessible to any company willing to invest in implementation.</p>
+
+    <div class="sw-grid">
+      <div class="sw-col strengths">
+        <h4>✦ Its strengths vs. PBH</h4>
+        <div class="sw-item"><strong>Deepest academic backing</strong> — decades of I/O psychology research; meta-analyses published in peer-reviewed journals; PBH's validation is practitioner-based, not peer-reviewed</div>
+        <div class="sw-item"><strong>Google's credibility</strong> — when Google publishes its hiring playbook and says "this works," companies listen; PBH doesn't have a comparable institutional champion</div>
+        <div class="sw-item"><strong>Bias reduction data</strong> — structured interviews have documented 35% improvement in rejected candidate satisfaction and measurable bias reduction; PBH's bias reduction claims are less formally studied</div>
+        <div class="sw-item"><strong>Free, open-source methodology</strong> — Google's re:Work guides are freely available; PBH requires subscription/training investment</div>
+      </div>
+      <div class="sw-col weaknesses">
+        <h4>✦ Where PBH is better</h4>
+        <div class="sw-item"><strong>Interview-only approach</strong> — structured behavioral interviewing is just the interview; PBH covers the entire hiring cycle from job definition through onboarding</div>
+        <div class="sw-item"><strong>"Tell me about a time" fatigue</strong> — behavioral questions without job-specific anchoring produce rehearsed STAR responses that measure presentation skills, not job fit</div>
+        <div class="sw-item"><strong>No job analysis embedded</strong> — structured interviews work best when anchored to job analysis, but most implementations skip this step; PBH requires it</div>
+        <div class="sw-item"><strong>No recruiting component</strong> — structured interviews assess whoever shows up; PBH actively changes who shows up by redefining the job as a career opportunity</div>
+        <div class="sw-item"><strong>Hypothetical ≠ evidence</strong> — "What would you do if..." is less predictive than "Tell me about a comparable accomplishment," which is PBH's Most Significant Accomplishment question</div>
+      </div>
+    </div>
+
+    <div class="verdict verdict-even">
+      <h4>MIXED: Academic validation vs. practical completeness</h4>
+      <p>This is PBH's most intellectually honest competitive comparison. Structured behavioral interviewing has stronger formal research backing. PBH has greater practical scope. The ideal positioning: <strong>PBH incorporates structured interviewing as one component of an end-to-end system</strong> — it doesn't replace it, it gives it the job-analysis foundation it usually lacks. The gap PBH needs to close: formal third-party research validating outcomes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ COMPETITOR 3: TOPGRADING ═══════ -->
+<div class="competitor">
+  <div class="competitor-header">
+    <h3>3. Topgrading (Bradford Smart / "Who" Method)</h3>
+    <span class="tag tag-method">Methodology</span>
+  </div>
+  <div class="competitor-body">
+    <p><strong>What it is:</strong> A 12-step process for hiring "A Players" — extensive chronological career interviews, candidate-arranged reference checks (TORC), job scorecards, and post-hire coaching. Used by GE, Lincoln Financial, Honeywell. Claims 85%+ success rate in hiring top performers.</p>
+    <p><strong>Market position:</strong> Topgrading is PBH's closest methodological cousin. Both prioritize past performance as the best predictor of future results. Both use scorecards. Both claim dramatically better hiring outcomes than traditional methods. They compete for the same buyer: the company that wants a systematic, methodology-driven approach to hiring.</p>
+
+    <div class="sw-grid">
+      <div class="sw-col strengths">
+        <h4>✦ Its strengths vs. PBH</h4>
+        <div class="sw-item"><strong>Brand recognition in C-suite</strong> — the "A Player" language has permeated executive vocabulary; the "Who" book (Geoff Smart) was a bestseller; PBH brand awareness is lower outside TA circles</div>
+        <div class="sw-item"><strong>Published case studies</strong> — Topgrading names clients and publishes success rates (85%+ A Players hired); PBH's case studies are less systematically published</div>
+        <div class="sw-item"><strong>Reference check innovation</strong> — the TORC (Threat of Reference Check) is a distinctive, memorable technique; PBH doesn't have an equivalently branded verification step</div>
+        <div class="sw-item"><strong>Consulting infrastructure</strong> — Topgrading has a built-out consulting and assessment practice for enterprise implementations</div>
+      </div>
+      <div class="sw-col weaknesses">
+        <h4>✦ Where PBH is better</h4>
+        <div class="sw-item"><strong>Candidate experience</strong> — Topgrading's multi-hour chronological interviews and mandatory reference arrangements feel entitled and one-sided; PBH treats hiring as a two-way exchange</div>
+        <div class="sw-item"><strong>A/B/C labeling is reductive</strong> — categorizing humans as "A, B, or C Players" ignores context; someone is an "A Player" relative to a specific role, not universally. PBH's performance-objectives approach is role-specific by design</div>
+        <div class="sw-item"><strong>Passive candidate recruitment</strong> — Topgrading assumes candidates will "jump through hoops." PBH recognizes that the best candidates are already employed and need to be attracted, not filtered</div>
+        <div class="sw-item"><strong>DEI compatibility</strong> — Topgrading's career-history focus can penalize people with non-linear paths (caregivers, career changers, underrepresented groups); PBH's performance-objectives approach opens the talent pool</div>
+        <div class="sw-item"><strong>AI-powered tooling</strong> — PBH's Talent Hub offers AI-driven job definition, interview guides, and scoring; Topgrading is still largely manual/consulting-driven</div>
+        <div class="sw-item"><strong>Lighter implementation</strong> — PBH can start with a single role in 10 minutes; Topgrading's 12-step process is heavyweight and intimidating</div>
+      </div>
+    </div>
+
+    <div class="verdict verdict-ahead">
+      <h4>PBH ADVANTAGE: Modern, candidate-centric, tech-enabled</h4>
+      <p>Topgrading and PBH share the "past performance predicts future performance" foundation. But Topgrading was built for an employer's market — it assumes candidates will tolerate a grueling process. PBH was built for a candidate's market, where the best people need to be attracted and sold on the opportunity. <strong>PBH is also 5+ years ahead on AI integration.</strong> Topgrading's weakness is the same as its strength: thoroughness to the point of rigidity.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ COMPETITOR 4: AI TOOLS ═══════ -->
+<div class="competitor">
+  <div class="competitor-header">
+    <h3>4. AI-Powered Hiring Platforms</h3>
+    <span class="tag tag-tool">Technology Wave</span>
+  </div>
+  <div class="competitor-body">
+    <p><strong>What it is:</strong> HireVue (AI video assessment), Greenhouse (structured ATS with AI scoring), Eightfold (talent intelligence), Paradox (conversational AI for screening), Pymetrics (neuroscience-based matching). By 2026, ~80% of enterprises are expected to use AI for significant parts of hiring. 72% of HR professionals use AI weekly.</p>
+    <p><strong>Market position:</strong> This is where the money and attention are flowing. AI hiring tools raised billions in venture funding. They promise efficiency, scale, and bias reduction. They're the "shiny object" in every TA leader's inbox.</p>
+
+    <div class="sw-grid">
+      <div class="sw-col strengths">
+        <h4>✦ Their strengths vs. PBH</h4>
+        <div class="sw-item"><strong>Scale and speed</strong> — AI tools can screen thousands of candidates in minutes; PBH's methodology is inherently human-intensive</div>
+        <div class="sw-item"><strong>Integration with existing stacks</strong> — Greenhouse, Lever, Workday integrations are plug-and-play; PBH's Talent Hub is standalone</div>
+        <div class="sw-item"><strong>Massive funding and marketing</strong> — HireVue, Eightfold, etc. have marketing budgets 100×+ PBH's; they dominate search results and conference stages</div>
+        <div class="sw-item"><strong>Enterprise procurement-ready</strong> — SOC 2, GDPR compliance, SLAs, enterprise pricing; PBH's Talent Hub is newer and still building enterprise credibility</div>
+        <div class="sw-item"><strong>Continuous improvement loops</strong> — AI platforms collect data on every interaction and improve automatically; PBH improvement relies on practitioner feedback</div>
+      </div>
+      <div class="sw-col weaknesses">
+        <h4>✦ Where PBH is better</h4>
+        <div class="sw-item"><strong>"Automating a broken process"</strong> — most AI tools speed up screening against skills-based JDs, which are the wrong starting point; PBH fixes the input (job definition) before optimizing the throughput</div>
+        <div class="sw-item"><strong>AI bias amplification</strong> — HireVue discontinued facial recognition after bias criticism; Pymetrics faces scrutiny; AI trained on historical hiring data amplifies historical biases. PBH's human-judgment + structured-evidence approach avoids this</div>
+        <div class="sw-item"><strong>No methodology inside</strong> — AI tools are infrastructure, not strategy. They don't tell you what to look for, how to interview, or how to recruit. PBH provides the thinking; AI should be the execution layer</div>
+        <div class="sw-item"><strong>Candidate backlash</strong> — 33% of candidates are uncomfortable with AI making hiring decisions without human oversight; PBH is inherently human-centered</div>
+        <div class="sw-item"><strong>Legal exposure</strong> — EU AI Act, NYC bias audits, and emerging regulation create compliance risk for AI screening; PBH has Littler Mendelson legal validation</div>
+      </div>
+    </div>
+
+    <div class="verdict verdict-even">
+      <h4>MIXED: PBH provides the brain, AI provides the muscle</h4>
+      <p>AI tools and PBH aren't natural competitors — they're natural partners. The strongest positioning: <strong>"AI can't tell you what success looks like. Your hiring manager can. We show them how. Then AI helps execute."</strong> The risk: if PBH doesn't integrate with major ATS/AI platforms, it stays in a methodology silo while AI tools eat the workflow. The Talent Hub's AI features are a smart start but need to evolve toward interoperability with Greenhouse, Lever, etc.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ COMPETITOR 5: STATUS QUO ═══════ -->
+<div class="competitor">
+  <div class="competitor-header">
+    <h3>5. Status Quo ("Traditional Hiring")</h3>
+    <span class="tag tag-trend">Biggest Competitor</span>
+  </div>
+  <div class="competitor-body">
+    <p><strong>What it is:</strong> Skills-based JDs, resume keyword screening, unstructured behavioral interviews, gut-feel decisions, compensation-driven offers. This is what 60-70% of companies still do for most positions. Only 27% formally measure quality of hire.</p>
+    <p><strong>Market position:</strong> Inertia is PBH's biggest real competitor. The hiring manager who says "I know a good candidate when I see one" and the recruiter who says "we've always done it this way" are harder to displace than any methodology or tool.</p>
+
+    <div class="sw-grid">
+      <div class="sw-col strengths">
+        <h4>✦ Why it persists</h4>
+        <div class="sw-item"><strong>Zero switching cost</strong> — no new tools, no training, no change management; PBH requires all three</div>
+        <div class="sw-item"><strong>Hiring managers prefer autonomy</strong> — structured methods feel like bureaucracy; gut-feel feels like expertise</div>
+        <div class="sw-item"><strong>Short-term speed</strong> — posting a JD and screening resumes is fast; defining performance objectives takes thought</div>
+        <div class="sw-item"><strong>Invisible failure costs</strong> — bad hires don't show up as a line item; companies absorb the cost without attributing it to the hiring process</div>
+      </div>
+      <div class="sw-col weaknesses">
+        <h4>✦ Where PBH is better (everywhere)</h4>
+        <div class="sw-item"><strong>Predictability</strong> — unstructured interviews have near-zero predictive validity; PBH's evidence-based approach is dramatically better</div>
+        <div class="sw-item"><strong>Bias exposure</strong> — traditional hiring is legally and ethically indefensible under scrutiny; PBH is legally validated</div>
+        <div class="sw-item"><strong>Cost of bad hires</strong> — 3-5× salary per mis-hire; PBH reduces this dramatically</div>
+        <div class="sw-item"><strong>Quality of hire</strong> — you can't improve what you don't measure; PBH provides the measurement framework</div>
+      </div>
+    </div>
+
+    <div class="verdict verdict-ahead">
+      <h4>PBH ADVANTAGE: Overwhelming — but the sales challenge is real</h4>
+      <p>PBH is better than traditional hiring in every dimension. The problem isn't proving it's better — it's getting companies to admit their current process is broken. <strong>The Kaizen Audit is the right tool for this</strong>: it quantifies the waste in their current process and makes the invisible visible. This is PBH's most important sales asset.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ COMPARISON MATRIX ═══════ -->
+<h2>Head-to-Head Comparison Matrix</h2>
+
+<table class="matrix">
+  <thead>
+    <tr>
+      <th style="width:26%">Dimension</th>
+      <th class="pbh" style="width:15%">PBH</th>
+      <th style="width:15%">Skills-Based</th>
+      <th style="width:15%">Structured Behavioral</th>
+      <th style="width:15%">Topgrading</th>
+      <th style="width:14%">AI Tools</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Job analysis / success definition</td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="weak">★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="weak">★</span></td>
+    </tr>
+    <tr>
+      <td>Interviewing methodology</td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="moderate">★★</span></td>
+    </tr>
+    <tr>
+      <td>Sourcing / attracting passive talent</td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="weak">★</span></td>
+      <td><span class="weak">★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="moderate">★★</span></td>
+    </tr>
+    <tr>
+      <td>Candidate experience / recruiting</td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="weak">★</span></td>
+      <td><span class="moderate">★★</span></td>
+    </tr>
+    <tr>
+      <td>Quality of hire measurement</td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="weak">★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="moderate">★★</span></td>
+    </tr>
+    <tr>
+      <td>DEI / talent pool expansion</td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="weak">★</span></td>
+      <td><span class="moderate">★★</span></td>
+    </tr>
+    <tr>
+      <td>Legal defensibility</td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="weak">★</span></td>
+    </tr>
+    <tr>
+      <td>Academic / research validation</td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="moderate">★★</span></td>
+    </tr>
+    <tr>
+      <td>Ease of implementation</td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="weak">★</span></td>
+      <td><span class="strong">★★★</span></td>
+    </tr>
+    <tr>
+      <td>AI / technology integration</td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="weak">★</span></td>
+      <td><span class="strong">★★★</span></td>
+    </tr>
+    <tr>
+      <td>Market awareness / brand</td>
+      <td><span class="weak">★</span></td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="strong">★★★</span></td>
+    </tr>
+    <tr>
+      <td>End-to-end completeness</td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="weak">★</span></td>
+      <td><span class="weak">★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="weak">★</span></td>
+    </tr>
+    <tr>
+      <td>Scalability (enterprise)</td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="strong">★★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="moderate">★★</span></td>
+      <td><span class="strong">★★★</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ═══════ HONEST GAPS ═══════ -->
+<h2>Where PBH Falls Short — Honestly</h2>
+
+<div class="card">
+  <h3>1. Academic Validation Gap</h3>
+  <p>PBH is validated by 40 years of practitioner experience and legal review by Littler Mendelson. But it lacks the kind of peer-reviewed, journal-published research that structured behavioral interviewing has. An I/O psychologist would point to Schmidt & Hunter's meta-analyses for structured interviews and ask "where's the equivalent for PBH?" The David Goldstein legal whitepaper is good. But a published study showing PBH's predictive validity vs. traditional methods would be transformative for credibility.</p>
+  <p><strong>What to do about it:</strong> Commission a university-based study. Partner with an I/O psychology department to run a controlled comparison. Even a well-designed case study series with measurable outcomes would help.</p>
+</div>
+
+<div class="card">
+  <h3>2. Market Awareness and Brand Recognition</h3>
+  <p>Skills-based hiring has LinkedIn, WEF, McKinsey, and Deloitte amplifying its message. Structured interviewing has Google re:Work. Topgrading has the "Who" book. AI tools have billions in marketing spend. PBH has Lou Adler's LinkedIn following and 50,000 trained practitioners — which is substantial, but not commensurate with the methodology's quality. The awareness-to-quality ratio is PBH's biggest strategic gap.</p>
+  <p><strong>What to do about it:</strong> The Talent Hub is the right play — it creates a tangible, shareable product experience. But PBH also needs a single, viral-ready concept (the way "A Player" went viral for Topgrading). Candidates: "Win-Win Hiring," "Hire for the Anniversary Date," or the Kaizen Audit score itself.</p>
+</div>
+
+<div class="card">
+  <h3>3. Technology Ecosystem Integration</h3>
+  <p>The Talent Hub is an impressive standalone tool. But enterprise TA teams live in Greenhouse, Lever, Workday, and iCIMS. If PBH methodology can't plug into those workflows — if it requires switching to a separate tool — adoption friction increases dramatically. AI hiring tools win on this dimension because they integrate with everything.</p>
+  <p><strong>What to do about it:</strong> Build integrations or exports that feed PBH outputs (performance-based JDs, interview guides, scorecards) directly into the ATS platforms companies already use. Even a simple "Export to Greenhouse" button would lower the barrier significantly.</p>
+</div>
+
+<div class="card">
+  <h3>4. Perceived Complexity</h3>
+  <p>Every competitor benefits from simplicity: skills-based hiring = "test for skills." Structured interviewing = "use the same questions." AI screening = "let the algorithm decide." PBH's end-to-end system is more complete, but completeness feels like complexity to a buyer who just wants to fix one thing. The Goodreads criticism of "Hire with Your Head" about repetition and organization reflects this perception problem.</p>
+  <p><strong>What to do about it:</strong> The "try one role" entry point is essential. Don't sell the system. Sell the first 10-minute experience. Let the methodology reveal itself after they've seen it work once. The Kaizen Audit + free PBJD generator is exactly the right funnel.</p>
+</div>
+
+<div class="card">
+  <h3>5. Scalability Perception</h3>
+  <p>PBH was born from executive search. Its techniques — deep MSA questioning, relationship-based recruiting, hiring-manager collaboration — feel designed for critical individual hires, not for filling 50 customer service roles. Whether or not PBH scales (and the 6×6 matrix suggests it can), the perception is that it's "too much" for volume hiring.</p>
+  <p><strong>What to do about it:</strong> Build and publish case studies specifically showing PBH applied to volume/class hiring (not just executive roles). The VIATechnik and construction technology work is a good start. Need more examples at different scales.</p>
+</div>
+
+<!-- ═══════ BOTTOM LINE ═══════ -->
+<div class="bottom-line">
+  <h2>The Bottom Line</h2>
+  <p>Performance-based Hiring is the <strong>most complete hiring methodology available</strong>. No competitor covers job definition, sourcing, interviewing, recruiting, and quality measurement in an integrated system. That's not marketing — it's a factual assessment of the competitive landscape.</p>
+  <p>But completeness alone doesn't win markets. PBH's competitive disadvantages are real: <strong>lower brand awareness than skills-based hiring, less academic validation than structured interviewing, less enterprise tech integration than AI platforms, and higher perceived complexity than all of them.</strong></p>
+  <p>The strategic path forward isn't to compete head-to-head with any single competitor. It's to <strong>position PBH as the operating system that makes all other hiring approaches work better</strong>:</p>
+  <p>• Skills-based hiring works better when you define the right skills through job analysis (PBH Step 1)<br>
+  • Structured interviews work better when anchored to performance objectives (PBH's MSA question)<br>
+  • AI tools work better when fed performance-based JDs instead of skills-based JDs (PBH output)<br>
+  • Even Topgrading's A-Player concept works better when "A" is defined by role-specific outcomes, not generic rankings</p>
+  <p><strong>PBH doesn't replace what companies are already doing. It makes what they're already doing actually work.</strong> That's the message that should drive the landing page, the Kaizen Audit, and every piece of marketing going forward.</p>
+</div>
+
+</div>
+</body>
+</html>
