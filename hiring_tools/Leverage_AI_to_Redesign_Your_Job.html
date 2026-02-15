@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leverage AI to Redesign Your Job | Career GPT Prompts</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f1ec;
+      --surface: #ffffff;
+      --surface-warm: #faf8f5;
+      --text: #1c1917;
+      --text-secondary: #57534e;
+      --text-muted: #a8a29e;
+      --border: #e7e5e4;
+      --border-strong: #d6d3d1;
+      --accent: #1e3a5f;
+      --accent-light: #e8eef5;
+      --accent-glow: rgba(30, 58, 95, 0.08);
+      --teal: #0f766e;
+      --teal-light: #e6f5f3;
+      --amber: #b45309;
+      --amber-light: #fef3c7;
+      --green: #15803d;
+      --green-light: #dcfce7;
+      --purple: #7c3aed;
+      --purple-light: #f3e8ff;
+      --rose: #be123c;
+      --rose-light: #ffe4e6;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+      --radius: 14px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Sans 3', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: linear-gradient(135deg, #1e3a5f 0%, #0f4c75 40%, #0f766e 100%);
+      padding: 56px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.9);
+      padding: 5px 16px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      backdrop-filter: blur(8px);
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: #7dd3c0;
+    }
+    .hero .subtitle {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.78);
+      max-width: 620px;
+      margin: 0 auto 24px;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+    .hero-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .hero-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 22px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .hero-link.primary {
+      background: #fff;
+      color: var(--accent);
+    }
+    .hero-link.primary:hover { background: #f0f0f0; transform: translateY(-1px); }
+    .hero-link.secondary {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .hero-link.secondary:hover { background: rgba(255,255,255,0.18); }
+
+    /* ─── INTRO ─── */
+    .intro {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 40px 24px 8px;
+    }
+    .intro-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: var(--shadow-sm);
+    }
+    .intro-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .intro-card p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .intro-card p + p { margin-top: 10px; }
+    .intro-card strong { color: var(--text); font-weight: 600; }
+
+    /* ─── SECTIONS ─── */
+    .content {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 24px 24px 60px;
+    }
+
+    .section-group {
+      margin-bottom: 36px;
+    }
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+    .section-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .section-label h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .section-label .section-count {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: auto;
+    }
+
+    /* ─── PROMPT CARDS ─── */
+    .prompt-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .prompt-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-strong);
+    }
+    .prompt-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 20px 24px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .prompt-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .prompt-meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .prompt-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 3px;
+    }
+    .prompt-why {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prompt-toggle {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: transform 0.25s ease, background 0.15s;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .prompt-card.open .prompt-toggle {
+      transform: rotate(90deg);
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+
+    .prompt-body {
+      display: none;
+      padding: 0 24px 22px;
+    }
+    .prompt-card.open .prompt-body { display: block; }
+
+    .prompt-text-container {
+      position: relative;
+      background: var(--surface-warm);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .prompt-text {
+      padding: 18px 20px;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text);
+      white-space: pre-wrap;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+    .prompt-text .fill-in {
+      background: var(--amber-light);
+      color: var(--amber);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .copy-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+    .copy-bar .label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .copy-btn:hover { background: #152d4a; transform: translateY(-1px); }
+    .copy-btn.copied { background: var(--green); }
+
+    .prompt-tip {
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: var(--accent-glow);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .prompt-tip strong { color: var(--accent); font-weight: 600; }
+
+    /* ─── COLOR THEMES PER SECTION ─── */
+    .theme-blue .prompt-num { background: var(--accent-light); color: var(--accent); }
+    .theme-blue .section-dot { background: var(--accent); }
+
+    .theme-teal .prompt-num { background: var(--teal-light); color: var(--teal); }
+    .theme-teal .section-dot { background: var(--teal); }
+
+    .theme-amber .prompt-num { background: var(--amber-light); color: var(--amber); }
+    .theme-amber .section-dot { background: var(--amber); }
+
+    .theme-purple .prompt-num { background: var(--purple-light); color: var(--purple); }
+    .theme-purple .section-dot { background: var(--purple); }
+
+    .theme-green .prompt-num { background: var(--green-light); color: var(--green); }
+    .theme-green .section-dot { background: var(--green); }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 24px 48px;
+    }
+    .footer-card {
+      background: linear-gradient(135deg, var(--accent) 0%, #0f766e 100%);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      text-align: center;
+      color: #fff;
+    }
+    .footer-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+    .footer-card p {
+      font-size: 15px;
+      opacity: 0.85;
+      max-width: 500px;
+      margin: 0 auto 20px;
+      line-height: 1.6;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 22px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      background: #fff;
+      color: var(--accent);
+    }
+    .footer-link:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .footer-link.outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+    }
+    .footer-link.outline:hover { background: rgba(255,255,255,0.1); }
+
+    .copyright {
+      text-align: center;
+      padding: 16px 24px 32px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      .hero { padding: 40px 20px 36px; }
+      .prompt-header { padding: 16px 18px; }
+      .prompt-body { padding: 0 18px 18px; }
+      .prompt-text { padding: 14px 16px; font-size: 13.5px; }
+      .intro-card { padding: 22px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">✦ Free Career GPT Prompts</div>
+      <h1>Leverage AI to <em>Redesign Your Job</em></h1>
+      <p class="subtitle">15 copy-paste prompts that convert your Super Skills into measurable outcomes, eliminate low-value work, and position you for the roles AI can't replace.</p>
+      <div class="hero-links">
+        <a href="https://hiring.tips/CareerGPT" class="hero-link primary" target="_blank" rel="noopener">🚀 Open Career GPT</a>
+        <a href="https://hiring.tips/PbH_Hub.com" class="hero-link secondary" target="_blank" rel="noopener">📘 Performance-based Hiring Hub</a>
+        <a href="https://hiring.tips/LII_H&GH_AI1" class="hero-link secondary" target="_blank" rel="noopener">📰 Win-Win Hiring Newsletter</a>
+        <a href="https://hiring.tips/Moneyball_signup6" class="hero-link secondary" target="_blank" rel="noopener">🎯 Moneyball for HR! Workshop</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ INTRO ═══ -->
+  <div class="intro">
+    <div class="intro-card">
+      <h2>How to Use These Prompts</h2>
+      <p>Open our free <a href="https://hiring.tips/CareerGPT" style="color: var(--accent); font-weight: 600;" target="_blank" rel="noopener">Career GPT</a> and paste any prompt below. Replace the <strong style="background: var(--amber-light); color: var(--amber); padding: 1px 6px; border-radius: 4px; font-size: 13px;">[bracketed items]</strong> with your own information. Each prompt builds on the one before, so working through them in order gives you the most powerful results — but any single prompt works on its own.</p>
+      <p>The core idea: <strong>stop defining yourself by tasks you perform and start defining yourself by the outcomes you produce.</strong> That shift — from "Having" to "Doing" — is what makes you irreplaceable in the AI era.</p>
+    </div>
+  </div>
+
+  <!-- ═══ PROMPT SECTIONS ═══ -->
+  <div class="content">
+
+    <!-- ══ SECTION 1: DISCOVER YOUR SUPER SKILLS ══ -->
+    <div class="section-group theme-blue">
+      <div class="section-label">
+        <div class="section-dot"></div>
+        <h3>Phase 1 — Discover Your Super Skills</h3>
+        <span class="section-count">Prompts 1–4</span>
+      </div>
+
+      <!-- Prompt 1 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">01</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">Uncover Your Super Skills</div>
+            <div class="prompt-why">Identify the 3–5 strengths that set you apart — the skills where you consistently outperform.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">I'm a <span class="fill-in">[your job title]</span> in <span class="fill-in">[industry/company type]</span>. My day-to-day work includes <span class="fill-in">[list 5–7 key activities]</span>.
+
+Help me identify my 3–5 "Super Skills" — the capabilities where I consistently deliver disproportionate value. For each one, explain why it's hard to replicate with AI and how it differentiates me from others in similar roles. Ask me clarifying questions if needed before finalizing the list.</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> Most professionals can't articulate what they're best at. This prompt forces specificity and reveals the strengths you should build your career around — not the tasks you happen to do today.</div>
+        </div>
+      </div>
+
+      <!-- Prompt 2 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">02</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">Convert Super Skills into Performance Objectives</div>
+            <div class="prompt-why">Transform abstract strengths into 6–8 measurable outcomes tied to business strategy.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">My Super Skills are: <span class="fill-in">[list from Prompt 1]</span>. My company's top strategic priorities this year are <span class="fill-in">[list 2–3 company goals or major projects]</span>.
+
+For each Super Skill, write 1–2 specific performance objectives that tie directly to those strategic priorities. Format each as: "Use [Super Skill] to accomplish [measurable outcome] by [timeframe]." These should describe what I will deliver — not what I do day-to-day.</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> This is the critical shift from "Having" to "Doing." Skills in a vacuum are just words on a resume. Skills tied to outcomes your company actually needs — that's a career move.</div>
+        </div>
+      </div>
+
+      <!-- Prompt 3 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">03</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">Build Your Achiever Pattern</div>
+            <div class="prompt-why">Map the rising trajectory of your accomplishments to demonstrate growth potential.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">Here are my last 3–4 roles or major projects in chronological order:
+
+1. <span class="fill-in">[Role/project, what you accomplished, approximate dates]</span>
+2. <span class="fill-in">[Role/project, what you accomplished, approximate dates]</span>
+3. <span class="fill-in">[Role/project, what you accomplished, approximate dates]</span>
+
+Analyze the trend line. Is each role/project more complex, more ambiguous, and more demanding than the last? Identify the pattern of growth — what specific capabilities expanded from one to the next? Where is the trajectory pointing for my next move?</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> The Achiever Pattern — a rising trajectory of accomplishment — is the strongest signal of high-potential talent. This prompt helps you see (and articulate) your own growth arc.</div>
+        </div>
+      </div>
+
+      <!-- Prompt 4 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">04</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">Stress-Test Your Value Proposition</div>
+            <div class="prompt-why">Pressure-test whether your current positioning survives the next wave of AI capability.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">I'm a <span class="fill-in">[job title]</span> whose Super Skills are <span class="fill-in">[list]</span> and whose key performance objectives are <span class="fill-in">[list from Prompt 2]</span>.
+
+Play devil's advocate. For each performance objective, rate on a 1–10 scale how likely AI is to be able to accomplish it independently within 2 years. For anything rated 7+, suggest how I should reframe the objective to emphasize the judgment, relationship, or strategic thinking component that AI can't replace. Be honest, not reassuring.</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> The professionals who get disrupted are the ones who never asked this question. This prompt ensures your performance objectives are anchored to genuinely human capabilities.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SECTION 2: AUDIT & FILTER YOUR WORK ══ -->
+    <div class="section-group theme-teal">
+      <div class="section-label">
+        <div class="section-dot"></div>
+        <h3>Phase 2 — Audit & Filter Your Work</h3>
+        <span class="section-count">Prompts 5–8</span>
+      </div>
+
+      <!-- Prompt 5 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">05</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">The Pareto Role Audit</div>
+            <div class="prompt-why">Identify which 20% of your activities produce 80% of your value.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">Here's a list of everything I do in a typical week, with approximate hours spent on each:
+
+<span class="fill-in">[List 10–15 activities with weekly hours, e.g., "Status update meetings — 4 hrs," "Building client proposals — 6 hrs," "Responding to internal Slack questions — 3 hrs"]</span>
+
+Apply the Pareto Principle: which 20% of these activities produce roughly 80% of my measurable value? Which 30% consume the most time but contribute the least to outcomes? Present this as two lists with a clear gap analysis between where my time goes and where my value comes from.</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> Most professionals spend 50%+ of their time on work that doesn't materially impact outcomes. You can't redesign your job until you see where the waste is.</div>
+        </div>
+      </div>
+
+      <!-- Prompt 6 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">06</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">The Covey Matrix Sort</div>
+            <div class="prompt-why">Map your activities into Urgent/Important quadrants to find your strategic opportunity.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">Using the same activity list from Prompt 5, sort each activity into Covey's four quadrants:
+
+• Quadrant I (Urgent + Important) — Crises, deadlines
+• Quadrant II (Important, Not Urgent) — Strategy, relationships, growth
+• Quadrant III (Urgent, Not Important) — Interruptions, most emails
+• Quadrant IV (Not Urgent, Not Important) — Busywork, time sinks
+
+Then tell me: What percentage of my week is spent in Quadrant II? That's the strategic work where high-impact careers are built. What specific Quadrant III activities should I automate or eliminate first to reclaim time for Quadrant II work?</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> Quadrant II — important but not urgent — is where career-defining work happens: building relationships, developing strategy, learning new capabilities. Most people get trapped in Quadrants I and III.</div>
+        </div>
+      </div>
+
+      <!-- Prompt 7 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">07</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">Pull the Efficiency Lever</div>
+            <div class="prompt-why">Use AI to automate your Quadrant III time-sinks and accelerate Quadrant I deadlines.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">From my Covey Matrix analysis, my biggest Quadrant III time-sinks are: <span class="fill-in">[list 3–4 activities]</span>, and my most pressured Quadrant I deadlines involve: <span class="fill-in">[list 2–3 activities]</span>.
+
+For each Quadrant III activity, give me a specific, step-by-step way to automate or radically simplify it using AI tools I can implement this week. For each Quadrant I activity, show me how AI can accelerate the execution so I finish faster. Include the specific AI tool or technique and a realistic time savings estimate.</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> The Efficiency Lever is step one — doing the same job faster. But it's not the finish line. The time you reclaim here is the fuel for Prompt 8.</div>
+        </div>
+      </div>
+
+      <!-- Prompt 8 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">08</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">Pull the Redesign Lever</div>
+            <div class="prompt-why">Stop doing the same job faster — ask whether the job itself should change.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">I've reclaimed approximately <span class="fill-in">[X hours/week]</span> by automating low-value work. My Super Skills are <span class="fill-in">[list]</span> and my company's strategic priorities are <span class="fill-in">[list]</span>.
+
+Now pull the Redesign Lever: instead of doing the same job faster, how could I fundamentally redesign my role to invest this reclaimed time in higher-impact work? Suggest 3 specific ways I could expand my responsibilities upward — from execution toward strategy, cross-functional leadership, or solving problems one level above my current role. For each, describe the new performance objective and why it matters more to the company than what I was doing before.</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> This is the critical pivot. Efficiency means doing someone else's job description faster. Redesign means rewriting your own job description around outcomes. The second is how careers are built.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SECTION 3: POSITION YOURSELF FOR WHAT'S NEXT ══ -->
+    <div class="section-group theme-amber">
+      <div class="section-label">
+        <div class="section-dot"></div>
+        <h3>Phase 3 — Position Yourself for What's Next</h3>
+        <span class="section-count">Prompts 9–11</span>
+      </div>
+
+      <!-- Prompt 9 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">09</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">Find Your Blind Spots</div>
+            <div class="prompt-why">Uncover what you don't know you don't know — before it finds you.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">I work in <span class="fill-in">[role/function]</span> at a <span class="fill-in">[company type/industry]</span>. My team's primary outputs are <span class="fill-in">[describe what your team delivers]</span>.
+
+Help me identify blind spots — things I might not know I don't know. Specifically:
+1. What downstream effects does my work have that I probably never see (2–3 handoffs away)?
+2. What assumptions does everyone in my function share that might be wrong?
+3. What adjacent industry shifts could disrupt how my role works within 18 months?
+4. What incentives does my current process create that I didn't intend?
+
+For each blind spot, suggest one question I could investigate this month to get ahead of it.</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> The most dangerous risks aren't the ones you're managing — they're the ones you can't see. AI is uniquely good at surfacing second- and third-order effects that domain experts miss because they're too close to the work.</div>
+        </div>
+      </div>
+
+      <!-- Prompt 10 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">10</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">The Cross-Functional Value Map</div>
+            <div class="prompt-why">Identify how your Super Skills create value for teams beyond your own.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">My Super Skills are <span class="fill-in">[list]</span> and I currently sit in the <span class="fill-in">[department/function]</span>. The other functions I interact with regularly are <span class="fill-in">[list 3–4 departments]</span>.
+
+For each adjacent function, identify one high-value problem I could help solve using my Super Skills — something that would be a stretch assignment for me but would create measurable impact for that team. Frame each as a performance objective: "Use [Super Skill] to help [function] achieve [outcome]." Which of these represents the biggest career-growth opportunity for me?</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> The professionals who advance fastest are the ones who solve problems across functions, not just within their lane. This prompt identifies where your skills can have outsized cross-functional impact.</div>
+        </div>
+      </div>
+
+      <!-- Prompt 11 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">11</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">Draft Your Redesigned Role Proposal</div>
+            <div class="prompt-why">Create a concrete proposal to present to your manager for an expanded, outcome-based role.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">Based on everything we've discussed — my Super Skills, performance objectives, Pareto audit, Covey analysis, and cross-functional opportunities — draft a one-page role proposal I can present to my manager.
+
+Structure it as:
+• Current state: what I spend most of my time on today
+• Proposed shift: what I would shift toward (with 4–6 new performance objectives)
+• How: specific AI workflows that free up time for higher-impact work
+• Impact: measurable value to the team and company strategy
+• Ask: what I need from my manager to make this transition (resources, access, authority)
+
+Keep the tone professional and confident, not apologetic. Frame this as a business case, not a personal request.</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> Thinking about redesigning your job is step one. Actually proposing it — with a clear business case — is what separates people who talk about career growth from people who create it.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SECTION 4: BUILD THE HABITS ══ -->
+    <div class="section-group theme-purple">
+      <div class="section-label">
+        <div class="section-dot"></div>
+        <h3>Phase 4 — Build the Habits</h3>
+        <span class="section-count">Prompts 12–15</span>
+      </div>
+
+      <!-- Prompt 12 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">12</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">The Weekly AI Experiment</div>
+            <div class="prompt-why">Turn one real workflow into an AI-assisted process and measure the delta.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">I want to run a one-week experiment. The workflow I'll test is: <span class="fill-in">[describe a recurring task you do weekly — e.g., "preparing the Monday sales pipeline report"]</span>.
+
+Currently it takes me approximately <span class="fill-in">[X hours]</span> and involves these steps: <span class="fill-in">[list the steps]</span>.
+
+Design an AI-assisted version of this workflow. For each step, tell me: what stays manual (and why), what AI handles, and what tool or prompt to use. Then give me a simple scorecard to track: time saved, quality difference, and anything I learned that I'd do differently next week.</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> You don't learn AI by reading about it. You learn by running one real workflow through it this week and seeing what happens. Start small, measure the delta, iterate.</div>
+        </div>
+      </div>
+
+      <!-- Prompt 13 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">13</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">Become the AI Translator</div>
+            <div class="prompt-why">Position yourself as the person who bridges AI capability and business context on your team.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">My team of <span class="fill-in">[size]</span> in <span class="fill-in">[function]</span> has the following recurring pain points: <span class="fill-in">[list 3–4 team-level frustrations, bottlenecks, or time sinks]</span>.
+
+For each pain point, suggest one AI-powered improvement I could prototype and demo to the team within two weeks. For each, include: the specific tool or prompt, what it replaces, estimated time savings per person per week, and a one-sentence pitch I could use to get my manager's buy-in to pilot it. I want to become the person the team turns to when they ask "could AI help with this?"</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> The most valuable people in the AI transition aren't the ones who understand AI best — they're the ones who understand the business well enough to know where AI should (and shouldn't) be applied.</div>
+        </div>
+      </div>
+
+      <!-- Prompt 14 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">14</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">Build Your Learning Network Sprint</div>
+            <div class="prompt-why">Design a 30-day plan to connect with the people who will accelerate your AI learning curve.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">I'm a <span class="fill-in">[role]</span> in <span class="fill-in">[industry]</span>. I want to build a small learning network of 5–8 people who are ahead of me in applying AI to work similar to mine.
+
+Help me design a 30-day sprint:
+• Week 1: Who should I look for? (What profiles, roles, or communities are most relevant?)
+• Week 2: How do I reach out? (Draft a brief, non-awkward message I can adapt)
+• Week 3: What should I ask in a first conversation? (5 questions that lead to actionable insight)
+• Week 4: How do I maintain the network without it feeling like work?
+
+I want a learning network, not just a contact list. The goal is people I can call when I'm stuck on a real problem.</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> The data is clear — 70–85% of career opportunities come through networks, not job postings. And learning speed multiplies when you're connected to people solving similar problems.</div>
+        </div>
+      </div>
+
+      <!-- Prompt 15 -->
+      <div class="prompt-card" onclick="togglePrompt(this)">
+        <div class="prompt-header">
+          <div class="prompt-num">15</div>
+          <div class="prompt-meta">
+            <div class="prompt-title">The 90-Day Career Redesign Roadmap</div>
+            <div class="prompt-why">Synthesize everything into a concrete, time-bound action plan you can actually execute.</div>
+          </div>
+          <div class="prompt-toggle">›</div>
+        </div>
+        <div class="prompt-body">
+          <div class="prompt-text-container">
+            <div class="prompt-text">Based on everything we've explored — my Super Skills (<span class="fill-in">[list]</span>), my performance objectives (<span class="fill-in">[list top 4]</span>), the time I can reclaim (<span class="fill-in">[X hrs/week]</span>), and the cross-functional opportunities I identified (<span class="fill-in">[list 1–2]</span>) — create a 90-day roadmap.
+
+Structure it as three phases:
+• Days 1–30: Quick wins — what I automate, what I stop doing, one experiment I run
+• Days 31–60: Visible impact — one cross-functional project I volunteer for, one redesigned workflow I demo
+• Days 61–90: Role shift — present my redesigned role proposal, measure results from Phase 1 and 2
+
+For each phase, give me 2–3 specific actions with deadlines. Make it realistic for someone who still has a full-time job. I'd rather do 3 things well than 10 things poorly.</div>
+            <div class="copy-bar">
+              <span class="label">Prompt</span>
+              <button class="copy-btn" onclick="event.stopPropagation(); copyPrompt(this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="prompt-tip"><strong>Why this matters:</strong> Strategy without execution is a daydream. This prompt turns everything you've explored into a plan with dates, actions, and milestones. The professionals who redesign their careers are the ones who actually start.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ FOOTER CTA ═══ -->
+  <div class="footer">
+    <div class="footer-card">
+      <h3>Ready to Start?</h3>
+      <p>Open the free Career GPT, paste Prompt 1, and give yourself 15 minutes. That's all it takes to begin seeing your career differently.</p>
+      <div class="footer-links">
+        <a href="https://hiring.tips/CareerGPT" class="footer-link" target="_blank" rel="noopener">🚀 Open Career GPT</a>
+        <a href="https://hiring.tips/PbH_Hub.com" class="footer-link outline" target="_blank" rel="noopener">📘 PbH Hub</a>
+        <a href="https://hiring.tips/LII_H&GH_AI1" class="footer-link outline" target="_blank" rel="noopener">📰 Newsletter</a>
+        <a href="https://hiring.tips/Moneyball_signup6" class="footer-link outline" target="_blank" rel="noopener">🎯 Moneyball Workshop</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="copyright">© 2026 Lou Adler · Performance-based Hiring · <a href="https://hiring.tips/PbH_Hub.com" style="color: var(--text-muted);" target="_blank" rel="noopener">hiring.tips/PbH_Hub</a></div>
+
+  <script>
+    function togglePrompt(card) {
+      const wasOpen = card.classList.contains('open');
+      card.classList.toggle('open');
+    }
+
+    function copyPrompt(btn) {
+      const container = btn.closest('.prompt-text-container');
+      const promptEl = container.querySelector('.prompt-text');
+      
+      // Get text content, replacing fill-in spans with bracket notation
+      let text = '';
+      promptEl.childNodes.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          text += node.textContent;
+        } else if (node.classList && node.classList.contains('fill-in')) {
+          text += node.textContent;
+        } else {
+          text += node.textContent;
+        }
+      });
+      
+      navigator.clipboard.writeText(text.trim()).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '✓ Copied';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = '📋 Copy';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
