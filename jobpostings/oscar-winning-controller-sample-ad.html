@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Performance-Based Job Ad: Oscar Winning Controller</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Merriweather:wght@400;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --linkedin-blue: #0a66c2;
+    --linkedin-dark: #004182;
+    --header-bg: #1b3a5c;
+    --text-primary: #333;
+    --text-secondary: #555;
+    --text-light: #777;
+    --border: #ddd;
+    --bg-page: #f3f2ef;
+    --bg-card: #fff;
+    --accent-gold: #c8a951;
+    --note-bg: #fffbeb;
+    --note-border: #e8d48b;
+    --pbh-blue: #2e75b6;
+  }
+
+  body {
+    font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 0;
+  }
+
+  /* === ANNOTATION BANNER === */
+  .annotation-banner {
+    background: var(--header-bg);
+    color: #fff;
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .annotation-banner h1 {
+    font-family: 'Merriweather', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  .annotation-banner p {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+  .annotation-banner .tag {
+    display: inline-block;
+    background: var(--pbh-blue);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    border-radius: 3px;
+    margin-bottom: 12px;
+  }
+
+  /* === LINKEDIN HEADER BAR === */
+  .linkedin-bar {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    flex-wrap: wrap;
+  }
+  .linkedin-logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--linkedin-blue);
+    letter-spacing: -0.03em;
+    margin-right: 8px;
+  }
+  .linkedin-logo span { color: #fff; background: var(--linkedin-blue); padding: 1px 4px 2px; border-radius: 3px; font-size: 1rem; }
+  .linkedin-bar a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .linkedin-bar a:hover { color: var(--linkedin-dark); }
+  .nav-badge {
+    background: #cc1016;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: 2px;
+  }
+
+  /* === MAIN CARD === */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+  .job-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    overflow: hidden;
+  }
+  .job-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .job-header h2 {
+    font-family: 'Merriweather', serif;
+    font-size: 1.35rem;
+    color: var(--text-primary);
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  .job-header .company-line {
+    font-size: 0.9rem;
+    color: var(--linkedin-blue);
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  .job-header .location {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 2px;
+  }
+  .company-logo {
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #f9f9f9;
+    padding: 8px;
+  }
+  .company-logo .logo-text {
+    font-size: 0.6rem;
+    color: var(--text-light);
+    text-align: center;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+  .company-logo .logo-icon {
+    font-size: 1.6rem;
+    color: var(--accent-gold);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* === JOB BODY === */
+  .job-body {
+    padding: 28px;
+  }
+  .job-body h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 28px 0 14px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #eee;
+  }
+  .job-body h3:first-child { margin-top: 0; }
+
+  .job-body p {
+    margin-bottom: 14px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .job-body ul {
+    margin: 0 0 16px 0;
+    padding-left: 24px;
+  }
+  .job-body ul li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+
+  /* === ANNOTATIONS (margin callouts) === */
+  .annotated-section {
+    position: relative;
+  }
+  .callout {
+    background: var(--note-bg);
+    border-left: 3px solid var(--accent-gold);
+    padding: 10px 14px;
+    margin: 12px 0 18px 0;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: #7a6520;
+    border-radius: 0 4px 4px 0;
+  }
+  .callout strong {
+    color: #5a4a10;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  /* === FOOTER === */
+  .card-footer {
+    padding: 20px 28px;
+    border-top: 1px solid var(--border);
+    background: #fafafa;
+    font-size: 0.82rem;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+  .card-footer a {
+    color: var(--pbh-blue);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 600px) {
+    .job-header { flex-direction: column; }
+    .company-logo { width: 56px; height: 56px; }
+    .job-body { padding: 20px; }
+    .annotation-banner h1 { font-size: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Annotation Banner -->
+<div class="annotation-banner">
+  <div class="tag">Performance-based Hiring &mdash; Sample Job Ad</div>
+  <h1>How to Attract Talent by Telling Stories, Not Listing Requirements</h1>
+  <p>This real job ad for a Controller/Director of Accounting demonstrates the Performance-based Hiring approach: lead with the career opportunity, describe the work as outcomes, and capture intrinsic motivators. Compare this to a traditional "7+ years, MBA required" posting.</p>
+</div>
+
+<!-- Faux LinkedIn Nav -->
+<div class="linkedin-bar">
+  <div class="linkedin-logo">Linked<span>in</span></div>
+  <a href="#">Home</a>
+  <a href="#">Profile</a>
+  <a href="#">Contacts</a>
+  <a href="#">Groups</a>
+  <a href="#">Jobs</a>
+  <a href="#">Inbox <span class="nav-badge">590</span></a>
+  <a href="#">Companies</a>
+  <a href="#">News</a>
+</div>
+
+<!-- Main Job Card -->
+<div class="container">
+  <div class="job-card">
+
+    <!-- Job Header -->
+    <div class="job-header">
+      <div>
+        <h2>Oscar Winning Controller or Director of Accounting</h2>
+        <div class="company-line">The Adler Group</div>
+        <div class="location">greater Los Angeles, CA (Greater Los Angeles Area)</div>
+      </div>
+      <div class="company-logo">
+        <div>
+          <span class="logo-icon">&#9670;</span>
+          <span class="logo-text">the adler group</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Job Body -->
+    <div class="job-body">
+
+      <h3>Job Description</h3>
+
+      <div class="annotated-section">
+        <p>If you want to accelerate your career growth, you need to stop thinking about the day one stuff. Instead, think year one, and beyond.</p>
+        <div class="callout">
+          <strong>PBH Technique: Lead with Intrinsic Motivation</strong>
+          The ad opens by speaking directly to the candidate&rsquo;s career ambitions &mdash; not the company&rsquo;s requirements. This immediately filters for people with a growth mindset who see opportunities as career moves, not lateral transfers.
+        </div>
+      </div>
+
+      <div class="annotated-section">
+        <p>For example, take this search we&rsquo;re now working on. It involves a small LA/Valley-based entertainment company that&rsquo;s asked us to find them a finance and admin executive to help them become as big as their dreams. As a result, you will, too! That&rsquo;s the stuff that&rsquo;s beyond year one.</p>
+        <div class="callout">
+          <strong>PBH Technique: Tell a Story, Not a Spec</strong>
+          Instead of a generic company description, the ad creates a narrative. The candidate can picture themselves in this role. &ldquo;Help them become as big as their dreams&rdquo; is a vision statement, not a job requirement.
+        </div>
+      </div>
+
+      <p>If you&rsquo;re interested, here&rsquo;s what year one is all about. For a CPA, this is the stuff of dreams &ndash; getting out of the numbers and making a difference.</p>
+
+      <div class="annotated-section">
+        <ul>
+          <li>Upgrade every single accounting process and procedure, including the entire reporting process. As part of this, make sure the internal controls are as tight as a drum.</li>
+          <li>Take over and rebuild the admin side of the company including procurement, contracts, funding and legal. You&rsquo;ll be working closely with studio and production people, so you need to speak non-accounting.</li>
+          <li>Rebuild the budgeting and planning process, including corporate reporting, and lead the preparation of the annual operating plan.</li>
+          <li>Prepare a monthly analysis and reporting package that identifies what&rsquo;s really happening in the company. Cool charts and graphs would help.</li>
+        </ul>
+        <div class="callout">
+          <strong>PBH Technique: Define Work as Outcomes, Not Tasks</strong>
+          These are performance objectives &mdash; measurable outcomes the person will deliver in Year One. Not &ldquo;responsibilities&rdquo; or &ldquo;duties.&rdquo; Notice the specificity: &ldquo;upgrade every single accounting process,&rdquo; &ldquo;take over and rebuild admin,&rdquo; &ldquo;lead the preparation of the annual operating plan.&rdquo; A candidate reading this knows exactly what success looks like.
+        </div>
+      </div>
+
+      <div class="annotated-section">
+        <p>Realistically, we need someone with a CPA (there&rsquo;s a bunch of public reporting and tax issues involved), and an MBA would add a lot of credibility. Most important is a hands-on understanding of the weird entertainment industry accounting treatments associated with a dozen independent collaborators involved in every production. If you pull all this off, all the folks you&rsquo;ll be working with will be thanking you when they receive their Oscars and Emmys.</p>
+        <div class="callout">
+          <strong>PBH Technique: Credentials in Context, Not as Gatekeepers</strong>
+          The CPA and MBA are mentioned &mdash; but as context for why they matter, not as screening filters. The ad explains the &ldquo;why&rdquo; behind each credential. And it closes with the emotional payoff: &ldquo;thanking you when they receive their Oscars and Emmys.&rdquo; That&rsquo;s intrinsic motivation.
+        </div>
+      </div>
+
+      <div class="annotated-section">
+        <p>While this is all of the Year One and Beyond stuff, Day One is pretty good, too. These are things like the compensation, the company, the people, and the location. However, none of this matters unless &ldquo;Year One and Beyond&rdquo; makes career sense for you.</p>
+        <div class="callout">
+          <strong>PBH Technique: Compensation Is Secondary</strong>
+          Day One factors (pay, location, company) are mentioned but explicitly subordinated to the career opportunity. This is how you attract people who evaluate opportunities as career moves, not just compensation packages.
+        </div>
+      </div>
+
+      <h3>Desired Skills &amp; Experience</h3>
+
+      <div class="annotated-section">
+        <p>If you can accomplish the above, you&rsquo;ve got what it takes. Realistically though, you need a CPA or CMA. If you have an MBA on top of this, you&rsquo;ll be able to accelerate your effectiveness and impact. Hands-on knowledge of the entertainment industry accounting issues is really important. If you have it, you know why. If you don&rsquo;t, ask someone who does, and if they think you can do the work, or they&rsquo;ll help you through it, let&rsquo;s talk anyway.</p>
+        <div class="callout">
+          <strong>PBH Technique: Open the Door, Don&rsquo;t Close It</strong>
+          &ldquo;If you can accomplish the above, you&rsquo;ve got what it takes&rdquo; &mdash; this single sentence flips the entire hiring model. Performance is the qualifier, not credentials. Then: &ldquo;let&rsquo;s talk anyway.&rdquo; This expands the candidate pool to people who can do the work but might self-select out of a traditional posting.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <strong>About This Sample:</strong> This ad was originally posted on LinkedIn by Lou Adler / The Adler Group as a real-world example of Performance-based Hiring methodology. Instead of leading with skills, experience requirements, and credentials, it leads with the career opportunity, defines the work as measurable outcomes, and speaks directly to the candidate&rsquo;s intrinsic motivators. The result: a fundamentally different candidate pool. Learn more at <a href="https://performance-based-hiring-hub.com">performance-based-hiring-hub.com</a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
