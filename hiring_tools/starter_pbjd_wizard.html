@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance-based Job Description Wizard – Starter Kit</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @page { size: letter; margin: 0.55in 0.65in 0.5in 0.65in; }
+
+  body {
+    font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    font-size: 8.5pt;
+    line-height: 1.35;
+    color: #1a1a1a;
+    background: #fff;
+    padding: 0.5in 0.65in;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 3px solid #1a3a5c;
+  }
+  .header-left h1 { font-size: 15pt; font-weight: 700; color: #1a3a5c; line-height: 1.15; }
+  .header-left .subtitle { font-size: 9pt; color: #d4652a; font-weight: 600; margin-top: 1px; }
+  .header-left .date { font-size: 7.5pt; color: #666; }
+  .header-right { text-align: right; font-size: 9.5pt; color: #1a3a5c; font-weight: 600; padding-top: 4px; }
+
+  /* Instructions */
+  .instructions {
+    font-size: 8pt;
+    color: #333;
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .instructions p { margin-bottom: 5px; }
+  .instructions strong { color: #1a3a5c; }
+  .instructions em { color: #1a3a5c; }
+
+  /* Wizard table */
+  .wizard-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #d4652a;
+  }
+  .wizard-table th {
+    background: #1a3a5c;
+    color: #fff;
+    font-weight: 700;
+    padding: 5px 8px;
+    text-align: left;
+    font-size: 8.5pt;
+    border: 1px solid #1a3a5c;
+  }
+  .wizard-table th.col-steps { width: 24%; }
+  .wizard-table th.col-questions { width: 43%; }
+  .wizard-table th.col-kpo { width: 33%; }
+
+  .wizard-table td {
+    padding: 7px 8px;
+    border: 1px solid #c0c5cc;
+    vertical-align: top;
+    line-height: 1.35;
+  }
+  .wizard-table tr { page-break-inside: avoid; }
+
+  /* Step name */
+  .step-name {
+    font-weight: 700;
+    color: #1a3a5c;
+    font-size: 8.5pt;
+    margin-bottom: 4px;
+  }
+  .step-desc {
+    font-size: 7.5pt;
+    color: #555;
+    line-height: 1.3;
+  }
+
+  /* Questions */
+  .q-text {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-style: italic;
+    color: #1a3a5c;
+    font-size: 8.5pt;
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+  .q-note {
+    font-family: 'Source Sans 3', sans-serif;
+    font-style: normal;
+    font-size: 7.5pt;
+    color: #555;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .q-bullets {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-style: italic;
+    color: #1a3a5c;
+    font-size: 8pt;
+    line-height: 1.35;
+    margin-left: 12px;
+    margin-bottom: 5px;
+  }
+  .q-bullets li { margin-bottom: 1px; }
+
+  /* KPO column — open white space */
+  .kpo-cell {
+    background: #fff;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 5px;
+    padding-top: 3px;
+    border-top: 1px solid #ccc;
+    font-size: 7pt;
+    color: #888;
+    text-align: center;
+  }
+
+  .page-break { page-break-before: always; }
+
+  /* Examples page */
+  .pre-note {
+    background: #f0f4f8; border-left: 3px solid #1a3a5c;
+    padding: 4px 9px; margin-bottom: 6px;
+    font-size: 7.5pt; color: #333; line-height: 1.3;
+  }
+  .pre-note strong { color: #1a3a5c; }
+  .example-group { margin-bottom: 8px; }
+  .example-group-title {
+    font-weight: 700; color: #1a3a5c; font-size: 9pt;
+    border-bottom: 2px solid #e8edf3; padding-bottom: 2px; margin-bottom: 4px;
+  }
+  .example-item {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-style: italic; font-size: 8.5pt; color: #333;
+    line-height: 1.35; margin-bottom: 3px;
+    padding-left: 10px; border-left: 2px solid #d4652a;
+  }
+  .example-label {
+    font-family: 'Source Sans 3', sans-serif;
+    font-style: normal; font-weight: 600; color: #1a3a5c; font-size: 7.5pt;
+  }
+
+  /* Page 2 table needs taller rows to fill the page */
+  .wizard-table-p2 td { height: 140px; }
+
+  @media print { body { padding: 0; max-width: none; margin: 0; } }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div class="header">
+  <div class="header-left">
+    <h1>Performance-based Job Description Wizard</h1>
+    <div class="subtitle">Starter Kit Edition</div>
+    <div class="date">2025 – The Adler Group, Inc.</div>
+  </div>
+  <div class="header-right">
+    Performance-based Hiring
+  </div>
+</div>
+
+<div class="instructions">
+  <p>This wizard converts a traditional skills-and-experience job description into a <strong>performance-based job description</strong> — one that defines the 6–8 key performance objectives (KPOs) a person needs to <em>accomplish</em> to be considered successful. This is the foundation of Performance-based Hiring.</p>
+  <p>Work through each step with the hiring manager. Answer the questions in the middle column to fully understand the role. Use the right column to draft each KPO using the <strong>"Action Verb – Task – Result (KPI or deliverable) – Timeframe"</strong> format. Then select the top 6–8 for the final job description. During interviews, you'll ask candidates for accomplishments most comparable to these KPOs.</p>
+</div>
+
+<table class="wizard-table">
+  <thead>
+    <tr>
+      <th class="col-steps">Steps</th>
+      <th class="col-questions">Questions to Define the Job</th>
+      <th class="col-kpo">Action-Task-Result-Time</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td>
+        <div class="step-name">Start by Defining the Job, Not the Person Doing the Job!</div>
+        <div class="step-desc">Identify the top 2–3 job responsibilities and answer the questions in the next column to better understand how the new hire needs to handle these responsibilities.</div>
+      </td>
+      <td>
+        <div class="q-text">Given the responsibilities of the job, describe what the person needs to do to ensure they're handled properly?</div>
+        <div class="q-text">What are some of the projects and tasks the person will be working on in this job as part of these responsibilities?</div>
+        <div class="q-text">Given the responsibilities of the job what do the best people in the role do differently or better than an average person?</div>
+      </td>
+      <td class="kpo-cell"></td>
+    </tr>
+
+    <tr>
+      <td>
+        <div class="step-name">Convert Skills, Experiences and Competencies into Outcomes</div>
+        <div class="step-desc">Identify the top 4–5 "must have" skills, competencies, and experience requirements. Then answer the questions in the second column for each one.</div>
+      </td>
+      <td>
+        <div class="q-text">How will (trait, skill or experience) actually be used on this job?</div>
+        <div class="q-text">Doing the same work, what do the best people do differently than an average person?</div>
+        <div class="q-text">How long would it normally take for a top person to learn how to handle this successfully?</div>
+      </td>
+      <td class="kpo-cell"></td>
+    </tr>
+
+    <tr>
+      <td>
+        <div class="step-name">Determine the Major Objectives</div>
+        <div class="step-desc">For management roles with lots of change it's best to start with this step. Most jobs have 2–3 major objectives during the first year. Bigger jobs have longer time spans.</div>
+      </td>
+      <td>
+        <div class="q-text">What's the biggest task(s) or project the person needs to finish over the course of the first year?</div>
+        <div class="q-note">Consider:</div>
+        <ul class="q-bullets">
+          <li>The biggest technical and/or team challenge</li>
+          <li>Major changes, problems or improvements</li>
+          <li>Processes that need to be redesigned or upgraded</li>
+          <li>Big projects the person will lead</li>
+        </ul>
+        <div class="q-note" style="text-decoration:underline;">For process or staff roles</div>
+        <div class="q-text">How long will it take the person to get up to speed in this role? Given this, what's the difference between exceptional and average performance?</div>
+      </td>
+      <td class="kpo-cell"></td>
+    </tr>
+
+    <tr>
+      <td>
+        <div class="step-name">Understand Team Issues</div>
+        <div class="step-desc">Draw a 360° work chart showing who the person will be working with on a regular basis inside and outside the company. Identify where team skills are essential for job success.</div>
+      </td>
+      <td>
+        <div class="q-text">Who does the person work with on a regular basis?</div>
+        <div class="q-text">From a team, EQ or interpersonal basis what is the difference between how the best people work with others vs. average and below average?</div>
+        <div class="q-text">Are there any specific team challenges the person will need to handle in this role?</div>
+      </td>
+      <td class="kpo-cell"></td>
+    </tr>
+
+  </tbody>
+</table>
+
+<div class="footer">
+  ©2025. All Rights Reserved by The Adler Group, Inc. &bull; performancebasedhiring.com &bull; Starter Kit Edition
+</div>
+
+<!-- PAGE 2 -->
+<div class="page-break"></div>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Performance-based Job Description Wizard</h1>
+    <div class="subtitle">Starter Kit Edition — Page 2</div>
+  </div>
+  <div class="header-right">
+    Performance-based Hiring
+  </div>
+</div>
+
+<table class="wizard-table wizard-table-p2">
+  <thead>
+    <tr>
+      <th class="col-steps">Steps</th>
+      <th class="col-questions">Questions to Define the Job</th>
+      <th class="col-kpo">Action-Task-Result-Time</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td>
+        <div class="step-name">Use Timeline to Develop the "Process of Success"</div>
+        <div class="step-desc">Identify the critical subtasks that directly affect or impact achieving the major objective.</div>
+      </td>
+      <td>
+        <div class="q-text">What does the person need to do in the first 30, 60, 90 days to ensure the major KPOs are met?</div>
+        <div class="q-text">What would a top person do first?</div>
+      </td>
+      <td class="kpo-cell"></td>
+    </tr>
+
+    <tr>
+      <td>
+        <div class="step-name">Problem-solving and Thinking Skills</div>
+      </td>
+      <td>
+        <div class="q-text">What types of problems will this person typically face in this role? These could be technical, team or business related.</div>
+      </td>
+      <td class="kpo-cell"></td>
+    </tr>
+
+    <tr>
+      <td>
+        <div class="step-name">Describe the Environment</div>
+        <div class="step-desc">The environment includes the pace, the decision-making process, the company culture and the hiring manager's style.</div>
+      </td>
+      <td>
+        <div class="q-text">What's the culture like? Political?</div>
+        <div class="q-text">Is the process for making decisions formal or informal?</div>
+        <div class="q-text">Is it more entrepreneurial or bureaucratic?</div>
+        <div class="q-text">Are there any aspects of the job that could negatively impact the person's performance?</div>
+        <div class="q-note">Consider a difficult hiring manager, the intensity of the pace, some odd culture issues, old tech, tight deadlines, limited budget, lack of resources or challenging business issues.</div>
+      </td>
+      <td class="kpo-cell"></td>
+    </tr>
+
+    <tr>
+      <td>
+        <div class="step-name">Develop the Employee Value Proposition (EVP)</div>
+        <div class="step-desc">The EVP describes why the job could be a worthwhile career move for the candidate.</div>
+      </td>
+      <td>
+        <div class="q-text">Why would a top person with multiple opportunities want this job for something other than the money?</div>
+      </td>
+      <td class="kpo-cell"></td>
+    </tr>
+
+  </tbody>
+</table>
+
+<div class="footer">
+  ©2025. All Rights Reserved by The Adler Group, Inc. &bull; performancebasedhiring.com &bull; Starter Kit Edition
+</div>
+
+<!-- PAGE 3: KPO EXAMPLES -->
+<div class="page-break"></div>
+
+<div class="header">
+  <div class="header-left">
+    <h1>KPO Examples by Category</h1>
+    <div class="subtitle">Starter Kit Edition — Reference Guide</div>
+  </div>
+  <div class="header-right">
+    Performance-based Hiring
+  </div>
+</div>
+
+<div class="pre-note">
+  <strong>Use these examples</strong> to help write KPOs for your performance-based job description. Each KPO should clarify the task, define a successful result with a metric or deliverable, and include a timeframe.
+</div>
+
+<div class="example-group">
+  <div class="example-group-title">Major Objectives — Projects</div>
+  <div class="example-item">Collaborate with engineering, operations and sales to develop the three-year product roadmap. Get executive approval and budget within 10 months.</div>
+</div>
+
+<div class="example-group">
+  <div class="example-group-title">Major Objectives — Process</div>
+  <div class="example-item">Within six months achieve quota 90% of the time.</div>
+  <div class="example-item">Within 3–4 months develop 10–20 high quality leads per month and arrange 50% onsite visits with the sales team.</div>
+</div>
+
+<div class="example-group">
+  <div class="example-group-title">Outcomes — Convert "Having" to "Doing"</div>
+  <div class="example-item"><span class="example-label">Communication skills →</span> Present weekly progress reports to the executive team on the status of the marketing launch program.</div>
+  <div class="example-item"><span class="example-label">Technical expertise →</span> Use in-depth experience in (skill) to develop final design within 90 days.</div>
+  <div class="example-item"><span class="example-label">Influencing others →</span> Get the cross-functional product team to agree to the specs in order to meet challenging delivery dates.</div>
+  <div class="example-item"><span class="example-label">"Results oriented" →</span> Proactively deal with problems in the (area) and work with team to develop immediate solutions.</div>
+</div>
+
+<div class="example-group">
+  <div class="example-group-title">30-60-90 Day Subtasks</div>
+  <div class="example-item">During the first 30 days, conduct an in-depth process review and identify any critical issues.</div>
+  <div class="example-item">Assess the team's ability to achieve the objectives.</div>
+  <div class="example-item">Prepare a detailed plan with contingencies.</div>
+  <div class="example-item">Identify critical bottlenecks and develop workarounds.</div>
+</div>
+
+<div class="example-group">
+  <div class="example-group-title">Team, EQ, and Interpersonal KPOs</div>
+  <div class="example-item">Meet with the staff and assess their ability to handle the revised plan.</div>
+  <div class="example-item">Lead a cross-functional team consisting of (describe) to upgrade the (joint project) by (timeframe).</div>
+  <div class="example-item">Manage a dysfunctional team of creative designers.</div>
+  <div class="example-item">Reorganize the group based on the company's new direction.</div>
+</div>
+
+<div class="example-group">
+  <div class="example-group-title">Problem-solving and Critical Thinking</div>
+  <div class="example-item">Evaluate the current approach to determine viability.</div>
+  <div class="example-item">Develop workaround for a critical design flaw.</div>
+  <div class="example-item">Implement a new system with limited resources.</div>
+</div>
+
+<div class="example-group">
+  <div class="example-group-title">Environment, Culture, and Hiring Manager</div>
+  <div class="example-item">Complete essential KPOs given extremely tight deadlines.</div>
+  <div class="example-item">There are limited resources with a need to make instant decisions with incomplete information.</div>
+  <div class="example-item">The pace is intense with the expectation that the work will get done with "no excuses."</div>
+</div>
+
+<div class="example-group">
+  <div class="example-group-title">EVP and Job Branding</div>
+  <div class="example-item">Use your (critical skill) to architect a new system.</div>
+  <div class="example-item">Lead the entire marketing effort to launch a critical new product line.</div>
+  <div class="example-item">Become an expert in (field) as part of our (education program).</div>
+</div>
+
+<div class="footer">
+  ©2025. All Rights Reserved by The Adler Group, Inc. &bull; performancebasedhiring.com &bull; Starter Kit Edition
+</div>
+
+</body>
+</html>
