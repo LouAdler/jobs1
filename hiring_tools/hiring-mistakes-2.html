@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Two Hiring Mistakes That Are Costing You Everything</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --paper: #f8f5ef;
+    --paper2: #f0ece2;
+    --accent: #c8392b;
+    --accent2: #1a5c3a;
+    --amber: #b5620e;
+    --rule: #d4cfc4;
+    --muted: #6b6760;
+    --coral-bg: #fdf0ee;
+    --coral-mid: #f5c4b8;
+    --teal-bg: #e8f4ee;
+    --teal-mid: #9ed4b6;
+    --amber-bg: #fdf4e3;
+    --amber-mid: #f0d090;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ─────────────────────────────── */
+  .masthead {
+    border-bottom: 3px double var(--rule);
+    padding: 20px 40px 16px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .masthead-brand {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .masthead-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── HERO ────────────────────────────────── */
+  .hero {
+    padding: 60px 40px 48px;
+    max-width: 860px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+  .hero-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: block;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 68px);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 28px;
+    letter-spacing: -.02em;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-deck {
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 640px;
+    margin: 0 auto 16px;
+    font-weight: 300;
+  }
+  .hero-rule {
+    width: 60px;
+    height: 3px;
+    background: var(--accent);
+    margin: 32px auto 0;
+  }
+
+  /* ── SECTION WRAPPER ─────────────────────── */
+  .section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 40px;
+  }
+  .section + .section {
+    border-top: 1px solid var(--rule);
+  }
+
+  /* ── PULL QUOTE ──────────────────────────── */
+  .pullquote {
+    border-left: 4px solid var(--accent);
+    padding: 20px 28px;
+    margin: 32px 0;
+    background: var(--paper2);
+    border-radius: 0 4px 4px 0;
+  }
+  .pullquote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+
+  /* ── SECTION HEADINGS ────────────────────── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: block;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    letter-spacing: -.01em;
+  }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  p { margin-bottom: 16px; color: #2a2926; }
+
+  /* ── ERROR CARDS (Type I / Type II intro) ── */
+  .error-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 32px 0;
+  }
+  @media (max-width: 600px) { .error-grid { grid-template-columns: 1fr; } }
+
+  .error-card {
+    border: 1.5px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .error-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .error-card.type1::before { background: var(--accent); }
+  .error-card.type2::before { background: var(--amber); }
+
+  .error-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .type1 .error-badge { color: var(--accent); }
+  .type2 .error-badge { color: var(--amber); }
+
+  .error-card h3 { font-size: 18px; margin-bottom: 8px; }
+  .error-card p { font-size: 14px; color: var(--muted); margin-bottom: 0; }
+
+  .difficulty {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .type1 .difficulty { background: #feeee9; color: var(--accent); }
+  .type2 .difficulty { background: #fdf3e0; color: var(--amber); }
+
+  /* ── CASCADE STEPS ───────────────────────── */
+  .cascade {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 28px 0;
+  }
+  .cascade-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px dashed var(--rule);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  .cascade-step.visible { opacity: 1; transform: none; }
+  .cascade-step:last-child { border-bottom: none; }
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--amber-mid);
+    line-height: 1;
+    min-width: 40px;
+    text-align: center;
+  }
+  .step-content h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .step-content p { font-size: 14px; color: var(--muted); margin: 0; }
+
+  .cascade-warning {
+    background: var(--amber-bg);
+    border: 1.5px solid var(--amber-mid);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #7a4a08;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  /* ── INTERACTIVE MATRIX ──────────────────── */
+  .matrix-section {
+    background: var(--paper2);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 48px 40px;
+  }
+  .matrix-section .inner { max-width: 860px; margin: 0 auto; }
+
+  .matrix-wrap {
+    margin-top: 32px;
+    overflow-x: auto;
+  }
+
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr;
+    grid-template-rows: 52px 1fr 1fr;
+    gap: 3px;
+    min-width: 520px;
+    background: var(--rule);
+    border: 2px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .mx-header {
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .mx-header.axis-label {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    grid-row: 2 / 4;
+    grid-column: 1;
+    font-size: 9px;
+  }
+  .mx-corner { background: var(--ink); }
+
+  .mx-cell {
+    padding: 24px 20px;
+    cursor: pointer;
+    transition: filter .18s ease, transform .15s ease;
+    position: relative;
+    min-height: 180px;
+  }
+  .mx-cell:hover { filter: brightness(.96); transform: scale(1.01); z-index: 2; }
+  .mx-cell:focus { outline: 3px solid var(--ink); outline-offset: -3px; }
+
+  .mx-cell.type1-error { background: var(--coral-bg); }
+  .mx-cell.correct-hire { background: var(--teal-bg); }
+  .mx-cell.correct-pass { background: var(--teal-bg); }
+  .mx-cell.type2-error { background: var(--amber-bg); }
+
+  .cell-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .type1-error .cell-tag { color: var(--accent); }
+  .correct-hire .cell-tag, .correct-pass .cell-tag { color: var(--accent2); }
+  .type2-error .cell-tag { color: var(--amber); }
+
+  .cell-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .type1-error .cell-title { color: #8b1c12; }
+  .correct-hire .cell-title, .correct-pass .cell-title { color: #144028; }
+  .type2-error .cell-title { color: #7a4208; }
+
+  .cell-body { font-size: 13px; line-height: 1.5; color: #4a4844; }
+
+  .cell-pill {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .type1-error .cell-pill { background: #f5c4b8; color: #8b1c12; }
+  .correct-hire .cell-pill, .correct-pass .cell-pill { background: #9ed4b6; color: #144028; }
+  .type2-error .cell-pill { background: var(--amber-mid); color: #5a3006; }
+
+  /* Detail drawer */
+  .detail-drawer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s ease;
+    background: #fff;
+    border-top: 1px solid var(--rule);
+  }
+  .detail-drawer.open { max-height: 300px; }
+  .drawer-inner {
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 500px) { .drawer-inner { grid-template-columns: 1fr; } }
+  .drawer-col h5 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .drawer-col ul { list-style: none; padding: 0; }
+  .drawer-col ul li {
+    font-size: 13px;
+    color: var(--ink);
+    padding: 3px 0;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    gap: 8px;
+  }
+  .drawer-col ul li::before { content: '—'; color: var(--muted); flex-shrink: 0; }
+
+  .matrix-note {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* ── SYSTEM SECTION ──────────────────────── */
+  .system-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 28px 0;
+  }
+  @media (max-width: 640px) { .system-grid { grid-template-columns: 1fr; } }
+
+  .system-card {
+    border: 1.5px solid var(--rule);
+    border-radius: 8px;
+    padding: 24px 20px;
+    background: #fff;
+  }
+  .system-card .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--rule);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .system-card h4 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .system-card p { font-size: 13px; color: var(--muted); margin: 0; }
+
+  /* ── CTA SECTION ─────────────────────────── */
+  .cta-section {
+    background: var(--ink);
+    padding: 56px 40px;
+  }
+  .cta-inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .cta-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #8a8680;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .cta-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 900;
+    color: var(--paper);
+    line-height: 1.1;
+    margin-bottom: 40px;
+    letter-spacing: -.01em;
+  }
+  .cta-headline em { font-style: italic; color: #f0b08a; }
+
+  .cta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 580px) { .cta-grid { grid-template-columns: 1fr; } }
+
+  .cta-card {
+    border-radius: 8px;
+    padding: 28px 24px;
+    text-decoration: none;
+    display: block;
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .cta-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.3); }
+
+  .cta-card.stop-t1 { background: var(--accent); }
+  .cta-card.stop-t2 { background: #b5620e; }
+
+  .cta-card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.65);
+    margin-bottom: 10px;
+    display: block;
+  }
+  .cta-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .cta-card p {
+    font-size: 13px;
+    color: rgba(255,255,255,.75);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.35);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background .15s;
+  }
+  .cta-btn:hover { background: rgba(255,255,255,.25); }
+  .cta-btn .arrow { font-size: 14px; }
+
+  /* Bottom CTAs */
+  .cta-secondary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 4px;
+  }
+  @media (max-width: 580px) { .cta-secondary-grid { grid-template-columns: 1fr; } }
+
+  .cta-secondary {
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 8px;
+    padding: 24px;
+    text-decoration: none;
+    display: block;
+    transition: border-color .18s ease, background .18s ease;
+  }
+  .cta-secondary:hover {
+    border-color: rgba(255,255,255,.4);
+    background: rgba(255,255,255,.04);
+  }
+  .cta-secondary .sec-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.4);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .cta-secondary h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--paper);
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+  .cta-secondary p {
+    font-size: 13px;
+    color: rgba(255,255,255,.55);
+    margin: 0 0 12px;
+    line-height: 1.5;
+  }
+  .sec-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #f0b08a;
+  }
+
+  /* ── FOOTER ──────────────────────────────── */
+  .footer {
+    border-top: 1px solid var(--rule);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .footer-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── ANIMATIONS ──────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: none; }
+  }
+  .hero h1, .hero-deck { animation: fadeUp .7s ease both; }
+  .hero-deck { animation-delay: .12s; }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <span class="masthead-brand"><a href="https://hiring.tips/PbH_Hub.com" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--rule);">Performance-based Hiring</a> · Lou Adler</span>
+  <span class="masthead-title">Moneyball for HR</span>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-kicker">The fundamental framework every hiring manager must understand</span>
+  <h1>Two Hiring Mistakes.<br><em>One Is Easy to Fix.</em><br>One Requires a System.</h1>
+  <p class="hero-deck">Every hiring decision lands in one of four outcomes. Understanding the difference between a Type I and Type II error is the first step toward building a hiring process that actually works.</p>
+  <div class="hero-rule"></div>
+</div>
+
+<!-- INTRODUCTION -->
+<div class="section">
+  <span class="section-label">The Framework</span>
+  <h2>Borrowed from Statistics. Built for Hiring.</h2>
+  <p>In statistical theory, a <strong>Type I error</strong> is a false positive — you concluded something was true when it wasn't. A <strong>Type II error</strong> is a false negative — you missed something real. Applied to hiring, these two error types define the entire landscape of hiring failure.</p>
+
+  <div class="pullquote">
+    <p>"Most organizations obsess over avoiding Type I errors and end up committing Type II errors by the hundreds — never even knowing it."</p>
+  </div>
+
+  <div class="error-grid">
+    <div class="error-card type1">
+      <span class="error-badge">Type I Error · False Positive</span>
+      <h3>Hiring the Wrong Person</h3>
+      <p>You offered the job to someone who turned out to be a poor performer. The cost is visible: low output, culture drag, remediation time, and eventual termination.</p>
+      <span class="difficulty">■ Addressable · Single failure point</span>
+    </div>
+    <div class="error-card type2">
+      <span class="error-badge">Type II Error · False Negative</span>
+      <h3>Losing a Top Performer</h3>
+      <p>A top person was available but you never hired them. Maybe you never found them. Maybe your process repelled them. Maybe you lost them at the offer. The cost is invisible — and compounding.</p>
+      <span class="difficulty">▲ Systemic · Three failure points</span>
+    </div>
+  </div>
+</div>
+
+<!-- TYPE II CASCADE -->
+<div class="section">
+  <span class="section-label">Why Type II Is Different</span>
+  <h2>Three Ways to Lose a Top Person — Any One Is Fatal</h2>
+  <p>Stopping a Type I error requires better judgment at a single moment: the hiring decision. Stopping Type II errors requires a complete system — because the top candidate can be lost at any of three entirely different stages, and each loss is permanent.</p>
+
+  <div class="cascade" id="cascade">
+    <div class="cascade-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Never seen — Sourcing gap</h4>
+        <p>The top person isn't passive-job-board visible. Your job description is credential-based, not performance-based, so the search returns the wrong pool. The best candidate never enters your funnel at all.</p>
+      </div>
+    </div>
+    <div class="cascade-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Seen but not engaged — Process gap</h4>
+        <p>You found them, but your process signaled mediocrity. A slow response, a generic req, a recruiter who led with requirements instead of opportunity. Top people interview <em>you</em> as much as you interview them — and they walked.</p>
+      </div>
+    </div>
+    <div class="cascade-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Engaged but not won — Offer and close gap</h4>
+        <p>They liked what they saw, but you lost the close. A below-market offer, a slow decision, a competing offer you never anticipated. No one tested their interest before the formal offer. They accepted elsewhere.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cascade-warning">
+    ⚠ A top performer lost at any stage is lost forever. This is why Type II errors require a complete hiring system — not a single fix.
+  </div>
+</div>
+
+<!-- INTERACTIVE MATRIX -->
+<div class="matrix-section">
+  <div class="inner">
+    <span class="section-label">The Hiring Outcomes Matrix</span>
+    <h2>Every Hiring Decision Lives in One of These Four Cells</h2>
+    <p>Click any cell to see what drives that outcome and what it costs — or earns — your organization.</p>
+
+    <div class="matrix-wrap">
+      <div class="matrix-grid">
+        <!-- Row 0: headers -->
+        <div class="mx-corner"></div>
+        <div class="mx-header">Weak Performer<br><span style="opacity:.6;font-size:8px">Actual result</span></div>
+        <div class="mx-header">Top Performer<br><span style="opacity:.6;font-size:8px">Actual result</span></div>
+
+        <!-- Row 1: Hired -->
+        <div class="mx-header axis-label">← Passed &nbsp;&nbsp;&nbsp; Hired →</div>
+
+        <!-- Cell: Hired / Weak = Type I -->
+        <div class="mx-cell type1-error" tabindex="0" role="button" aria-expanded="false" onclick="toggleDrawer('d1')" onkeydown="if(event.key==='Enter')toggleDrawer('d1')">
+          <span class="cell-tag">Type I Error</span>
+          <div class="cell-title">Hired the wrong person</div>
+          <div class="cell-body">You acted when you shouldn't have. The pain arrives quickly and is hard to ignore.</div>
+          <span class="cell-pill">False positive</span>
+          <div class="detail-drawer" id="d1">
+            <div class="drawer-inner">
+              <div class="drawer-col">
+                <h5>What it costs</h5>
+                <ul>
+                  <li>Wasted salary and onboarding</li>
+                  <li>Manager time on remediation</li>
+                  <li>Team morale and culture drag</li>
+                  <li>Recruiting cost to replace</li>
+                </ul>
+              </div>
+              <div class="drawer-col">
+                <h5>Root causes</h5>
+                <ul>
+                  <li>Trait-based interviews (no outcomes)</li>
+                  <li>No structured scorecard</li>
+                  <li>Hiring on likability or credentials</li>
+                  <li>No Most Significant Accomplishment check</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cell: Hired / Strong = Correct -->
+        <div class="mx-cell correct-hire" tabindex="0" role="button" aria-expanded="false" onclick="toggleDrawer('d2')" onkeydown="if(event.key==='Enter')toggleDrawer('d2')">
+          <span class="cell-tag">Correct Hire</span>
+          <div class="cell-title">Top person identified, recruited and hired</div>
+          <div class="cell-body">All four stages of the system worked. Value compounds: output, team lift, culture elevation.</div>
+          <span class="cell-pill">True positive</span>
+          <div class="detail-drawer" id="d2">
+            <div class="drawer-inner">
+              <div class="drawer-col">
+                <h5>What it earns</h5>
+                <ul>
+                  <li>Above-average individual output</li>
+                  <li>Raises team performance ceiling</li>
+                  <li>Culture and retention flywheel</li>
+                  <li>Compounding ROI over time</li>
+                </ul>
+              </div>
+              <div class="drawer-col">
+                <h5>What it requires</h5>
+                <ul>
+                  <li>Performance-based job description</li>
+                  <li>Proactive sourcing strategy</li>
+                  <li>Structured PbH interview process</li>
+                  <li>Win-Win offer and close process</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cell: Passed / Weak = Correct pass -->
+        <div class="mx-cell correct-pass" tabindex="0" role="button" aria-expanded="false" onclick="toggleDrawer('d3')" onkeydown="if(event.key==='Enter')toggleDrawer('d3')">
+          <span class="cell-tag">Correct Pass</span>
+          <div class="cell-title">Avoided a weak performer</div>
+          <div class="cell-body">You protected the team. This is the low-upside win — important, but it's just cost avoidance.</div>
+          <span class="cell-pill">True negative</span>
+          <div class="detail-drawer" id="d3">
+            <div class="drawer-inner">
+              <div class="drawer-col">
+                <h5>What it saves</h5>
+                <ul>
+                  <li>Remediation and management time</li>
+                  <li>Culture disruption</li>
+                  <li>Re-recruiting costs</li>
+                  <li>Team morale protection</li>
+                </ul>
+              </div>
+              <div class="drawer-col">
+                <h5>What it requires</h5>
+                <ul>
+                  <li>Structured, consistent assessment</li>
+                  <li>Clear performance expectations defined upfront</li>
+                  <li>Discipline to pass on likable non-performers</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cell: Passed / Strong = Type II -->
+        <div class="mx-cell type2-error" tabindex="0" role="button" aria-expanded="false" onclick="toggleDrawer('d4')" onkeydown="if(event.key==='Enter')toggleDrawer('d4')">
+          <span class="cell-tag">Type II Error</span>
+          <div class="cell-title">Top performer lost — 3 root causes</div>
+          <div class="cell-body">① Never seen &nbsp;·&nbsp; ② Seen, not engaged &nbsp;·&nbsp; ③ Engaged, not won. Any one ends the same way.</div>
+          <span class="cell-pill">False negative</span>
+          <div class="detail-drawer" id="d4">
+            <div class="drawer-inner">
+              <div class="drawer-col">
+                <h5>The invisible cost</h5>
+                <ul>
+                  <li>Lost competitive advantage</li>
+                  <li>Competitor gains your talent</li>
+                  <li>Role filled with a lesser candidate</li>
+                  <li>Opportunity gap compounds silently</li>
+                </ul>
+              </div>
+              <div class="drawer-col">
+                <h5>Requires a complete system</h5>
+                <ul>
+                  <li>Performance-based job description (PBJD)</li>
+                  <li>Proactive and passive sourcing</li>
+                  <li>Compelling candidate experience</li>
+                  <li>Win-Win offer and close process</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <p class="matrix-note">Click any cell to expand details · The goal is to live in the top-right and bottom-left cells</p>
+  </div>
+</div>
+
+<!-- WHY A SYSTEM -->
+<div class="section">
+  <span class="section-label">The Asymmetry</span>
+  <h2>Why Type II Demands a Complete Hiring System</h2>
+  <p>Stopping Type I errors is a judgment improvement: use structured interviews, define performance outcomes before you meet candidates, score on evidence rather than gut feel. It's hard to do consistently, but it's a bounded problem with known interventions.</p>
+  <p>Stopping Type II errors is categorically different. Because a top candidate can be lost at three completely independent stages — sourcing, engagement, or closing — no single tool or training session fixes it. Every stage must work, in sequence, every time.</p>
+
+  <div class="system-grid">
+    <div class="system-card">
+      <div class="num">01</div>
+      <h4>Find them</h4>
+      <p>Performance-based job descriptions cast a different net. Proactive sourcing reaches passive candidates who never see your postings.</p>
+    </div>
+    <div class="system-card">
+      <div class="num">02</div>
+      <h4>Engage them</h4>
+      <p>Top candidates evaluate your process in real time. Speed, clarity, and a compelling opportunity narrative determine whether they stay in.</p>
+    </div>
+    <div class="system-card">
+      <div class="num">03</div>
+      <h4>Win them</h4>
+      <p>Testing interest before extending the offer, understanding competing priorities, and crafting a Win-Win offer closes the loop.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CTA SECTION -->
+<div class="cta-section">
+  <div class="cta-inner">
+    <span class="cta-eyebrow">Take action · Performance-based Hiring</span>
+    <div class="cta-headline">Stop Both Mistakes.<br><em>Start with the right tool.</em></div>
+
+    <div class="cta-grid">
+      <a href="https://hiring.tips/SAMPLE_interview_audit" target="_blank" class="cta-card stop-t1">
+        <span class="cta-card-label">Stop Type I errors · Interview audit</span>
+        <h3>Hiring Manager Interview Audit</h3>
+        <p>See a sample audit of your interview process and identify the specific judgment gaps letting weak performers through.</p>
+        <span class="cta-btn">View Sample Audit <span class="arrow">→</span></span>
+      </a>
+      <a href="https://hiring.tips/2minute_PBJD" target="_blank" class="cta-card stop-t2">
+        <span class="cta-card-label">Stop Type II errors · Build the system</span>
+        <h3>Start Your Performance-based Job Description</h3>
+        <p>A 2-minute PBJD is the foundation of the entire system. Define the role by outcomes — not credentials — and change who you find.</p>
+        <span class="cta-btn">Build Your PBJD <span class="arrow">→</span></span>
+      </a>
+    </div>
+
+    <div class="cta-secondary-grid">
+      <a href="https://hiring.tips/PbH_Hub.com" target="_blank" class="cta-secondary">
+        <span class="sec-label">Full methodology platform</span>
+        <h4>Performance-based Hiring Talent Hub</h4>
+        <p>Eight AI-powered tools — from sourcing to offer — built on 40 years of PbH methodology and the Moneyball mindset.</p>
+        <span class="sec-link">Explore the Hub →</span>
+      </a>
+      <a href="https://hiring.tips/Zoom_nomoremistakes" target="_blank" class="cta-secondary">
+        <span class="sec-label">Free live workshop</span>
+        <h4>"No More Hiring Mistakes!" Workshop</h4>
+        <p>Join Lou Adler for a free live Zoom session. Walk away with the framework to eliminate both Type I and Type II errors from your process.</p>
+        <span class="sec-link">Reserve Your Spot →</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer style="background:var(--paper2); border-top: 3px double var(--rule); padding: 24px 40px;">
+  <div class="footer">
+    <span class="footer-brand">The Adler Group</span>
+    <span class="footer-note">Performance-based Hiring · Moneyball for HR · Lou Adler</span>
+  </div>
+</footer>
+
+<script>
+  function toggleDrawer(id) {
+    const drawer = document.getElementById(id);
+    const cell = drawer.parentElement;
+    const isOpen = drawer.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.detail-drawer').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.mx-cell').forEach(c => c.setAttribute('aria-expanded','false'));
+    // Open clicked if it was closed
+    if (!isOpen) {
+      drawer.classList.add('open');
+      cell.setAttribute('aria-expanded','true');
+    }
+  }
+
+  // Cascade animation on scroll
+  const steps = document.querySelectorAll('.cascade-step');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 150);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  steps.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
